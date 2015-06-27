@@ -25,6 +25,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     let request = NSFetchRequest(entityName: "Habit")
     do {
       habits = try moContext.executeFetchRequest(request) as! [Habit]
+      habits = habits.sort({ $0.dueIn() < $1.dueIn() })
     } catch let error as NSError {
       print("Fetch failed: \(error.localizedDescription)")
     }
@@ -89,7 +90,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       vc.habit = activeCell!.habit
     } else if segue.identifier == "NewHabit" {
       let vc = segue.destinationViewController as! HabitViewController
-      vc.habit = Habit.create(moc: moContext, name: "", details: "", `repeat`: 0, times: 1)
+      vc.habit = Habit.create(moc: moContext, name: "", details: "", frequency: 0, times: 1)
     }
   }
   

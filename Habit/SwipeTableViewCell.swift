@@ -95,16 +95,16 @@ class SwipeTableViewCell : UITableViewCell {
     }
     
     // If the content view background is transparent we get the background color.
-    let contentViewBackgroundClear = contentView.backgroundColor != nil
-    if contentViewBackgroundClear {
-      contentView.backgroundColor = backgroundColor!.isEqual(UIColor.clearColor()) ? UIColor.whiteColor() : backgroundColor
-    }
+//    let contentViewBackgroundClear = contentView.backgroundColor == nil
+//    if contentViewBackgroundClear {
+//      contentView.backgroundColor = backgroundColor!.isEqual(UIColor.clearColor()) ? UIColor.whiteColor() : backgroundColor
+//    }
     
     let screenshotImage = image(view: self)
     
-    if contentViewBackgroundClear {
-      contentView.backgroundColor = nil
-    }
+//    if contentViewBackgroundClear {
+//      contentView.backgroundColor = nil
+//    }
     
     colorView = UIView(frame: bounds)
     colorView?.autoresizingMask = [UIViewAutoresizing.FlexibleHeight, UIViewAutoresizing.FlexibleWidth]
@@ -210,7 +210,7 @@ class SwipeTableViewCell : UITableViewCell {
     }
   }
   
-  func offset(percentage percentage: CGFloat, width: CGFloat) -> CGFloat {
+  static func offset(percentage percentage: CGFloat, width: CGFloat) -> CGFloat {
     var offset = percentage * width
     
     if offset < -width {
@@ -247,10 +247,6 @@ class SwipeTableViewCell : UITableViewCell {
     return Defaults.DurationHighLimit + Defaults.DurationLowLimit - abs(((horizontalVelocity / width) * Defaults.AnimationDurationDiff));
   }
   
-  func alpha(percentage percentage: CGFloat) -> CGFloat {
-    return min(abs(percentage / (Defaults.AlphaRate * trigger)), 1)
-  }
-  
   func rotation(percentage percentage: CGFloat) -> CGFloat {
     var rotation: CGFloat = 0.0
     if percentage >= 0 && percentage < trigger {
@@ -266,7 +262,7 @@ class SwipeTableViewCell : UITableViewCell {
   func animateSwipe(direction: Direction, percentage: CGFloat) {
     if let view = views[direction.hashValue] {
       if options.contains(.Alpha) {
-        slidingView!.alpha = alpha(percentage: percentage)
+        slidingView!.alpha = min(abs(percentage / (Defaults.AlphaRate * trigger)), 1)
       }
       var transform = CGAffineTransformIdentity
       if options.contains(.Scale) {
@@ -293,7 +289,7 @@ class SwipeTableViewCell : UITableViewCell {
     
     var position = CGPointMake(0, 0)
     position.y = bounds.height / 2.0
-    position.x = offset(percentage: percentage - 0.05, width: bounds.width)
+    position.x = SwipeTableViewCell.offset(percentage: percentage - 0.05, width: bounds.width)
     let activeViewSize = view!.bounds.size;
     let activeViewFrame = CGRectMake(position.x - activeViewSize.width,
                                      position.y - activeViewSize.height / 2.0,

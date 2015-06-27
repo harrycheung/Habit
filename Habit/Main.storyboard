@@ -16,6 +16,8 @@
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
+            <string>Bariol-Regular</string>
+            <string>Bariol-Regular</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -81,18 +83,32 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fj9-m5-H5A">
                                                     <rect key="frame" x="8" y="11" width="584" height="21"/>
                                                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="18"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="in 5 mins" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fhm-ox-pDU">
+                                                    <rect key="frame" x="472" y="24" width="120" height="12"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="120" id="Dfi-zH-kMm"/>
+                                                        <constraint firstAttribute="height" constant="12" id="qFQ-uA-kga"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="12"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <color key="backgroundColor" red="0.20392156862745098" green="0.59607843137254901" blue="0.85882352941176465" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstItem="fj9-m5-H5A" firstAttribute="trailing" secondItem="vCE-hH-7MT" secondAttribute="trailingMargin" id="2fJ-8Q-nUB"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="fhm-ox-pDU" secondAttribute="trailing" id="9Ji-mA-2vd"/>
                                                 <constraint firstItem="fj9-m5-H5A" firstAttribute="top" secondItem="vCE-hH-7MT" secondAttribute="topMargin" constant="3" id="NBq-m6-fRz"/>
                                                 <constraint firstItem="fj9-m5-H5A" firstAttribute="leading" secondItem="vCE-hH-7MT" secondAttribute="leadingMargin" id="XF3-FB-Bd0"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="fj9-m5-H5A" secondAttribute="bottom" constant="3.5" id="jhn-B1-Sif"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="fhm-ox-pDU" secondAttribute="bottom" id="nyc-7w-ytj"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="due" destination="fhm-ox-pDU" id="Fic-MR-pSE"/>
                                             <outlet property="name" destination="fj9-m5-H5A" id="mPL-1p-fjk"/>
                                             <segue destination="fuZ-7k-oQj" kind="show" identifier="ShowHabit" id="YaX-9k-v6L"/>
                                         </connections>
@@ -155,7 +171,7 @@
                                     <segment title="Annually"/>
                                 </segments>
                                 <connections>
-                                    <action selector="repeatChanged:" destination="fuZ-7k-oQj" eventType="valueChanged" id="x84-e2-ZzR"/>
+                                    <action selector="frequencyChanged:" destination="fuZ-7k-oQj" eventType="valueChanged" id="IS8-tM-Gi2"/>
                                 </connections>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FeH-uK-xvJ">
@@ -196,6 +212,16 @@
                                 <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="in 5 mins" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DcU-bO-SfE">
+                                <rect key="frame" x="20" y="164" width="140" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="ecS-Dm-15o"/>
+                                    <constraint firstAttribute="width" constant="140" id="h9J-h8-K8U"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
@@ -208,6 +234,8 @@
                             <constraint firstItem="M63-V2-hq7" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leadingMargin" id="KHM-GJ-6Q3"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ufW-as-ekp" secondAttribute="trailing" id="LC2-0L-iTY"/>
                             <constraint firstItem="0tr-LV-M4N" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leadingMargin" id="YNT-ci-MIf"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="DcU-bO-SfE" secondAttribute="leading" id="a9d-hr-02A"/>
+                            <constraint firstItem="DcU-bO-SfE" firstAttribute="top" secondItem="M63-V2-hq7" secondAttribute="bottom" constant="8" id="bId-a7-e4q"/>
                             <constraint firstItem="3xy-47-OAN" firstAttribute="top" secondItem="7l0-3q-qB9" secondAttribute="bottom" constant="8" id="br0-J8-7Pp"/>
                             <constraint firstItem="M63-V2-hq7" firstAttribute="top" secondItem="0tr-LV-M4N" secondAttribute="bottom" constant="20" id="cax-TF-cqM"/>
                             <constraint firstItem="3xy-47-OAN" firstAttribute="trailing" secondItem="VOQ-mx-QHa" secondAttribute="trailingMargin" id="gmX-Gs-TnL"/>
@@ -226,8 +254,9 @@
                     </view>
                     <connections>
                         <outlet property="cancel" destination="FeH-uK-xvJ" id="h7G-ea-UJx"/>
+                        <outlet property="due" destination="DcU-bO-SfE" id="sUo-NE-4Xm"/>
+                        <outlet property="frequency" destination="0tr-LV-M4N" id="scQ-SV-J2P"/>
                         <outlet property="name" destination="3xy-47-OAN" id="88D-aI-VhZ"/>
-                        <outlet property="repeat" destination="0tr-LV-M4N" id="988-FO-jih"/>
                         <outlet property="times" destination="M63-V2-hq7" id="VJc-u2-UwS"/>
                     </connections>
                 </viewController>

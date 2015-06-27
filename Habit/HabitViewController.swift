@@ -18,9 +18,10 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIPickerViewD
   var timesValue: Int = 0
   
   @IBOutlet weak var name: UITextField!
-  @IBOutlet weak var `repeat`: UISegmentedControl!
+  @IBOutlet weak var frequency: UISegmentedControl!
   @IBOutlet weak var times: UITextField!
   @IBOutlet weak var cancel: UIButton!
+  @IBOutlet weak var due: UILabel!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -29,7 +30,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIPickerViewD
     
     name.text = habit!.name;
     name.delegate = self
-    `repeat`.setEnabled(true, forSegmentAtIndex: Int(habit!.`repeat`))
+    frequency.setEnabled(true, forSegmentAtIndex: Int(habit!.frequency))
     times.text = habit!.times.stringValue
     timesValue = Int(habit!.times)
     setTimesText()
@@ -43,12 +44,16 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIPickerViewD
     let recognizer = UITapGestureRecognizer(target: self, action: "dismissModal:")
     recognizer.cancelsTouchesInView = false
     recognizer.numberOfTapsRequired = 1
-    `repeat`.addGestureRecognizer(recognizer)
+    frequency.addGestureRecognizer(recognizer)
     view.addGestureRecognizer(recognizer)
     
     if !habit!.isNew() {
       cancel.setTitle("Delete", forState: .Normal)
     }
+    
+    due.text = "in \(Int(habit!.dueIn())) seconds"
+    
+    NSLog("created at \(habit!.createdAt.timeIntervalSinceNow)")
   }
   
   func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -61,20 +66,20 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIPickerViewD
     times.resignFirstResponder()
   }
   
-  @IBAction func repeatChanged(sender: AnyObject) {
+  @IBAction func frequencyChanged(sender: AnyObject) {
     setTimesText()
   }
   
   func setTimesText() {
     var repeatText = ""
-    switch `repeat`.selectedSegmentIndex {
-    case Habit.DAILY:
+    switch frequency.selectedSegmentIndex {
+    case Habit.Frequency.Daily.hashValue:
       repeatText = "day"
-    case Habit.WEEKLY:
+    case Habit.Frequency.Weekly.hashValue:
       repeatText = "week"
-    case Habit.MONTHLY:
+    case Habit.Frequency.Monthly.hashValue:
       repeatText = "month"
-    case Habit.ANNUALLY:
+    case Habit.Frequency.Annually.hashValue:
       repeatText = "year"
     default: ()
     }
@@ -90,8 +95,12 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIPickerViewD
     let button = sender as! UIButton
     if button.titleForState(.Normal) == "Done" {
       habit!.name = name.text!
-      habit!.`repeat` = `repeat`.selectedSegmentIndex
+      habit!.frequency = frequency.selectedSegmentIndex
       habit!.times = timesValue
+      if habit!.isNew() {
+        habit!.last = NSDate()
+        habit!.createdAt = NSDate()
+      }
       do {
         try moContext.save()
       } catch let error as NSError {

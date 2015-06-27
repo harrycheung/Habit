@@ -10,22 +10,22 @@ import Foundation
 import CoreData
 
 class Habit: NSManagedObject {
-  static let DAILY = 0;
-  static let WEEKLY = 1;
-  static let MONTHLY = 2;
-  static let ANNUALLY = 3;
-
+  enum Frequency: Int {
+    case Daily, Weekly, Monthly, Annually
+  }
+  
   @NSManaged var name: String
   @NSManaged var details: String
-  @NSManaged var `repeat`: NSNumber
+  @NSManaged var frequency: NSNumber
   @NSManaged var times: NSNumber
   @NSManaged var last: NSDate
+  @NSManaged var createdAt: NSDate
   
-  class func create(moc moc: NSManagedObjectContext, name: String, details: String, `repeat`: Int, times: Int) -> Habit {
+  class func create(moc moc: NSManagedObjectContext, name: String, details: String, frequency: Int, times: Int) -> Habit {
     let habit = NSEntityDescription.insertNewObjectForEntityForName("Habit", inManagedObjectContext: moc) as! Habit
     habit.name = name
     habit.details = details
-    habit.`repeat` = `repeat`
+    habit.frequency = frequency
     habit.times = times
     return habit
   }
@@ -34,24 +34,41 @@ class Habit: NSManagedObject {
     return committedValuesForKeys(nil).count == 0
   }
   
-  //  public TimeSpan DueIn() {
-  //  DateTime nextDue = DateTime.Today;
-  //  switch (Frequency) {
-  //  case Habit.DAILY:
-  //  nextDue = LastCompleted.AddHours(24.0 / Repeat);
-  //  break;
-  //  case Habit.WEEKLY:
-  //  nextDue = LastCompleted.AddDays(7.0 / Repeat);
-  //  break;
-  //  case Habit.MONTHLY:
-  //  nextDue = LastCompleted.AddDays(30.0 / Repeat);
-  //  break;
-  //  case Habit.ANNUALLY:
-  //  nextDue = LastCompleted.AddDays(365.0 / Repeat);
-  //  break;
-  //  }
-  //  return nextDue.Subtract(DateTime.Today);
-  //  }
-
+  func dueIn() -> NSTimeInterval {
+    var interval = 24.0 * 3600
+    switch frequency.integerValue {
+    case Frequency.Weekly.hashValue:
+      interval *= 7
+    case Frequency.Monthly.hashValue:
+      interval *= 30
+    case Frequency.Annually.hashValue:
+      interval *= 365
+    default: ()
+    }
+    return interval / times.doubleValue - abs(last.timeIntervalSinceNow)
+  }
+  
+  func dueText() -> String {
+    let due = Int(dueIn())
+    let absDue = abs(due)
+    var factor = 1
+    var text = ""
+    if absDue < 5 * 60 {
+      return "now"
+    } else if absDue < 3600 {
+      factor = 60
+      text = "minutes"
+    } else if absDue < (24 * 3600) {
+      factor = 3600
+      text = "hour"
+    } else if absDue < (7 * 24 * 3600) {
+      factor = 24 * 3600
+      text = "day"
+    } else {
+      factor = 7 * 24 * 3600
+      text = "week"
+    }
+    return "\(absDue / factor) \(text)" + (absDue < 2 * factor ? "" : "s") + (due < 0 ? " ago" : "")
+  }
 
 }
