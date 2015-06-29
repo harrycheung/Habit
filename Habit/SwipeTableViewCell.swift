@@ -107,13 +107,13 @@ class SwipeTableViewCell : UITableViewCell {
 //    }
     
     colorView = UIView(frame: bounds)
-    colorView?.autoresizingMask = [UIViewAutoresizing.FlexibleHeight, UIViewAutoresizing.FlexibleWidth]
-    colorView?.backgroundColor = defaultColor ?? UIColor.clearColor()
+    colorView!.autoresizingMask = [UIViewAutoresizing.FlexibleHeight, UIViewAutoresizing.FlexibleWidth]
+    colorView!.backgroundColor = defaultColor ?? UIColor.clearColor()
     addSubview(colorView!)
     
     slidingView = UIView()
-    slidingView?.contentMode = UIViewContentMode.Center
-    colorView?.addSubview(slidingView!)
+    slidingView!.contentMode = UIViewContentMode.Center
+    colorView!.addSubview(slidingView!)
     
     screenshotView = UIImageView(image: screenshotImage)
     addSubview(screenshotView!)

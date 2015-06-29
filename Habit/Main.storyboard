@@ -18,6 +18,7 @@
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
+            <string>Bariol-Regular</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -96,10 +97,22 @@
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ysl-cj-fC7">
+                                                    <rect key="frame" x="550" y="6" width="42" height="15"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="42" id="9eW-Ku-f3q"/>
+                                                        <constraint firstAttribute="height" constant="15" id="Fb9-Ti-RMu"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="12"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <color key="backgroundColor" red="0.20392156862745098" green="0.59607843137254901" blue="0.85882352941176465" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
+                                                <constraint firstItem="Ysl-cj-fC7" firstAttribute="top" secondItem="vCE-hH-7MT" secondAttribute="topMargin" constant="-2" id="1OT-Nd-Zvl"/>
                                                 <constraint firstItem="fj9-m5-H5A" firstAttribute="trailing" secondItem="vCE-hH-7MT" secondAttribute="trailingMargin" id="2fJ-8Q-nUB"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="Ysl-cj-fC7" secondAttribute="trailing" id="4Kp-Y5-BOd"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="fhm-ox-pDU" secondAttribute="trailing" id="9Ji-mA-2vd"/>
                                                 <constraint firstItem="fj9-m5-H5A" firstAttribute="top" secondItem="vCE-hH-7MT" secondAttribute="topMargin" constant="3" id="NBq-m6-fRz"/>
                                                 <constraint firstItem="fj9-m5-H5A" firstAttribute="leading" secondItem="vCE-hH-7MT" secondAttribute="leadingMargin" id="XF3-FB-Bd0"/>
@@ -109,6 +122,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="due" destination="fhm-ox-pDU" id="Fic-MR-pSE"/>
+                                            <outlet property="entries" destination="Ysl-cj-fC7" id="ncg-rh-hf7"/>
                                             <outlet property="name" destination="fj9-m5-H5A" id="mPL-1p-fjk"/>
                                             <segue destination="fuZ-7k-oQj" kind="show" identifier="ShowHabit" id="YaX-9k-v6L"/>
                                         </connections>

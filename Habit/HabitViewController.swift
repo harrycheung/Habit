@@ -30,15 +30,15 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIPickerViewD
     
     name.text = habit!.name;
     name.delegate = self
-    frequency.setEnabled(true, forSegmentAtIndex: Int(habit!.frequency))
-    times.text = habit!.times.stringValue
-    timesValue = Int(habit!.times)
+    frequency.setEnabled(true, forSegmentAtIndex: Int(habit!.frequency!))
+    times.text = habit!.times!.stringValue
+    timesValue = Int(habit!.times!)
     setTimesText()
     
     let picker = UIPickerView()
     picker.dataSource = self
     picker.delegate = self
-    picker.selectRow(Int(habit!.times) - 1, inComponent: 0, animated: false)
+    picker.selectRow(Int(habit!.times!) - 1, inComponent: 0, animated: false)
     times.inputView = picker
     
     let recognizer = UITapGestureRecognizer(target: self, action: "dismissModal:")
@@ -49,11 +49,8 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIPickerViewD
     
     if !habit!.isNew() {
       cancel.setTitle("Delete", forState: .Normal)
+      due.text = "in \(Int(habit!.dueIn())) seconds"
     }
-    
-    due.text = "in \(Int(habit!.dueIn())) seconds"
-    
-    NSLog("created at \(habit!.createdAt.timeIntervalSinceNow)")
   }
   
   func textFieldShouldReturn(textField: UITextField) -> Bool {

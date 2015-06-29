@@ -13,6 +13,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   let moContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
   let cellIdentifier = "HabitCell"
+  let showHabitSegue = "ShowHabit"
+  let newHabitSegue = "NewHabit"
 
   @IBOutlet weak var tableView: UITableView!
   
@@ -39,6 +41,21 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 //        NSLog("  \(name)")
 //      }
 //    }
+//    
+//    Habit.create(moc: moContext, name: "1. Daily 10x", details: "", frequency: 0, times: 10)
+//    Habit.create(moc: moContext, name: "2. Daily 5x", details: "", frequency: 0, times: 5)
+//    Habit.create(moc: moContext, name: "3. Daily 1x", details: "", frequency: 0, times: 1)
+//    Habit.create(moc: moContext, name: "4. Weekly 10x", details: "", frequency: 1, times: 10)
+//    Habit.create(moc: moContext, name: "5. Weekly 5x", details: "", frequency: 1, times: 10)
+//    Habit.create(moc: moContext, name: "6. Weekly 1x", details: "", frequency: 1, times: 10)
+//    
+//    do {
+//      try self.moContext.save()
+//    } catch let error as NSError {
+//      NSLog("Could not save \(error), \(error.userInfo)")
+//    } catch {
+//      NSLog("Could not save")
+//    }
   }
 
   override func didReceiveMemoryWarning() {
@@ -50,7 +67,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! HabitTableViewCell
-    
     cell.load(habits[indexPath.row])
   
     let image = UIImageView(image: UIImage(named: "Checkmark"))
@@ -61,14 +77,25 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       color: color,
       options: [.Rotate, .Alpha],
       completion: { (cell: SwipeTableViewCell) in
-        let indexPath = tableView.indexPathForCell(cell)!
         tableView.beginUpdates()
-        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
-        tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: self.habits.count - 1, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
+        let indexPath = tableView.indexPathForCell(cell)!
+        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
         let habit = self.habits.removeAtIndex(indexPath.row)
-        self.habits.append(habit)
         tableView.endUpdates()
-      })
+        
+        let entry = Entry.create(moc: self.moContext, habit: habit)
+        habit.last = entry.createdAt!
+        do {
+          try self.moContext.save()
+        } catch let error as NSError {
+          NSLog("Could not save \(error), \(error.userInfo)")
+        } catch {
+          NSLog("Could not save")
+        }
+        
+        NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "insertHabit:", userInfo: [habit],
+          repeats: false)
+    })
     
     return cell
   }
@@ -81,14 +108,37 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     tableView.deselectRowAtIndexPath(indexPath, animated: false)
   }
   
+  func insertHabit(timer: NSTimer) {
+    let insert = { (habit: Habit, index: Int) -> (Void) in
+      self.habits.insert(habit, atIndex: index)
+      self.tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)], withRowAnimation: .Fade)
+    }
+    
+    tableView.beginUpdates()
+    
+    let habit = (timer.userInfo as! [Habit])[0]
+    if habits.count > 0 {
+      for index in 0...habits.count {
+        if index == habits.count || habit.dueIn() < habits[index].dueIn() {
+          insert(habit, index)
+          break
+        }
+      }
+    } else {
+      insert(habit, 0)
+    }
+    
+    tableView.endUpdates()
+  }
+  
   // Segue
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    if segue.identifier == "ShowHabit" {
+    if segue.identifier == showHabitSegue {
       let vc = segue.destinationViewController as! HabitViewController
       activeCell = sender as? HabitTableViewCell
       vc.habit = activeCell!.habit
-    } else if segue.identifier == "NewHabit" {
+    } else if segue.identifier == newHabitSegue {
       let vc = segue.destinationViewController as! HabitViewController
       vc.habit = Habit.create(moc: moContext, name: "", details: "", frequency: 0, times: 1)
     }

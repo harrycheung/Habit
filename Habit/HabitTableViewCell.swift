@@ -16,6 +16,7 @@ class HabitTableViewCell : SwipeTableViewCell {
   
   @IBOutlet weak var name: UILabel!
   @IBOutlet weak var due: UILabel!
+  @IBOutlet weak var entries: UILabel!
   
   required init(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
@@ -31,9 +32,12 @@ class HabitTableViewCell : SwipeTableViewCell {
     due.text = habit!.dueText()
     let dueIn = habit!.dueIn()
     var alpha = MinimumAlpha
-    if dueIn < 24 * 3600 {
-      alpha = min(CGFloat(0.2 + 0.8 * abs(1 - dueIn / (24 * 3600))), 1)
+    if dueIn < 10 * 60 {
+      alpha = 1.0
+    } else if dueIn < 24 * 3600 {
+      alpha = MinimumAlpha + (1 - MinimumAlpha) * (1 - CGFloat(dueIn) / (24 * 3600))
     }
+    print("\(name.text): \(habit!.dueIn()): \(alpha)")
     if contentView.backgroundColor != nil {
       var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0
       contentView.backgroundColor!.getRed(&red, green: &green, blue: &blue, alpha: nil)
@@ -41,6 +45,7 @@ class HabitTableViewCell : SwipeTableViewCell {
     } else {
       contentView.alpha = alpha
     }
+    entries.text = String(habit!.entries!.count)
   }
   
 }

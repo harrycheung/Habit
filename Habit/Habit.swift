@@ -9,17 +9,11 @@
 import Foundation
 import CoreData
 
+@objc(Habit)
 class Habit: NSManagedObject {
   enum Frequency: Int {
     case Daily, Weekly, Monthly, Annually
   }
-  
-  @NSManaged var name: String
-  @NSManaged var details: String
-  @NSManaged var frequency: NSNumber
-  @NSManaged var times: NSNumber
-  @NSManaged var last: NSDate
-  @NSManaged var createdAt: NSDate
   
   class func create(moc moc: NSManagedObjectContext, name: String, details: String, frequency: Int, times: Int) -> Habit {
     let habit = NSEntityDescription.insertNewObjectForEntityForName("Habit", inManagedObjectContext: moc) as! Habit
@@ -27,6 +21,8 @@ class Habit: NSManagedObject {
     habit.details = details
     habit.frequency = frequency
     habit.times = times
+    habit.createdAt = NSDate()
+    habit.last = habit.createdAt
     return habit
   }
   
@@ -36,7 +32,7 @@ class Habit: NSManagedObject {
   
   func dueIn() -> NSTimeInterval {
     var interval = 24.0 * 3600
-    switch frequency.integerValue {
+    switch frequency!.integerValue {
     case Frequency.Weekly.hashValue:
       interval *= 7
     case Frequency.Monthly.hashValue:
@@ -45,7 +41,7 @@ class Habit: NSManagedObject {
       interval *= 365
     default: ()
     }
-    return interval / times.doubleValue - abs(last.timeIntervalSinceNow)
+    return interval / times!.doubleValue - abs(last!.timeIntervalSinceNow)
   }
   
   func dueText() -> String {
