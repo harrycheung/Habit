@@ -20,6 +20,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   var activeCell: HabitTableViewCell?
   var habits = [Habit]()
+  var insertHabit: Habit?
+  var removeHabit: NSIndexPath?
+  var moveHabit: NSIndexPath?
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -66,6 +69,51 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // Dispose of any resources that can be recreated.
   }
   
+  override func viewDidAppear(animated: Bool) {
+    NSLog("viewDidAppear")
+    
+    if insertHabit != nil {
+      let insert = { (habit: Habit, index: Int) -> (Void) in
+        self.habits.insert(habit, atIndex: index)
+        self.tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)], withRowAnimation: .Fade)
+      }
+      
+      tableView.beginUpdates()
+      if habits.count > 0 {
+        for index in 0...habits.count {
+          if index == habits.count || insertHabit!.dueIn() < habits[index].dueIn() {
+            insert(insertHabit!, index)
+            break
+          }
+        }
+      } else {
+        insert(insertHabit!, 0)
+      }
+      tableView.endUpdates()
+      insertHabit = nil
+    }
+    
+    if removeHabit != nil {
+      tableView.deleteRowsAtIndexPaths([removeHabit!], withRowAnimation: .Fade)
+      removeHabit = nil
+    }
+    
+    if moveHabit != nil {
+      let habit = habits[moveHabit!.row]
+      habits = habits.sort({ $0.dueIn() < $1.dueIn() })
+      let newIndex = habits.indexOf(habit)
+      if moveHabit!.row != newIndex {
+        tableView.beginUpdates()
+        tableView.deleteRowsAtIndexPaths([moveHabit!], withRowAnimation: .Top)
+        tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: newIndex!, inSection: 0)], withRowAnimation: .Top)
+        tableView.endUpdates()
+      } else {
+        (tableView.cellForRowAtIndexPath(moveHabit!) as! HabitTableViewCell).reload()
+      }
+      moveHabit = nil
+    }
+  }
+  
   // Table view
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -94,8 +142,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
           NSLog("Could not save")
         }
         
-        NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "insertHabit:", userInfo: [habit],
-          repeats: false)
+        self.insertHabit = habit
     })
     cell.setSwipeGesture(
       direction: .Left,
@@ -109,8 +156,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let habit = self.habits.removeAtIndex(indexPath.row)
         tableView.endUpdates()
         
-        let entry = Entry.create(moc: self.moContext, habit: habit)
-        habit.last = entry.createdAt!
+        habit.last = NSDate()
         do {
           try self.moContext.save()
         } catch let error as NSError {
@@ -119,8 +165,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
           NSLog("Could not save")
         }
         
-        NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "insertHabit:", userInfo: [habit],
-          repeats: false)
+        self.insertHabit = habit
     })
     
     return cell
@@ -136,48 +181,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     NSLog("name: \(cell.habit!.name)")
     dispatch_async(dispatch_get_main_queue()) {
       self.performSegueWithIdentifier(self.showHabitSegue, sender: tableView.cellForRowAtIndexPath(indexPath))
-    }
-  }
-  
-  func insertHabit(timer: NSTimer) {
-    let insert = { (habit: Habit, index: Int) -> (Void) in
-      self.habits.insert(habit, atIndex: index)
-      self.tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)], withRowAnimation: .Fade)
-    }
-    
-    tableView.beginUpdates()
-    
-    let habit = (timer.userInfo as! [Habit])[0]
-    if habits.count > 0 {
-      for index in 0...habits.count {
-        if index == habits.count || habit.dueIn() < habits[index].dueIn() {
-          insert(habit, index)
-          break
-        }
-      }
-    } else {
-      insert(habit, 0)
-    }
-    
-    tableView.endUpdates()
-  }
-  
-  func removeHabit(timer: NSTimer) {
-    tableView.deleteRowsAtIndexPaths([timer.userInfo as! NSIndexPath], withRowAnimation: .Fade)
-  }
-  
-  func moveHabit(timer: NSTimer) {
-    let indexPath = timer.userInfo as! NSIndexPath
-    let habit = habits[indexPath.row]
-    habits = habits.sort({ $0.dueIn() < $1.dueIn() })
-    let newIndex = habits.indexOf(habit)
-    if indexPath.row != newIndex {
-      tableView.beginUpdates()
-      tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
-      tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: newIndex!, inSection: 0)], withRowAnimation: .Top)
-      tableView.endUpdates()
-    } else {
-      (tableView.cellForRowAtIndexPath(indexPath) as! HabitTableViewCell).reload()
     }
   }
   
@@ -210,11 +213,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       tableView.deselectRowAtIndexPath(indexPath!, animated: false)
       if vc.habit == nil {
         habits.removeAtIndex(indexPath!.row)
-        NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "removeHabit:", userInfo: indexPath!,
-          repeats: false)
+        removeHabit = indexPath
       } else {
-        NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "moveHabit:", userInfo: indexPath!,
-          repeats: false)
+        moveHabit = indexPath
       }
       activeCell = nil
     }
