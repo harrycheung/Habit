@@ -174,10 +174,7 @@
                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
                             </textField>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" translatesAutoresizingMaskIntoConstraints="NO" id="0tr-LV-M4N">
-                                <rect key="frame" x="20" y="78" width="323" height="29"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="323" id="8oR-WL-zXa"/>
-                                </constraints>
+                                <rect key="frame" x="20" y="78" width="560" height="29"/>
                                 <segments>
                                     <segment title="Hourly"/>
                                     <segment title="Daily"/>
@@ -241,9 +238,6 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstAttribute="centerX" secondItem="M63-V2-hq7" secondAttribute="centerX" id="8gq-3F-Whl"/>
-                            <constraint firstAttribute="width" secondItem="3xy-47-OAN" secondAttribute="width" id="AxP-fC-k4v"/>
-                            <constraint firstAttribute="centerX" secondItem="0tr-LV-M4N" secondAttribute="centerX" constant="136.5" id="BQb-s2-4Ch"/>
                             <constraint firstItem="cSw-LG-uKR" firstAttribute="top" secondItem="FeH-uK-xvJ" secondAttribute="bottom" constant="20" id="HCN-Gt-373"/>
                             <constraint firstAttribute="centerX" secondItem="3xy-47-OAN" secondAttribute="centerX" id="HgO-aC-mqU"/>
                             <constraint firstItem="M63-V2-hq7" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leadingMargin" id="KHM-GJ-6Q3"/>
@@ -258,14 +252,8 @@
                             <constraint firstItem="FeH-uK-xvJ" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leadingMargin" id="iz1-Yo-bpP"/>
                             <constraint firstItem="3xy-47-OAN" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leadingMargin" id="oTc-2J-KWQ"/>
                             <constraint firstItem="cSw-LG-uKR" firstAttribute="top" secondItem="ufW-as-ekp" secondAttribute="bottom" constant="20" id="qxa-XZ-e73"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="0tr-LV-M4N" secondAttribute="trailing" id="vrh-Sg-BTu"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="AxP-fC-k4v"/>
-                                <exclude reference="BQb-s2-4Ch"/>
-                                <exclude reference="8gq-3F-Whl"/>
-                            </mask>
-                        </variation>
                     </view>
                     <connections>
                         <outlet property="cancel" destination="FeH-uK-xvJ" id="h7G-ea-UJx"/>
