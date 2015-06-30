@@ -202,11 +202,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     let vc = segue.sourceViewController as! HabitViewController;
     if activeCell == nil {
       if vc.habit != nil {
-        habits.append(vc.habit!)
-        tableView.beginUpdates()
-        tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: habits.count - 1, inSection: 0)],
-          withRowAnimation: UITableViewRowAnimation.Top)
-        tableView.endUpdates()
+        insertHabit = vc.habit
       }
     } else {
       let indexPath = tableView.indexPathForCell(activeCell!)
