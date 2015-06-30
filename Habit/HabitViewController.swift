@@ -24,13 +24,15 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIPickerViewD
   @IBOutlet weak var due: UILabel!
   
   override func viewDidLoad() {
+    NSLog("HabitViewController.viewDidLoad")
     super.viewDidLoad()
+    NSLog("HabitViewController.viewDidLoad after super")
     
     view.userInteractionEnabled = true
     
     name.text = habit!.name;
     name.delegate = self
-    frequency.setEnabled(true, forSegmentAtIndex: Int(habit!.frequency!))
+    frequency.selectedSegmentIndex = Int(habit!.frequency!)
     times.text = habit!.times!.stringValue
     timesValue = Int(habit!.times!)
     setTimesText()
@@ -51,6 +53,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIPickerViewD
       cancel.setTitle("Delete", forState: .Normal)
       due.text = "in \(Int(habit!.dueIn())) seconds"
     }
+    NSLog("HabitViewController.viewDidLoad end")
   }
   
   func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -70,6 +73,8 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIPickerViewD
   func setTimesText() {
     var repeatText = ""
     switch frequency.selectedSegmentIndex {
+    case Habit.Frequency.Hourly.hashValue:
+      repeatText = "hour"
     case Habit.Frequency.Daily.hashValue:
       repeatText = "day"
     case Habit.Frequency.Weekly.hashValue:
@@ -105,6 +110,11 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIPickerViewD
       }
     } else if button.titleForState(.Normal) == "Delete" {
       moContext.deleteObject(habit!)
+      do {
+        try moContext.save()
+      } catch let error as NSError {
+        NSLog("Could not save \(error), \(error.userInfo)")
+      }
       habit = nil
     } else {
       habit = nil

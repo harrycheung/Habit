@@ -12,14 +12,14 @@ import CoreData
 @objc(Habit)
 class Habit: NSManagedObject {
   enum Frequency: Int {
-    case Daily, Weekly, Monthly, Annually
+    case Hourly, Daily, Weekly, Monthly, Annually
   }
   
-  class func create(moc moc: NSManagedObjectContext, name: String, details: String, frequency: Int, times: Int) -> Habit {
+  class func create(moc moc: NSManagedObjectContext, name: String, details: String, frequency: Frequency, times: Int) -> Habit {
     let habit = NSEntityDescription.insertNewObjectForEntityForName("Habit", inManagedObjectContext: moc) as! Habit
     habit.name = name
     habit.details = details
-    habit.frequency = frequency
+    habit.frequency = frequency.hashValue
     habit.times = times
     habit.createdAt = NSDate()
     habit.last = habit.createdAt
@@ -31,14 +31,16 @@ class Habit: NSManagedObject {
   }
   
   func dueIn() -> NSTimeInterval {
-    var interval = 24.0 * 3600
+    var interval = 3600.0
     switch frequency!.integerValue {
+    case Frequency.Daily.hashValue:
+      interval *= 24
     case Frequency.Weekly.hashValue:
-      interval *= 7
+      interval *= 7 * 24
     case Frequency.Monthly.hashValue:
-      interval *= 30
+      interval *= 30 * 24
     case Frequency.Annually.hashValue:
-      interval *= 365
+      interval *= 365 * 24
     default: ()
     }
     return interval / times!.doubleValue - abs(last!.timeIntervalSinceNow)
@@ -53,7 +55,7 @@ class Habit: NSManagedObject {
       return "now"
     } else if absDue < 3600 {
       factor = 60
-      text = "minutes"
+      text = "minute"
     } else if absDue < (24 * 3600) {
       factor = 3600
       text = "hour"

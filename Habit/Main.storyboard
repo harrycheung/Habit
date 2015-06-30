@@ -71,7 +71,7 @@
                                     <constraint firstAttribute="height" constant="40" id="dmD-Qq-zpM"/>
                                 </constraints>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="al0-3V-BIj">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="al0-3V-BIj">
                                 <rect key="frame" x="0.0" y="60" width="600" height="540"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="HabitCell" id="sHQ-W2-Zzg" customClass="HabitTableViewCell" customModule="Habit" customModuleProvider="target">
@@ -124,7 +124,6 @@
                                             <outlet property="due" destination="fhm-ox-pDU" id="Fic-MR-pSE"/>
                                             <outlet property="entries" destination="Ysl-cj-fC7" id="ncg-rh-hf7"/>
                                             <outlet property="name" destination="fj9-m5-H5A" id="mPL-1p-fjk"/>
-                                            <segue destination="fuZ-7k-oQj" kind="show" identifier="ShowHabit" id="YaX-9k-v6L"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -147,6 +146,7 @@
                     </view>
                     <connections>
                         <outlet property="tableView" destination="al0-3V-BIj" id="uHS-GK-pye"/>
+                        <segue destination="fuZ-7k-oQj" kind="show" identifier="ShowHabit" id="PyM-4B-EAp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hA2-Vp-FNi" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -173,12 +173,13 @@
                                 <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
                             </textField>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="0tr-LV-M4N">
-                                <rect key="frame" x="20" y="78" width="295" height="29"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" translatesAutoresizingMaskIntoConstraints="NO" id="0tr-LV-M4N">
+                                <rect key="frame" x="20" y="78" width="323" height="29"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="295" id="8oR-WL-zXa"/>
+                                    <constraint firstAttribute="width" constant="323" id="8oR-WL-zXa"/>
                                 </constraints>
                                 <segments>
+                                    <segment title="Hourly"/>
                                     <segment title="Daily"/>
                                     <segment title="Weekly"/>
                                     <segment title="Monthly"/>
@@ -281,6 +282,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="oli-Da-Izi"/>
+        <segue reference="PyM-4B-EAp"/>
     </inferredMetricsTieBreakers>
 </document>

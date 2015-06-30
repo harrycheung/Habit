@@ -27,6 +27,7 @@ class SwipeTableViewCell : UITableViewCell {
     static let AnimationDurationDiff: CGFloat = DurationHighLimit - DurationLowLimit
     static let AlphaRate: CGFloat         = 0.6  // When full alpha is achieved relative to trigger
     static let ScaleRate: CGFloat         = 0.6  // When full scale is achieved relative to trigger
+    static let IconViewMargin: CGFloat    = 30
   }
   
   enum Direction {
@@ -49,7 +50,6 @@ class SwipeTableViewCell : UITableViewCell {
   var dragging: Bool = false
   var trigger: CGFloat = Defaults.Trigger
   var animationDuration: CGFloat = Defaults.AnimationDuration
-  var defaultColor = UIColor.whiteColor()
   var recognizer: UIPanGestureRecognizer?
   var screenshotView: UIView?
   var colorView: UIView?
@@ -58,15 +58,14 @@ class SwipeTableViewCell : UITableViewCell {
   var views = [UIView?](count: 2, repeatedValue: nil)
   var colors = [UIColor?](count: 2, repeatedValue: nil)
   var blocks = [CompletionBlock?](count: 2, repeatedValue: nil)
+  var options = [TransformOptions](count: 2, repeatedValue: .None)
   var delegate: SwipeTableViewCellDelegate?
-  var options: TransformOptions = .None
 
   required init(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     recognizer = UIPanGestureRecognizer()
-    recognizer?.cancelsTouchesInView = true
-    recognizer?.maximumNumberOfTouches = 1;
-    recognizer?.addTarget(self, action: "handlePan:")
+    recognizer!.delegate = self
+    recognizer!.addTarget(self, action: "handlePan:")
     addGestureRecognizer(recognizer!);
     
     initDefaults();
@@ -77,7 +76,6 @@ class SwipeTableViewCell : UITableViewCell {
     dragging = false
     trigger = Defaults.Trigger
     animationDuration = Defaults.AnimationDuration
-    defaultColor = UIColor.whiteColor()
     views[0...1] = [nil, nil]
     colors[0...1] = [nil, nil]
     blocks[0...1] = [nil, nil]
@@ -94,27 +92,14 @@ class SwipeTableViewCell : UITableViewCell {
       return
     }
     
-    // If the content view background is transparent we get the background color.
-//    let contentViewBackgroundClear = contentView.backgroundColor == nil
-//    if contentViewBackgroundClear {
-//      contentView.backgroundColor = backgroundColor!.isEqual(UIColor.clearColor()) ? UIColor.whiteColor() : backgroundColor
-//    }
-    
-    let screenshotImage = image(view: self)
-    
-//    if contentViewBackgroundClear {
-//      contentView.backgroundColor = nil
-//    }
-    
     colorView = UIView(frame: bounds)
-    colorView!.autoresizingMask = [UIViewAutoresizing.FlexibleHeight, UIViewAutoresizing.FlexibleWidth]
-    colorView!.backgroundColor = defaultColor ?? UIColor.clearColor()
     addSubview(colorView!)
     
     slidingView = UIView()
     slidingView!.contentMode = UIViewContentMode.Center
     colorView!.addSubview(slidingView!)
     
+    let screenshotImage = image(view: self)
     screenshotView = UIImageView(image: screenshotImage)
     addSubview(screenshotView!)
   }
@@ -155,36 +140,52 @@ class SwipeTableViewCell : UITableViewCell {
     slidingView!.addSubview(view)
   }
   
-  func setSwipeGesture(direction direction: Direction, view: UIView, color: UIColor, options: TransformOptions, completion: CompletionBlock) {
-    self.options = options
+  func setSwipeGesture(direction direction: Direction, view: UIView, color: UIColor,
+    options transformOptions: TransformOptions, completion: CompletionBlock) {
+    options[direction.hashValue] = transformOptions
     views[direction.hashValue] = view
     colors[direction.hashValue] = color
     blocks[direction.hashValue] = completion
   }
   
+  override func gestureRecognizerShouldBegin(recognizer: UIGestureRecognizer) -> Bool {
+    if recognizer is UIPanGestureRecognizer {
+      let panRecognizer = recognizer as! UIPanGestureRecognizer
+      let point = panRecognizer.velocityInView(self)
+      if abs(point.x) > abs(point.y) {
+        if (point.x < 0 && views[Direction.Left.hashValue] == nil) ||
+          (point.x > 0 && views[Direction.Right.hashValue] == nil) {
+          return false
+        }
+        return true
+      }
+    }
+    return false
+  }
+  
+  
   func handlePan(recognizer: UIPanGestureRecognizer) {
     if isExited {
       return
     }
-  
-    let state = recognizer.state
+
     var currentX: CGFloat = 0
     if screenshotView != nil {
       currentX = screenshotView!.frame.origin.x
     }
-    let percent = percentage(offset: currentX, width: bounds.width)
     let translationX = recognizer.translationInView(self).x
-    let direction = (currentX + translationX) > 0 ? Direction.Right : Direction.Left
+    let percent = percentage(offset: currentX + translationX, width: bounds.width)
+    let direction = percent > 0 ? Direction.Right : Direction.Left
     
-    switch (state) {
+    switch (recognizer.state) {
     case UIGestureRecognizerState.Began:
-      setupSwipingView()
       delegate?.startSwiping(self)
-      dragging = true
     case UIGestureRecognizerState.Changed:
+      setupSwipingView()
+      dragging = true
       var frame = screenshotView!.frame
       if views[direction.hashValue] == nil {
-        frame.origin.x = 0 // Use logirithmic scale
+        frame.origin.x = 0
       } else {
         frame.origin.x = frame.origin.x + translationX
       }
@@ -212,6 +213,10 @@ class SwipeTableViewCell : UITableViewCell {
   
   static func offset(percentage percentage: CGFloat, width: CGFloat) -> CGFloat {
     var offset = percentage * width
+    
+    if offset < 0 {
+      offset = width + offset
+    }
     
     if offset < -width {
       offset = -width
@@ -249,8 +254,10 @@ class SwipeTableViewCell : UITableViewCell {
   
   func rotation(percentage percentage: CGFloat) -> CGFloat {
     var rotation: CGFloat = 0.0
-    if percentage >= 0 && percentage < trigger {
+    if percentage > 0 && percentage < trigger {
       rotation = CGFloat(M_PI) * percentage / trigger + CGFloat(M_PI)
+    } else if percentage < 0 && percentage > -trigger {
+      rotation = CGFloat(M_PI) * (1 + percentage) / trigger
     }
     return rotation
   }
@@ -261,15 +268,15 @@ class SwipeTableViewCell : UITableViewCell {
   
   func animateSwipe(direction: Direction, percentage: CGFloat) {
     if let view = views[direction.hashValue] {
-      if options.contains(.Alpha) {
+      if options[direction.hashValue].contains(.Alpha) {
         slidingView!.alpha = min(abs(percentage / (Defaults.AlphaRate * trigger)), 1)
       }
       var transform = CGAffineTransformIdentity
-      if options.contains(.Scale) {
-        let scalePercentage = scale(percentage: percentage)
+      if options[direction.hashValue].contains(.Scale) {
+        let scalePercentage = scale(percentage: abs(percentage))
         transform = CGAffineTransformScale(transform, scalePercentage, scalePercentage)
       }
-      if options.contains(.Rotate) {
+      if options[direction.hashValue].contains(.Rotate) {
         transform = CGAffineTransformRotate(transform, rotation(percentage: percentage))
       }
       view.transform = transform
@@ -289,9 +296,14 @@ class SwipeTableViewCell : UITableViewCell {
     
     var position = CGPointMake(0, 0)
     position.y = bounds.height / 2.0
-    position.x = SwipeTableViewCell.offset(percentage: percentage - 0.05, width: bounds.width)
-    let activeViewSize = view!.bounds.size;
-    let activeViewFrame = CGRectMake(position.x - activeViewSize.width,
+    position.x = SwipeTableViewCell.offset(percentage: percentage, width: bounds.width)
+    if direction == .Right {
+      position.x -= Defaults.IconViewMargin
+    } else {
+      position.x += Defaults.IconViewMargin
+    }
+    let activeViewSize = view!.bounds.size
+    let activeViewFrame = CGRectMake(position.x - activeViewSize.width / 2.0,
                                      position.y - activeViewSize.height / 2.0,
                                      activeViewSize.width,
                                      activeViewSize.height)
@@ -314,7 +326,7 @@ class SwipeTableViewCell : UITableViewCell {
   
     UIView.animateWithDuration(NSTimeInterval(duration),
       delay: NSTimeInterval(0),
-      options: [UIViewAnimationOptions.CurveEaseOut, UIViewAnimationOptions.AllowUserInteraction],
+      options: [.CurveEaseOut, .AllowUserInteraction],
       animations: {
         var frame = self.screenshotView!.frame
         frame.origin.x = originX
@@ -328,17 +340,24 @@ class SwipeTableViewCell : UITableViewCell {
   }
   
   func reset() {
+    colorView!.backgroundColor = UIColor.clearColor()
+    let leftColorView = UIView(frame: CGRectMake(0, 0, frame.width / 2, frame.height))
+    leftColorView.backgroundColor = colors[Direction.Right.hashValue] ?? contentView.backgroundColor
+    colorView!.addSubview(leftColorView)
+    let rightColorView = UIView(frame: CGRectMake(frame.width / 2, 0, frame.width / 2, frame.height))
+    rightColorView.backgroundColor = colors[Direction.Left.hashValue] ?? contentView.backgroundColor
+    colorView!.addSubview(rightColorView)
+    
     UIView.animateWithDuration(NSTimeInterval(animationDuration),
       delay: NSTimeInterval(0),
       usingSpringWithDamping: Defaults.Damping,
       initialSpringVelocity: Defaults.Velocity,
-      options: UIViewAnimationOptions.CurveEaseOut,
+      options: [.CurveEaseOut, .AllowUserInteraction],
       animations: {
         if self.activeView != nil {
           var frame = self.screenshotView!.frame
           frame.origin.x = 0
           self.screenshotView!.frame = frame
-          self.colorView!.backgroundColor = self.defaultColor
           self.activeView!.transform = CGAffineTransformMakeRotation(self.rotation(percentage: 0))
           self.slidingView!.alpha = 0
           self.slideView(direction: Direction.Center, percentage: 0, view: self.activeView)

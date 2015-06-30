@@ -13,6 +13,7 @@ class HabitTableViewCell : SwipeTableViewCell {
   let MinimumAlpha:CGFloat = 0.4
   
   var habit: Habit?
+  var bottomBorder: CALayer?
   
   @IBOutlet weak var name: UILabel!
   @IBOutlet weak var due: UILabel!
@@ -20,6 +21,11 @@ class HabitTableViewCell : SwipeTableViewCell {
   
   required init(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
+    
+    bottomBorder = CALayer()
+    let frame = contentView.frame
+    bottomBorder!.frame = CGRectMake(0, frame.height, frame.width, 1)
+    layer.addSublayer(bottomBorder!)
   }
   
   func load(habit: Habit) {
@@ -35,17 +41,16 @@ class HabitTableViewCell : SwipeTableViewCell {
     if dueIn < 10 * 60 {
       alpha = 1.0
     } else if dueIn < 24 * 3600 {
-      alpha = MinimumAlpha + (1 - MinimumAlpha) * (1 - CGFloat(dueIn) / (24 * 3600))
+      alpha = MinimumAlpha + (1 - MinimumAlpha) * pow(1000, -CGFloat(dueIn) / (24 * 3600))
     }
-    print("\(name.text): \(habit!.dueIn()): \(alpha)")
     if contentView.backgroundColor != nil {
       var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0
       contentView.backgroundColor!.getRed(&red, green: &green, blue: &blue, alpha: nil)
       contentView.backgroundColor = UIColor(red: red, green: green, blue: blue, alpha: alpha)
+      bottomBorder!.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.05).CGColor
     } else {
       contentView.alpha = alpha
     }
     entries.text = String(habit!.entries!.count)
   }
-  
 }

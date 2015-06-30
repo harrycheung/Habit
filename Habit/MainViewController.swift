@@ -23,6 +23,24 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   override func viewDidLoad() {
     super.viewDidLoad()
+
+//    Habit.create(moc: moContext, name: "1. Hourly 10x", details: "", frequency: .Hourly, times: 10)
+//    Habit.create(moc: moContext, name: "2. Hourly 5x", details: "", frequency: .Hourly, times: 5)
+//    Habit.create(moc: moContext, name: "3. Hourly 1x", details: "", frequency: .Hourly, times: 1)
+//    Habit.create(moc: moContext, name: "4. Daily 10x", details: "", frequency: .Daily, times: 10)
+//    Habit.create(moc: moContext, name: "5. Daily 5x", details: "", frequency: .Daily, times: 5)
+//    Habit.create(moc: moContext, name: "6. Daily 1x", details: "", frequency: .Daily, times: 1)
+//    Habit.create(moc: moContext, name: "7. Weekly 10x", details: "", frequency: .Weekly, times: 10)
+//    Habit.create(moc: moContext, name: "8. Weekly 5x", details: "", frequency: .Weekly, times: 5)
+//    Habit.create(moc: moContext, name: "9. Weekly 1x", details: "", frequency: .Weekly, times: 1)
+//    
+//    do {
+//      try self.moContext.save()
+//    } catch let error as NSError {
+//      NSLog("Could not save \(error), \(error.userInfo)")
+//    } catch {
+//      NSLog("Could not save")
+//    }
     
     let request = NSFetchRequest(entityName: "Habit")
     do {
@@ -41,21 +59,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 //        NSLog("  \(name)")
 //      }
 //    }
-//    
-//    Habit.create(moc: moContext, name: "1. Daily 10x", details: "", frequency: 0, times: 10)
-//    Habit.create(moc: moContext, name: "2. Daily 5x", details: "", frequency: 0, times: 5)
-//    Habit.create(moc: moContext, name: "3. Daily 1x", details: "", frequency: 0, times: 1)
-//    Habit.create(moc: moContext, name: "4. Weekly 10x", details: "", frequency: 1, times: 10)
-//    Habit.create(moc: moContext, name: "5. Weekly 5x", details: "", frequency: 1, times: 10)
-//    Habit.create(moc: moContext, name: "6. Weekly 1x", details: "", frequency: 1, times: 10)
-//    
-//    do {
-//      try self.moContext.save()
-//    } catch let error as NSError {
-//      NSLog("Could not save \(error), \(error.userInfo)")
-//    } catch {
-//      NSLog("Could not save")
-//    }
   }
 
   override func didReceiveMemoryWarning() {
@@ -68,18 +71,41 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! HabitTableViewCell
     cell.load(habits[indexPath.row])
-  
-    let image = UIImageView(image: UIImage(named: "Checkmark"))
-    let color = UIColor(red: 85.0 / 255.0, green: 213.0 / 255.0, blue: 80.0 / 255.0, alpha: 1)
+    
     cell.setSwipeGesture(
       direction: .Right,
-      view: image,
-      color: color,
+      view: UIImageView(image: UIImage(named: "Checkmark")),
+      color: UIColor(red: 85.0 / 255.0, green: 213.0 / 255.0, blue: 80.0 / 255.0, alpha: 1),
       options: [.Rotate, .Alpha],
       completion: { (cell: SwipeTableViewCell) in
         tableView.beginUpdates()
         let indexPath = tableView.indexPathForCell(cell)!
         tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
+        let habit = self.habits.removeAtIndex(indexPath.row)
+        tableView.endUpdates()
+        
+        let entry = Entry.create(moc: self.moContext, habit: habit)
+        habit.last = entry.createdAt!
+        do {
+          try self.moContext.save()
+        } catch let error as NSError {
+          NSLog("Could not save \(error), \(error.userInfo)")
+        } catch {
+          NSLog("Could not save")
+        }
+        
+        NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "insertHabit:", userInfo: [habit],
+          repeats: false)
+    })
+    cell.setSwipeGesture(
+      direction: .Left,
+      view: UIImageView(image: UIImage(named: "Clock")),
+      color: UIColor(red: 254.0 / 255.0, green: 217.0 / 255.0, blue: 56.0 / 255.0, alpha: 1),
+      options: [.Rotate, .Alpha],
+      completion: { (cell: SwipeTableViewCell) in
+        tableView.beginUpdates()
+        let indexPath = tableView.indexPathForCell(cell)!
+        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Left)
         let habit = self.habits.removeAtIndex(indexPath.row)
         tableView.endUpdates()
         
@@ -104,8 +130,13 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     return habits.count
   }
   
-  func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-    tableView.deselectRowAtIndexPath(indexPath, animated: false)
+  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    NSLog("didSelectRowAtIndexPath \(indexPath)")
+    let cell = tableView.cellForRowAtIndexPath(indexPath) as! HabitTableViewCell
+    NSLog("name: \(cell.habit!.name)")
+    dispatch_async(dispatch_get_main_queue()) {
+      self.performSegueWithIdentifier(self.showHabitSegue, sender: tableView.cellForRowAtIndexPath(indexPath))
+    }
   }
   
   func insertHabit(timer: NSTimer) {
@@ -131,16 +162,36 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     tableView.endUpdates()
   }
   
+  func removeHabit(timer: NSTimer) {
+    tableView.deleteRowsAtIndexPaths([timer.userInfo as! NSIndexPath], withRowAnimation: .Fade)
+  }
+  
+  func moveHabit(timer: NSTimer) {
+    let indexPath = timer.userInfo as! NSIndexPath
+    let habit = habits[indexPath.row]
+    habits = habits.sort({ $0.dueIn() < $1.dueIn() })
+    let newIndex = habits.indexOf(habit)
+    if indexPath.row != newIndex {
+      tableView.beginUpdates()
+      tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
+      tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: newIndex!, inSection: 0)], withRowAnimation: .Top)
+      tableView.endUpdates()
+    } else {
+      (tableView.cellForRowAtIndexPath(indexPath) as! HabitTableViewCell).reload()
+    }
+  }
+  
   // Segue
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    NSLog("MainViewController.prepareForSegue")
     if segue.identifier == showHabitSegue {
       let vc = segue.destinationViewController as! HabitViewController
       activeCell = sender as? HabitTableViewCell
       vc.habit = activeCell!.habit
     } else if segue.identifier == newHabitSegue {
       let vc = segue.destinationViewController as! HabitViewController
-      vc.habit = Habit.create(moc: moContext, name: "", details: "", frequency: 0, times: 1)
+      vc.habit = Habit.create(moc: moContext, name: "", details: "", frequency: .Hourly, times: 1)
     }
   }
   
@@ -159,11 +210,11 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       tableView.deselectRowAtIndexPath(indexPath!, animated: false)
       if vc.habit == nil {
         habits.removeAtIndex(indexPath!.row)
-        tableView.reloadData()
+        NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "removeHabit:", userInfo: indexPath!,
+          repeats: false)
       } else {
-        tableView.beginUpdates()
-        activeCell!.reload()
-        tableView.endUpdates()
+        NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "moveHabit:", userInfo: indexPath!,
+          repeats: false)
       }
       activeCell = nil
     }

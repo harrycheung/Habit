@@ -117,9 +117,8 @@
 			children = (
 				4A1D08C81B3E1A7A006A9CA4 /* Fonts */,
 				4A1D08DE1B404DF7006A9CA4 /* Models */,
+				4A9D5A391B41DD4B005F1277 /* TableViewCells */,
 				4A1D08E01B40C975006A9CA4 /* ViewControllers */,
-				4A1D08CA1B3E1A7A006A9CA4 /* HabitTableViewCell.swift */,
-				4A1D08CD1B3E1A7A006A9CA4 /* SwipeTableViewCell.swift */,
 				4A1D08971B3E17E9006A9CA4 /* AppDelegate.swift */,
 				4A1D08A11B3E17E9006A9CA4 /* Assets.xcassets */,
 				4A1D08A31B3E17E9006A9CA4 /* LaunchScreen.storyboard */,
@@ -166,6 +165,15 @@
 				4A1D08CC1B3E1A7A006A9CA4 /* MainViewController.swift */,
 			);
 			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		4A9D5A391B41DD4B005F1277 /* TableViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				4A1D08CA1B3E1A7A006A9CA4 /* HabitTableViewCell.swift */,
+				4A1D08CD1B3E1A7A006A9CA4 /* SwipeTableViewCell.swift */,
+			);
+			name = TableViewCells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
