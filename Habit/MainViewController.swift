@@ -11,12 +11,17 @@ import CoreData
 
 class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
   
+  static let blue = UIColor(red: 42.0 / 255.0, green: 132.0 / 255.0, blue: 219.0 / 255.0, alpha: 1)
+  static let green = UIColor(red: 85.0 / 255.0, green: 213.0 / 255.0, blue: 80.0 / 255.0, alpha: 1)
+  static let yellow = UIColor(red: 254.0 / 255.0, green: 217.0 / 255.0, blue: 56.0 / 255.0, alpha: 1)
+  
   let moContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
   let cellIdentifier = "HabitCell"
   let showHabitSegue = "ShowHabit"
   let newHabitSegue = "NewHabit"
 
   @IBOutlet weak var tableView: UITableView!
+  @IBOutlet weak var titleBar: UIView!
   
   var activeCell: HabitTableViewCell?
   var habits = [Habit]()
@@ -26,10 +31,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   override func viewDidLoad() {
     super.viewDidLoad()
-
-//    Habit.create(moc: moContext, name: "1. Hourly 10x", details: "", frequency: .Hourly, times: 10)
-//    Habit.create(moc: moContext, name: "2. Hourly 5x", details: "", frequency: .Hourly, times: 5)
-//    Habit.create(moc: moContext, name: "3. Hourly 1x", details: "", frequency: .Hourly, times: 1)
+    
+    tableView.backgroundColor = UIColor.blackColor()
+    
+//    Habit.create(moc: moContext, name: "1. Hourly 10x", details: "", frequency: .Daily, times: 48)
 //    Habit.create(moc: moContext, name: "4. Daily 10x", details: "", frequency: .Daily, times: 10)
 //    Habit.create(moc: moContext, name: "5. Daily 5x", details: "", frequency: .Daily, times: 5)
 //    Habit.create(moc: moContext, name: "6. Daily 1x", details: "", frequency: .Daily, times: 1)
@@ -55,6 +60,20 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     tableView.backgroundView = nil
     
+//    UIApplication.sharedApplication().statusBarHidden = true
+    titleBar.backgroundColor = MainViewController.blue
+//    for (_, constraint) in view.constraints.enumerate() {
+//      if constraint.firstItem.isEqual(titleBar) && constraint.firstAttribute == NSLayoutAttribute.Top {
+//        constraint.constant = -20
+//      }
+//    }
+//    for (_, constraint) in titleBar.constraints.enumerate() {
+//      if constraint.firstItem.isEqual(titleBar) && constraint.firstAttribute == NSLayoutAttribute.Height {
+//        constraint.constant = 20
+//      }
+//    }
+//    titleBar.layoutIfNeeded()
+    
 //    for family in UIFont.familyNames() {
 //      NSLog("\(family)")
 //      
@@ -70,8 +89,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   override func viewDidAppear(animated: Bool) {
-    NSLog("viewDidAppear")
-    
     if insertHabit != nil {
       let insert = { (habit: Habit, index: Int) -> (Void) in
         self.habits.insert(habit, atIndex: index)
@@ -123,7 +140,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     cell.setSwipeGesture(
       direction: .Right,
       view: UIImageView(image: UIImage(named: "Checkmark")),
-      color: UIColor(red: 85.0 / 255.0, green: 213.0 / 255.0, blue: 80.0 / 255.0, alpha: 1),
+      color: MainViewController.green,
       options: [.Rotate, .Alpha],
       completion: { (cell: SwipeTableViewCell) in
         tableView.beginUpdates()
@@ -147,7 +164,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     cell.setSwipeGesture(
       direction: .Left,
       view: UIImageView(image: UIImage(named: "Clock")),
-      color: UIColor(red: 254.0 / 255.0, green: 217.0 / 255.0, blue: 56.0 / 255.0, alpha: 1),
+      color: MainViewController.yellow,
       options: [.Rotate, .Alpha],
       completion: { (cell: SwipeTableViewCell) in
         tableView.beginUpdates()
@@ -176,9 +193,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    NSLog("didSelectRowAtIndexPath \(indexPath)")
-    let cell = tableView.cellForRowAtIndexPath(indexPath) as! HabitTableViewCell
-    NSLog("name: \(cell.habit!.name)")
     dispatch_async(dispatch_get_main_queue()) {
       self.performSegueWithIdentifier(self.showHabitSegue, sender: tableView.cellForRowAtIndexPath(indexPath))
     }
@@ -187,7 +201,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   // Segue
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    NSLog("MainViewController.prepareForSegue")
     if segue.identifier == showHabitSegue {
       let vc = segue.destinationViewController as! HabitViewController
       activeCell = sender as? HabitTableViewCell

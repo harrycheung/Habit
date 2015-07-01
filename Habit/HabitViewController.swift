@@ -22,17 +22,24 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIPickerViewD
   @IBOutlet weak var times: UITextField!
   @IBOutlet weak var cancel: UIButton!
   @IBOutlet weak var due: UILabel!
+  @IBOutlet weak var done: UIButton!
   
   override func viewDidLoad() {
-    NSLog("HabitViewController.viewDidLoad")
     super.viewDidLoad()
-    NSLog("HabitViewController.viewDidLoad after super")
     
     view.userInteractionEnabled = true
     
     name.text = habit!.name;
     name.delegate = self
-    frequency.selectedSegmentIndex = Int(habit!.frequency!)
+    switch Habit.Frequency(rawValue: habit!.frequency!.integerValue)! {
+    case .Daily:
+      frequency.selectedSegmentIndex = 0
+    case .Weekly:
+      frequency.selectedSegmentIndex = 1
+    case .Monthly:
+      frequency.selectedSegmentIndex = 2
+    default: ()
+    }
     times.text = habit!.times!.stringValue
     timesValue = Int(habit!.times!)
     setTimesText()
@@ -51,9 +58,11 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIPickerViewD
     
     if !habit!.isNew() {
       cancel.setTitle("Delete", forState: .Normal)
-      due.text = "in \(Int(habit!.dueIn())) seconds"
+      due.text = "in \(habit!.dueText())"
+      done.enabled = true
+    } else {
+      name.becomeFirstResponder()
     }
-    NSLog("HabitViewController.viewDidLoad end")
   }
   
   func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -73,16 +82,12 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIPickerViewD
   func setTimesText() {
     var repeatText = ""
     switch frequency.selectedSegmentIndex {
-    case Habit.Frequency.Hourly.hashValue:
-      repeatText = "hour"
-    case Habit.Frequency.Daily.hashValue:
+    case 0:
       repeatText = "day"
-    case Habit.Frequency.Weekly.hashValue:
+    case 1:
       repeatText = "week"
-    case Habit.Frequency.Monthly.hashValue:
+    case 2:
       repeatText = "month"
-    case Habit.Frequency.Annually.hashValue:
-      repeatText = "year"
     default: ()
     }
     
@@ -90,6 +95,14 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIPickerViewD
       times.text = "1 time a \(repeatText)"
     } else {
       times.text = "\(timesValue) times a \(repeatText)"
+    }
+  }
+  
+  @IBAction func nameEntered(sender: AnyObject) {
+    if name.text!.isEmpty {
+      done.enabled = false
+    } else {
+      done.enabled = true
     }
   }
   
@@ -128,7 +141,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIPickerViewD
   }
     
   func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-    return 10
+    return 12
   }
     
   func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {

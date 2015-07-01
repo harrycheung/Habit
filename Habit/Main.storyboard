@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8121.20" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="EoV-sV-T6s">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8121.20" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="EoV-sV-T6s">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8101.16"/>
@@ -10,6 +10,8 @@
             <string>Bariol-Bold</string>
         </mutableArray>
         <mutableArray key="Bariol_Regular.otf">
+            <string>Bariol-Regular</string>
+            <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
@@ -38,23 +40,24 @@
                                 <rect key="frame" x="0.0" y="20" width="600" height="40"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="habit" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yD2-xD-ARB">
-                                        <rect key="frame" x="269" y="11" width="63" height="21"/>
+                                        <rect key="frame" x="269" y="9.5" width="63" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="63" id="AgR-9C-ev3"/>
                                             <constraint firstAttribute="height" constant="21" id="RHK-wN-pqb"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="Bariol-Bold" family="Bariol" pointSize="20"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IS1-aO-EzW">
-                                        <rect key="frame" x="546" y="6" width="30" height="30"/>
+                                        <rect key="frame" x="546" y="5" width="30" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="Fmy-kx-YqA"/>
                                             <constraint firstAttribute="width" constant="30" id="k7W-DG-n6t"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
                                         <state key="normal" title="new">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
@@ -64,9 +67,9 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="centerY" secondItem="IS1-aO-EzW" secondAttribute="centerY" constant="-1" id="1YL-A9-Hrg"/>
-                                    <constraint firstAttribute="centerY" secondItem="yD2-xD-ARB" secondAttribute="centerY" constant="-1.5" id="DoB-tv-WZj"/>
-                                    <constraint firstAttribute="centerX" secondItem="yD2-xD-ARB" secondAttribute="centerX" constant="-0.5" id="H9X-2h-8QY"/>
+                                    <constraint firstAttribute="centerY" secondItem="IS1-aO-EzW" secondAttribute="centerY" id="1YL-A9-Hrg"/>
+                                    <constraint firstAttribute="centerY" secondItem="yD2-xD-ARB" secondAttribute="centerY" id="DoB-tv-WZj"/>
+                                    <constraint firstAttribute="centerX" secondItem="yD2-xD-ARB" secondAttribute="centerX" id="H9X-2h-8QY"/>
                                     <constraint firstAttribute="trailing" secondItem="IS1-aO-EzW" secondAttribute="trailing" constant="24" id="PCb-Zd-3Xo"/>
                                     <constraint firstAttribute="height" constant="40" id="dmD-Qq-zpM"/>
                                 </constraints>
@@ -133,7 +136,6 @@
                                 </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="al0-3V-BIj" secondAttribute="centerX" id="3Uz-YV-txl"/>
                             <constraint firstItem="vGZ-8P-gz0" firstAttribute="width" secondItem="LvB-hO-ya5" secondAttribute="width" id="ARZ-vD-XHO"/>
@@ -146,6 +148,7 @@
                     </view>
                     <connections>
                         <outlet property="tableView" destination="al0-3V-BIj" id="uHS-GK-pye"/>
+                        <outlet property="titleBar" destination="vGZ-8P-gz0" id="Zws-Pv-b8s"/>
                         <segue destination="fuZ-7k-oQj" kind="show" identifier="ShowHabit" id="PyM-4B-EAp"/>
                     </connections>
                 </viewController>
@@ -165,22 +168,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="start a habit" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="3xy-47-OAN">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="start a habit" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="3xy-47-OAN">
                                 <rect key="frame" x="20" y="28" width="560" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="iKK-M6-kwn"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
+                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="20"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                <connections>
+                                    <action selector="nameEntered:" destination="fuZ-7k-oQj" eventType="editingDidEnd" id="H75-gs-1rd"/>
+                                </connections>
                             </textField>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" translatesAutoresizingMaskIntoConstraints="NO" id="0tr-LV-M4N">
-                                <rect key="frame" x="20" y="78" width="560" height="29"/>
+                                <rect key="frame" x="20" y="92" width="560" height="29"/>
                                 <segments>
-                                    <segment title="Hourly"/>
                                     <segment title="Daily"/>
                                     <segment title="Weekly"/>
                                     <segment title="Monthly"/>
-                                    <segment title="Annually"/>
                                 </segments>
                                 <connections>
                                     <action selector="frequencyChanged:" destination="fuZ-7k-oQj" eventType="valueChanged" id="IS8-tM-Gi2"/>
@@ -201,7 +205,7 @@
                                     <segue destination="Xjg-bp-os8" kind="unwind" unwindAction="unwind:" id="CJs-Hn-fxE"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ufW-as-ekp">
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ufW-as-ekp">
                                 <rect key="frame" x="544" y="550" width="36" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="36" id="0oX-pk-qLx"/>
@@ -216,7 +220,7 @@
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="1 time a day" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M63-V2-hq7">
-                                <rect key="frame" x="20" y="126" width="175" height="30"/>
+                                <rect key="frame" x="20" y="169" width="175" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="M07-ma-gk1"/>
                                     <constraint firstAttribute="width" constant="175" id="ruB-dd-oBi"/>
@@ -224,8 +228,28 @@
                                 <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How often?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jwW-4y-xn8">
+                                <rect key="frame" x="20" y="78" width="63" height="14"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="63" id="NWm-0v-mwB"/>
+                                    <constraint firstAttribute="height" constant="14" id="pb1-WN-LBq"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="14"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How many times a day?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qkO-QV-4TD">
+                                <rect key="frame" x="20" y="140" width="295" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="AWO-CK-gBg"/>
+                                    <constraint firstAttribute="width" constant="295" id="knB-2A-5sg"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="14"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="in 5 mins" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DcU-bO-SfE">
-                                <rect key="frame" x="20" y="164" width="140" height="21"/>
+                                <rect key="frame" x="20" y="218" width="140" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="ecS-Dm-15o"/>
                                     <constraint firstAttribute="width" constant="140" id="h9J-h8-K8U"/>
@@ -238,25 +262,30 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="0tr-LV-M4N" firstAttribute="top" secondItem="jwW-4y-xn8" secondAttribute="bottom" id="7QG-fK-hy6"/>
+                            <constraint firstItem="qkO-QV-4TD" firstAttribute="top" secondItem="0tr-LV-M4N" secondAttribute="bottom" constant="20" id="BZ3-2f-rS8"/>
                             <constraint firstItem="cSw-LG-uKR" firstAttribute="top" secondItem="FeH-uK-xvJ" secondAttribute="bottom" constant="20" id="HCN-Gt-373"/>
                             <constraint firstAttribute="centerX" secondItem="3xy-47-OAN" secondAttribute="centerX" id="HgO-aC-mqU"/>
                             <constraint firstItem="M63-V2-hq7" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leadingMargin" id="KHM-GJ-6Q3"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ufW-as-ekp" secondAttribute="trailing" id="LC2-0L-iTY"/>
                             <constraint firstItem="0tr-LV-M4N" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leadingMargin" id="YNT-ci-MIf"/>
                             <constraint firstAttribute="leadingMargin" secondItem="DcU-bO-SfE" secondAttribute="leading" id="a9d-hr-02A"/>
-                            <constraint firstItem="DcU-bO-SfE" firstAttribute="top" secondItem="M63-V2-hq7" secondAttribute="bottom" constant="8" id="bId-a7-e4q"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="jwW-4y-xn8" secondAttribute="leading" id="aee-X1-8Jv"/>
+                            <constraint firstItem="DcU-bO-SfE" firstAttribute="top" secondItem="M63-V2-hq7" secondAttribute="bottom" constant="19" id="bId-a7-e4q"/>
                             <constraint firstItem="3xy-47-OAN" firstAttribute="top" secondItem="7l0-3q-qB9" secondAttribute="bottom" constant="8" id="br0-J8-7Pp"/>
-                            <constraint firstItem="M63-V2-hq7" firstAttribute="top" secondItem="0tr-LV-M4N" secondAttribute="bottom" constant="20" id="cax-TF-cqM"/>
+                            <constraint firstItem="M63-V2-hq7" firstAttribute="top" secondItem="0tr-LV-M4N" secondAttribute="bottom" constant="49" id="cax-TF-cqM"/>
                             <constraint firstItem="3xy-47-OAN" firstAttribute="trailing" secondItem="VOQ-mx-QHa" secondAttribute="trailingMargin" id="gmX-Gs-TnL"/>
-                            <constraint firstItem="0tr-LV-M4N" firstAttribute="top" secondItem="3xy-47-OAN" secondAttribute="bottom" constant="20" id="hBd-lE-O1o"/>
+                            <constraint firstItem="jwW-4y-xn8" firstAttribute="top" secondItem="3xy-47-OAN" secondAttribute="bottom" constant="20" id="gou-Q6-e6U"/>
                             <constraint firstItem="FeH-uK-xvJ" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leadingMargin" id="iz1-Yo-bpP"/>
                             <constraint firstItem="3xy-47-OAN" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leadingMargin" id="oTc-2J-KWQ"/>
                             <constraint firstItem="cSw-LG-uKR" firstAttribute="top" secondItem="ufW-as-ekp" secondAttribute="bottom" constant="20" id="qxa-XZ-e73"/>
                             <constraint firstAttribute="trailingMargin" secondItem="0tr-LV-M4N" secondAttribute="trailing" id="vrh-Sg-BTu"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="qkO-QV-4TD" secondAttribute="leading" id="zWy-My-Kbn"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="cancel" destination="FeH-uK-xvJ" id="h7G-ea-UJx"/>
+                        <outlet property="done" destination="ufW-as-ekp" id="3Ab-8q-QB6"/>
                         <outlet property="due" destination="DcU-bO-SfE" id="sUo-NE-4Xm"/>
                         <outlet property="frequency" destination="0tr-LV-M4N" id="scQ-SV-J2P"/>
                         <outlet property="name" destination="3xy-47-OAN" id="88D-aI-VhZ"/>

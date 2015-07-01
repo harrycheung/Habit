@@ -120,11 +120,11 @@
 				4A9D5A391B41DD4B005F1277 /* TableViewCells */,
 				4A1D08E01B40C975006A9CA4 /* ViewControllers */,
 				4A1D08971B3E17E9006A9CA4 /* AppDelegate.swift */,
-				4A1D08A11B3E17E9006A9CA4 /* Assets.xcassets */,
 				4A1D08A31B3E17E9006A9CA4 /* LaunchScreen.storyboard */,
 				4A1D08D41B3E1E52006A9CA4 /* Main.storyboard */,
 				4A1D08A61B3E17E9006A9CA4 /* Info.plist */,
 				4A1D089E1B3E17E9006A9CA4 /* Habit.xcdatamodeld */,
+				4A1D08A11B3E17E9006A9CA4 /* Assets.xcassets */,
 			);
 			path = Habit;
 			sourceTree = "<group>";
