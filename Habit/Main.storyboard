@@ -4,15 +4,13 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8101.16"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="Bariol_Bold.otf">
             <string>Bariol-Bold</string>
         </mutableArray>
         <mutableArray key="Bariol_Regular.otf">
-            <string>Bariol-Regular</string>
-            <string>Bariol-Regular</string>
-            <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
@@ -164,7 +162,7 @@
                         <viewControllerLayoutGuide type="top" id="7l0-3q-qB9"/>
                         <viewControllerLayoutGuide type="bottom" id="cSw-LG-uKR"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="VOQ-mx-QHa">
+                    <view key="view" contentMode="scaleToFill" id="VOQ-mx-QHa" userLabel="Edit Habit View">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -219,15 +217,6 @@
                                     <segue destination="Xjg-bp-os8" kind="unwind" unwindAction="unwind:" id="r4Q-Qz-bxZ"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="1 time a day" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M63-V2-hq7">
-                                <rect key="frame" x="20" y="169" width="175" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="M07-ma-gk1"/>
-                                    <constraint firstAttribute="width" constant="175" id="ruB-dd-oBi"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How often?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jwW-4y-xn8">
                                 <rect key="frame" x="20" y="78" width="63" height="14"/>
                                 <constraints>
@@ -235,61 +224,59 @@
                                     <constraint firstAttribute="height" constant="14" id="pb1-WN-LBq"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="14"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How many times a day?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qkO-QV-4TD">
-                                <rect key="frame" x="20" y="140" width="295" height="21"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g9g-gL-H8l">
+                                <rect key="frame" x="20" y="128" width="560" height="300"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LXJ-7i-RmO">
+                                        <rect key="frame" x="0.0" y="0.0" width="1680" height="300"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="AWO-CK-gBg"/>
-                                    <constraint firstAttribute="width" constant="295" id="knB-2A-5sg"/>
+                                    <constraint firstAttribute="trailing" secondItem="LXJ-7i-RmO" secondAttribute="trailing" id="Af3-SR-HKc"/>
+                                    <constraint firstItem="LXJ-7i-RmO" firstAttribute="top" secondItem="g9g-gL-H8l" secondAttribute="top" id="NvC-i3-mcu"/>
+                                    <constraint firstAttribute="bottom" secondItem="LXJ-7i-RmO" secondAttribute="bottom" id="XPz-gB-9BM"/>
+                                    <constraint firstItem="LXJ-7i-RmO" firstAttribute="leading" secondItem="g9g-gL-H8l" secondAttribute="leading" id="ezS-sv-KPV"/>
+                                    <constraint firstAttribute="height" constant="300" id="ox1-qZ-vWI"/>
+                                    <constraint firstItem="LXJ-7i-RmO" firstAttribute="height" secondItem="g9g-gL-H8l" secondAttribute="height" id="twy-VT-vvc"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="14"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="in 5 mins" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DcU-bO-SfE">
-                                <rect key="frame" x="20" y="218" width="140" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="ecS-Dm-15o"/>
-                                    <constraint firstAttribute="width" constant="140" id="h9J-h8-K8U"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <connections>
+                                    <outlet property="delegate" destination="fuZ-7k-oQj" id="7Sc-xr-hCd"/>
+                                </connections>
+                            </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="0tr-LV-M4N" firstAttribute="top" secondItem="jwW-4y-xn8" secondAttribute="bottom" id="7QG-fK-hy6"/>
-                            <constraint firstItem="qkO-QV-4TD" firstAttribute="top" secondItem="0tr-LV-M4N" secondAttribute="bottom" constant="20" id="BZ3-2f-rS8"/>
                             <constraint firstItem="cSw-LG-uKR" firstAttribute="top" secondItem="FeH-uK-xvJ" secondAttribute="bottom" constant="20" id="HCN-Gt-373"/>
                             <constraint firstAttribute="centerX" secondItem="3xy-47-OAN" secondAttribute="centerX" id="HgO-aC-mqU"/>
-                            <constraint firstItem="M63-V2-hq7" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leadingMargin" id="KHM-GJ-6Q3"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="g9g-gL-H8l" secondAttribute="leading" id="IuU-Dt-hon"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ufW-as-ekp" secondAttribute="trailing" id="LC2-0L-iTY"/>
                             <constraint firstItem="0tr-LV-M4N" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leadingMargin" id="YNT-ci-MIf"/>
-                            <constraint firstAttribute="leadingMargin" secondItem="DcU-bO-SfE" secondAttribute="leading" id="a9d-hr-02A"/>
                             <constraint firstAttribute="leadingMargin" secondItem="jwW-4y-xn8" secondAttribute="leading" id="aee-X1-8Jv"/>
-                            <constraint firstItem="DcU-bO-SfE" firstAttribute="top" secondItem="M63-V2-hq7" secondAttribute="bottom" constant="19" id="bId-a7-e4q"/>
                             <constraint firstItem="3xy-47-OAN" firstAttribute="top" secondItem="7l0-3q-qB9" secondAttribute="bottom" constant="8" id="br0-J8-7Pp"/>
-                            <constraint firstItem="M63-V2-hq7" firstAttribute="top" secondItem="0tr-LV-M4N" secondAttribute="bottom" constant="49" id="cax-TF-cqM"/>
+                            <constraint firstItem="LXJ-7i-RmO" firstAttribute="width" secondItem="0tr-LV-M4N" secondAttribute="width" multiplier="3" id="eSX-4l-AAB"/>
                             <constraint firstItem="3xy-47-OAN" firstAttribute="trailing" secondItem="VOQ-mx-QHa" secondAttribute="trailingMargin" id="gmX-Gs-TnL"/>
                             <constraint firstItem="jwW-4y-xn8" firstAttribute="top" secondItem="3xy-47-OAN" secondAttribute="bottom" constant="20" id="gou-Q6-e6U"/>
                             <constraint firstItem="FeH-uK-xvJ" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leadingMargin" id="iz1-Yo-bpP"/>
                             <constraint firstItem="3xy-47-OAN" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leadingMargin" id="oTc-2J-KWQ"/>
                             <constraint firstItem="cSw-LG-uKR" firstAttribute="top" secondItem="ufW-as-ekp" secondAttribute="bottom" constant="20" id="qxa-XZ-e73"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="g9g-gL-H8l" secondAttribute="trailing" id="s13-Tb-ai7"/>
                             <constraint firstAttribute="trailingMargin" secondItem="0tr-LV-M4N" secondAttribute="trailing" id="vrh-Sg-BTu"/>
-                            <constraint firstAttribute="leadingMargin" secondItem="qkO-QV-4TD" secondAttribute="leading" id="zWy-My-Kbn"/>
+                            <constraint firstItem="g9g-gL-H8l" firstAttribute="top" secondItem="0tr-LV-M4N" secondAttribute="bottom" constant="8" id="wAp-xN-P4U"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="cancel" destination="FeH-uK-xvJ" id="h7G-ea-UJx"/>
                         <outlet property="done" destination="ufW-as-ekp" id="3Ab-8q-QB6"/>
-                        <outlet property="due" destination="DcU-bO-SfE" id="sUo-NE-4Xm"/>
                         <outlet property="frequency" destination="0tr-LV-M4N" id="scQ-SV-J2P"/>
+                        <outlet property="frequencyScroller" destination="g9g-gL-H8l" id="cQV-St-VnV"/>
+                        <outlet property="frequencyScrollerContent" destination="LXJ-7i-RmO" id="kZ5-Kq-a2F"/>
                         <outlet property="name" destination="3xy-47-OAN" id="88D-aI-VhZ"/>
-                        <outlet property="times" destination="M63-V2-hq7" id="VJc-u2-UwS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uf1-eU-pA4" userLabel="First Responder" sceneMemberID="firstResponder"/>
