@@ -23,10 +23,10 @@
 		4A1D08D91B3F4F03006A9CA4 /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D08D71B3F4F03006A9CA4 /* Entry.swift */; };
 		4A1D08DC1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D08DA1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift */; };
 		4A1D08DD1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D08DB1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift */; };
-		4A46437C1B44557800732389 /* HabitDaily.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A46437B1B44557800732389 /* HabitDaily.xib */; };
-		4A46437E1B4457FF00732389 /* HabitWeekly.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A46437D1B4457FF00732389 /* HabitWeekly.xib */; };
-		4A4643811B44632400732389 /* HabitWeekly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4643801B44632400732389 /* HabitWeekly.swift */; };
-		4A4643831B448B3300732389 /* MultiSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4643821B448B3300732389 /* MultiSegmentedControl.swift */; };
+		4A421C1A1B48960900F3186C /* FrequencySettings.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A421C191B48960900F3186C /* FrequencySettings.xib */; };
+		4A4643811B44632400732389 /* FrequencySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4643801B44632400732389 /* FrequencySettings.swift */; };
+		4A4643831B448B3300732389 /* MultiSelectControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4643821B448B3300732389 /* MultiSelectControl.swift */; };
+		4A6DB6FC1B4B8781008BC1B7 /* UIButton+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6DB6FB1B4B8781008BC1B7 /* UIButton+Color.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,10 +69,10 @@
 		4A1D08D71B3F4F03006A9CA4 /* Entry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
 		4A1D08DA1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Habit+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4A1D08DB1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Entry+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		4A46437B1B44557800732389 /* HabitDaily.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HabitDaily.xib; sourceTree = "<group>"; };
-		4A46437D1B4457FF00732389 /* HabitWeekly.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HabitWeekly.xib; sourceTree = "<group>"; };
-		4A4643801B44632400732389 /* HabitWeekly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitWeekly.swift; sourceTree = "<group>"; };
-		4A4643821B448B3300732389 /* MultiSegmentedControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSegmentedControl.swift; sourceTree = "<group>"; };
+		4A421C191B48960900F3186C /* FrequencySettings.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FrequencySettings.xib; sourceTree = "<group>"; };
+		4A4643801B44632400732389 /* FrequencySettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrequencySettings.swift; sourceTree = "<group>"; };
+		4A4643821B448B3300732389 /* MultiSelectControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSelectControl.swift; sourceTree = "<group>"; };
+		4A6DB6FB1B4B8781008BC1B7 /* UIButton+Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Color.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,13 +123,13 @@
 		4A1D08961B3E17E9006A9CA4 /* Habit */ = {
 			isa = PBXGroup;
 			children = (
+				4A1D08971B3E17E9006A9CA4 /* AppDelegate.swift */,
 				4A1D08C81B3E1A7A006A9CA4 /* Fonts */,
 				4A1D08DE1B404DF7006A9CA4 /* Models */,
 				4A9D5A391B41DD4B005F1277 /* TableViewCells */,
 				4A1D08E01B40C975006A9CA4 /* ViewControllers */,
-				4A1D08971B3E17E9006A9CA4 /* AppDelegate.swift */,
-				4A46437F1B44581300732389 /* IBs */,
-				4A4643821B448B3300732389 /* MultiSegmentedControl.swift */,
+				4A46437F1B44581300732389 /* UI */,
+				4A6DB6FA1B4A3892008BC1B7 /* Custom */,
 				4A1D08A61B3E17E9006A9CA4 /* Info.plist */,
 				4A1D089E1B3E17E9006A9CA4 /* Habit.xcdatamodeld */,
 				4A1D08A11B3E17E9006A9CA4 /* Assets.xcassets */,
@@ -175,23 +175,31 @@
 			name = ViewControllers;
 			sourceTree = "<group>";
 		};
-		4A46437F1B44581300732389 /* IBs */ = {
+		4A46437F1B44581300732389 /* UI */ = {
 			isa = PBXGroup;
 			children = (
 				4A1D08A31B3E17E9006A9CA4 /* LaunchScreen.storyboard */,
 				4A1D08D41B3E1E52006A9CA4 /* Main.storyboard */,
-				4A46437B1B44557800732389 /* HabitDaily.xib */,
-				4A46437D1B4457FF00732389 /* HabitWeekly.xib */,
-				4A4643801B44632400732389 /* HabitWeekly.swift */,
+				4A421C191B48960900F3186C /* FrequencySettings.xib */,
+				4A4643801B44632400732389 /* FrequencySettings.swift */,
 			);
-			name = IBs;
+			name = UI;
+			sourceTree = "<group>";
+		};
+		4A6DB6FA1B4A3892008BC1B7 /* Custom */ = {
+			isa = PBXGroup;
+			children = (
+				4A1D08CD1B3E1A7A006A9CA4 /* SwipeTableViewCell.swift */,
+				4A4643821B448B3300732389 /* MultiSelectControl.swift */,
+				4A6DB6FB1B4B8781008BC1B7 /* UIButton+Color.swift */,
+			);
+			name = Custom;
 			sourceTree = "<group>";
 		};
 		4A9D5A391B41DD4B005F1277 /* TableViewCells */ = {
 			isa = PBXGroup;
 			children = (
 				4A1D08CA1B3E1A7A006A9CA4 /* HabitTableViewCell.swift */,
-				4A1D08CD1B3E1A7A006A9CA4 /* SwipeTableViewCell.swift */,
 			);
 			name = TableViewCells;
 			sourceTree = "<group>";
@@ -302,9 +310,8 @@
 				4A1D08A51B3E17E9006A9CA4 /* LaunchScreen.storyboard in Resources */,
 				4A1D08A21B3E17E9006A9CA4 /* Assets.xcassets in Resources */,
 				4A1D08CE1B3E1A7A006A9CA4 /* Fonts in Resources */,
-				4A46437C1B44557800732389 /* HabitDaily.xib in Resources */,
 				4A1D08D51B3E1E52006A9CA4 /* Main.storyboard in Resources */,
-				4A46437E1B4457FF00732389 /* HabitWeekly.xib in Resources */,
+				4A421C1A1B48960900F3186C /* FrequencySettings.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,10 +338,11 @@
 			files = (
 				4A1D08D91B3F4F03006A9CA4 /* Entry.swift in Sources */,
 				4A1D08D21B3E1A7A006A9CA4 /* MainViewController.swift in Sources */,
-				4A4643831B448B3300732389 /* MultiSegmentedControl.swift in Sources */,
+				4A4643831B448B3300732389 /* MultiSelectControl.swift in Sources */,
+				4A6DB6FC1B4B8781008BC1B7 /* UIButton+Color.swift in Sources */,
 				4A1D08A01B3E17E9006A9CA4 /* Habit.xcdatamodeld in Sources */,
 				4A1D08D11B3E1A7A006A9CA4 /* HabitViewController.swift in Sources */,
-				4A4643811B44632400732389 /* HabitWeekly.swift in Sources */,
+				4A4643811B44632400732389 /* FrequencySettings.swift in Sources */,
 				4A1D08D01B3E1A7A006A9CA4 /* HabitTableViewCell.swift in Sources */,
 				4A1D08DD1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift in Sources */,
 				4A1D08CF1B3E1A7A006A9CA4 /* Habit.swift in Sources */,

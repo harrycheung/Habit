@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8121.20" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8101.16"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <mutableArray key="Bariol_Regular.otf">
+            <string>Bariol-Regular</string>
+            <string>Bariol-Regular</string>
+        </mutableArray>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FrequencySettings" customModule="Habit" customModuleProvider="target">
+            <connections>
+                <outlet property="leftTitle" destination="QyN-w6-dga" id="dnV-hX-O0G"/>
+                <outlet property="multiSelect" destination="vIP-Ib-9Mc" id="Jor-Ic-Xi1"/>
+                <outlet property="picker" destination="Ex2-cd-5Jl" id="TAe-hn-Z33"/>
+                <outlet property="rightTitle" destination="Ocd-v8-HiC" id="mJH-FR-HRx"/>
+                <outlet property="view" destination="iN0-l3-epB" id="d8m-lx-odK"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view alpha="0.29999999999999999" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cal-0N-FpV" userLabel="Splitter">
+                    <rect key="frame" x="299" y="21" width="1" height="579"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="1" id="YrV-2D-Cfg"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What days of the week?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ocd-v8-HiC">
+                    <rect key="frame" x="300" y="0.0" width="300" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="TBT-eX-PWt"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="14"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How many times a week?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QyN-w6-dga">
+                    <rect key="frame" x="0.0" y="0.0" width="300" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="iF1-oG-9FM"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="14"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ex2-cd-5Jl">
+                    <rect key="frame" x="4" y="21" width="292" height="579"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="lEE-Ej-9Jw"/>
+                        <outlet property="delegate" destination="-1" id="JbQ-iM-OT6"/>
+                    </connections>
+                </pickerView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vIP-Ib-9Mc" customClass="MultiSelectControl" customModule="Habit" customModuleProvider="target">
+                    <rect key="frame" x="304" y="21" width="292" height="579"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="kFA-hY-d5g"/>
+                    </connections>
+                </view>
+            </subviews>
+            <constraints>
+                <constraint firstItem="QyN-w6-dga" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.5" id="2BX-jY-Bwl"/>
+                <constraint firstAttribute="bottom" secondItem="cal-0N-FpV" secondAttribute="bottom" id="400-RF-bPs"/>
+                <constraint firstItem="QyN-w6-dga" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" multiplier="0.5" id="7Oo-cv-l0K"/>
+                <constraint firstItem="Ocd-v8-HiC" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" multiplier="1.5" id="FhB-Bc-3Wh"/>
+                <constraint firstItem="vIP-Ib-9Mc" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.5" constant="-8" id="I0p-dx-v3M"/>
+                <constraint firstItem="cal-0N-FpV" firstAttribute="top" secondItem="QyN-w6-dga" secondAttribute="bottom" id="P5w-DX-IhE"/>
+                <constraint firstItem="Ex2-cd-5Jl" firstAttribute="top" secondItem="QyN-w6-dga" secondAttribute="bottom" id="Sje-pa-vV9"/>
+                <constraint firstItem="Ex2-cd-5Jl" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.5" constant="-8" id="Tgl-oD-dcV"/>
+                <constraint firstItem="cal-0N-FpV" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="U6z-MJ-XS4"/>
+                <constraint firstItem="vIP-Ib-9Mc" firstAttribute="top" secondItem="Ocd-v8-HiC" secondAttribute="bottom" id="ZgN-nL-NxW"/>
+                <constraint firstItem="Ocd-v8-HiC" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.5" id="bOu-FU-ZrO"/>
+                <constraint firstAttribute="bottom" secondItem="vIP-Ib-9Mc" secondAttribute="bottom" id="cpw-N2-7Pq"/>
+                <constraint firstItem="Ocd-v8-HiC" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="fWC-xA-PFb"/>
+                <constraint firstItem="QyN-w6-dga" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="hsb-iv-Zwg"/>
+                <constraint firstItem="Ex2-cd-5Jl" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" multiplier="0.5" id="q1l-Xs-42J"/>
+                <constraint firstItem="vIP-Ib-9Mc" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" multiplier="1.5" id="vkS-MH-3qf"/>
+                <constraint firstAttribute="bottom" secondItem="Ex2-cd-5Jl" secondAttribute="bottom" id="yst-Pe-ySq"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="323" y="370"/>
+        </view>
+    </objects>
+</document>
