@@ -1,0 +1,20 @@
+PODS:
+  - SnapKit (0.12.0)
+
+DEPENDENCIES:
+  - SnapKit (from `https://github.com/SnapKit/SnapKit.git`, branch `swift-2.0`)
+
+EXTERNAL SOURCES:
+  SnapKit:
+    :branch: swift-2.0
+    :git: https://github.com/SnapKit/SnapKit.git
+
+CHECKOUT OPTIONS:
+  SnapKit:
+    :commit: e9c9f6fe8e0954a50dd62a61a449b66ef84ae205
+    :git: https://github.com/SnapKit/SnapKit.git
+
+SPEC CHECKSUMS:
+  SnapKit: 00c388aa3bf1944c1b55472f31e841f75bd83882
+
+COCOAPODS: 0.37.2

@@ -9,12 +9,16 @@
 import Foundation
 import UIKit
 import CoreData
+import SnapKit
 
 class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewDelegate {
   
   let moContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
   
   var habit: Habit?
+  var dailySettings: FrequencySettings?
+  var weeklySettings: FrequencySettings?
+  var monthlySettings: FrequencySettings?
   
   @IBOutlet weak var name: UITextField!
   @IBOutlet weak var frequency: UISegmentedControl!
@@ -52,37 +56,34 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
     
     enableDone()
     
-    let p1 = FrequencySettings(leftTitle: "How many times a day?",
+    let dailySettings = FrequencySettings(leftTitle: "How many times a day?",
       pickerCount: 12,
       rightTitle: "What parts of the day?",
       multiSelectItems: ["Morning", "Mid-Morning", "Midday", "Mid-Afternoon", "Afternoon", "Evening"])
-    p1.translatesAutoresizingMaskIntoConstraints = false
-    frequencyScrollerContent.addSubview(p1)
-    frequencyScrollerContent.addConstraint(NSLayoutConstraint(item: p1, attribute: .Top, relatedBy: .Equal, toItem: frequencyScrollerContent, attribute: .Top, multiplier: 1, constant: 0))
-    frequencyScrollerContent.addConstraint(NSLayoutConstraint(item: p1, attribute: .Left, relatedBy: .Equal, toItem: frequencyScrollerContent, attribute: .Left, multiplier: 1, constant: 0))
-    frequencyScrollerContent.addConstraint(NSLayoutConstraint(item: p1, attribute: .Width, relatedBy: .Equal, toItem: frequencyScrollerContent, attribute: .Width, multiplier: 0.33333, constant: 0))
-    frequencyScrollerContent.addConstraint(NSLayoutConstraint(item: p1, attribute: .Height, relatedBy: .Equal, toItem: frequencyScrollerContent, attribute: .Height, multiplier: 1, constant: 0))
-    let p2 = FrequencySettings(leftTitle: "How many times a week?",
-                       pickerCount: 6,
-                        rightTitle: "What days of the week?",
-                  multiSelectItems: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"])
-    p2.translatesAutoresizingMaskIntoConstraints = false
-    frequencyScrollerContent.addSubview(p2)
-    frequencyScrollerContent.addConstraint(NSLayoutConstraint(item: p2, attribute: .CenterY, relatedBy: .Equal, toItem: frequencyScrollerContent, attribute: .CenterY, multiplier: 1, constant: 0))
-    frequencyScrollerContent.addConstraint(NSLayoutConstraint(item: p2, attribute: .CenterX, relatedBy: .Equal, toItem: frequencyScrollerContent, attribute: .CenterX, multiplier: 1, constant: 0))
-    frequencyScrollerContent.addConstraint(NSLayoutConstraint(item: p2, attribute: .Width, relatedBy: .Equal, toItem: frequencyScrollerContent, attribute: .Width, multiplier: 0.33333, constant: 0))
-    frequencyScrollerContent.addConstraint(NSLayoutConstraint(item: p2, attribute: .Height, relatedBy: .Equal, toItem: frequencyScrollerContent, attribute: .Height, multiplier: 1, constant: 0))
+    buildSettings(dailySettings, centerX: 0.33333)
     
-    let p3 = FrequencySettings(leftTitle: "How many times a month?",
-      pickerCount: 3,
+    let weeklySettings = FrequencySettings(leftTitle: "How many times a week?",
+      pickerCount: 6,
+      rightTitle: "What days of the week?",
+      multiSelectItems: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"])
+    buildSettings(weeklySettings, centerX: 1)
+    
+    let monthlySettings = FrequencySettings(leftTitle: "How many times a month?",
+      pickerCount: 5,
       rightTitle: "What parts of the month?",
       multiSelectItems: ["Beginning", "Middle", "End"])
-    p3.translatesAutoresizingMaskIntoConstraints = false
-    frequencyScrollerContent.addSubview(p3)
-    frequencyScrollerContent.addConstraint(NSLayoutConstraint(item: p3, attribute: .Top, relatedBy: .Equal, toItem: frequencyScrollerContent, attribute: .Top, multiplier: 1, constant: 0))
-    frequencyScrollerContent.addConstraint(NSLayoutConstraint(item: p3, attribute: .Right, relatedBy: .Equal, toItem: frequencyScrollerContent, attribute: .Right, multiplier: 1, constant: 0))
-    frequencyScrollerContent.addConstraint(NSLayoutConstraint(item: p3, attribute: .Width, relatedBy: .Equal, toItem: frequencyScrollerContent, attribute: .Width, multiplier: 0.33333, constant: 0))
-    frequencyScrollerContent.addConstraint(NSLayoutConstraint(item: p3, attribute: .Height, relatedBy: .Equal, toItem: frequencyScrollerContent, attribute: .Height, multiplier: 1, constant: 0))
+    buildSettings(monthlySettings, centerX: 1.66666)
+  }
+  
+  func buildSettings(settings: FrequencySettings, centerX: CGFloat) {
+    settings.translatesAutoresizingMaskIntoConstraints = false
+    frequencyScrollerContent.addSubview(settings)
+    settings.snp_makeConstraints { (make) -> Void in
+      make.centerX.equalTo(frequencyScrollerContent).multipliedBy(centerX)
+      make.centerY.equalTo(frequencyScrollerContent)
+      make.width.equalTo(frequencyScrollerContent).multipliedBy(0.33333)
+      make.height.equalTo(frequencyScrollerContent)
+    }
   }
   
   func textFieldShouldReturn(textField: UITextField) -> Bool {
