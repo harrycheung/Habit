@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import CocoaLumberjack
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,6 +22,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     view.backgroundColor = MainViewController.blue
     window!.rootViewController!.view.addSubview(view)
     application.setStatusBarStyle(UIStatusBarStyle.LightContent, animated: false)
+    
+    // CocoaLumberjack
+    DDLog.addLogger(DDTTYLogger.sharedInstance())    
+#if DEBUG
+    defaultDebugLevel = .Verbose
+    DDLogVerbose("Log level verbose")
+#else
+    defaultDebugLevel = .Warning
+#endif
+    
     return true
   }
 

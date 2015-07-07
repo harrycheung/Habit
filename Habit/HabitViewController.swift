@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import CoreData
 import SnapKit
+import CocoaLumberjack
 
 class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewDelegate {
   
@@ -33,14 +34,14 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
     name.text = habit!.name;
     name.delegate = self
     switch Habit.Frequency(rawValue: habit!.frequency!.integerValue)! {
-    case .Daily:
-      frequency.selectedSegmentIndex = 0
     case .Weekly:
       frequency.selectedSegmentIndex = 1
     case .Monthly:
       frequency.selectedSegmentIndex = 2
-    default: ()
+    default:
+      frequency.selectedSegmentIndex = 0
     }
+    scrollToSettings()
     
     let recognizer = UITapGestureRecognizer(target: self, action: "dismissModal:")
     recognizer.cancelsTouchesInView = false
@@ -97,6 +98,10 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
   
   @IBAction func frequencyChanged(sender: AnyObject) {
     enableDone()
+    scrollToSettings(true)
+  }
+  
+  func scrollToSettings(animated: Bool = false) {
     let frame = frequencyScroller.bounds
     frequencyScroller.scrollRectToVisible(CGRectMake(CGFloat(frequency.selectedSegmentIndex) * frame.width, 0, frame.width, frame.height), animated: true)
   }
@@ -125,14 +130,14 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
       do {
         try moContext.save()
       } catch let error as NSError {
-        NSLog("Could not save \(error), \(error.userInfo)")
+        DDLogError("Could not save \(error), \(error.userInfo)")
       }
     } else if button.titleForState(.Normal) == "Delete" {
       moContext.deleteObject(habit!)
       do {
         try moContext.save()
       } catch let error as NSError {
-        NSLog("Could not save \(error), \(error.userInfo)")
+        DDLogError("Could not save \(error), \(error.userInfo)")
       }
       habit = nil
     } else {

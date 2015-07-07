@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import CocoaLumberjack
 
 class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
   
@@ -45,9 +46,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 //    do {
 //      try self.moContext.save()
 //    } catch let error as NSError {
-//      NSLog("Could not save \(error), \(error.userInfo)")
+//      DDLogError("Could not save \(error), \(error.userInfo)")
 //    } catch {
-//      NSLog("Could not save")
+//      DDLogError("Could not save")
 //    }
     
     let request = NSFetchRequest(entityName: "Habit")
@@ -75,10 +76,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 //    titleBar.layoutIfNeeded()
     
 //    for family in UIFont.familyNames() {
-//      NSLog("\(family)")
+//      DDLogVerbose("\(family)")
 //      
 //      for name in UIFont.fontNamesForFamilyName(family as! String) {
-//        NSLog("  \(name)")
+//        DDLogVerbose("  \(name)")
 //      }
 //    }
   }
@@ -154,9 +155,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         do {
           try self.moContext.save()
         } catch let error as NSError {
-          NSLog("Could not save \(error), \(error.userInfo)")
+          DDLogError("Could not save \(error), \(error.userInfo)")
         } catch {
-          NSLog("Could not save")
+          DDLogError("Could not save")
         }
         
         self.insertHabit = habit
@@ -177,9 +178,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         do {
           try self.moContext.save()
         } catch let error as NSError {
-          NSLog("Could not save \(error), \(error.userInfo)")
+          DDLogError("Could not save \(error), \(error.userInfo)")
         } catch {
-          NSLog("Could not save")
+          DDLogError("Could not save")
         }
         
         self.insertHabit = habit
