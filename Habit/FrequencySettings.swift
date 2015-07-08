@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SnapKit
 
 class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, MultiSelectControlDataSource {
   
@@ -47,18 +48,22 @@ class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, 
     leftOverlay!.translatesAutoresizingMaskIntoConstraints = false
     leftOverlay!.backgroundColor = UIColor.whiteColor()
     addSubview(leftOverlay!)
-    addConstraint(NSLayoutConstraint(item: leftOverlay!, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 0.5, constant: 0))
-    addConstraint(NSLayoutConstraint(item: leftOverlay!, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1, constant: 0))
-    addConstraint(NSLayoutConstraint(item: leftOverlay!, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 0.5, constant: -2))
-    addConstraint(NSLayoutConstraint(item: leftOverlay!, attribute: .Height, relatedBy: .Equal, toItem: self, attribute: .Height, multiplier: 1, constant: 0))
+    leftOverlay!.snp_makeConstraints { (make) -> Void in
+      make.centerX.equalTo(self).multipliedBy(0.5)
+      make.centerY.equalTo(self)
+      make.width.equalTo(self).multipliedBy(0.5).offset(-2)
+      make.height.equalTo(self)
+    }
     rightOverlay = OverlayView(frequencySettings: self)
     rightOverlay!.translatesAutoresizingMaskIntoConstraints = false
     rightOverlay!.backgroundColor = UIColor.whiteColor()
     addSubview(rightOverlay!)
-    addConstraint(NSLayoutConstraint(item: rightOverlay!, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.5, constant: 0))
-    addConstraint(NSLayoutConstraint(item: rightOverlay!, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1, constant: 0))
-    addConstraint(NSLayoutConstraint(item: rightOverlay!, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 0.5, constant: -2))
-    addConstraint(NSLayoutConstraint(item: rightOverlay!, attribute: .Height, relatedBy: .Equal, toItem: self, attribute: .Height, multiplier: 1, constant: 0))
+    rightOverlay!.snp_makeConstraints { (make) -> Void in
+      make.centerX.equalTo(self).multipliedBy(1.5)
+      make.centerY.equalTo(self)
+      make.width.equalTo(self).multipliedBy(0.5).offset(-2)
+      make.height.equalTo(self)
+    }
     overlayTouched(leftOverlay!)
   }
   
