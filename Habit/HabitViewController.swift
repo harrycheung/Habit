@@ -20,11 +20,11 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
   var dailySettings: FrequencySettings?
   var weeklySettings: FrequencySettings?
   var monthlySettings: FrequencySettings?
+//  var settingsConstraint: Constraint?
   
   @IBOutlet weak var name: UITextField!
+  @IBOutlet weak var settings: UIView!
   @IBOutlet weak var frequency: UISegmentedControl!
-  @IBOutlet weak var cancel: UIButton!
-  @IBOutlet weak var done: UIButton!
   @IBOutlet weak var frequencyScroller: UIScrollView!
   @IBOutlet weak var frequencyScrollerContent: UIView!
   
@@ -48,11 +48,12 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
     recognizer.numberOfTapsRequired = 1
     frequency.addGestureRecognizer(recognizer)
     view.addGestureRecognizer(recognizer)
-    
-    if !habit!.isNew() {
-      cancel.setTitle("Delete", forState: .Normal)
-    } else {
+
+    if habit!.isNew() {
       name.becomeFirstResponder()
+      //showSettings(animated: false)
+    } else {
+      //hideSettings(animated: false)
     }
     
     enableDone()
@@ -87,6 +88,22 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
     }
   }
   
+//  func showSettings(animated animated: Bool) {
+//    settingsConstraint?.uninstall()
+//    settings.snp_makeConstraints { (make) -> Void in
+//      settingsConstraint = make.bottom.equalTo(view).constraint
+//    }
+//    settings.layoutIfNeeded()
+//  }
+//  
+//  func hideSettings(animated animated: Bool) {
+//    settingsConstraint?.uninstall()
+//    settings.snp_makeConstraints { (make) -> Void in
+//      settingsConstraint = make.height.equalTo(100).constraint
+//    }
+//    settings.layoutIfNeeded()
+//  }
+  
   func textFieldShouldReturn(textField: UITextField) -> Bool {
     name.resignFirstResponder()
     return true
@@ -112,13 +129,17 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
   
   func enableDone() {
     if name.text!.isEmpty && frequency.selectedSegmentIndex >= 0 {
-      done.enabled = false
+      //done.enabled = false
     } else {
-      done.enabled = true
+      //done.enabled = true
     }
   }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    if sender is UIBarButtonItem {
+      habit = nil
+      return
+    }
     let button = sender as! UIButton
     if button.titleForState(.Normal) == "Done" {
       habit!.name = name.text!

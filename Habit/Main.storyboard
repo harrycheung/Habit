@@ -17,8 +17,6 @@
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
-            <string>Bariol-Regular</string>
-            <string>Bariol-Regular</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -163,12 +161,27 @@
                         <viewControllerLayoutGuide type="top" id="7l0-3q-qB9"/>
                         <viewControllerLayoutGuide type="bottom" id="cSw-LG-uKR"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="VOQ-mx-QHa" userLabel="Edit Habit View">
+                    <view key="view" contentMode="scaleToFill" id="VOQ-mx-QHa" userLabel="Habit View">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xVf-yL-jNb">
+                                <rect key="frame" x="-4" y="20" width="383" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="Lu2-OM-cGz"/>
+                                </constraints>
+                                <items>
+                                    <navigationItem id="F18-vG-SSx">
+                                        <barButtonItem key="rightBarButtonItem" title="X" id="Nlh-iY-rkn">
+                                            <connections>
+                                                <segue destination="Xjg-bp-os8" kind="unwind" unwindAction="unwind:" id="Isa-rr-uVk"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="start a habit" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="3xy-47-OAN">
-                                <rect key="frame" x="16" y="28" width="343" height="30"/>
+                                <rect key="frame" x="16" y="68" width="343" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="iKK-M6-kwn"/>
                                 </constraints>
@@ -178,107 +191,91 @@
                                     <action selector="nameEntered:" destination="fuZ-7k-oQj" eventType="editingDidEnd" id="H75-gs-1rd"/>
                                 </connections>
                             </textField>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" translatesAutoresizingMaskIntoConstraints="NO" id="0tr-LV-M4N">
-                                <rect key="frame" x="16" y="92" width="343" height="29"/>
-                                <segments>
-                                    <segment title="Daily"/>
-                                    <segment title="Weekly"/>
-                                    <segment title="Monthly"/>
-                                </segments>
-                                <connections>
-                                    <action selector="frequencyChanged:" destination="fuZ-7k-oQj" eventType="valueChanged" id="IS8-tM-Gi2"/>
-                                </connections>
-                            </segmentedControl>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FeH-uK-xvJ">
-                                <rect key="frame" x="16" y="617" width="47" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="N9P-oA-mQ3"/>
-                                    <constraint firstAttribute="width" constant="47" id="OO9-Ur-tpC"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="47" id="hCn-iF-MZa"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
-                                <state key="normal" title="Cancel">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="Xjg-bp-os8" kind="unwind" unwindAction="unwind:" id="CJs-Hn-fxE"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ufW-as-ekp">
-                                <rect key="frame" x="323" y="617" width="36" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="36" id="0oX-pk-qLx"/>
-                                    <constraint firstAttribute="height" constant="30" id="tFr-X3-RsZ"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
-                                <state key="normal" title="Done">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="Xjg-bp-os8" kind="unwind" unwindAction="unwind:" id="r4Q-Qz-bxZ"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How often?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jwW-4y-xn8">
-                                <rect key="frame" x="16" y="78" width="63" height="14"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="63" id="NWm-0v-mwB"/>
-                                    <constraint firstAttribute="height" constant="14" id="pb1-WN-LBq"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="14"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g9g-gL-H8l">
-                                <rect key="frame" x="16" y="128" width="343" height="300"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9hC-uO-pGM" userLabel="Settings">
+                                <rect key="frame" x="16" y="102" width="343" height="565"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LXJ-7i-RmO">
-                                        <rect key="frame" x="0.0" y="0.0" width="1029" height="300"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How often?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jwW-4y-xn8">
+                                        <rect key="frame" x="0.0" y="0.0" width="343" height="14"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="14" id="pb1-WN-LBq"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="14"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" translatesAutoresizingMaskIntoConstraints="NO" id="0tr-LV-M4N">
+                                        <rect key="frame" x="0.0" y="14" width="343" height="29"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="28" id="SkM-Md-yeO"/>
+                                        </constraints>
+                                        <segments>
+                                            <segment title="Daily"/>
+                                            <segment title="Weekly"/>
+                                            <segment title="Monthly"/>
+                                        </segments>
+                                        <connections>
+                                            <action selector="frequencyChanged:" destination="fuZ-7k-oQj" eventType="valueChanged" id="IS8-tM-Gi2"/>
+                                        </connections>
+                                    </segmentedControl>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g9g-gL-H8l">
+                                        <rect key="frame" x="0.0" y="50" width="343" height="515"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LXJ-7i-RmO">
+                                                <rect key="frame" x="0.0" y="0.0" width="1029" height="515"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </view>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="LXJ-7i-RmO" secondAttribute="trailing" id="Af3-SR-HKc"/>
+                                            <constraint firstItem="LXJ-7i-RmO" firstAttribute="top" secondItem="g9g-gL-H8l" secondAttribute="top" id="NvC-i3-mcu"/>
+                                            <constraint firstAttribute="bottom" secondItem="LXJ-7i-RmO" secondAttribute="bottom" id="XPz-gB-9BM"/>
+                                            <constraint firstItem="LXJ-7i-RmO" firstAttribute="leading" secondItem="g9g-gL-H8l" secondAttribute="leading" id="ezS-sv-KPV"/>
+                                            <constraint firstItem="LXJ-7i-RmO" firstAttribute="height" secondItem="g9g-gL-H8l" secondAttribute="height" id="twy-VT-vvc"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="delegate" destination="fuZ-7k-oQj" id="7Sc-xr-hCd"/>
+                                        </connections>
+                                    </scrollView>
                                 </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="LXJ-7i-RmO" secondAttribute="trailing" id="Af3-SR-HKc"/>
-                                    <constraint firstItem="LXJ-7i-RmO" firstAttribute="top" secondItem="g9g-gL-H8l" secondAttribute="top" id="NvC-i3-mcu"/>
-                                    <constraint firstAttribute="bottom" secondItem="LXJ-7i-RmO" secondAttribute="bottom" id="XPz-gB-9BM"/>
-                                    <constraint firstItem="LXJ-7i-RmO" firstAttribute="leading" secondItem="g9g-gL-H8l" secondAttribute="leading" id="ezS-sv-KPV"/>
-                                    <constraint firstAttribute="height" constant="300" id="ox1-qZ-vWI"/>
-                                    <constraint firstItem="LXJ-7i-RmO" firstAttribute="height" secondItem="g9g-gL-H8l" secondAttribute="height" id="twy-VT-vvc"/>
+                                    <constraint firstItem="LXJ-7i-RmO" firstAttribute="width" secondItem="9hC-uO-pGM" secondAttribute="width" multiplier="3" id="2nJ-JW-eip"/>
+                                    <constraint firstItem="jwW-4y-xn8" firstAttribute="leading" secondItem="9hC-uO-pGM" secondAttribute="leading" id="4fb-oU-pK0"/>
+                                    <constraint firstAttribute="trailing" secondItem="g9g-gL-H8l" secondAttribute="trailing" id="5wH-rb-GMS"/>
+                                    <constraint firstAttribute="bottom" secondItem="g9g-gL-H8l" secondAttribute="bottom" id="9S6-KV-dKS"/>
+                                    <constraint firstItem="g9g-gL-H8l" firstAttribute="top" secondItem="0tr-LV-M4N" secondAttribute="bottom" constant="8" id="GFM-Dc-6ti"/>
+                                    <constraint firstAttribute="trailing" secondItem="jwW-4y-xn8" secondAttribute="trailing" id="JFJ-JL-tOX"/>
+                                    <constraint firstAttribute="trailing" secondItem="0tr-LV-M4N" secondAttribute="trailing" id="Oyt-Kb-BMJ"/>
+                                    <constraint firstItem="0tr-LV-M4N" firstAttribute="top" secondItem="jwW-4y-xn8" secondAttribute="bottom" id="VwF-7C-EKM"/>
+                                    <constraint firstItem="0tr-LV-M4N" firstAttribute="leading" secondItem="9hC-uO-pGM" secondAttribute="leading" id="WfR-Q4-3n8"/>
+                                    <constraint firstItem="jwW-4y-xn8" firstAttribute="top" secondItem="9hC-uO-pGM" secondAttribute="top" id="bRI-Pa-Jw2"/>
+                                    <constraint firstItem="g9g-gL-H8l" firstAttribute="leading" secondItem="9hC-uO-pGM" secondAttribute="leading" id="sfD-Wr-ivy"/>
                                 </constraints>
-                                <connections>
-                                    <outlet property="delegate" destination="fuZ-7k-oQj" id="7Sc-xr-hCd"/>
-                                </connections>
-                            </scrollView>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="0tr-LV-M4N" firstAttribute="top" secondItem="jwW-4y-xn8" secondAttribute="bottom" id="7QG-fK-hy6"/>
-                            <constraint firstItem="cSw-LG-uKR" firstAttribute="top" secondItem="FeH-uK-xvJ" secondAttribute="bottom" constant="20" id="HCN-Gt-373"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="9hC-uO-pGM" secondAttribute="trailing" id="APg-Ak-c03"/>
                             <constraint firstAttribute="centerX" secondItem="3xy-47-OAN" secondAttribute="centerX" id="HgO-aC-mqU"/>
-                            <constraint firstAttribute="leadingMargin" secondItem="g9g-gL-H8l" secondAttribute="leading" id="IuU-Dt-hon"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="ufW-as-ekp" secondAttribute="trailing" id="LC2-0L-iTY"/>
-                            <constraint firstItem="0tr-LV-M4N" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leadingMargin" id="YNT-ci-MIf"/>
-                            <constraint firstAttribute="leadingMargin" secondItem="jwW-4y-xn8" secondAttribute="leading" id="aee-X1-8Jv"/>
-                            <constraint firstItem="3xy-47-OAN" firstAttribute="top" secondItem="7l0-3q-qB9" secondAttribute="bottom" constant="8" id="br0-J8-7Pp"/>
-                            <constraint firstItem="LXJ-7i-RmO" firstAttribute="width" secondItem="0tr-LV-M4N" secondAttribute="width" multiplier="3" id="eSX-4l-AAB"/>
+                            <constraint firstItem="9hC-uO-pGM" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leadingMargin" id="J2Y-Ga-hDX"/>
+                            <constraint firstItem="xVf-yL-jNb" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leadingMargin" constant="-20" id="QEo-Wl-TSF"/>
+                            <constraint firstItem="9hC-uO-pGM" firstAttribute="top" secondItem="3xy-47-OAN" secondAttribute="bottom" constant="4" id="ZpB-9m-bHf"/>
+                            <constraint firstItem="xVf-yL-jNb" firstAttribute="top" secondItem="7l0-3q-qB9" secondAttribute="bottom" id="cDq-V0-lg5"/>
+                            <constraint firstItem="3xy-47-OAN" firstAttribute="top" secondItem="xVf-yL-jNb" secondAttribute="bottom" constant="4" id="gBz-OL-YHd"/>
                             <constraint firstItem="3xy-47-OAN" firstAttribute="trailing" secondItem="VOQ-mx-QHa" secondAttribute="trailingMargin" id="gmX-Gs-TnL"/>
-                            <constraint firstItem="jwW-4y-xn8" firstAttribute="top" secondItem="3xy-47-OAN" secondAttribute="bottom" constant="20" id="gou-Q6-e6U"/>
-                            <constraint firstItem="FeH-uK-xvJ" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leadingMargin" id="iz1-Yo-bpP"/>
+                            <constraint firstItem="cSw-LG-uKR" firstAttribute="top" secondItem="9hC-uO-pGM" secondAttribute="bottom" id="mbS-5A-cLh"/>
                             <constraint firstItem="3xy-47-OAN" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leadingMargin" id="oTc-2J-KWQ"/>
-                            <constraint firstItem="cSw-LG-uKR" firstAttribute="top" secondItem="ufW-as-ekp" secondAttribute="bottom" constant="20" id="qxa-XZ-e73"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="g9g-gL-H8l" secondAttribute="trailing" id="s13-Tb-ai7"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="0tr-LV-M4N" secondAttribute="trailing" id="vrh-Sg-BTu"/>
-                            <constraint firstItem="g9g-gL-H8l" firstAttribute="top" secondItem="0tr-LV-M4N" secondAttribute="bottom" constant="8" id="wAp-xN-P4U"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="xVf-yL-jNb" secondAttribute="trailing" constant="-20" id="xyf-dA-ujB"/>
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
-                        <outlet property="cancel" destination="FeH-uK-xvJ" id="h7G-ea-UJx"/>
-                        <outlet property="done" destination="ufW-as-ekp" id="3Ab-8q-QB6"/>
                         <outlet property="frequency" destination="0tr-LV-M4N" id="scQ-SV-J2P"/>
                         <outlet property="frequencyScroller" destination="g9g-gL-H8l" id="cQV-St-VnV"/>
                         <outlet property="frequencyScrollerContent" destination="LXJ-7i-RmO" id="kZ5-Kq-a2F"/>
                         <outlet property="name" destination="3xy-47-OAN" id="88D-aI-VhZ"/>
+                        <outlet property="settings" destination="9hC-uO-pGM" id="q2w-oj-f86"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uf1-eU-pA4" userLabel="First Responder" sceneMemberID="firstResponder"/>
