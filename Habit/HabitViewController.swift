@@ -32,6 +32,10 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
   @IBOutlet weak var deleteWidth: NSLayoutConstraint!
   @IBOutlet weak var saveLeading: NSLayoutConstraint!
   
+  var activeSettings: FrequencySettings {
+    return frequencySettings[frequency.selectedSegmentIndex]!
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -62,7 +66,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
     name.text = habit!.name;
     name.delegate = self
     frequency.selectedSegmentIndex = habit!.frequency!.integerValue - 1
-    frequencySettings[frequency.selectedSegmentIndex]!.picker.selectRow(habit!.times!.integerValue - 1, inComponent: 0, animated: false)
+    activeSettings.picker.selectRow(habit!.times!.integerValue - 1, inComponent: 0, animated: false)
     notification.on = habit!.notifyBool
     
     // Tap handlers for closing the keyboard. Note: I need a specific recognizer for
@@ -144,7 +148,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
   }
   
   func enableSave() {
-    let settings = frequencySettings[frequency.selectedSegmentIndex]!
+    let settings = activeSettings
     if !habit!.isNew && name.text! == habit!.name! && notification.on == habit!.notifyBool &&
        frequency.selectedSegmentIndex == habit!.frequency!.integerValue - 1 {
       // If name and frequency is the same, test frequency settings
@@ -166,7 +170,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
     if button.isEqual(save) {
       habit!.name = name.text!
       habit!.frequency = frequency.selectedSegmentIndex + 1
-      habit!.times = frequencySettings[frequency.selectedSegmentIndex]!.picker!.selectedRowInComponent(0) + 1
+      habit!.times = activeSettings.picker!.selectedRowInComponent(0) + 1
       habit!.notifyBool = notification.on
       if habit!.isNew {
         habit!.last = NSDate()
