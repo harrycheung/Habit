@@ -23,9 +23,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     window!.rootViewController!.view.addSubview(view)
     application.setStatusBarStyle(UIStatusBarStyle.LightContent, animated: false)
     
-    let attr = NSDictionary(object: UIFont(name: "Bariol-Regular", size: 15.0)!, forKey: NSFontAttributeName)
-    UISegmentedControl.appearance().setTitleTextAttributes(attr as? [NSObject : AnyObject], forState: .Normal)
-    
+    var attr = [NSObject: AnyObject]()
+    attr[NSFontAttributeName] = UIFont(name: "Bariol-Regular", size: 15.0)!
+    attr[NSForegroundColorAttributeName] = MainViewController.blue
+    UISegmentedControl.appearance().setTitleTextAttributes(attr, forState: .Normal)
+    UISegmentedControl.appearance().tintColor = MainViewController.blue
     return true
   }
 
