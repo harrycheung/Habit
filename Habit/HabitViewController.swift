@@ -12,15 +12,14 @@ import CoreData
 import SnapKit
 import CocoaLumberjack
 
-class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewDelegate, FrequencySettingsDelegate {
+class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewDelegate, FrequencySettingsDelegate, UIGestureRecognizerDelegate {
   
   let moContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
   
   var habit: Habit?
   var blurImage: UIImage?
-  var dailySettings: FrequencySettings?
-  var weeklySettings: FrequencySettings?
-  var monthlySettings: FrequencySettings?
+  var frequencySettings = [FrequencySettings?](count:3, repeatedValue: nil)
+  var pickerRecognizers = [UITapGestureRecognizer?](count:3, repeatedValue: nil)
   
   @IBOutlet weak var name: UITextField!
   @IBOutlet weak var settings: UIView!
@@ -37,24 +36,24 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
     super.viewDidLoad()
     
     // Setup settings views for each frequency
-    dailySettings = FrequencySettings(leftTitle: "Times a day",
+    frequencySettings[0] = FrequencySettings(leftTitle: "Times a day",
       pickerCount: 12,
       rightTitle: "Parts of day",
       multiSelectItems: ["Morning", "Mid-Morning", "Midday", "Mid-Afternoon", "Afternoon", "Evening"],
       delegate: self)
-    buildSettings(dailySettings!, centerX: 0.33333)
-    weeklySettings = FrequencySettings(leftTitle: "Times a week",
+    buildSettings(frequencySettings[0]!, centerX: 0.33333)
+    frequencySettings[1] = FrequencySettings(leftTitle: "Times a week",
       pickerCount: 6,
       rightTitle: "Days of week",
       multiSelectItems: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
       delegate: self)
-    buildSettings(weeklySettings!, centerX: 1)
-    monthlySettings = FrequencySettings(leftTitle: "Times a month",
+    buildSettings(frequencySettings[1]!, centerX: 1)
+    frequencySettings[2] = FrequencySettings(leftTitle: "Times a month",
       pickerCount: 5,
       rightTitle: "Parts of month",
       multiSelectItems: ["Beginning", "Middle", "End"],
       delegate: self)
-    buildSettings(monthlySettings!, centerX: 1.66666)
+    buildSettings(frequencySettings[2]!, centerX: 1.66666)
     
     // Setup blurred background
     blurImageView.image = blurImage!.applyBlurWithRadius(5, tintColor: nil, saturationDeltaFactor: 1)
@@ -63,22 +62,27 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
     name.text = habit!.name;
     name.delegate = self
     frequency.selectedSegmentIndex = habit!.frequency!.integerValue - 1
-    activeFrequencySettings().picker.selectRow(habit!.times!.integerValue - 1, inComponent: 0, animated: false)
+    frequencySettings[frequency.selectedSegmentIndex]!.picker.selectRow(habit!.times!.integerValue - 1, inComponent: 0, animated: false)
     notification.on = habit!.notifyBool
     
-    // Tap handler for closing the keyboard
-//    let recognizer = UITapGestureRecognizer(target: self, action: "dismissModal:")
-//    recognizer.cancelsTouchesInView = false
-//    recognizer.numberOfTapsRequired = 1
-//    frequency.addGestureRecognizer(recognizer)
-//    view.addGestureRecognizer(recognizer)
-//    dailySettings!.picker.addGestureRecognizer(recognizer)
-//    weeklySettings!.picker.addGestureRecognizer(recognizer)
-//    monthlySettings!.picker.addGestureRecognizer(recognizer)
+    // Tap handlers for closing the keyboard. Note: I need a specific recognizer for
+    // the UIPickerViews since they handle the gesture a little differently. I think
+    // it's a bug.
+    let recognizer = UITapGestureRecognizer(target: self, action: "hideKeyboard:")
+    recognizer.cancelsTouchesInView = false
+    recognizer.numberOfTapsRequired = 1
+    recognizer.delegate = self
+    view.addGestureRecognizer(recognizer)
+    for index in 0..<3 {
+      pickerRecognizers[index] = UITapGestureRecognizer(target: self, action: "hideKeyboard:")
+      pickerRecognizers[index]!.cancelsTouchesInView = false
+      pickerRecognizers[index]!.numberOfTapsRequired = 1
+      pickerRecognizers[index]!.delegate = self
+      frequencySettings[index]!.picker.addGestureRecognizer(pickerRecognizers[index]!)
+    }
 
     // Setup form if this is new
     if habit!.isNew {
-      name.becomeFirstResponder()
       save.setTitle("Create", forState: .Normal)
       deleteWidth.constant = 0
       saveLeading.constant = 0
@@ -94,11 +98,6 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
       make.width.equalTo(frequencyScrollerContent).multipliedBy(0.33333)
       make.height.equalTo(frequencyScrollerContent)
     }
-  }
-  
-  override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?){
-    view.endEditing(true)
-    super.touchesBegan(touches, withEvent: event)
   }
   
   @IBAction func frequencyChanged(sender: AnyObject) {
@@ -123,8 +122,19 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
     return true
   }
   
-  func dismissModal(recognizer: UIPanGestureRecognizer) {
-    name.resignFirstResponder()
+  func gestureRecognizer(gestureRecognizer: UIGestureRecognizer,
+    shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    for recognizer in pickerRecognizers {
+      if recognizer!.isEqual(gestureRecognizer) {
+        return true
+      }
+    }
+    return false
+  }
+  
+  func hideKeyboard(recognizer: UIPanGestureRecognizer) {
+    // TODO: or name.resignFirstResponder?
+    view.endEditing(true)
   }
   
   func scrollToSettings(index: Int, animated: Bool = false) {
@@ -134,7 +144,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
   }
   
   func enableSave() {
-    let settings = activeFrequencySettings()
+    let settings = frequencySettings[frequency.selectedSegmentIndex]!
     if !habit!.isNew && name.text! == habit!.name! && notification.on == habit!.notifyBool &&
        frequency.selectedSegmentIndex == habit!.frequency!.integerValue - 1 {
       // If name and frequency is the same, test frequency settings
@@ -151,23 +161,12 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
     }
   }
   
-  func activeFrequencySettings() -> FrequencySettings {
-    switch frequency.selectedSegmentIndex {
-    case 1:
-      return weeklySettings!
-    case 2:
-      return monthlySettings!
-    default:
-      return dailySettings!
-    }
-  }
-  
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     let button = sender as! UIButton
     if button.isEqual(save) {
       habit!.name = name.text!
       habit!.frequency = frequency.selectedSegmentIndex + 1
-      habit!.times = activeFrequencySettings().picker!.selectedRowInComponent(0) + 1
+      habit!.times = frequencySettings[frequency.selectedSegmentIndex]!.picker!.selectedRowInComponent(0) + 1
       habit!.notifyBool = notification.on
       if habit!.isNew {
         habit!.last = NSDate()
