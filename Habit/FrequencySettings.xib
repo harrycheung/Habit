@@ -54,6 +54,10 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vIP-Ib-9Mc" customClass="MultiSelectControl" customModule="Habit" customModuleProvider="target">
                     <rect key="frame" x="308" y="21" width="292" height="579"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="hg6-Pc-Eah"/>
+                        <outlet property="delegate" destination="-1" id="ruK-bj-aYi"/>
+                    </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cTi-dB-CTV" userLabel="Picker Container">
                     <rect key="frame" x="0.0" y="21" width="299" height="579"/>

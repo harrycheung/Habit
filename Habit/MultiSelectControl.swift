@@ -30,19 +30,18 @@ class MultiSelectControl : UIView {
   @IBOutlet var dataSource: MultiSelectControlDataSource?
   @IBOutlet var delegate: MultiSelectControlDelegate?
   
-  private var segments: [String] = []
-  private var count: Int = 0
-  private var buttons: [UIButton] = []
-  private(set) var selectedIndexes: [Int] = []
+  var segments: [String] = []
+  var count: Int = 0
+  var buttons: [UIButton] = []
+  var selectedIndexes: [Int] = []
   
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
   }
   
-  override func layoutSubviews() {    
+  override func layoutSubviews() {
     if dataSource != nil {
       count = dataSource!.numberOfItemsInMultiSelectControl(self)
-      
       for index in 0..<count {
         let button = UIButton()
         button.setTitle(dataSource!.multiSelectControl(self, itemAtIndex: index), forState: .Normal)
@@ -54,13 +53,16 @@ class MultiSelectControl : UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 3
         button.layer.masksToBounds = true
+        buttons.append(button)
         addSubview(button)
         addConstraint(NSLayoutConstraint(item: button, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1, constant: 0))
         addConstraint(NSLayoutConstraint(item: button, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: CGFloat(1 + 2 * index) / CGFloat(count), constant: 0))
         addConstraint(NSLayoutConstraint(item: button, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1, constant: 0))
         addConstraint(NSLayoutConstraint(item: button, attribute: .Height, relatedBy: .Equal, toItem: self, attribute: .Height, multiplier: 1 / CGFloat(count), constant: -4))
         button.addTarget(self, action: "itemTapped:", forControlEvents: .TouchUpInside)
-        buttons.append(button)
+        if selectedIndexes.contains(index) {
+          button.selected = true
+        }
       }
     }
   }

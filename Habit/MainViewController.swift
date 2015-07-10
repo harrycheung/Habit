@@ -104,11 +104,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       color: MainViewController.green,
       options: [.Rotate, .Alpha],
       completion: { (cell: SwipeTableViewCell) in
-        tableView.beginUpdates()
         let indexPath = tableView.indexPathForCell(cell)!
         tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
         let habit = self.habits.removeAtIndex(indexPath.row)
-        tableView.endUpdates()
         
         let entry = Entry.create(moc: self.moContext, habit: habit)
         habit.last = entry.createdAt!
@@ -128,11 +126,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       color: MainViewController.yellow,
       options: [.Rotate, .Alpha],
       completion: { (cell: SwipeTableViewCell) in
-        tableView.beginUpdates()
         let indexPath = tableView.indexPathForCell(cell)!
         tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Left)
         let habit = self.habits.removeAtIndex(indexPath.row)
-        tableView.endUpdates()
         
         habit.last = NSDate()
         do {
@@ -194,8 +190,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         habits = habits.sort({ $0.dueIn < $1.dueIn })
         let newIndex = habits.indexOf(habit)
         if indexPath!.row != newIndex {
+          tableView.beginUpdates()
           tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Top)
           tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: newIndex!, inSection: 0)], withRowAnimation: .Top)
+          tableView.endUpdates()
         } else {
           (tableView.cellForRowAtIndexPath(indexPath!) as! HabitTableViewCell).reload()
         }

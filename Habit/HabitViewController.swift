@@ -44,18 +44,21 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
       pickerCount: 12,
       rightTitle: "Parts of day",
       multiSelectItems: ["Morning", "Mid-Morning", "Midday", "Mid-Afternoon", "Afternoon", "Evening"],
+      useTimes: habit!.useTimes,
       delegate: self)
     buildSettings(frequencySettings[0]!, centerX: 0.33333)
     frequencySettings[1] = FrequencySettings(leftTitle: "Times a week",
       pickerCount: 6,
       rightTitle: "Days of week",
       multiSelectItems: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      useTimes: habit!.useTimes,
       delegate: self)
     buildSettings(frequencySettings[1]!, centerX: 1)
     frequencySettings[2] = FrequencySettings(leftTitle: "Times a month",
       pickerCount: 5,
       rightTitle: "Parts of month",
       multiSelectItems: ["Beginning", "Middle", "End"],
+      useTimes: habit!.useTimes,
       delegate: self)
     buildSettings(frequencySettings[2]!, centerX: 1.66666)
     
@@ -66,7 +69,11 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
     name.text = habit!.name;
     name.delegate = self
     frequency.selectedSegmentIndex = habit!.frequency!.integerValue - 1
-    activeSettings.picker.selectRow(habit!.times!.integerValue - 1, inComponent: 0, animated: false)
+    if habit!.partsArray.isEmpty {
+      activeSettings.picker.selectRow(habit!.times!.integerValue - 1, inComponent: 0, animated: false)
+    } else {
+      activeSettings.multiSelect.selectedIndexes = habit!.partsArray
+    }
     notification.on = habit!.notifyBool
     
     // Tap handlers for closing the keyboard. Note: I need a specific recognizer for
@@ -91,6 +98,10 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
       deleteWidth.constant = 0
       saveLeading.constant = 0
     }
+  }
+  
+  override func viewDidLayoutSubviews() {
+    scrollToSettings(frequency.selectedSegmentIndex)
   }
   
   func buildSettings(settings: FrequencySettings, centerX: CGFloat) {
@@ -152,14 +163,14 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
     if !habit!.isNew && name.text! == habit!.name! && notification.on == habit!.notifyBool &&
        frequency.selectedSegmentIndex == habit!.frequency!.integerValue - 1 {
       // If name and frequency is the same, test frequency settings
-      save.enabled = (settings.leftOverlay!.active &&
+      save.enabled = (settings.useTimes &&
                        (!habit!.useTimes || settings.picker.selectedRowInComponent(0) != habit!.timesInt - 1)) ||
-                     (settings.rightOverlay!.active && !settings.multiSelect.selectedIndexes.isEmpty &&
+                     (!settings.useTimes && !settings.multiSelect.selectedIndexes.isEmpty &&
                        (habit!.useTimes || settings.multiSelect.selectedIndexes != habit!.partsArray))
     } else {
       // If either name or frequency is different, check frequency settings too
       save.enabled = !name.text!.isEmpty
-      if settings.rightOverlay!.active {
+      if !settings.useTimes {
         save.enabled = save.enabled && !settings.multiSelect.selectedIndexes.isEmpty
       }
     }
@@ -170,7 +181,12 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
     if button.isEqual(save) {
       habit!.name = name.text!
       habit!.frequency = frequency.selectedSegmentIndex + 1
-      habit!.times = activeSettings.picker!.selectedRowInComponent(0) + 1
+      if activeSettings.useTimes {
+        habit!.times = activeSettings.picker!.selectedRowInComponent(0) + 1
+        habit!.partsArray = []
+      } else {        
+        habit!.partsArray = activeSettings.multiSelect.selectedIndexes
+      }
       habit!.notifyBool = notification.on
       if habit!.isNew {
         habit!.last = NSDate()

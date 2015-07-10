@@ -31,9 +31,10 @@ class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, 
   var rightOverlay: OverlayView?
   var pickerCount: Int = 0
   var multiSelectItems: [String] = []
+  var useTimes: Bool = false
   var delegate: FrequencySettingsDelegate?
   
-  init(leftTitle: String, pickerCount: Int, rightTitle: String, multiSelectItems: [String], delegate: FrequencySettingsDelegate?) {
+  init(leftTitle: String, pickerCount: Int, rightTitle: String, multiSelectItems: [String], useTimes: Bool, delegate: FrequencySettingsDelegate?) {
     super.init(frame: CGRectMake(0, 0, 1, 1))
     NSBundle.mainBundle().loadNibNamed("FrequencySettings", owner: self, options: nil)
     bounds = view.bounds
@@ -43,11 +44,8 @@ class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, 
     self.pickerCount = pickerCount
     self.rightTitle.text = rightTitle
     self.multiSelectItems = multiSelectItems
+    self.useTimes = useTimes
     self.delegate = delegate
-    
-    // TODO: Move this to IB (worked in 7 beta 2, but broke with beta 3)
-    multiSelect.delegate = self
-    multiSelect.dataSource = self
   }
 
   required init(coder aDecoder: NSCoder) {
@@ -77,20 +75,18 @@ class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, 
       make.width.equalTo(self).multipliedBy(0.5)
       make.height.equalTo(self)
     }
-    overlayTouched(leftOverlay!, touched: false)
+    overlayTouched(useTimes ? leftOverlay! : rightOverlay!, touched: false)
   }
   
   func overlayTouched(overlayView: OverlayView, touched: Bool = true) {
     if overlayView.isEqual(leftOverlay) {
+      useTimes = true
       leftOverlay!.alpha = 0
-      leftOverlay!.active = true
       rightOverlay!.alpha = deactivatedAlpha
-      rightOverlay!.active = false
     } else {
+      useTimes = false
       leftOverlay!.alpha = deactivatedAlpha
-      leftOverlay!.active = false
       rightOverlay!.alpha = 0
-      rightOverlay!.active = true
     }
     if touched {
       delegate?.frequencySettingsChanged()
@@ -136,7 +132,6 @@ class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, 
   class OverlayView : UIView {
     
     var frequencySettings: FrequencySettings?
-    var active: Bool = false
     
     init(frequencySettings: FrequencySettings) {
       super.init(frame: CGRectMake(0, 0, 10, 10))
