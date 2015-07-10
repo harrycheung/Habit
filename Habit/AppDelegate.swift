@@ -23,14 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     window!.rootViewController!.view.addSubview(view)
     application.setStatusBarStyle(UIStatusBarStyle.LightContent, animated: false)
     
-    // CocoaLumberjack
-    DDLog.addLogger(DDTTYLogger.sharedInstance())    
-#if DEBUG
-    defaultDebugLevel = .Verbose
-    DDLogVerbose("Log level verbose")
-#else
-    defaultDebugLevel = .Warning
-#endif
+    let attr = NSDictionary(object: UIFont(name: "Bariol-Regular", size: 15.0)!, forKey: NSFontAttributeName)
+    UISegmentedControl.appearance().setTitleTextAttributes(attr as? [NSObject : AnyObject], forState: .Normal)
     
     return true
   }

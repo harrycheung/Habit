@@ -19,7 +19,7 @@ class HabitTableViewCell : SwipeTableViewCell {
   @IBOutlet weak var due: UILabel!
   @IBOutlet weak var entries: UILabel!
   
-  required init(coder aDecoder: NSCoder) {
+  required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     
     contentView.backgroundColor = MainViewController.blue
@@ -38,8 +38,8 @@ class HabitTableViewCell : SwipeTableViewCell {
 
   func reload() {
     name.text = habit!.name
-    due.text = habit!.dueText()
-    let dueIn = habit!.dueIn()
+    due.text = habit!.dueText
+    let dueIn = habit!.dueIn
     var alpha = MinimumAlpha
     if dueIn < 10 * 60 {
       alpha = 1.0

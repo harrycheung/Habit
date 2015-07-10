@@ -1,37 +1,20 @@
 PODS:
-  - CocoaLumberjack (2.0.1):
-    - CocoaLumberjack/Default (= 2.0.1)
-    - CocoaLumberjack/Extensions (= 2.0.1)
-  - CocoaLumberjack/Core (2.0.1)
-  - CocoaLumberjack/Default (2.0.1):
-    - CocoaLumberjack/Core
-  - CocoaLumberjack/Extensions (2.0.1):
-    - CocoaLumberjack/Default
   - SnapKit (0.12.0)
 
 DEPENDENCIES:
-  - CocoaLumberjack (from `https://github.com/CocoaLumberjack/CocoaLumberjack`, branch
-    `swift_2.0`)
   - SnapKit (from `https://github.com/SnapKit/SnapKit.git`, branch `swift-2.0`)
 
 EXTERNAL SOURCES:
-  CocoaLumberjack:
-    :branch: swift_2.0
-    :git: https://github.com/CocoaLumberjack/CocoaLumberjack
   SnapKit:
     :branch: swift-2.0
     :git: https://github.com/SnapKit/SnapKit.git
 
 CHECKOUT OPTIONS:
-  CocoaLumberjack:
-    :commit: 717c54a7c5ddb8612777866bdc4c48a7c44a1e13
-    :git: https://github.com/CocoaLumberjack/CocoaLumberjack
   SnapKit:
     :commit: e9c9f6fe8e0954a50dd62a61a449b66ef84ae205
     :git: https://github.com/SnapKit/SnapKit.git
 
 SPEC CHECKSUMS:
-  CocoaLumberjack: 27ae9abcd376c3e4ee726ecd4adfd7b093ddef3f
   SnapKit: 00c388aa3bf1944c1b55472f31e841f75bd83882
 
 COCOAPODS: 0.37.2

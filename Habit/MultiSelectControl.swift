@@ -18,16 +18,24 @@ protocol MultiSelectControlDataSource {
   
 }
 
+@objc(MultiSelectControlDelegate)
+protocol MultiSelectControlDelegate {
+  
+  func multiSelectControl(multiSelectControl: MultiSelectControl, didChangeIndexes: [Int]) -> Void
+  
+}
+
 class MultiSelectControl : UIView {
   
   @IBOutlet var dataSource: MultiSelectControlDataSource?
+  @IBOutlet var delegate: MultiSelectControlDelegate?
   
   private var segments: [String] = []
   private var count: Int = 0
   private var buttons: [UIButton] = []
-  private(set) var selectedIndices: [Int] = []
+  private(set) var selectedIndexes: [Int] = []
   
-  required init(coder aDecoder: NSCoder) {
+  required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
   }
   
@@ -60,11 +68,12 @@ class MultiSelectControl : UIView {
   func itemTapped(sender: AnyObject) {
     let button = sender as! UIButton
     if button.selected {
-      selectedIndices.removeAtIndex(selectedIndices.indexOf(buttons.indexOf(button)!)!)
+      selectedIndexes.removeAtIndex(selectedIndexes.indexOf(buttons.indexOf(button)!)!)
     } else {
-      selectedIndices.append(buttons.indexOf(button)!)
+      selectedIndexes.append(buttons.indexOf(button)!)
     }
     button.selected = !button.selected
+    delegate?.multiSelectControl(self, didChangeIndexes: selectedIndexes)
   }
 
 }

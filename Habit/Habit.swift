@@ -21,16 +21,43 @@ class Habit: NSManagedObject {
     habit.details = details
     habit.frequency = frequency.hashValue
     habit.times = times
+    habit.parts = ""
+    habit.notifyBool = true
     habit.createdAt = NSDate()
     habit.last = habit.createdAt
     return habit
   }
+  var partsArray: [Int] {
+    get {
+      return split(parts!.characters, isSeparator: { $0 == "," }).map({Int(String($0))!})
+    }
+    set {
+      parts = ",".join(newValue.map({ String($0) }))
+    }
+  }
   
-  func isNew() -> Bool {
+  var timesInt: Int {
+    return times!.integerValue
+  }
+  
+  var useTimes: Bool {
+    return parts!.isEmpty
+  }
+  
+  var notifyBool: Bool {
+    get {
+      return notify!.boolValue
+    }
+    set {
+      notify = NSNumber(bool: newValue)
+    }
+  }
+  
+  var isNew: Bool {
     return committedValuesForKeys(nil).count == 0
   }
   
-  func dueIn() -> NSTimeInterval {
+  var dueIn: NSTimeInterval {
     var interval = 3600.0
     switch frequency!.integerValue {
     case Frequency.Daily.hashValue:
@@ -46,8 +73,8 @@ class Habit: NSManagedObject {
     return interval / times!.doubleValue - abs(last!.timeIntervalSinceNow)
   }
   
-  func dueText() -> String {
-    let due = Int(dueIn())
+  var dueText: String {
+    let due = Int(dueIn)
     let absDue = abs(due)
     var factor = 1
     var text = ""

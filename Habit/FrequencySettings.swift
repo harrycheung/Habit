@@ -10,7 +10,14 @@ import Foundation
 import UIKit
 import SnapKit
 
-class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, MultiSelectControlDataSource {
+@objc(FrequencySettingsDelegate)
+protocol FrequencySettingsDelegate {
+  
+  func frequencySettingsChanged() -> Void
+  
+}
+
+class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, MultiSelectControlDelegate, MultiSelectControlDataSource {
   
   let deactivatedAlpha: CGFloat = 0.8
   
@@ -24,8 +31,9 @@ class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, 
   var rightOverlay: OverlayView?
   var pickerCount: Int = 0
   var multiSelectItems: [String] = []
+  var delegate: FrequencySettingsDelegate?
   
-  init(leftTitle: String, pickerCount: Int, rightTitle: String, multiSelectItems: [String]) {
+  init(leftTitle: String, pickerCount: Int, rightTitle: String, multiSelectItems: [String], delegate: FrequencySettingsDelegate?) {
     super.init(frame: CGRectMake(0, 0, 1, 1))
     NSBundle.mainBundle().loadNibNamed("FrequencySettings", owner: self, options: nil)
     bounds = view.bounds
@@ -35,6 +43,11 @@ class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, 
     self.pickerCount = pickerCount
     self.rightTitle.text = rightTitle
     self.multiSelectItems = multiSelectItems
+    self.delegate = delegate
+    
+    // TODO: Move this to IB (worked in 7 beta 2, but broke with beta 3)
+    multiSelect.delegate = self
+    multiSelect.dataSource = self
   }
 
   required init(coder aDecoder: NSCoder) {
@@ -51,7 +64,7 @@ class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, 
     leftOverlay!.snp_makeConstraints { (make) -> Void in
       make.centerX.equalTo(self).multipliedBy(0.5)
       make.centerY.equalTo(self)
-      make.width.equalTo(self).multipliedBy(0.5).offset(-2)
+      make.width.equalTo(self).multipliedBy(0.5)
       make.height.equalTo(self)
     }
     rightOverlay = OverlayView(frequencySettings: self)
@@ -61,13 +74,13 @@ class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, 
     rightOverlay!.snp_makeConstraints { (make) -> Void in
       make.centerX.equalTo(self).multipliedBy(1.5)
       make.centerY.equalTo(self)
-      make.width.equalTo(self).multipliedBy(0.5).offset(-2)
+      make.width.equalTo(self).multipliedBy(0.5)
       make.height.equalTo(self)
     }
-    overlayTouched(leftOverlay!)
+    overlayTouched(leftOverlay!, touched: false)
   }
   
-  func overlayTouched(overlayView: OverlayView) {
+  func overlayTouched(overlayView: OverlayView, touched: Bool = true) {
     if overlayView.isEqual(leftOverlay) {
       leftOverlay!.alpha = 0
       leftOverlay!.active = true
@@ -78,6 +91,9 @@ class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, 
       leftOverlay!.active = false
       rightOverlay!.alpha = 0
       rightOverlay!.active = true
+    }
+    if touched {
+      delegate?.frequencySettingsChanged()
     }
   }
   
@@ -95,6 +111,10 @@ class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, 
     return String(row + 1)
   }
   
+  func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    delegate?.frequencySettingsChanged()
+  }
+  
   // MultiSelectControl
   
   func numberOfItemsInMultiSelectControl(multiSelectControl: MultiSelectControl) -> Int {
@@ -102,11 +122,15 @@ class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, 
   }
   
   func fontOfMultiSelectControl(multiselectControl: MultiSelectControl) -> UIFont {
-    return UIFont(name: "Bariol-Regular", size: 20)!
+    return UIFont(name: "Bariol-Regular", size: 18)!
   }
   
   func multiSelectControl(multiSelectControl: MultiSelectControl, itemAtIndex index: Int) -> String? {
     return multiSelectItems[index]
+  }
+  
+  func multiSelectControl(multiSelectControl: MultiSelectControl, didChangeIndexes: [Int]) {
+    delegate?.frequencySettingsChanged()
   }
   
   class OverlayView : UIView {
@@ -117,7 +141,6 @@ class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, 
     init(frequencySettings: FrequencySettings) {
       super.init(frame: CGRectMake(0, 0, 10, 10))
       self.frequencySettings = frequencySettings
-      active = false
     }
 
     required init(coder aDecoder: NSCoder) {
@@ -127,19 +150,6 @@ class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, 
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
       frequencySettings!.overlayTouched(self)
     }
-    
-//    override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
-//      let hitView = super.hitTest(point, withEvent: event)
-//      if hitView != nil && hitView!.isEqual(self) {
-//        // Activate the view that was touched and return nil to pass the event up higher
-//        if !active {
-//          habitWeekly!.overlayTouched(self)
-//        }
-//        return nil
-//      } else {
-//        return hitView
-//      }
-//    }
     
   }
 

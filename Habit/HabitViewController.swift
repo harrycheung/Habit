@@ -12,69 +12,77 @@ import CoreData
 import SnapKit
 import CocoaLumberjack
 
-class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewDelegate {
+class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewDelegate, FrequencySettingsDelegate {
   
   let moContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
   
   var habit: Habit?
+  var blurImage: UIImage?
   var dailySettings: FrequencySettings?
   var weeklySettings: FrequencySettings?
   var monthlySettings: FrequencySettings?
-//  var settingsConstraint: Constraint?
   
   @IBOutlet weak var name: UITextField!
   @IBOutlet weak var settings: UIView!
   @IBOutlet weak var frequency: UISegmentedControl!
   @IBOutlet weak var frequencyScroller: UIScrollView!
   @IBOutlet weak var frequencyScrollerContent: UIView!
+  @IBOutlet weak var notification: UISwitch!
+  @IBOutlet weak var save: UIButton!
+  @IBOutlet weak var blurImageView: UIImageView!
+  @IBOutlet weak var deleteWidth: NSLayoutConstraint!
+  @IBOutlet weak var saveLeading: NSLayoutConstraint!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    // Setup settings views for each frequency
+    dailySettings = FrequencySettings(leftTitle: "Times a day",
+      pickerCount: 12,
+      rightTitle: "Parts of day",
+      multiSelectItems: ["Morning", "Mid-Morning", "Midday", "Mid-Afternoon", "Afternoon", "Evening"],
+      delegate: self)
+    buildSettings(dailySettings!, centerX: 0.33333)
+    weeklySettings = FrequencySettings(leftTitle: "Times a week",
+      pickerCount: 6,
+      rightTitle: "Days of week",
+      multiSelectItems: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      delegate: self)
+    buildSettings(weeklySettings!, centerX: 1)
+    monthlySettings = FrequencySettings(leftTitle: "Times a month",
+      pickerCount: 5,
+      rightTitle: "Parts of month",
+      multiSelectItems: ["Beginning", "Middle", "End"],
+      delegate: self)
+    buildSettings(monthlySettings!, centerX: 1.66666)
+    
+    // Setup blurred background
+    blurImageView.image = blurImage!.applyBlurWithRadius(5, tintColor: nil, saturationDeltaFactor: 1)
+    
+    // Fill out the form
     name.text = habit!.name;
     name.delegate = self
-    switch Habit.Frequency(rawValue: habit!.frequency!.integerValue)! {
-    case .Weekly:
-      frequency.selectedSegmentIndex = 1
-    case .Monthly:
-      frequency.selectedSegmentIndex = 2
-    default:
-      frequency.selectedSegmentIndex = 0
-    }
-    scrollToSettings()
+    frequency.selectedSegmentIndex = habit!.frequency!.integerValue - 1
+    activeFrequencySettings().picker.selectRow(habit!.times!.integerValue - 1, inComponent: 0, animated: false)
+    notification.on = habit!.notifyBool
     
-    let recognizer = UITapGestureRecognizer(target: self, action: "dismissModal:")
-    recognizer.cancelsTouchesInView = false
-    recognizer.numberOfTapsRequired = 1
-    frequency.addGestureRecognizer(recognizer)
-    view.addGestureRecognizer(recognizer)
+    // Tap handler for closing the keyboard
+//    let recognizer = UITapGestureRecognizer(target: self, action: "dismissModal:")
+//    recognizer.cancelsTouchesInView = false
+//    recognizer.numberOfTapsRequired = 1
+//    frequency.addGestureRecognizer(recognizer)
+//    view.addGestureRecognizer(recognizer)
+//    dailySettings!.picker.addGestureRecognizer(recognizer)
+//    weeklySettings!.picker.addGestureRecognizer(recognizer)
+//    monthlySettings!.picker.addGestureRecognizer(recognizer)
 
-    if habit!.isNew() {
+    // Setup form if this is new
+    if habit!.isNew {
       name.becomeFirstResponder()
-      //showSettings(animated: false)
-    } else {
-      //hideSettings(animated: false)
+      save.setTitle("Create", forState: .Normal)
+      deleteWidth.constant = 0
+      saveLeading.constant = 0
     }
-    
-    enableDone()
-    
-    let dailySettings = FrequencySettings(leftTitle: "How many times a day?",
-      pickerCount: 12,
-      rightTitle: "What parts of the day?",
-      multiSelectItems: ["Morning", "Mid-Morning", "Midday", "Mid-Afternoon", "Afternoon", "Evening"])
-    buildSettings(dailySettings, centerX: 0.33333)
-    
-    let weeklySettings = FrequencySettings(leftTitle: "How many times a week?",
-      pickerCount: 6,
-      rightTitle: "What days of the week?",
-      multiSelectItems: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"])
-    buildSettings(weeklySettings, centerX: 1)
-    
-    let monthlySettings = FrequencySettings(leftTitle: "How many times a month?",
-      pickerCount: 5,
-      rightTitle: "What parts of the month?",
-      multiSelectItems: ["Beginning", "Middle", "End"])
-    buildSettings(monthlySettings, centerX: 1.66666)
   }
   
   func buildSettings(settings: FrequencySettings, centerX: CGFloat) {
@@ -88,21 +96,27 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
     }
   }
   
-//  func showSettings(animated animated: Bool) {
-//    settingsConstraint?.uninstall()
-//    settings.snp_makeConstraints { (make) -> Void in
-//      settingsConstraint = make.bottom.equalTo(view).constraint
-//    }
-//    settings.layoutIfNeeded()
-//  }
-//  
-//  func hideSettings(animated animated: Bool) {
-//    settingsConstraint?.uninstall()
-//    settings.snp_makeConstraints { (make) -> Void in
-//      settingsConstraint = make.height.equalTo(100).constraint
-//    }
-//    settings.layoutIfNeeded()
-//  }
+  override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?){
+    view.endEditing(true)
+    super.touchesBegan(touches, withEvent: event)
+  }
+  
+  @IBAction func frequencyChanged(sender: AnyObject) {
+    scrollToSettings(frequency.selectedSegmentIndex, animated: true)
+    enableSave()
+  }
+  
+  func frequencySettingsChanged() {
+    enableSave()
+  }
+  
+  @IBAction func notifyChanged(sender: AnyObject) {
+    enableSave()
+  }
+  
+  @IBAction func nameChanged(sender: AnyObject) {
+    enableSave()
+  }
   
   func textFieldShouldReturn(textField: UITextField) -> Bool {
     name.resignFirstResponder()
@@ -113,55 +127,72 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
     name.resignFirstResponder()
   }
   
-  @IBAction func frequencyChanged(sender: AnyObject) {
-    enableDone()
-    scrollToSettings(true)
+  func scrollToSettings(index: Int, animated: Bool = false) {
+    let bounds = frequencyScroller.bounds
+    frequencyScroller.scrollRectToVisible(
+      CGRectMake(CGFloat(index) * bounds.width, 0, bounds.width, bounds.height), animated: animated)
   }
   
-  func scrollToSettings(animated: Bool = false) {
-    let frame = frequencyScroller.bounds
-    frequencyScroller.scrollRectToVisible(CGRectMake(CGFloat(frequency.selectedSegmentIndex) * frame.width, 0, frame.width, frame.height), animated: true)
-  }
-  
-  @IBAction func nameEntered(sender: AnyObject) {
-    enableDone()
-  }
-  
-  func enableDone() {
-    if name.text!.isEmpty && frequency.selectedSegmentIndex >= 0 {
-      //done.enabled = false
+  func enableSave() {
+    let settings = activeFrequencySettings()
+    if !habit!.isNew && name.text! == habit!.name! && notification.on == habit!.notifyBool &&
+       frequency.selectedSegmentIndex == habit!.frequency!.integerValue - 1 {
+      // If name and frequency is the same, test frequency settings
+      save.enabled = (settings.leftOverlay!.active &&
+                       (!habit!.useTimes || settings.picker.selectedRowInComponent(0) != habit!.timesInt - 1)) ||
+                     (settings.rightOverlay!.active && !settings.multiSelect.selectedIndexes.isEmpty &&
+                       (habit!.useTimes || settings.multiSelect.selectedIndexes != habit!.partsArray))
     } else {
-      //done.enabled = true
+      // If either name or frequency is different, check frequency settings too
+      save.enabled = !name.text!.isEmpty
+      if settings.rightOverlay!.active {
+        save.enabled = save.enabled && !settings.multiSelect.selectedIndexes.isEmpty
+      }
+    }
+  }
+  
+  func activeFrequencySettings() -> FrequencySettings {
+    switch frequency.selectedSegmentIndex {
+    case 1:
+      return weeklySettings!
+    case 2:
+      return monthlySettings!
+    default:
+      return dailySettings!
     }
   }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    if sender is UIBarButtonItem {
-      habit = nil
-      return
-    }
     let button = sender as! UIButton
-    if button.titleForState(.Normal) == "Done" {
+    if button.isEqual(save) {
       habit!.name = name.text!
-      habit!.frequency = frequency.selectedSegmentIndex
-      if habit!.isNew() {
+      habit!.frequency = frequency.selectedSegmentIndex + 1
+      habit!.times = activeFrequencySettings().picker!.selectedRowInComponent(0) + 1
+      habit!.notifyBool = notification.on
+      if habit!.isNew {
         habit!.last = NSDate()
         habit!.createdAt = NSDate()
       }
       do {
         try moContext.save()
       } catch let error as NSError {
-        DDLogError("Could not save \(error), \(error.userInfo)")
+        NSLog("Could not save \(error), \(error.userInfo)")
       }
-    } else if button.titleForState(.Normal) == "Delete" {
-      moContext.deleteObject(habit!)
-      do {
-        try moContext.save()
-      } catch let error as NSError {
-        DDLogError("Could not save \(error), \(error.userInfo)")
-      }
-      habit = nil
     } else {
+      if button.titleForState(.Normal) == "Delete" {
+        moContext.deleteObject(habit!)
+        do {
+          try moContext.save()
+        } catch let error as NSError {
+          NSLog("Could not save \(error), \(error.userInfo)")
+        }
+      } else if button.titleForState(.Normal) == "X" {
+        if habit!.isNew {
+          moContext.deleteObject(habit!)
+        } else {
+          return
+        }
+      }
       habit = nil
     }
   }

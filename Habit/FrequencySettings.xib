@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8121.20" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8152.3" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8101.16"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8124.4"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -15,8 +15,8 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FrequencySettings" customModule="Habit" customModuleProvider="target">
             <connections>
                 <outlet property="leftTitle" destination="QyN-w6-dga" id="dnV-hX-O0G"/>
-                <outlet property="multiSelect" destination="vIP-Ib-9Mc" id="Jor-Ic-Xi1"/>
-                <outlet property="picker" destination="Ex2-cd-5Jl" id="TAe-hn-Z33"/>
+                <outlet property="multiSelect" destination="vIP-Ib-9Mc" id="Ipq-Hg-V4Y"/>
+                <outlet property="picker" destination="wLI-h7-Hzg" id="avY-Tf-5sl"/>
                 <outlet property="rightTitle" destination="Ocd-v8-HiC" id="mJH-FR-HRx"/>
                 <outlet property="view" destination="iN0-l3-epB" id="d8m-lx-odK"/>
             </connections>
@@ -39,7 +39,7 @@
                         <constraint firstAttribute="height" constant="21" id="TBT-eX-PWt"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="14"/>
-                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How many times a week?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QyN-w6-dga">
@@ -48,22 +48,33 @@
                         <constraint firstAttribute="height" constant="21" id="iF1-oG-9FM"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="14"/>
-                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ex2-cd-5Jl">
-                    <rect key="frame" x="4" y="21" width="292" height="579"/>
-                    <connections>
-                        <outlet property="dataSource" destination="-1" id="lEE-Ej-9Jw"/>
-                        <outlet property="delegate" destination="-1" id="JbQ-iM-OT6"/>
-                    </connections>
-                </pickerView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vIP-Ib-9Mc" customClass="MultiSelectControl" customModule="Habit" customModuleProvider="target">
-                    <rect key="frame" x="304" y="21" width="292" height="579"/>
+                    <rect key="frame" x="308" y="21" width="292" height="579"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <connections>
-                        <outlet property="dataSource" destination="-1" id="kFA-hY-d5g"/>
-                    </connections>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cTi-dB-CTV" userLabel="Picker Container">
+                    <rect key="frame" x="0.0" y="21" width="299" height="579"/>
+                    <subviews>
+                        <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wLI-h7-Hzg">
+                            <rect key="frame" x="0.0" y="182" width="291" height="216"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="216" id="BJu-5Z-uUB"/>
+                            </constraints>
+                            <connections>
+                                <outlet property="dataSource" destination="-1" id="ADw-ud-lAi"/>
+                                <outlet property="delegate" destination="-1" id="dUW-cH-9lf"/>
+                            </connections>
+                        </pickerView>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="wLI-h7-Hzg" secondAttribute="trailing" constant="8" id="Itx-Gd-RSH"/>
+                        <constraint firstItem="wLI-h7-Hzg" firstAttribute="centerY" secondItem="cTi-dB-CTV" secondAttribute="centerY" id="sOI-Eo-0BP"/>
+                        <constraint firstItem="wLI-h7-Hzg" firstAttribute="leading" secondItem="cTi-dB-CTV" secondAttribute="leading" id="tox-1K-6IX"/>
+                    </constraints>
                 </view>
             </subviews>
             <constraints>
@@ -72,18 +83,18 @@
                 <constraint firstItem="QyN-w6-dga" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" multiplier="0.5" id="7Oo-cv-l0K"/>
                 <constraint firstItem="Ocd-v8-HiC" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" multiplier="1.5" id="FhB-Bc-3Wh"/>
                 <constraint firstItem="vIP-Ib-9Mc" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.5" constant="-8" id="I0p-dx-v3M"/>
+                <constraint firstItem="cal-0N-FpV" firstAttribute="leading" secondItem="cTi-dB-CTV" secondAttribute="trailing" id="I6A-7c-eYG"/>
                 <constraint firstItem="cal-0N-FpV" firstAttribute="top" secondItem="QyN-w6-dga" secondAttribute="bottom" id="P5w-DX-IhE"/>
-                <constraint firstItem="Ex2-cd-5Jl" firstAttribute="top" secondItem="QyN-w6-dga" secondAttribute="bottom" id="Sje-pa-vV9"/>
-                <constraint firstItem="Ex2-cd-5Jl" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.5" constant="-8" id="Tgl-oD-dcV"/>
+                <constraint firstAttribute="bottom" secondItem="cTi-dB-CTV" secondAttribute="bottom" id="PJs-Us-YSA"/>
                 <constraint firstItem="cal-0N-FpV" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="U6z-MJ-XS4"/>
+                <constraint firstItem="cTi-dB-CTV" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="XEB-zf-bfk"/>
                 <constraint firstItem="vIP-Ib-9Mc" firstAttribute="top" secondItem="Ocd-v8-HiC" secondAttribute="bottom" id="ZgN-nL-NxW"/>
                 <constraint firstItem="Ocd-v8-HiC" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.5" id="bOu-FU-ZrO"/>
                 <constraint firstAttribute="bottom" secondItem="vIP-Ib-9Mc" secondAttribute="bottom" id="cpw-N2-7Pq"/>
                 <constraint firstItem="Ocd-v8-HiC" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="fWC-xA-PFb"/>
+                <constraint firstItem="cTi-dB-CTV" firstAttribute="top" secondItem="QyN-w6-dga" secondAttribute="bottom" id="hBk-pq-iO7"/>
                 <constraint firstItem="QyN-w6-dga" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="hsb-iv-Zwg"/>
-                <constraint firstItem="Ex2-cd-5Jl" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" multiplier="0.5" id="q1l-Xs-42J"/>
-                <constraint firstItem="vIP-Ib-9Mc" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" multiplier="1.5" id="vkS-MH-3qf"/>
-                <constraint firstAttribute="bottom" secondItem="Ex2-cd-5Jl" secondAttribute="bottom" id="yst-Pe-ySq"/>
+                <constraint firstItem="vIP-Ib-9Mc" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" multiplier="1.5" constant="4" id="vkS-MH-3qf"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <nil key="simulatedTopBarMetrics"/>

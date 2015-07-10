@@ -29,6 +29,7 @@
 		4A4643831B448B3300732389 /* MultiSelectControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4643821B448B3300732389 /* MultiSelectControl.swift */; };
 		4A6DB6FC1B4B8781008BC1B7 /* UIButton+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6DB6FB1B4B8781008BC1B7 /* UIButton+Color.swift */; };
 		4A6DB6FE1B4C1587008BC1B7 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DB6FD1B4C1587008BC1B7 /* Podfile */; };
+		4A7C8E4A1B4E02840081E8FB /* UIImage+ImageEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8E491B4E02840081E8FB /* UIImage+ImageEffects.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +77,7 @@
 		4A4643821B448B3300732389 /* MultiSelectControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSelectControl.swift; sourceTree = "<group>"; };
 		4A6DB6FB1B4B8781008BC1B7 /* UIButton+Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Color.swift"; sourceTree = "<group>"; };
 		4A6DB6FD1B4C1587008BC1B7 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		4A7C8E491B4E02840081E8FB /* UIImage+ImageEffects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+ImageEffects.swift"; sourceTree = "<group>"; };
 		665F8C2916FF820599C8EF0C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		947E88BAF44C6A4867BE9E9A /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		C30FEA7A7703C78B572D2FEA /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -202,6 +204,7 @@
 				4A1D08CD1B3E1A7A006A9CA4 /* SwipeTableViewCell.swift */,
 				4A4643821B448B3300732389 /* MultiSelectControl.swift */,
 				4A6DB6FB1B4B8781008BC1B7 /* UIButton+Color.swift */,
+				4A7C8E491B4E02840081E8FB /* UIImage+ImageEffects.swift */,
 			);
 			name = Custom;
 			sourceTree = "<group>";
@@ -302,6 +305,7 @@
 				TargetAttributes = {
 					4A1D08931B3E17E9006A9CA4 = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = 7M4B2MXG5A;
 					};
 					4A1D08AA1B3E17E9006A9CA4 = {
 						CreatedOnToolsVersion = 7.0;
@@ -424,6 +428,7 @@
 				4A1D08D11B3E1A7A006A9CA4 /* HabitViewController.swift in Sources */,
 				4A4643811B44632400732389 /* FrequencySettings.swift in Sources */,
 				4A1D08D01B3E1A7A006A9CA4 /* HabitTableViewCell.swift in Sources */,
+				4A7C8E4A1B4E02840081E8FB /* UIImage+ImageEffects.swift in Sources */,
 				4A1D08DD1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift in Sources */,
 				4A1D08CF1B3E1A7A006A9CA4 /* Habit.swift in Sources */,
 				4A1D08DC1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift in Sources */,
@@ -561,8 +566,10 @@
 			baseConfigurationReference = 665F8C2916FF820599C8EF0C /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Habit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "$(inherited) -D DEBUG \"-D\" \"COCOAPODS\"";
 				PRODUCT_BUNDLE_IDENTIFIER = harrycheung.habit.Habit;
@@ -575,8 +582,10 @@
 			baseConfigurationReference = 947E88BAF44C6A4867BE9E9A /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Habit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = harrycheung.habit.Habit;
 				PRODUCT_NAME = "$(TARGET_NAME)";

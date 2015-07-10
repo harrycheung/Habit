@@ -61,7 +61,7 @@ class SwipeTableViewCell : UITableViewCell {
   var options = [TransformOptions](count: 2, repeatedValue: .None)
   var delegate: SwipeTableViewCellDelegate?
 
-  required init(coder aDecoder: NSCoder) {
+  required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     recognizer = UIPanGestureRecognizer()
     recognizer!.delegate = self
