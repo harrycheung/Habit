@@ -26,7 +26,7 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view alpha="0.29999999999999999" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cal-0N-FpV" userLabel="Splitter">
+                <view hidden="YES" alpha="0.29999999999999999" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cal-0N-FpV" userLabel="Splitter">
                     <rect key="frame" x="299" y="21" width="1" height="579"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
@@ -62,7 +62,7 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cTi-dB-CTV" userLabel="Picker Container">
                     <rect key="frame" x="0.0" y="21" width="299" height="579"/>
                     <subviews>
-                        <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wLI-h7-Hzg">
+                        <pickerView contentMode="scaleToFill" showsSelectionIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wLI-h7-Hzg">
                             <rect key="frame" x="0.0" y="182" width="291" height="216"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="216" id="BJu-5Z-uUB"/>
@@ -85,9 +85,10 @@
                 <constraint firstItem="QyN-w6-dga" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.5" id="2BX-jY-Bwl"/>
                 <constraint firstAttribute="bottom" secondItem="cal-0N-FpV" secondAttribute="bottom" id="400-RF-bPs"/>
                 <constraint firstItem="QyN-w6-dga" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" multiplier="0.5" id="7Oo-cv-l0K"/>
+                <constraint firstAttribute="trailing" secondItem="vIP-Ib-9Mc" secondAttribute="trailing" id="8C8-xK-a0m"/>
                 <constraint firstItem="Ocd-v8-HiC" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" multiplier="1.5" id="FhB-Bc-3Wh"/>
-                <constraint firstItem="vIP-Ib-9Mc" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.5" constant="-8" id="I0p-dx-v3M"/>
                 <constraint firstItem="cal-0N-FpV" firstAttribute="leading" secondItem="cTi-dB-CTV" secondAttribute="trailing" id="I6A-7c-eYG"/>
+                <constraint firstItem="vIP-Ib-9Mc" firstAttribute="leading" secondItem="cal-0N-FpV" secondAttribute="trailing" constant="8" id="Nsl-6l-gff"/>
                 <constraint firstItem="cal-0N-FpV" firstAttribute="top" secondItem="QyN-w6-dga" secondAttribute="bottom" id="P5w-DX-IhE"/>
                 <constraint firstAttribute="bottom" secondItem="cTi-dB-CTV" secondAttribute="bottom" id="PJs-Us-YSA"/>
                 <constraint firstItem="cal-0N-FpV" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="U6z-MJ-XS4"/>
@@ -98,7 +99,6 @@
                 <constraint firstItem="Ocd-v8-HiC" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="fWC-xA-PFb"/>
                 <constraint firstItem="cTi-dB-CTV" firstAttribute="top" secondItem="QyN-w6-dga" secondAttribute="bottom" id="hBk-pq-iO7"/>
                 <constraint firstItem="QyN-w6-dga" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="hsb-iv-Zwg"/>
-                <constraint firstItem="vIP-Ib-9Mc" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" multiplier="1.5" constant="4" id="vkS-MH-3qf"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <nil key="simulatedTopBarMetrics"/>

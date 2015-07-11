@@ -55,10 +55,12 @@ class MultiSelectControl : UIView {
         button.layer.masksToBounds = true
         buttons.append(button)
         addSubview(button)
-        addConstraint(NSLayoutConstraint(item: button, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1, constant: 0))
-        addConstraint(NSLayoutConstraint(item: button, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: CGFloat(1 + 2 * index) / CGFloat(count), constant: 0))
-        addConstraint(NSLayoutConstraint(item: button, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1, constant: 0))
-        addConstraint(NSLayoutConstraint(item: button, attribute: .Height, relatedBy: .Equal, toItem: self, attribute: .Height, multiplier: 1 / CGFloat(count), constant: -4))
+        button.snp_makeConstraints({ (make) -> Void in
+          make.centerX.equalTo(self)
+          make.centerY.equalTo(self).multipliedBy(CGFloat(1 + 2 * index) / CGFloat(count))
+          make.width.equalTo(self)
+          make.height.equalTo(self).multipliedBy(1.0 / CGFloat(count)).offset(-3)
+        })
         button.addTarget(self, action: "itemTapped:", forControlEvents: .TouchUpInside)
         if selectedIndexes.contains(index) {
           button.selected = true

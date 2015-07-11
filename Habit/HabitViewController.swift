@@ -96,7 +96,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
     // Setup form if this is new
     if habit!.isNew {
       save.setTitle("Create", forState: .Normal)
-      deleteWidth.constant = 0
+      deleteWidth.priority = UILayoutPriorityDefaultHigh
       saveLeading.constant = 0
     }
   }
@@ -180,9 +180,14 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   @IBAction func closeView(sender: AnyObject) {
     if habit!.isNew {
       moContext.deleteObject(habit!)
+      habit = nil
     }
     performSegueWithIdentifier(UnwindSegueIdentifier, sender: self)
   }
+  
+  // 86 tall
+  // 30 left right
+  // 12 top bottom
   
   @IBAction func saveHabit(sender: AnyObject) {
     habit!.name = name.text!
@@ -203,6 +208,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
     } catch let error as NSError {
       NSLog("Could not save \(error), \(error.userInfo)")
     }
+    performSegueWithIdentifier(UnwindSegueIdentifier, sender: self)
   }
   
   @IBAction func deleteHabit(sender: AnyObject) {
