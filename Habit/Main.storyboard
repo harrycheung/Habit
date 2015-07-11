@@ -188,7 +188,7 @@
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
                                                 <connections>
-                                                    <segue destination="Xjg-bp-os8" kind="unwind" unwindAction="unwind:" id="C5b-QO-f9L"/>
+                                                    <action selector="closeView:" destination="fuZ-7k-oQj" eventType="touchUpInside" id="Kf9-VN-glt"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -267,7 +267,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <segue destination="Xjg-bp-os8" kind="unwind" unwindAction="unwind:" id="nu9-ok-ZAb"/>
+                                                    <action selector="deleteHabit:" destination="fuZ-7k-oQj" eventType="touchUpInside" id="Y1k-dX-nHd"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rmt-ez-nkv">
@@ -287,7 +287,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <segue destination="Xjg-bp-os8" kind="unwind" unwindAction="unwind:" id="hTD-zc-B7x"/>
+                                                    <action selector="saveHabit:" destination="fuZ-7k-oQj" eventType="touchUpInside" id="vrB-en-eXb"/>
                                                 </connections>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wpu-fr-v8p" userLabel="Notification View">
@@ -392,6 +392,7 @@
                         <outlet property="save" destination="rmt-ez-nkv" id="C5S-jO-4pa"/>
                         <outlet property="saveLeading" destination="sat-Ke-Zt7" id="sbi-NA-0fg"/>
                         <outlet property="settings" destination="9hC-uO-pGM" id="q2w-oj-f86"/>
+                        <segue destination="Xjg-bp-os8" kind="unwind" identifier="unwindToMain" unwindAction="unwind:" id="J96-SJ-4cO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uf1-eU-pA4" userLabel="First Responder" sceneMemberID="firstResponder"/>

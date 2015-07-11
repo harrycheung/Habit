@@ -12,9 +12,10 @@ import CoreData
 import SnapKit
 import CocoaLumberjack
 
-class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewDelegate, FrequencySettingsDelegate, UIGestureRecognizerDelegate {
+class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySettingsDelegate, UIGestureRecognizerDelegate, UIActionSheetDelegate {
   
   let moContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+  let UnwindSegueIdentifier = "unwindToMain"
   
   var habit: Habit?
   var blurImage: UIImage?
@@ -176,44 +177,53 @@ class HabitViewController : UIViewController, UITextFieldDelegate, UIScrollViewD
     }
   }
   
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    let button = sender as! UIButton
-    if button.isEqual(save) {
-      habit!.name = name.text!
-      habit!.frequency = frequency.selectedSegmentIndex + 1
-      if activeSettings.useTimes {
-        habit!.times = activeSettings.picker!.selectedRowInComponent(0) + 1
-        habit!.partsArray = []
-      } else {        
-        habit!.partsArray = activeSettings.multiSelect.selectedIndexes
-      }
-      habit!.notifyBool = notification.on
-      if habit!.isNew {
-        habit!.last = NSDate()
-        habit!.createdAt = NSDate()
-      }
-      do {
-        try moContext.save()
-      } catch let error as NSError {
-        NSLog("Could not save \(error), \(error.userInfo)")
-      }
+  @IBAction func closeView(sender: AnyObject) {
+    if habit!.isNew {
+      moContext.deleteObject(habit!)
+    }
+    performSegueWithIdentifier(UnwindSegueIdentifier, sender: self)
+  }
+  
+  @IBAction func saveHabit(sender: AnyObject) {
+    habit!.name = name.text!
+    habit!.frequency = frequency.selectedSegmentIndex + 1
+    if activeSettings.useTimes {
+      habit!.times = activeSettings.picker!.selectedRowInComponent(0) + 1
+      habit!.partsArray = []
     } else {
-      if button.titleForState(.Normal) == "Delete" {
-        moContext.deleteObject(habit!)
-        do {
-          try moContext.save()
-        } catch let error as NSError {
-          NSLog("Could not save \(error), \(error.userInfo)")
-        }
-      } else if button.titleForState(.Normal) == "X" {
-        if habit!.isNew {
-          moContext.deleteObject(habit!)
-        } else {
-          return
-        }
-      }
-      habit = nil
+      habit!.partsArray = activeSettings.multiSelect.selectedIndexes
+    }
+    habit!.notifyBool = notification.on
+    if habit!.isNew {
+      habit!.last = NSDate()
+      habit!.createdAt = NSDate()
+    }
+    do {
+      try moContext.save()
+    } catch let error as NSError {
+      NSLog("Could not save \(error), \(error.userInfo)")
     }
   }
-
+  
+  @IBAction func deleteHabit(sender: AnyObject) {
+    let alert = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+    let delete = UIAlertAction(title: "Delete habit", style: .Destructive, handler: { (UIAlertAction) -> Void in
+      self.moContext.deleteObject(self.habit!)
+      do {
+        try self.moContext.save()
+      } catch let error as NSError {
+        NSLog("Could not save \(error), \(error.userInfo)")
+      } catch {
+        // something
+      }
+      self.habit = nil
+      self.performSegueWithIdentifier(self.UnwindSegueIdentifier, sender: self)
+    })
+    alert.addAction(delete)
+    let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: { (UIAlertAction) -> Void in
+      alert.dismissViewControllerAnimated(true, completion: nil)
+    })
+    alert.addAction(cancel)
+    presentViewController(alert, animated: true, completion: nil)
+  }
 }
