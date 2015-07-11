@@ -30,8 +30,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    tableView.backgroundColor = UIColor.blackColor()
-    
     let requestAny = NSFetchRequest(entityName: "Habit")
     do {
       habits = try moContext.executeFetchRequest(requestAny) as! [Habit]
@@ -56,24 +54,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       habits = try moContext.executeFetchRequest(request) as! [Habit]
       habits = habits.sort({ $0.dueIn < $1.dueIn })
     } catch let error as NSError {
-      print("Fetch failed: \(error.localizedDescription)")
+      NSLog("Fetch failed: \(error.localizedDescription)")
     }
     
     tableView.backgroundView = nil
-    
-//    UIApplication.sharedApplication().statusBarHidden = true
-    titleBar.backgroundColor = MainViewController.blue
-//    for (_, constraint) in view.constraints.enumerate() {
-//      if constraint.firstItem.isEqual(titleBar) && constraint.firstAttribute == NSLayoutAttribute.Top {
-//        constraint.constant = -20
-//      }
-//    }
-//    for (_, constraint) in titleBar.constraints.enumerate() {
-//      if constraint.firstItem.isEqual(titleBar) && constraint.firstAttribute == NSLayoutAttribute.Height {
-//        constraint.constant = 20
-//      }
-//    }
-//    titleBar.layoutIfNeeded()
+    tableView.backgroundColor = UIColor.blackColor()
+    titleBar.backgroundColor = UIApplication.sharedApplication().windows[0].tintColor
     
 //    for family in UIFont.familyNames() {
 //      NSLog("\(family)")

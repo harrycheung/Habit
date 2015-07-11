@@ -22,7 +22,7 @@ class HabitTableViewCell : SwipeTableViewCell {
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     
-    contentView.backgroundColor = MainViewController.blue
+    contentView.backgroundColor = tintColor
     
     bottomBorder = CALayer()
     let frame = contentView.frame
@@ -48,7 +48,7 @@ class HabitTableViewCell : SwipeTableViewCell {
     }
     if contentView.backgroundColor != nil {
       var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0
-      MainViewController.blue.getRed(&red, green: &green, blue: &blue, alpha: nil)
+      tintColor.getRed(&red, green: &green, blue: &blue, alpha: nil)
       alpha = 1 - alpha
       red += (1 - red) * alpha
       green += (1 - green) * alpha
