@@ -18,13 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     // Override point for customization after application launch.
     
-    window!.tintColor = UIColor.orangeColor()
-    
-    let view = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 20))
-    view.backgroundColor = UIColor.orangeColor()
-    window!.rootViewController!.view.addSubview(view)
-    application.setStatusBarStyle(UIStatusBarStyle.LightContent, animated: false)
-    
     var attr = [NSObject: AnyObject]()
     attr[NSFontAttributeName] = UIFont(name: "Bariol-Regular", size: 15.0)!
     //attr[NSForegroundColorAttributeName] = window!.tintColor
