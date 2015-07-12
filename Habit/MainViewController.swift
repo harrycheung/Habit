@@ -107,9 +107,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       color: MainViewController.green,
       options: [.Rotate, .Alpha],
       completion: { (cell: SwipeTableViewCell) in
+        // TODO: Remove updates and delay insert
+        tableView.beginUpdates()
         let indexPath = tableView.indexPathForCell(cell)!
         tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
         let habit = self.habits.removeAtIndex(indexPath.row)
+        tableView.endUpdates()
         
         let entry = Entry.create(moc: self.moContext, habit: habit)
         habit.last = entry.createdAt!
@@ -129,9 +132,11 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       color: MainViewController.yellow,
       options: [.Rotate, .Alpha],
       completion: { (cell: SwipeTableViewCell) in
+        tableView.beginUpdates()
         let indexPath = tableView.indexPathForCell(cell)!
         tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Left)
         let habit = self.habits.removeAtIndex(indexPath.row)
+        tableView.endUpdates()
         
         habit.last = NSDate()
         do {
