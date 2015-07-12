@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 import CoreData
 import SnapKit
-import CocoaLumberjack
 
 class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySettingsDelegate, UIGestureRecognizerDelegate, UIActionSheetDelegate {
   

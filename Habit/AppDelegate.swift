@@ -8,7 +8,6 @@
 
 import UIKit
 import CoreData
-import CocoaLumberjack
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

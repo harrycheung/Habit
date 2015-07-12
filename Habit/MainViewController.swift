@@ -8,7 +8,6 @@
 
 import UIKit
 import CoreData
-import CocoaLumberjack
 
 class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
   
@@ -30,7 +29,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var titleBar: UIView!
-  @IBOutlet weak var screenshotView: UIImageView!
+  @IBOutlet weak var overlayView: UIView!
   
   var statusBar: UIView?
   var activeCell: HabitTableViewCell?
@@ -43,9 +42,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     view.addSubview(statusBar!)
     UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.LightContent, animated: false)
     
-    statusBar!.backgroundColor = MainViewController.colors[0]
+    statusBar!.backgroundColor = MainViewController.colors[1]
     // TODO: What's up with the "window!!"?
-    UIApplication.sharedApplication().delegate!.window!!.tintColor = MainViewController.colors[0]
+    UIApplication.sharedApplication().delegate!.window!!.tintColor = MainViewController.colors[1]
     
     let requestAny = NSFetchRequest(entityName: "Habit")
     do {
@@ -163,13 +162,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
   }
   
-  func screenshot(fullScreen: Bool) -> UIImage {
-    var screenShotView = view
-    if fullScreen {
-      screenShotView = UIScreen.mainScreen().snapshotViewAfterScreenUpdates(true)
-    }
-    UIGraphicsBeginImageContextWithOptions(screenShotView.bounds.size, false, UIScreen.mainScreen().scale);
-    screenShotView.drawViewHierarchyInRect(view.bounds, afterScreenUpdates: true)
+  func screenshot() -> UIImage {
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, UIScreen.mainScreen().scale);
+    view.drawViewHierarchyInRect(view.bounds, afterScreenUpdates: true)
     let image = UIGraphicsGetImageFromCurrentImageContext()
     UIGraphicsEndImageContext()
     return image
@@ -177,7 +172,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     let vc = segue.destinationViewController as! HabitViewController
-    vc.blurImage = screenshot(false)
+    vc.blurImage = screenshot()
     if segue.identifier == showHabitSegue {
       activeCell = sender as? HabitTableViewCell
       vc.habit = activeCell!.habit
@@ -239,28 +234,29 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   func changeColor(color: UIColor) {
     // Save previous color
-    UIApplication.sharedApplication().keyWindow!.windowLevel = UIWindowLevelStatusBar + 1
-    screenshotView.image = screenshot(true)
-    screenshotView.hidden = false
-    screenshotView.alpha = 1
-    view.bringSubviewToFront(screenshotView)
-    
+    let previousView = UIScreen.mainScreen().snapshotViewAfterScreenUpdates(true)
+    overlayView.addSubview(previousView)
+    overlayView.hidden = false
+    overlayView.alpha = 1
+    view.bringSubviewToFront(overlayView)
+
     // Change color
     UIApplication.sharedApplication().keyWindow!.tintColor = color
     titleBar.backgroundColor = color
     statusBar!.backgroundColor = color
     tableView.reloadData()
-    UIApplication.sharedApplication().keyWindow!.windowLevel = UIWindowLevelNormal
     
     // Animate color change
-    UIView.animateWithDuration(0.3,
+    UIView.animateWithDuration(0.5,
       delay: 0,
       options: .CurveEaseInOut,
       animations: {
-        self.screenshotView.alpha = 0
+        self.overlayView.alpha = 0
       }, completion: { (value: Bool) in
-        self.screenshotView.image = nil
-        self.screenshotView.hidden = true
+        self.overlayView.hidden = true
+        for subview in self.overlayView.subviews {
+          subview.removeFromSuperview()
+        }
     })
   }
   
