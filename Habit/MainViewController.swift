@@ -162,17 +162,14 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
   }
   
-  func screenshot() -> UIImage {
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, UIScreen.mainScreen().scale);
-    view.drawViewHierarchyInRect(view.bounds, afterScreenUpdates: true)
-    let image = UIGraphicsGetImageFromCurrentImageContext()
-    UIGraphicsEndImageContext()
-    return image
-  }
-  
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     let vc = segue.destinationViewController as! HabitViewController
-    vc.blurImage = screenshot()
+    
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, UIScreen.mainScreen().scale)
+    view.drawViewHierarchyInRect(view.bounds, afterScreenUpdates: true)
+    vc.blurImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+
     if segue.identifier == showHabitSegue {
       activeCell = sender as? HabitTableViewCell
       vc.habit = activeCell!.habit
@@ -180,10 +177,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       vc.habit = Habit.create(moc: moContext, name: "", details: "", frequency: .Daily, times: 1)
     }
     
-    //UIApplication.sharedApplication().keyWindow!.windowLevel = UIWindowLevelStatusBar + 1
+    UIApplication.sharedApplication().keyWindow!.windowLevel = UIWindowLevelStatusBar + 1
   }
   
   @IBAction func unwind(segue: UIStoryboardSegue) {
+    UIApplication.sharedApplication().keyWindow!.windowLevel = UIWindowLevelNormal
+    
     let vc = segue.sourceViewController as! HabitViewController;
     if activeCell == nil {
       if vc.habit != nil {
@@ -210,8 +209,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       }
       activeCell = nil
     }
-    
-    UIApplication.sharedApplication().keyWindow!.windowLevel = UIWindowLevelNormal
   }
   
   func insertHabit(habit: Habit) {
@@ -233,9 +230,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func changeColor(color: UIColor) {
-    // Save previous color
-    let previousView = UIScreen.mainScreen().snapshotViewAfterScreenUpdates(true)
-    overlayView.addSubview(previousView)
+    // Snapshot previous color
+    let snapshotView = UIScreen.mainScreen().snapshotViewAfterScreenUpdates(true)
+    overlayView.addSubview(snapshotView)
     overlayView.hidden = false
     overlayView.alpha = 1
     view.bringSubviewToFront(overlayView)
