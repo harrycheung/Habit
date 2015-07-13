@@ -18,7 +18,6 @@
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
-            <string>Bariol-Regular</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -52,29 +51,12 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IS1-aO-EzW">
-                                        <rect key="frame" x="321" y="5" width="30" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="Fmy-kx-YqA"/>
-                                            <constraint firstAttribute="width" constant="30" id="k7W-DG-n6t"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
-                                        <state key="normal" title="new">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <segue destination="fuZ-7k-oQj" kind="presentation" identifier="NewHabit" modalPresentationStyle="overFullScreen" modalTransitionStyle="crossDissolve" id="oli-Da-Izi"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.20392156859999999" green="0.59607843140000005" blue="0.85882352939999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <gestureRecognizers/>
                                 <constraints>
-                                    <constraint firstAttribute="centerY" secondItem="IS1-aO-EzW" secondAttribute="centerY" id="1YL-A9-Hrg"/>
                                     <constraint firstAttribute="centerY" secondItem="yD2-xD-ARB" secondAttribute="centerY" id="DoB-tv-WZj"/>
                                     <constraint firstAttribute="centerX" secondItem="yD2-xD-ARB" secondAttribute="centerX" id="H9X-2h-8QY"/>
-                                    <constraint firstAttribute="trailing" secondItem="IS1-aO-EzW" secondAttribute="trailing" constant="24" id="PCb-Zd-3Xo"/>
                                     <constraint firstAttribute="height" constant="40" id="dmD-Qq-zpM"/>
                                 </constraints>
                                 <connections>
@@ -143,13 +125,32 @@
                                     <outlet property="delegate" destination="EoV-sV-T6s" id="ym0-yD-8pz"/>
                                 </connections>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3aO-Hc-w6C">
+                                <rect key="frame" x="299" y="591" width="56" height="56"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="56" id="kcs-7O-ddR"/>
+                                    <constraint firstAttribute="height" constant="56" id="lFz-dj-7oc"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
+                                <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="4"/>
+                                <state key="normal" title="+">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="xGb-Hd-Ko5" appends="YES" id="IBT-9P-9QM"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="al0-3V-BIj" secondAttribute="centerX" id="3Uz-YV-txl"/>
+                            <constraint firstAttribute="trailing" secondItem="3aO-Hc-w6C" secondAttribute="trailing" constant="20" id="8RB-eo-9Zc"/>
                             <constraint firstItem="vGZ-8P-gz0" firstAttribute="width" secondItem="LvB-hO-ya5" secondAttribute="width" id="ARZ-vD-XHO"/>
                             <constraint firstItem="YxZ-cZ-8AJ" firstAttribute="leading" secondItem="LvB-hO-ya5" secondAttribute="leadingMargin" constant="47" id="DGZ-YR-sBC"/>
                             <constraint firstAttribute="trailing" secondItem="YxZ-cZ-8AJ" secondAttribute="trailing" id="GZd-1d-Gme"/>
                             <constraint firstItem="bYN-gK-gVh" firstAttribute="top" secondItem="al0-3V-BIj" secondAttribute="bottom" id="HpE-Ve-aig"/>
+                            <constraint firstItem="bYN-gK-gVh" firstAttribute="top" secondItem="3aO-Hc-w6C" secondAttribute="bottom" constant="20" id="OGl-Fu-bia"/>
                             <constraint firstItem="vGZ-8P-gz0" firstAttribute="top" secondItem="ZAm-fX-RF0" secondAttribute="bottom" id="TFZ-Io-OZ9"/>
                             <constraint firstAttribute="centerX" secondItem="vGZ-8P-gz0" secondAttribute="centerX" id="a81-Rm-yX0"/>
                             <constraint firstItem="al0-3V-BIj" firstAttribute="width" secondItem="LvB-hO-ya5" secondAttribute="width" id="aXY-05-rhQ"/>
@@ -166,6 +167,7 @@
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
+                        <outlet property="newButton" destination="3aO-Hc-w6C" id="F7g-IR-5fn"/>
                         <outlet property="overlayView" destination="YxZ-cZ-8AJ" id="zuv-DP-3S4"/>
                         <outlet property="tableView" destination="al0-3V-BIj" id="uHS-GK-pye"/>
                         <outlet property="titleBar" destination="vGZ-8P-gz0" id="Zws-Pv-b8s"/>
@@ -183,8 +185,13 @@
                         <action selector="changeColorRight:" destination="EoV-sV-T6s" id="0Au-HB-FZ8"/>
                     </connections>
                 </swipeGestureRecognizer>
+                <tapGestureRecognizer id="xGb-Hd-Ko5">
+                    <connections>
+                        <segue destination="fuZ-7k-oQj" kind="presentation" identifier="NewHabit" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="baQ-ma-pNZ"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="455" y="455"/>
+            <point key="canvasLocation" x="454.5" y="454.5"/>
         </scene>
         <!--Habit View Controller-->
         <scene sceneID="vFa-WD-a9P">
@@ -448,6 +455,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="PyM-4B-EAp"/>
+        <segue reference="baQ-ma-pNZ"/>
     </inferredMetricsTieBreakers>
 </document>

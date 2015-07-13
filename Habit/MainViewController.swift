@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import FontAwesome_swift
 
 class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
   
@@ -24,16 +25,18 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   let moContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
   let cellIdentifier = "HabitCell"
-  let showHabitSegue = "ShowHabit"
   let newHabitSegue = "NewHabit"
+  let showHabitSegue = "ShowHabit"
 
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var titleBar: UIView!
   @IBOutlet weak var overlayView: UIView!
+  @IBOutlet weak var newButton: UIButton!
   
   var statusBar: UIView?
   var activeCell: HabitTableViewCell?
   var habits = [Habit]()
+  var floatingButton: UIButton?
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -50,6 +53,20 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     do {
       habits = try moContext.executeFetchRequest(requestAny) as! [Habit]
       if habits.count == 0 {
+        Habit.create(moc: moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12)
+        Habit.create(moc: moContext, name: "4. Daily 8x", details: "", frequency: .Daily, times: 8)
+        Habit.create(moc: moContext, name: "5. Daily 4x", details: "", frequency: .Daily, times: 4)
+        Habit.create(moc: moContext, name: "6. Daily 1x", details: "", frequency: .Daily, times: 1)
+        Habit.create(moc: moContext, name: "7. Weekly 6x", details: "", frequency: .Weekly, times: 6)
+        Habit.create(moc: moContext, name: "8. Weekly 3x", details: "", frequency: .Weekly, times: 3)
+        Habit.create(moc: moContext, name: "9. Weekly 1x", details: "", frequency: .Weekly, times: 1)
+        Habit.create(moc: moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12)
+        Habit.create(moc: moContext, name: "4. Daily 8x", details: "", frequency: .Daily, times: 8)
+        Habit.create(moc: moContext, name: "5. Daily 4x", details: "", frequency: .Daily, times: 4)
+        Habit.create(moc: moContext, name: "6. Daily 1x", details: "", frequency: .Daily, times: 1)
+        Habit.create(moc: moContext, name: "7. Weekly 6x", details: "", frequency: .Weekly, times: 6)
+        Habit.create(moc: moContext, name: "8. Weekly 3x", details: "", frequency: .Weekly, times: 3)
+        Habit.create(moc: moContext, name: "9. Weekly 1x", details: "", frequency: .Weekly, times: 1)
         Habit.create(moc: moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12)
         Habit.create(moc: moContext, name: "4. Daily 8x", details: "", frequency: .Daily, times: 8)
         Habit.create(moc: moContext, name: "5. Daily 4x", details: "", frequency: .Daily, times: 4)
@@ -74,7 +91,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     tableView.backgroundView = nil
-    tableView.backgroundColor = UIColor.blackColor()
+    tableView.backgroundColor = UIColor.darkGrayColor()
     titleBar.backgroundColor = UIApplication.sharedApplication().windows[0].tintColor
     
 //    for family in UIFont.familyNames() {
@@ -84,14 +101,17 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 //        NSLog("  \(name)")
 //      }
 //    }
+    
+    newButton.backgroundColor = UIApplication.sharedApplication().windows[0].tintColor
+    newButton.layer.cornerRadius = 28
+    newButton.layer.shadowOpacity = 0.5
+    newButton.layer.shadowRadius = 2
+    newButton.layer.shadowOffset = CGSizeMake(0, 1)
   }
 
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
-  }
-  
-  override func viewDidAppear(animated: Bool) {
   }
   
   // Table view
@@ -164,18 +184,19 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     let vc = segue.destinationViewController as! HabitViewController
+    if segue.identifier == showHabitSegue {
+      activeCell = sender as? HabitTableViewCell
+      vc.habit = activeCell!.habit
+    } else {
+      vc.habit = Habit.create(moc: moContext, name: "", details: "", frequency: .Daily, times: 1)
+      
+      newButton.highlighted = false
+    }
     
     UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, UIScreen.mainScreen().scale)
     view.drawViewHierarchyInRect(view.bounds, afterScreenUpdates: true)
     vc.blurImage = UIGraphicsGetImageFromCurrentImageContext()
     UIGraphicsEndImageContext()
-
-    if segue.identifier == showHabitSegue {
-      activeCell = sender as? HabitTableViewCell
-      vc.habit = activeCell!.habit
-    } else if segue.identifier == newHabitSegue {
-      vc.habit = Habit.create(moc: moContext, name: "", details: "", frequency: .Daily, times: 1)
-    }
     
     UIApplication.sharedApplication().keyWindow!.windowLevel = UIWindowLevelStatusBar + 1
   }
@@ -273,5 +294,22 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     changeColor(MainViewController.colors[currentColorIndex])
   }
   
+  // UIScrollView
+  
+  func scrollViewDidScroll(scrollView: UIScrollView) {
+    NSLog("\(scrollView.contentOffset)")
+  }
+  
+  func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+    UIView.animateWithDuration(0.2, animations: {
+      self.newButton.alpha = 0
+    })
+  }
+  
+  func scrollViewWillBeginDecelerating(scrollView: UIScrollView) {
+    UIView.animateWithDuration(0.2, animations: {
+      self.newButton.alpha = 1
+    })
+  }
 }
 
