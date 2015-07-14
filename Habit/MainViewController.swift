@@ -117,6 +117,27 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   // Table view
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    let completion = { (cell: SwipeTableViewCell) -> Void in
+      // TODO: Remove updates and delay insert
+      tableView.beginUpdates()
+      let indexPath = tableView.indexPathForCell(cell)!
+      tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
+      let habit = self.habits.removeAtIndex(indexPath.row)
+      tableView.endUpdates()
+      
+      let entry = Entry.create(moc: self.moContext, habit: habit)
+      habit.last = entry.createdAt!
+      do {
+        try self.moContext.save()
+      } catch let error as NSError {
+        NSLog("Could not save \(error), \(error.userInfo)")
+      } catch {
+        NSLog("Could not save")
+      }
+      
+      self.insertHabit(habit)
+    }
+    
     let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! HabitTableViewCell
     cell.load(habits[indexPath.row])
     
@@ -125,50 +146,13 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       view: UIImageView(image: UIImage(named: "Checkmark")),
       color: MainViewController.green,
       options: [.Rotate, .Alpha],
-      completion: { (cell: SwipeTableViewCell) in
-        // TODO: Remove updates and delay insert
-        tableView.beginUpdates()
-        let indexPath = tableView.indexPathForCell(cell)!
-        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
-        let habit = self.habits.removeAtIndex(indexPath.row)
-        tableView.endUpdates()
-        
-        let entry = Entry.create(moc: self.moContext, habit: habit)
-        habit.last = entry.createdAt!
-        do {
-          try self.moContext.save()
-        } catch let error as NSError {
-          NSLog("Could not save \(error), \(error.userInfo)")
-        } catch {
-          NSLog("Could not save")
-        }
-        
-        self.insertHabit(habit)
-    })
+      completion: completion)
     cell.setSwipeGesture(
       direction: .Left,
       view: UIImageView(image: UIImage(named: "Clock")),
       color: MainViewController.yellow,
       options: [.Rotate, .Alpha],
-      completion: { (cell: SwipeTableViewCell) in
-        tableView.beginUpdates()
-        let indexPath = tableView.indexPathForCell(cell)!
-        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Left)
-        let habit = self.habits.removeAtIndex(indexPath.row)
-        tableView.endUpdates()
-        
-        habit.last = NSDate()
-        do {
-          try self.moContext.save()
-        } catch let error as NSError {
-          NSLog("Could not save \(error), \(error.userInfo)")
-        } catch {
-          NSLog("Could not save")
-        }
-        
-        self.insertHabit(habit)
-    })
-    
+      completion: completion)
     return cell
   }
   

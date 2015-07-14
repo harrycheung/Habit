@@ -122,7 +122,7 @@ class SwipeTableViewCell : UITableViewCell {
   func image(view view: UIView) -> UIImage {
     let scale = UIScreen.mainScreen().scale
     UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, scale);
-    view.layer.renderInContext(UIGraphicsGetCurrentContext())
+    view.drawViewHierarchyInRect(view.bounds, afterScreenUpdates: true)
     let image = UIGraphicsGetImageFromCurrentImageContext()
     UIGraphicsEndImageContext()
     return image;
@@ -318,10 +318,6 @@ class SwipeTableViewCell : UITableViewCell {
     if direction == Direction.Left {
       originX = -bounds.width
       percentage = -1
-    }
-    
-    if let color = colors[direction.hashValue] {
-      colorView!.backgroundColor = color
     }
   
     UIView.animateWithDuration(NSTimeInterval(duration),
