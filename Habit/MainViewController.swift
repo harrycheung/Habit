@@ -6,15 +6,26 @@
 //  Copyright (c) 2015 Harry Cheung. All rights reserved.
 //
 
+// TODO
+// 1. Check timezone changes on load
+// 2. Snooze behavior
+// 3. Sort habits based on time periods
+// 4. github style history graph
+// 5. Habit info page
+// 6. App settings
+// 7. Local notifications
+
 import UIKit
 import CoreData
 import FontAwesome_swift
 
 class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
   
+  // App colors
   static let green = UIColor(red: 85.0 / 255.0, green: 213.0 / 255.0, blue: 80.0 / 255.0, alpha: 1)
   static let yellow = UIColor(red: 254.0 / 255.0, green: 217.0 / 255.0, blue: 56.0 / 255.0, alpha: 1)
   
+  // User color options
   static let blueTint = UIColor(red: 42.0 / 255.0, green: 132.0 / 255.0, blue: 219.0 / 255.0, alpha: 1)
   static let purpleTint = UIColor(red: 155.0 / 255.0, green: 79.0 / 255.0, blue: 172.0 / 255.0, alpha: 1)
   static let greenTint = UIColor(red: 46.0 / 255.0, green: 180.0 / 255.0, blue: 113.0 / 255.0, alpha: 1)
@@ -24,6 +35,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   static let colors = [blueTint, purpleTint, greenTint, darkBlueTint, greyTint, orangeTint]
   
   let moContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+  
+  // IB identifiers
   let cellIdentifier = "HabitCell"
   let newHabitSegue = "NewHabit"
   let showHabitSegue = "ShowHabit"
@@ -94,6 +107,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     tableView.backgroundColor = UIColor.darkGrayColor()
     titleBar.backgroundColor = UIApplication.sharedApplication().windows[0].tintColor
     
+    newButton.backgroundColor = UIApplication.sharedApplication().windows[0].tintColor
+    newButton.layer.cornerRadius = 28
+    newButton.layer.shadowOpacity = 0.5
+    newButton.layer.shadowRadius = 2
+    newButton.layer.shadowOffset = CGSizeMake(0, 1)
+    
 //    for family in UIFont.familyNames() {
 //      NSLog("\(family)")
 //      
@@ -101,12 +120,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 //        NSLog("  \(name)")
 //      }
 //    }
-    
-    newButton.backgroundColor = UIApplication.sharedApplication().windows[0].tintColor
-    newButton.layer.cornerRadius = 28
-    newButton.layer.shadowOpacity = 0.5
-    newButton.layer.shadowRadius = 2
-    newButton.layer.shadowOffset = CGSizeMake(0, 1)
   }
 
   override func didReceiveMemoryWarning() {
