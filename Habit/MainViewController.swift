@@ -214,7 +214,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       tableView.deselectRowAtIndexPath(indexPath!, animated: false)
       if vc.habit == nil {
         habits.removeAtIndex(indexPath!.row)
-        tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+        tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Top)
       } else {
         let habit = habits[indexPath!.row]
         habits = habits.sort({ $0.dueIn < $1.dueIn })
@@ -301,12 +301,20 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func scrollViewWillBeginDragging(scrollView: UIScrollView) {
-    UIView.animateWithDuration(0.2, animations: {
+    UIView.animateWithDuration(0.1, animations: {
       self.newButton.alpha = 0
     })
   }
   
-  func scrollViewWillBeginDecelerating(scrollView: UIScrollView) {
+  func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    if !decelerate {
+      UIView.animateWithDuration(0.2, animations: {
+        self.newButton.alpha = 1
+      })
+    }
+  }
+  
+  func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
     UIView.animateWithDuration(0.2, animations: {
       self.newButton.alpha = 1
     })
