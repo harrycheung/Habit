@@ -2,7 +2,7 @@
 //  Entry+CoreDataProperties.swift
 //  Habit
 //
-//  Created by harry on 6/27/15.
+//  Created by harry on 7/14/15.
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 //  Delete this file and regenerate it using "Create NSManagedObject Subclass…"
@@ -15,6 +15,7 @@ import CoreData
 extension Entry {
 
     @NSManaged var createdAt: NSDate?
+    @NSManaged var createdAtTimeZone: String?
     @NSManaged var habit: Habit?
 
 }

@@ -16,6 +16,7 @@ class Entry: NSManagedObject {
     let entry = NSEntityDescription.insertNewObjectForEntityForName("Entry", inManagedObjectContext: moc) as! Entry
     entry.habit = habit
     entry.createdAt = NSDate()
+    entry.createdAtTimeZone = NSTimeZone.localTimeZone().name
     return entry
   }
 

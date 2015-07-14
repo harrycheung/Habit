@@ -24,6 +24,7 @@ class Habit: NSManagedObject {
     habit.parts = ""
     habit.notifyBool = true
     habit.createdAt = NSDate()
+    habit.createdAtTimeZone = NSTimeZone.localTimeZone().name
     habit.last = habit.createdAt
     return habit
   }

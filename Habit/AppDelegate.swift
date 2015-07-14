@@ -11,17 +11,27 @@ import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+  
+  // User setting strings
+  static let timeZoneSetting = "timezone"
+  static let notificationSetting = "notification"
 
   var window: UIWindow?
 
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-    // Override point for customization after application launch.
-    
     var attr = [NSObject: AnyObject]()
     attr[NSFontAttributeName] = UIFont(name: "Bariol-Regular", size: 15.0)!
-    //attr[NSForegroundColorAttributeName] = window!.tintColor
     UISegmentedControl.appearance().setTitleTextAttributes(attr, forState: .Normal)
-    //UISegmentedControl.appearance().tintColor = window!.tintColor
+    
+    // User settings
+    let userSettings = NSUserDefaults.standardUserDefaults()
+    let timezone = userSettings.stringForKey(AppDelegate.timeZoneSetting)
+    if timezone == nil {
+      // First time defaults
+      userSettings.setObject(NSTimeZone.localTimeZone().name, forKey: AppDelegate.timeZoneSetting)
+      userSettings.setBool(true, forKey: AppDelegate.notificationSetting)
+      userSettings.synchronize()
+    }
     
     return true
   }
@@ -34,6 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func applicationDidEnterBackground(application: UIApplication) {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    NSUserDefaults.standardUserDefaults().synchronize()
   }
 
   func applicationWillEnterForeground(application: UIApplication) {
@@ -47,6 +58,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func applicationWillTerminate(application: UIApplication) {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     // Saves changes in the application's managed object context before the application terminates.
+    NSUserDefaults.standardUserDefaults().synchronize()
     self.saveContext()
   }
 
