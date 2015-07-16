@@ -3,3 +3,5 @@ platform :ios, '8.0'
 use_frameworks!
 
 pod 'SnapKit', :git => 'https://github.com/SnapKit/SnapKit.git', :branch => 'swift-2.0'
+pod 'KAProgressLabel'
+pod 'FontAwesome.swift'

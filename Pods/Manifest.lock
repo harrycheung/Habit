@@ -1,7 +1,11 @@
 PODS:
+  - FontAwesome.swift (0.4.3)
+  - KAProgressLabel (3.2)
   - SnapKit (0.12.0)
 
 DEPENDENCIES:
+  - FontAwesome.swift
+  - KAProgressLabel
   - SnapKit (from `https://github.com/SnapKit/SnapKit.git`, branch `swift-2.0`)
 
 EXTERNAL SOURCES:
@@ -15,6 +19,8 @@ CHECKOUT OPTIONS:
     :git: https://github.com/SnapKit/SnapKit.git
 
 SPEC CHECKSUMS:
+  FontAwesome.swift: 4f3dbf913b9ef9db275d02b75f6b794fa3bcbabc
+  KAProgressLabel: 4362a1d37c5a7bc7c10cd059fd2da7cb9599cb50
   SnapKit: 00c388aa3bf1944c1b55472f31e841f75bd83882
 
 COCOAPODS: 0.37.2

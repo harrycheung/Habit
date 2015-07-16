@@ -10,11 +10,18 @@ import Foundation
 import UIKit
 import CoreData
 import SnapKit
+import KAProgressLabel
+import FontAwesome_swift
 
 class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySettingsDelegate, UIGestureRecognizerDelegate, UIActionSheetDelegate {
   
-  let moContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
   let UnwindSegueIdentifier = "unwindToMain"
+  let AnimateSwitchModeDuration = 0.4
+  let MaxPriority: UILayoutPriority = 999
+  let MinPriority: UILayoutPriority = 997
+  let BackgroundBlurRadius: CGFloat = 5
+  
+  let moContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
   
   var habit: Habit?
   var blurImage: UIImage?
@@ -22,6 +29,8 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   var pickerRecognizers = [UITapGestureRecognizer?](count:3, repeatedValue: nil)
   
   @IBOutlet weak var name: UITextField!
+  @IBOutlet weak var nameTrailing: NSLayoutConstraint!
+  @IBOutlet weak var switchMode: UIButton!
   @IBOutlet weak var settings: UIView!
   @IBOutlet weak var frequency: UISegmentedControl!
   @IBOutlet weak var frequencyScroller: UIScrollView!
@@ -30,7 +39,12 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   @IBOutlet weak var save: UIButton!
   @IBOutlet weak var blurImageView: UIImageView!
   @IBOutlet weak var deleteWidth: NSLayoutConstraint!
-  @IBOutlet weak var saveLeading: NSLayoutConstraint!
+  @IBOutlet weak var progressLabel: KAProgressLabel!
+  @IBOutlet weak var progressPercentage: UILabel!
+  @IBOutlet weak var statsView: UIView!
+  @IBOutlet weak var statsHeight: NSLayoutConstraint!
+  @IBOutlet weak var settingsHeight: NSLayoutConstraint!
+  @IBOutlet weak var settingsView: UIView!
   
   var activeSettings: FrequencySettings {
     return frequencySettings[frequency.selectedSegmentIndex]!
@@ -38,6 +52,11 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    progressLabel.labelVCBlock = { (label) -> Void in
+      self.progressPercentage.text = "\(Int(label.progress * 100))%"
+    }
+    progressLabel.progressColor = UIApplication.sharedApplication().windows[0].tintColor
     
     // Setup settings views for each frequency
     frequencySettings[0] = FrequencySettings(leftTitle: "Times a day",
@@ -63,7 +82,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
     buildSettings(frequencySettings[2]!, centerX: 1.66666)
     
     // Setup blurred background
-    blurImageView.image = blurImage!.applyBlurWithRadius(5, tintColor: nil, saturationDeltaFactor: 1)
+    blurImageView.image = blurImage!.applyBlurWithRadius(BackgroundBlurRadius, tintColor: nil, saturationDeltaFactor: 1)
     
     // Fill out the form
     name.text = habit!.name;
@@ -95,12 +114,27 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
     // Setup form if this is new
     if habit!.isNew {
       save.setTitle("Create", forState: .Normal)
-      deleteWidth.priority = UILayoutPriorityDefaultHigh
-      saveLeading.constant = 0
+      switchMode.hidden = true
+      deleteWidth.priority = MaxPriority
+      nameTrailing.priority = MaxPriority
+      statsView.hidden = true
+      statsHeight.priority = MinPriority
+      settingsView.hidden = false
+      settingsView.alpha = 1
+      settingsHeight.priority = MaxPriority
+    } else {
+      switchMode.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
+      switchMode.setTitle(String.fontAwesomeIconWithName(.Cog), forState: .Normal)
     }
   }
   
+  override func viewWillAppear(animated: Bool) {
+    progressLabel.setProgress(1, timing: TPPropertyAnimationTimingEaseOut, duration: 0.5, delay: 0.3)
+  }
+  
   override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    
     scrollToSettings(frequency.selectedSegmentIndex)
   }
   
@@ -122,6 +156,37 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   
   func frequencySettingsChanged() {
     enableSave()
+  }
+  
+  func changeMode(fromView fromView: UIView, fromHeight: NSLayoutConstraint,
+    toView: UIView, toHeight: NSLayoutConstraint, switchModeIcon: FontAwesome) {
+    fromView.hidden = true
+    fromHeight.priority = MinPriority
+    toView.hidden = false
+    toHeight.priority = MaxPriority
+    UIView.animateWithDuration(AnimateSwitchModeDuration, animations: {
+      fromView.alpha = 0
+      toView.alpha = 1
+      self.view.layoutIfNeeded()
+    })
+    UIView.animateWithDuration(AnimateSwitchModeDuration / 2, animations: {
+      self.switchMode.alpha = 0
+    }, completion: { (finished) in
+      self.switchMode.setTitle(String.fontAwesomeIconWithName(switchModeIcon), forState: .Normal)
+      UIView.animateWithDuration(self.AnimateSwitchModeDuration / 2, animations: {
+        self.switchMode.alpha = 1
+      })
+    })
+  }
+  
+  @IBAction func changeMode(sender: AnyObject) {
+    if statsView.hidden {
+      changeMode(fromView: settingsView, fromHeight: settingsHeight,
+        toView: statsView, toHeight: statsHeight, switchModeIcon: .Cog)
+    } else {
+      changeMode(fromView: statsView, fromHeight: statsHeight,
+        toView: settingsView, toHeight: settingsHeight, switchModeIcon: .Close)
+    }
   }
   
   @IBAction func notifyChanged(sender: AnyObject) {
@@ -183,10 +248,6 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
     }
     performSegueWithIdentifier(UnwindSegueIdentifier, sender: self)
   }
-  
-  // 86 tall
-  // 30 left right
-  // 12 top bottom
   
   @IBAction func saveHabit(sender: AnyObject) {
     habit!.name = name.text!

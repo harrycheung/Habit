@@ -46,14 +46,6 @@ class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, 
     self.multiSelectItems = multiSelectItems
     self.useTimes = useTimes
     self.delegate = delegate
-  }
-
-  required init(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-  
-  override func layoutSubviews() {
-    super.layoutSubviews()
     
     leftOverlay = OverlayView(frequencySettings: self)
     leftOverlay!.translatesAutoresizingMaskIntoConstraints = false
@@ -76,6 +68,10 @@ class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, 
       make.height.equalTo(self)
     }
     overlayTouched(useTimes ? leftOverlay! : rightOverlay!, touched: false)
+  }
+
+  required init(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
   }
   
   func overlayTouched(overlayView: OverlayView, touched: Bool = true) {

@@ -6,6 +6,18 @@
 // project.
 
 
+// FontAwesome.swift
+#define COCOAPODS_POD_AVAILABLE_FontAwesome_swift
+#define COCOAPODS_VERSION_MAJOR_FontAwesome_swift 0
+#define COCOAPODS_VERSION_MINOR_FontAwesome_swift 4
+#define COCOAPODS_VERSION_PATCH_FontAwesome_swift 3
+
+// KAProgressLabel
+#define COCOAPODS_POD_AVAILABLE_KAProgressLabel
+#define COCOAPODS_VERSION_MAJOR_KAProgressLabel 3
+#define COCOAPODS_VERSION_MINOR_KAProgressLabel 2
+#define COCOAPODS_VERSION_PATCH_KAProgressLabel 0
+
 // SnapKit
 #define COCOAPODS_POD_AVAILABLE_SnapKit
 #define COCOAPODS_VERSION_MAJOR_SnapKit 0

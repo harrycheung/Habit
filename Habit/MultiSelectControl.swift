@@ -40,7 +40,10 @@ class MultiSelectControl : UIView {
   }
   
   override func layoutSubviews() {
-    if dataSource != nil {
+    // TODO: Is this the right place for adding buttons? The buttons.isEmpty check is necessary.
+    // Otherwise, a recursive loop occurs with each button that gets added. The other wasy to "fix" 
+    // this is to give the superview a height constraint with priority 1000.
+    if dataSource != nil && buttons.isEmpty {
       count = dataSource!.numberOfItemsInMultiSelectControl(self)
       for index in 0..<count {
         let button = UIButton()

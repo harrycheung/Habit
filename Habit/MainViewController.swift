@@ -298,7 +298,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func scrollViewWillBeginDragging(scrollView: UIScrollView) {
-    UIView.animateWithDuration(0.1, animations: {
+    UIView.animateWithDuration(0.2, animations: {
       self.newButton.alpha = 0
     })
   }
