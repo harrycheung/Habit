@@ -115,7 +115,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
     if habit!.isNew {
       save.setTitle("Create", forState: .Normal)
       switchMode.hidden = true
-      deleteWidth.priority = MaxPriority
+      deleteWidth.priority = UILayoutPriorityDefaultHigh
       nameTrailing.priority = MaxPriority
       statsView.hidden = true
       statsHeight.priority = MinPriority
