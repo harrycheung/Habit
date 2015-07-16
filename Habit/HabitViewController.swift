@@ -45,6 +45,8 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   @IBOutlet weak var statsHeight: NSLayoutConstraint!
   @IBOutlet weak var settingsHeight: NSLayoutConstraint!
   @IBOutlet weak var settingsView: UIView!
+  @IBOutlet weak var toolbar: UIView!
+  @IBOutlet weak var back: UIButton!
   
   var activeSettings: FrequencySettings {
     return frequencySettings[frequency.selectedSegmentIndex]!
@@ -116,7 +118,6 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
       save.setTitle("Create", forState: .Normal)
       switchMode.hidden = true
       deleteWidth.priority = UILayoutPriorityDefaultHigh
-      nameTrailing.priority = MaxPriority
       statsView.hidden = true
       statsHeight.priority = MinPriority
       settingsView.hidden = false
@@ -126,6 +127,16 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
       switchMode.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
       switchMode.setTitle(String.fontAwesomeIconWithName(.Cog), forState: .Normal)
     }
+    
+    back.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
+    back.setTitle(String.fontAwesomeIconWithName(.ChevronLeft), forState: .Normal)
+    
+    var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0
+    UIApplication.sharedApplication().keyWindow!.tintColor.getRed(&red, green: &green, blue: &blue, alpha: nil)
+    red += (1 - red) * 0.8
+    green += (1 - green) * 0.8
+    blue += (1 - blue) * 0.8
+    toolbar.backgroundColor = UIColor(red: red, green: green, blue: blue, alpha: 1)
   }
   
   override func viewWillAppear(animated: Bool) {

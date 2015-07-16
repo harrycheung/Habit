@@ -49,7 +49,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   var statusBar: UIView?
   var activeCell: HabitTableViewCell?
   var habits = [Habit]()
-  var floatingButton: UIButton?
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -259,6 +258,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     UIApplication.sharedApplication().keyWindow!.tintColor = color
     titleBar.backgroundColor = color
     statusBar!.backgroundColor = color
+    newButton.backgroundColor = color
     tableView.reloadData()
     
     // Animate color change
