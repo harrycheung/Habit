@@ -109,7 +109,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     newButton.backgroundColor = UIApplication.sharedApplication().windows[0].tintColor
     newButton.layer.cornerRadius = 28
     newButton.layer.shadowOpacity = 0.5
-    newButton.layer.shadowRadius = 2
+    newButton.layer.shadowRadius = 3
     newButton.layer.shadowOffset = CGSizeMake(0, 1)
     
 //    for family in UIFont.familyNames() {
