@@ -8,12 +8,13 @@
 
 // TODO
 // 1. Check timezone changes on load
-// 2. Snooze behavior
+// 2. done - Snooze behavior
 // 3. Sort habits based on time periods
 // 4. github style history graph
-// 5. Habit info page
+// 5. 25% - Habit info page
 // 6. App settings
 // 7. Local notifications
+// 8. Expire habits periodically
 
 import UIKit
 import CoreData
@@ -49,9 +50,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   var statusBar: UIView?
   var activeCell: HabitTableViewCell?
   var habits = [Habit]()
+  var refreshTimer: NSTimer?
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    NSLog("MVC.viewDidLoad")
     
     statusBar = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 20))
     view.addSubview(statusBar!)
@@ -102,15 +106,18 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       NSLog("Fetch failed: \(error.localizedDescription)")
     }
     
+    // Setup colors
     tableView.backgroundView = nil
     tableView.backgroundColor = UIColor.darkGrayColor()
     titleBar.backgroundColor = UIApplication.sharedApplication().windows[0].tintColor
-    
     newButton.backgroundColor = UIApplication.sharedApplication().windows[0].tintColor
     newButton.layer.cornerRadius = 28
     newButton.layer.shadowOpacity = 0.5
     newButton.layer.shadowRadius = 3
     newButton.layer.shadowOffset = CGSizeMake(0, 1)
+    
+    // Setup timers
+    refreshTimer = NSTimer.scheduledTimerWithTimeInterval(5, target: tableView, selector: "reloadData", userInfo: nil, repeats: true)
     
 //    for family in UIFont.familyNames() {
 //      NSLog("\(family)")
