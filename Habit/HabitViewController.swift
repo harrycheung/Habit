@@ -50,6 +50,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   @IBOutlet weak var back: UIButton!
   @IBOutlet weak var currentStreak: UILabel!
   @IBOutlet weak var longestStreak: UILabel!
+  @IBOutlet weak var skipped: UILabel!
   @IBOutlet weak var total: UILabel!
   
   var activeSettings: FrequencySettings {
@@ -156,6 +157,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   func setupStats() {
     currentStreak.text = "\(habit!.currentStreak!)"
     longestStreak.text = "\(habit!.longestStreak!)"
+    skipped.text = "\(habit!.skippedCount())"
     total.text = "\(habit!.total!)"
     
     switch habit!.frequency!.integerValue {

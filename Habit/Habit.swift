@@ -69,19 +69,11 @@ class Habit: NSManagedObject {
     }
   }
   
-  func expiredCount(since: NSDate? = nil) -> Int {
-    if since == nil {
-      return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "expired == YES")).count
-    } else {
-      return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "expired == YES && createdAt > %@", since!)).count
-    }
-  }
-  
   func completedCount(since: NSDate? = nil) -> Int {
     if since == nil {
-      return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "skipped == NO AND expired == NO")).count
+      return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "skipped == NO")).count
     } else {
-      return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "skipped == NO AND expired == NO && createdAt > %@", since!)).count
+      return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "skipped == NO && createdAt > %@", since!)).count
     }
   }
   

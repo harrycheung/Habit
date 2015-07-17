@@ -3,7 +3,6 @@
     <entity name="Entry" representedClassName="Entry" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="createdAtTimeZone" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="expired" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="skipped" optional="YES" attributeType="Boolean" syncable="YES"/>
         <relationship name="habit" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Habit" inverseName="entries" inverseEntity="Habit" syncable="YES"/>
     </entity>
@@ -24,7 +23,7 @@
         <relationship name="entries" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Entry" inverseName="habit" inverseEntity="Entry" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Entry" positionX="-63" positionY="27" width="128" height="120"/>
+        <element name="Entry" positionX="-63" positionY="27" width="128" height="105"/>
         <element name="Habit" positionX="-63" positionY="-18" width="128" height="255"/>
     </elements>
 </model>

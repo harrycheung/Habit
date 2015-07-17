@@ -18,7 +18,6 @@ class Entry: NSManagedObject {
     entry.createdAt = NSDate()
     entry.createdAtTimeZone = NSTimeZone.localTimeZone().name
     entry.skipped = false
-    entry.expired = false
     return entry
   }
 

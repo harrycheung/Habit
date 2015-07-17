@@ -17,7 +17,6 @@ extension Entry {
     @NSManaged var createdAt: NSDate?
     @NSManaged var createdAtTimeZone: String?
     @NSManaged var skipped: NSNumber?
-    @NSManaged var expired: NSNumber?
     @NSManaged var habit: Habit?
 
 }
