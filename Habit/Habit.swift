@@ -26,6 +26,9 @@ class Habit: NSManagedObject {
     habit.createdAt = NSDate()
     habit.createdAtTimeZone = NSTimeZone.localTimeZone().name
     habit.last = habit.createdAt
+    habit.currentStreak = 0
+    habit.longestStreak = 0
+    habit.total = 0
     return habit
   }
   var partsArray: [Int] {
@@ -56,6 +59,46 @@ class Habit: NSManagedObject {
   
   var isNew: Bool {
     return committedValuesForKeys(nil).count == 0
+  }
+  
+  func skippedCount(since: NSDate? = nil) -> Int {
+    if since == nil {
+      return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "skipped == YES")).count
+    } else {
+      return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "skipped == YES && createdAt > %@", since!)).count
+    }
+  }
+  
+  func expiredCount(since: NSDate? = nil) -> Int {
+    if since == nil {
+      return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "expired == YES")).count
+    } else {
+      return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "expired == YES && createdAt > %@", since!)).count
+    }
+  }
+  
+  func completedCount(since: NSDate? = nil) -> Int {
+    if since == nil {
+      return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "skipped == NO AND expired == NO")).count
+    } else {
+      return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "skipped == NO AND expired == NO && createdAt > %@", since!)).count
+    }
+  }
+  
+  func total(since: NSDate? = nil) -> Int {
+    if since == nil {
+      return total!.integerValue
+    } else {
+      return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "createdAt > %@", since!)).count
+    }
+  }
+  
+  func progress(since: NSDate? = nil) -> CGFloat {
+    if total!.integerValue == 0 {
+      return 0
+    } else {
+      return CGFloat(completedCount(since)) / CGFloat(total!.integerValue)
+    }
   }
   
   var dueIn: NSTimeInterval {

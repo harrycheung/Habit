@@ -41,12 +41,16 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   @IBOutlet weak var deleteWidth: NSLayoutConstraint!
   @IBOutlet weak var progressLabel: KAProgressLabel!
   @IBOutlet weak var progressPercentage: UILabel!
+  @IBOutlet weak var progressPeriod: UILabel!
   @IBOutlet weak var statsView: UIView!
   @IBOutlet weak var statsHeight: NSLayoutConstraint!
   @IBOutlet weak var settingsHeight: NSLayoutConstraint!
   @IBOutlet weak var settingsView: UIView!
   @IBOutlet weak var toolbar: UIView!
   @IBOutlet weak var back: UIButton!
+  @IBOutlet weak var currentStreak: UILabel!
+  @IBOutlet weak var longestStreak: UILabel!
+  @IBOutlet weak var total: UILabel!
   
   var activeSettings: FrequencySettings {
     return frequencySettings[frequency.selectedSegmentIndex]!
@@ -55,7 +59,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    progressLabel.labelVCBlock = { (label) -> Void in
+    progressLabel.labelVCBlock = { (label) in
       self.progressPercentage.text = "\(Int(label.progress * 100))%"
     }
     progressLabel.progressColor = UIApplication.sharedApplication().windows[0].tintColor
@@ -140,13 +144,33 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   }
   
   override func viewWillAppear(animated: Bool) {
-    progressLabel.setProgress(1, timing: TPPropertyAnimationTimingEaseOut, duration: 0.5, delay: 0.3)
+    setupStats()
   }
   
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     
     scrollToSettings(frequency.selectedSegmentIndex)
+  }
+  
+  func setupStats() {
+    currentStreak.text = "\(habit!.currentStreak!)"
+    longestStreak.text = "\(habit!.longestStreak!)"
+    total.text = "\(habit!.total!)"
+    
+    switch habit!.frequency!.integerValue {
+    case Habit.Frequency.Daily.rawValue:
+      progressPeriod.text = "Past 30 days"
+      break
+    case Habit.Frequency.Weekly.rawValue:
+      progressPeriod.text = "Past 12 weeks"
+      break
+    case Habit.Frequency.Monthly.rawValue:
+      progressPeriod.text = "Past 6 months"
+      break
+    default: ()
+    }
+    progressLabel.setProgress(habit!.progress(), timing: TPPropertyAnimationTimingEaseOut, duration: 0.5, delay: 0.3)
   }
   
   func buildSettings(settings: FrequencySettings, centerX: CGFloat) {
@@ -261,6 +285,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   }
   
   @IBAction func saveHabit(sender: AnyObject) {
+    // TODO: set habit!.next
     habit!.name = name.text!
     habit!.frequency = frequency.selectedSegmentIndex + 1
     if activeSettings.useTimes {

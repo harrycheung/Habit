@@ -129,7 +129,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   // Table view
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let completion = { (cell: SwipeTableViewCell) -> Void in
+    let completion = { (cell: SwipeTableViewCell, skipped skipped: Bool) -> Void in
       // TODO: Remove updates and delay insert
       tableView.beginUpdates()
       let indexPath = tableView.indexPathForCell(cell)!
@@ -139,6 +139,16 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       
       let entry = Entry.create(moc: self.moContext, habit: habit)
       habit.last = entry.createdAt!
+      habit.total = habit.total!.integerValue + 1
+      if skipped {
+        entry.skipped = true
+        habit.currentStreak = 0
+      } else {
+        habit.currentStreak = habit.currentStreak!.integerValue + 1
+        if habit.currentStreak!.integerValue > habit.longestStreak!.integerValue {
+          habit.longestStreak = habit.currentStreak
+        }
+      }
       do {
         try self.moContext.save()
       } catch let error as NSError {
@@ -158,13 +168,17 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       view: UIImageView(image: UIImage(named: "Checkmark")),
       color: MainViewController.green,
       options: [.Rotate, .Alpha],
-      completion: completion)
+      completion: { (cell: SwipeTableViewCell) in
+        completion(cell, skipped: false)
+    })
     cell.setSwipeGesture(
       direction: .Left,
       view: UIImageView(image: UIImage(named: "Clock")),
       color: MainViewController.yellow,
       options: [.Rotate, .Alpha],
-      completion: completion)
+      completion: { (cell: SwipeTableViewCell) in
+        completion(cell, skipped: true)
+    })
     return cell
   }
   
