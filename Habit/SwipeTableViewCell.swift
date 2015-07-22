@@ -322,7 +322,7 @@ class SwipeTableViewCell : UITableViewCell {
   
     UIView.animateWithDuration(NSTimeInterval(duration),
       delay: NSTimeInterval(0),
-      options: [.CurveEaseOut, .AllowUserInteraction],
+      options: [.CurveEaseOut],
       animations: {
         var frame = self.screenshotView!.frame
         frame.origin.x = originX
@@ -348,7 +348,7 @@ class SwipeTableViewCell : UITableViewCell {
       delay: NSTimeInterval(0),
       usingSpringWithDamping: Defaults.Damping,
       initialSpringVelocity: Defaults.Velocity,
-      options: [.CurveEaseOut, .AllowUserInteraction],
+      options: [.CurveEaseOut],
       animations: {
         if self.activeView != nil {
           var frame = self.screenshotView!.frame
