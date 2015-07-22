@@ -15,16 +15,14 @@ import FontAwesome_swift
 
 class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySettingsDelegate, UIGestureRecognizerDelegate, UIActionSheetDelegate {
   
-  let UnwindSegueIdentifier = "unwindToMain"
+  let UnwindSegueIdentifier = "HabitUnwind"
   let AnimateSwitchModeDuration = 0.4
   let MaxPriority: UILayoutPriority = 999
   let MinPriority: UILayoutPriority = 997
-  let BackgroundBlurRadius: CGFloat = 5
   
   let moContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
   
   var habit: Habit?
-  var blurImage: UIImage?
   var frequencySettings = [FrequencySettings?](count:3, repeatedValue: nil)
   var pickerRecognizers = [UITapGestureRecognizer?](count:3, repeatedValue: nil)
   
@@ -37,7 +35,6 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   @IBOutlet weak var frequencyScrollerContent: UIView!
   @IBOutlet weak var notification: UISwitch!
   @IBOutlet weak var save: UIButton!
-  @IBOutlet weak var blurImageView: UIImageView!
   @IBOutlet weak var deleteWidth: NSLayoutConstraint!
   @IBOutlet weak var progressLabel: KAProgressLabel!
   @IBOutlet weak var progressPercentage: UILabel!
@@ -87,9 +84,6 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
       useTimes: habit!.useTimes,
       delegate: self)
     buildSettings(frequencySettings[2]!, centerX: 1.66666)
-    
-    // Setup blurred background
-    blurImageView.image = blurImage!.applyBlurWithRadius(BackgroundBlurRadius, tintColor: nil, saturationDeltaFactor: 1)
     
     // Fill out the form
     name.text = habit!.name;

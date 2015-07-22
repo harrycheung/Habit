@@ -25,6 +25,8 @@
 		4A1D08DC1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D08DA1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift */; };
 		4A1D08DD1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D08DB1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift */; };
 		4A421C1A1B48960900F3186C /* FrequencySettings.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A421C191B48960900F3186C /* FrequencySettings.xib */; };
+		4A44D7871B5A29EC0017B34B /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A44D7861B5A29EC0017B34B /* SettingsViewController.swift */; };
+		4A44D7891B5A9A930017B34B /* SettingsSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A44D7881B5A9A930017B34B /* SettingsSegue.swift */; };
 		4A4643811B44632400732389 /* FrequencySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4643801B44632400732389 /* FrequencySettings.swift */; };
 		4A4643831B448B3300732389 /* MultiSelectControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4643821B448B3300732389 /* MultiSelectControl.swift */; };
 		4A5186EE1B54C87C0019BBDD /* AppSettings.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A5186ED1B54C87C0019BBDD /* AppSettings.xib */; };
@@ -75,6 +77,8 @@
 		4A1D08DA1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Habit+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4A1D08DB1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Entry+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4A421C191B48960900F3186C /* FrequencySettings.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FrequencySettings.xib; sourceTree = "<group>"; };
+		4A44D7861B5A29EC0017B34B /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		4A44D7881B5A9A930017B34B /* SettingsSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsSegue.swift; sourceTree = "<group>"; };
 		4A4643801B44632400732389 /* FrequencySettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrequencySettings.swift; sourceTree = "<group>"; };
 		4A4643821B448B3300732389 /* MultiSelectControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSelectControl.swift; sourceTree = "<group>"; };
 		4A50A7851B55A5E8002D508B /* Bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bridge.h; sourceTree = "<group>"; };
@@ -189,6 +193,8 @@
 			children = (
 				4A1D08CB1B3E1A7A006A9CA4 /* HabitViewController.swift */,
 				4A1D08CC1B3E1A7A006A9CA4 /* MainViewController.swift */,
+				4A44D7861B5A29EC0017B34B /* SettingsViewController.swift */,
+				4A44D7881B5A9A930017B34B /* SettingsSegue.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -436,12 +442,14 @@
 				4A1D08A01B3E17E9006A9CA4 /* Habit.xcdatamodeld in Sources */,
 				4A1D08D11B3E1A7A006A9CA4 /* HabitViewController.swift in Sources */,
 				4A4643811B44632400732389 /* FrequencySettings.swift in Sources */,
+				4A44D7871B5A29EC0017B34B /* SettingsViewController.swift in Sources */,
 				4A1D08D01B3E1A7A006A9CA4 /* HabitTableViewCell.swift in Sources */,
 				4A5186F01B54D0940019BBDD /* AppSettings.swift in Sources */,
 				4A7C8E4A1B4E02840081E8FB /* UIImage+ImageEffects.swift in Sources */,
 				4A1D08DD1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift in Sources */,
 				4A1D08CF1B3E1A7A006A9CA4 /* Habit.swift in Sources */,
 				4A1D08DC1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift in Sources */,
+				4A44D7891B5A9A930017B34B /* SettingsSegue.swift in Sources */,
 				4A1D08D31B3E1A7A006A9CA4 /* SwipeTableViewCell.swift in Sources */,
 				4A1D08981B3E17E9006A9CA4 /* AppDelegate.swift in Sources */,
 			);

@@ -51,9 +51,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   var activeCell: HabitTableViewCell?
   var habits = [Habit]()
   var refreshTimer: NSTimer?
+  var settingsSegue: SettingsSegue?
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    settingsSegue = SettingsSegue()
     
     NSLog("MVC.viewDidLoad")
     
@@ -109,6 +112,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // Setup colors
     tableView.backgroundView = nil
     tableView.backgroundColor = UIColor.darkGrayColor()
+    // TODO: This was added when I switched to Xcode 7 beta 4. Probably a IB bug.
+    tableView.separatorStyle = .None
     titleBar.backgroundColor = UIApplication.sharedApplication().windows[0].tintColor
     newButton.backgroundColor = UIApplication.sharedApplication().windows[0].tintColor
     newButton.layer.cornerRadius = 28
@@ -126,6 +131,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 //        NSLog("  \(name)")
 //      }
 //    }
+    
   }
 
   override func didReceiveMemoryWarning() {
@@ -200,52 +206,52 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    let vc = segue.destinationViewController as! HabitViewController
-    if segue.identifier == showHabitSegue {
-      activeCell = sender as? HabitTableViewCell
-      vc.habit = activeCell!.habit
+    if let vc = segue.destinationViewController as? HabitViewController {
+      if segue.identifier == showHabitSegue {
+        activeCell = sender as? HabitTableViewCell
+        vc.habit = activeCell!.habit
+      } else {
+        vc.habit = Habit.create(moc: moContext, name: "", details: "", frequency: .Daily, times: 1)
+        
+        newButton.highlighted = false
+      }
     } else {
-      vc.habit = Habit.create(moc: moContext, name: "", details: "", frequency: .Daily, times: 1)
+      super.prepareForSegue(segue, sender: sender)
       
-      newButton.highlighted = false
+      segue.destinationViewController.transitioningDelegate = settingsSegue
+      segue.destinationViewController.modalPresentationStyle = .Custom
     }
-    
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, UIScreen.mainScreen().scale)
-    view.drawViewHierarchyInRect(view.bounds, afterScreenUpdates: true)
-    vc.blurImage = UIGraphicsGetImageFromCurrentImageContext()
-    UIGraphicsEndImageContext()
-    
-    UIApplication.sharedApplication().keyWindow!.windowLevel = UIWindowLevelStatusBar + 1
   }
   
   @IBAction func unwind(segue: UIStoryboardSegue) {
-    UIApplication.sharedApplication().keyWindow!.windowLevel = UIWindowLevelNormal
+    NSLog("MVC.unwind")
     
-    let vc = segue.sourceViewController as! HabitViewController;
-    if activeCell == nil {
-      if vc.habit != nil {
-        insertHabit(vc.habit!)
-      }
-    } else {
-      let indexPath = tableView.indexPathForCell(activeCell!)
-      tableView.deselectRowAtIndexPath(indexPath!, animated: false)
-      if vc.habit == nil {
-        habits.removeAtIndex(indexPath!.row)
-        tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Top)
-      } else {
-        let habit = habits[indexPath!.row]
-        habits = habits.sort({ $0.dueIn < $1.dueIn })
-        let newIndex = habits.indexOf(habit)
-        if indexPath!.row != newIndex {
-          tableView.beginUpdates()
-          tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Top)
-          tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: newIndex!, inSection: 0)], withRowAnimation: .Top)
-          tableView.endUpdates()
-        } else {
-          (tableView.cellForRowAtIndexPath(indexPath!) as! HabitTableViewCell).reload()
+    if let vc = segue.sourceViewController as? HabitViewController {
+      if activeCell == nil {
+        if vc.habit != nil {
+          insertHabit(vc.habit!)
         }
+      } else {
+        let indexPath = tableView.indexPathForCell(activeCell!)
+        tableView.deselectRowAtIndexPath(indexPath!, animated: false)
+        if vc.habit == nil {
+          habits.removeAtIndex(indexPath!.row)
+          tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Top)
+        } else {
+          let habit = habits[indexPath!.row]
+          habits = habits.sort({ $0.dueIn < $1.dueIn })
+          let newIndex = habits.indexOf(habit)
+          if indexPath!.row != newIndex {
+            tableView.beginUpdates()
+            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Top)
+            tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: newIndex!, inSection: 0)], withRowAnimation: .Top)
+            tableView.endUpdates()
+          } else {
+            (tableView.cellForRowAtIndexPath(indexPath!) as! HabitTableViewCell).reload()
+          }
+        }
+        activeCell = nil
       }
-      activeCell = nil
     }
   }
   
@@ -281,6 +287,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     statusBar!.backgroundColor = color
     newButton.backgroundColor = color
     tableView.reloadData()
+    UILabel.appearance().textColor = color
     
     // Animate color change
     UIView.animateWithDuration(0.5,
@@ -337,5 +344,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       self.newButton.alpha = 1
     })
   }
+  
 }
 
