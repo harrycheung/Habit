@@ -51,12 +51,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   var activeCell: HabitTableViewCell?
   var habits = [Habit]()
   var refreshTimer: NSTimer?
-  var settingsSegue: SettingsSegue?
+  var settingsTransition: SettingsTransition?
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    settingsSegue = SettingsSegue()
+    settingsTransition = SettingsTransition()
     
     NSLog("MVC.viewDidLoad")
     
@@ -218,7 +218,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     } else {
       super.prepareForSegue(segue, sender: sender)
       
-      segue.destinationViewController.transitioningDelegate = settingsSegue
+      segue.destinationViewController.transitioningDelegate = settingsTransition
       segue.destinationViewController.modalPresentationStyle = .Custom
     }
   }

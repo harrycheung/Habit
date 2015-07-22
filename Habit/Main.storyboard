@@ -601,9 +601,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PzV-JR-XSz">
-                                <rect key="frame" x="0.0" y="248" width="320" height="320"/>
+                                <rect key="frame" x="0.0" y="248" width="320" height="500"/>
                                 <view key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" id="52b-jT-Us0">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="500"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R0n-e1-r1L" userLabel="Content View">
@@ -645,6 +645,7 @@
                                                 <constraint firstItem="H4x-2L-0JJ" firstAttribute="leading" secondItem="R0n-e1-r1L" secondAttribute="leading" id="eFg-dx-zvg"/>
                                                 <constraint firstAttribute="trailing" secondItem="sdO-gi-Auw" secondAttribute="trailing" constant="15" id="k9X-yH-vjv"/>
                                                 <constraint firstItem="H4x-2L-0JJ" firstAttribute="centerY" secondItem="OHx-7v-lRk" secondAttribute="centerY" id="kAY-gU-8KC"/>
+                                                <constraint firstAttribute="height" constant="320" id="lDd-zh-kKf"/>
                                                 <constraint firstItem="OHx-7v-lRk" firstAttribute="leading" secondItem="R0n-e1-r1L" secondAttribute="leading" id="qiF-v1-pcK"/>
                                                 <constraint firstItem="sdO-gi-Auw" firstAttribute="top" secondItem="OHx-7v-lRk" secondAttribute="bottom" constant="6" id="tvT-WJ-lRt"/>
                                                 <constraint firstItem="OHx-7v-lRk" firstAttribute="top" secondItem="R0n-e1-r1L" secondAttribute="top" id="wKy-hy-kQw"/>
@@ -654,12 +655,11 @@
                                     <constraints>
                                         <constraint firstItem="R0n-e1-r1L" firstAttribute="top" secondItem="52b-jT-Us0" secondAttribute="top" id="1P2-or-3PV"/>
                                         <constraint firstItem="R0n-e1-r1L" firstAttribute="leading" secondItem="52b-jT-Us0" secondAttribute="leading" id="8Gn-0t-Mt0"/>
-                                        <constraint firstAttribute="bottom" secondItem="R0n-e1-r1L" secondAttribute="bottom" id="Bi2-Xz-jS5"/>
                                         <constraint firstAttribute="trailing" secondItem="R0n-e1-r1L" secondAttribute="trailing" id="fzO-x1-b3r"/>
                                     </constraints>
                                 </view>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="320" id="pOY-GB-iPf"/>
+                                    <constraint firstAttribute="height" constant="500" id="pOY-GB-iPf"/>
                                 </constraints>
                                 <blurEffect style="light"/>
                             </visualEffectView>
@@ -676,7 +676,7 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="PzV-JR-XSz" secondAttribute="trailing" id="5qq-sz-OrQ"/>
                             <constraint firstItem="PzV-JR-XSz" firstAttribute="leading" secondItem="VLF-OE-xbU" secondAttribute="leading" id="A4g-Fd-IPM"/>
-                            <constraint firstItem="qe5-sL-ghR" firstAttribute="top" secondItem="PzV-JR-XSz" secondAttribute="bottom" id="RBG-xt-1xM"/>
+                            <constraint firstItem="qe5-sL-ghR" firstAttribute="top" secondItem="PzV-JR-XSz" secondAttribute="bottom" constant="-180" id="RBG-xt-1xM"/>
                             <constraint firstAttribute="trailing" secondItem="ovd-qV-hkD" secondAttribute="trailing" id="cdT-Tc-E2n"/>
                             <constraint firstItem="ovd-qV-hkD" firstAttribute="top" secondItem="2f0-pD-A8a" secondAttribute="bottom" id="nlh-kd-x96"/>
                             <constraint firstItem="ovd-qV-hkD" firstAttribute="leading" secondItem="VLF-OE-xbU" secondAttribute="leading" id="pBQ-Sv-Nlr"/>
@@ -684,7 +684,7 @@
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
-                        <outlet property="settingsHeight" destination="pOY-GB-iPf" id="VxH-j9-Jft"/>
+                        <outlet property="settingsHeight" destination="lDd-zh-kKf" id="BHq-oX-mAH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="D1Z-SQ-Hf3" userLabel="First Responder" sceneMemberID="firstResponder"/>
