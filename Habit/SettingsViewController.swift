@@ -19,9 +19,9 @@ class SettingsViewController: UIViewController {
   
   @IBAction func panning(recognizer: UIPanGestureRecognizer) {
     let translation = recognizer.translationInView(view)
-    //if (translation.y > 0) {
+    if (translation.y > 0) {
       view.frame = CGRectMake(0, translation.y, view.frame.width, view.frame.height)
-    //}
+    }
     if(recognizer.state == .Ended) {
       performSegueWithIdentifier("SettingsUnwind", sender: self)
     }

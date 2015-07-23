@@ -168,7 +168,7 @@ class SwipeTableViewCell : UITableViewCell {
     if isExited {
       return
     }
-
+    
     var currentX: CGFloat = 0
     if screenshotView != nil {
       currentX = screenshotView!.frame.origin.x
@@ -180,6 +180,7 @@ class SwipeTableViewCell : UITableViewCell {
     switch (recognizer.state) {
     case UIGestureRecognizerState.Began:
       delegate?.startSwiping(self)
+      fallthrough
     case UIGestureRecognizerState.Changed:
       setupSwipingView()
       dragging = true
@@ -194,7 +195,6 @@ class SwipeTableViewCell : UITableViewCell {
       recognizer.setTranslation(CGPointMake(0, 0), inView: self)
     
       delegate?.swiping(self, percentage: percent)
-      break;
     case UIGestureRecognizerState.Cancelled, UIGestureRecognizerState.Ended:
       let velocity = recognizer.velocityInView(self)
       dragging = false
