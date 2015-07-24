@@ -102,6 +102,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     titleBar.backgroundColor = UIApplication.sharedApplication().windows[0].tintColor
     newButton.backgroundColor = UIApplication.sharedApplication().windows[0].tintColor
     newButton.layer.cornerRadius = 28
+    newButton.layer.shadowColor = UIColor.blackColor().CGColor
     newButton.layer.shadowOpacity = 0.5
     newButton.layer.shadowRadius = 3
     newButton.layer.shadowOffset = CGSizeMake(0, 1)

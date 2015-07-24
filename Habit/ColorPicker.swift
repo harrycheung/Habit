@@ -72,7 +72,7 @@ class ColorPicker: UIView {
   
   override func layoutSubviews() {
     for (index, button) in buttons.enumerate() {
-      button.setBackgroundColor(dataSource!.colorPicker(self, colorAtIndex: index), forState: .Normal)
+      button.backgroundColor = dataSource!.colorPicker(self, colorAtIndex: index)
     }
   }
   
@@ -96,13 +96,12 @@ class ColorPicker: UIView {
       setTitle("", forState: .Normal)
       translatesAutoresizingMaskIntoConstraints = false
       layer.cornerRadius = diameter / 2
-      layer.masksToBounds = true
       layer.borderWidth = 1.5
       layer.borderColor = UIColor.clearColor().CGColor
       layer.shadowColor = UIColor.blackColor().CGColor
       layer.shadowOpacity = 0.5
-      layer.shadowRadius = 10
-      layer.shadowOffset = CGSizeMake(0, 5)
+      layer.shadowRadius = 3
+      layer.shadowOffset = CGSizeMake(0, 1)
     }
 
     required init?(coder aDecoder: NSCoder) {
