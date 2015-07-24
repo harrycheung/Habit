@@ -12,7 +12,7 @@
 // 3. Sort habits based on time periods
 // 4. github style history graph
 // 5. 25% - Habit info page
-// 6. App settings
+// 6. done - App settings
 // 7. Local notifications
 // 8. Expire habits periodically
 
@@ -58,26 +58,26 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       habits = try moContext.executeFetchRequest(requestAny) as! [Habit]
       if habits.count == 0 {
         Habit.create(moc: moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12)
-        Habit.create(moc: moContext, name: "4. Daily 8x", details: "", frequency: .Daily, times: 8)
-        Habit.create(moc: moContext, name: "5. Daily 4x", details: "", frequency: .Daily, times: 4)
-        Habit.create(moc: moContext, name: "6. Daily 1x", details: "", frequency: .Daily, times: 1)
-        Habit.create(moc: moContext, name: "7. Weekly 6x", details: "", frequency: .Weekly, times: 6)
-        Habit.create(moc: moContext, name: "8. Weekly 3x", details: "", frequency: .Weekly, times: 3)
-        Habit.create(moc: moContext, name: "9. Weekly 1x", details: "", frequency: .Weekly, times: 1)
-        Habit.create(moc: moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12)
-        Habit.create(moc: moContext, name: "4. Daily 8x", details: "", frequency: .Daily, times: 8)
-        Habit.create(moc: moContext, name: "5. Daily 4x", details: "", frequency: .Daily, times: 4)
-        Habit.create(moc: moContext, name: "6. Daily 1x", details: "", frequency: .Daily, times: 1)
-        Habit.create(moc: moContext, name: "7. Weekly 6x", details: "", frequency: .Weekly, times: 6)
-        Habit.create(moc: moContext, name: "8. Weekly 3x", details: "", frequency: .Weekly, times: 3)
-        Habit.create(moc: moContext, name: "9. Weekly 1x", details: "", frequency: .Weekly, times: 1)
-        Habit.create(moc: moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12)
-        Habit.create(moc: moContext, name: "4. Daily 8x", details: "", frequency: .Daily, times: 8)
-        Habit.create(moc: moContext, name: "5. Daily 4x", details: "", frequency: .Daily, times: 4)
-        Habit.create(moc: moContext, name: "6. Daily 1x", details: "", frequency: .Daily, times: 1)
-        Habit.create(moc: moContext, name: "7. Weekly 6x", details: "", frequency: .Weekly, times: 6)
-        Habit.create(moc: moContext, name: "8. Weekly 3x", details: "", frequency: .Weekly, times: 3)
-        Habit.create(moc: moContext, name: "9. Weekly 1x", details: "", frequency: .Weekly, times: 1)
+        Habit.create(moc: moContext, name: "2. Daily 8x", details: "", frequency: .Daily, times: 8)
+        Habit.create(moc: moContext, name: "3. Daily 4x", details: "", frequency: .Daily, times: 4)
+        Habit.create(moc: moContext, name: "4. Daily 1x", details: "", frequency: .Daily, times: 1)
+        Habit.create(moc: moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6)
+        Habit.create(moc: moContext, name: "6. Weekly 3x", details: "", frequency: .Weekly, times: 3)
+        Habit.create(moc: moContext, name: "7. Weekly 1x", details: "", frequency: .Weekly, times: 1)
+        Habit.create(moc: moContext, name: "8. Daily 12x", details: "", frequency: .Daily, times: 12)
+        Habit.create(moc: moContext, name: "9. Daily 8x", details: "", frequency: .Daily, times: 8)
+        Habit.create(moc: moContext, name: "10. Daily 4x", details: "", frequency: .Daily, times: 4)
+        Habit.create(moc: moContext, name: "11. Daily 1x", details: "", frequency: .Daily, times: 1)
+        Habit.create(moc: moContext, name: "12. Weekly 6x", details: "", frequency: .Weekly, times: 6)
+        Habit.create(moc: moContext, name: "13. Weekly 3x", details: "", frequency: .Weekly, times: 3)
+        Habit.create(moc: moContext, name: "14. Weekly 1x", details: "", frequency: .Weekly, times: 1)
+        Habit.create(moc: moContext, name: "15. Daily 12x", details: "", frequency: .Daily, times: 12)
+        Habit.create(moc: moContext, name: "16. Daily 8x", details: "", frequency: .Daily, times: 8)
+        Habit.create(moc: moContext, name: "17. Daily 4x", details: "", frequency: .Daily, times: 4)
+        Habit.create(moc: moContext, name: "18. Daily 1x", details: "", frequency: .Daily, times: 1)
+        Habit.create(moc: moContext, name: "19. Weekly 6x", details: "", frequency: .Weekly, times: 6)
+        Habit.create(moc: moContext, name: "20. Weekly 3x", details: "", frequency: .Weekly, times: 3)
+        Habit.create(moc: moContext, name: "21. Weekly 1x", details: "", frequency: .Weekly, times: 1)
         try self.moContext.save()
       }
     } catch let error as NSError {
@@ -108,7 +108,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     newButton.layer.shadowOffset = CGSizeMake(0, 1)
     
     // Setup timers
-    refreshTimer = NSTimer.scheduledTimerWithTimeInterval(5, target: tableView, selector: "reloadData", userInfo: nil, repeats: true)
+    refreshTimer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: "refreshTableView", userInfo: nil, repeats: true)
     
 //    for family in UIFont.familyNames() {
 //      NSLog("\(family)")
@@ -126,6 +126,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   // Table view
+  
+  func refreshTableView() {
+    if !SwipeTableViewCell.isSwiping {
+      tableView.reloadData()
+    }
+  }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let completion = { (cell: SwipeTableViewCell, skipped skipped: Bool) -> Void in
@@ -161,6 +167,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! HabitTableViewCell
     cell.load(habits[indexPath.row])
+    NSLog("cellFor: \(unsafeAddressOf(cell)) \(cell.habit!.name!)")
     
     cell.setSwipeGesture(
       direction: .Right,

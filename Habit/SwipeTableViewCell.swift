@@ -46,6 +46,12 @@ class SwipeTableViewCell : UITableViewCell {
   
   typealias CompletionBlock = (SwipeTableViewCell) -> (Void)
   
+  static var swipeCellCount = 0
+  
+  static var isSwiping: Bool {
+    return swipeCellCount != 0
+  }
+  
   var isExited: Bool = false
   var dragging: Bool = false
   var trigger: CGFloat = Defaults.Trigger
@@ -83,11 +89,14 @@ class SwipeTableViewCell : UITableViewCell {
   
   override func prepareForReuse() {
     super.prepareForReuse()
+    NSLog("prepareForReuse: \(unsafeAddressOf(self))")
     uninstallSwipingView()
     initDefaults()
   }
   
   func setupSwipingView() {
+    NSLog("setupSwipingView: \(screenshotView == nil) \((self as! HabitTableViewCell).habit!.name!)")
+    uninstallSwipingView()
     if screenshotView != nil {
       return
     }
@@ -105,6 +114,7 @@ class SwipeTableViewCell : UITableViewCell {
   }
   
   func uninstallSwipingView() {
+    NSLog("uninstallSwipingView: \(screenshotView != nil) \((self as! HabitTableViewCell).habit!.name!)")
     if screenshotView == nil {
       return
     }
@@ -169,6 +179,19 @@ class SwipeTableViewCell : UITableViewCell {
       return
     }
     
+    switch recognizer.state {
+    case .Began:
+      NSLog("handlePan: began")
+    case .Changed:
+      NSLog("handlePan: changed")
+    case .Cancelled:
+      NSLog("handlePan: cancelled")
+    case .Ended:
+      NSLog("handlePan: ended")
+    default:
+      NSLog("handlePan: default")
+    }
+    
     var currentX: CGFloat = 0
     if screenshotView != nil {
       currentX = screenshotView!.frame.origin.x
@@ -178,11 +201,11 @@ class SwipeTableViewCell : UITableViewCell {
     let direction = percent > 0 ? Direction.Right : Direction.Left
     
     switch (recognizer.state) {
-    case UIGestureRecognizerState.Began:
+    case .Began:
       delegate?.startSwiping(self)
-      fallthrough
-    case UIGestureRecognizerState.Changed:
       setupSwipingView()
+      fallthrough
+    case .Changed:
       dragging = true
       var frame = screenshotView!.frame
       if views[direction.hashValue] == nil {
@@ -195,7 +218,7 @@ class SwipeTableViewCell : UITableViewCell {
       recognizer.setTranslation(CGPointMake(0, 0), inView: self)
     
       delegate?.swiping(self, percentage: percent)
-    case UIGestureRecognizerState.Cancelled, UIGestureRecognizerState.Ended:
+    case .Cancelled, .Ended:
       let velocity = recognizer.velocityInView(self)
       dragging = false
       activeView = views[direction.hashValue]
@@ -312,6 +335,8 @@ class SwipeTableViewCell : UITableViewCell {
   }
   
   func finish(duration duration: CGFloat, direction: Direction) {
+    NSLog("finish: \(unsafeAddressOf(self)) \((self as! HabitTableViewCell).habit!.name!)")
+    recognizer!.enabled = false
     isExited = true
     var originX: CGFloat = bounds.width
     var percentage: CGFloat = 1
@@ -332,10 +357,14 @@ class SwipeTableViewCell : UITableViewCell {
       },
       completion: { (finished: Bool) in
         self.blocks[direction.hashValue]!(self)
+        self.recognizer!.enabled = true
+        NSLog("finish done: \(unsafeAddressOf(self))")
       })
   }
   
   func reset() {
+    NSLog("reset: \(unsafeAddressOf(self)) \((self as! HabitTableViewCell).habit!.name!)")
+    recognizer!.enabled = false
     colorView!.backgroundColor = UIColor.clearColor()
     let leftColorView = UIView(frame: CGRectMake(0, 0, frame.width / 2, frame.height))
     leftColorView.backgroundColor = colors[Direction.Right.hashValue] ?? contentView.backgroundColor
@@ -362,6 +391,8 @@ class SwipeTableViewCell : UITableViewCell {
       completion: { (finished: Bool) in
         self.isExited = false
         self.uninstallSwipingView()
+        self.recognizer!.enabled = true
+        NSLog("reset done: \(unsafeAddressOf(self))")
       })
   }
 }

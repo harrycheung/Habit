@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 class HabitTableViewCell : SwipeTableViewCell {
+  
   let MinimumAlpha:CGFloat = 0.4
   
   var habit: Habit?
@@ -37,6 +38,8 @@ class HabitTableViewCell : SwipeTableViewCell {
   }
 
   func reload() {
+    // Not sure why this tint needs be set here, but otherwise, it picks up the global tint sometimes.
+    name.tintColor = UIColor.whiteColor()
     name.text = habit!.name
     due.text = habit!.dueText
     let dueIn = habit!.dueIn
