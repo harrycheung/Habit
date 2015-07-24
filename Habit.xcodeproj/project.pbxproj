@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		401129C628C7DAC83C65C9A3 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C30FEA7A7703C78B572D2FEA /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		4A144D791B61C31B001A6094 /* HabitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A144D781B61C31B001A6094 /* HabitApp.swift */; };
 		4A1D08981B3E17E9006A9CA4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D08971B3E17E9006A9CA4 /* AppDelegate.swift */; };
 		4A1D08A01B3E17E9006A9CA4 /* Habit.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D089E1B3E17E9006A9CA4 /* Habit.xcdatamodeld */; };
 		4A1D08A21B3E17E9006A9CA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A1D08A11B3E17E9006A9CA4 /* Assets.xcassets */; };
@@ -29,11 +30,10 @@
 		4A44D7891B5A9A930017B34B /* SettingsTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A44D7881B5A9A930017B34B /* SettingsTransition.swift */; };
 		4A4643811B44632400732389 /* FrequencySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4643801B44632400732389 /* FrequencySettings.swift */; };
 		4A4643831B448B3300732389 /* MultiSelectControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4643821B448B3300732389 /* MultiSelectControl.swift */; };
-		4A5186EE1B54C87C0019BBDD /* AppSettings.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A5186ED1B54C87C0019BBDD /* AppSettings.xib */; };
-		4A5186F01B54D0940019BBDD /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5186EF1B54D0940019BBDD /* AppSettings.swift */; };
 		4A6DB6FC1B4B8781008BC1B7 /* UIButton+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6DB6FB1B4B8781008BC1B7 /* UIButton+Color.swift */; };
 		4A6DB6FE1B4C1587008BC1B7 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DB6FD1B4C1587008BC1B7 /* Podfile */; };
 		4A7C8E4A1B4E02840081E8FB /* UIImage+ImageEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8E491B4E02840081E8FB /* UIImage+ImageEffects.swift */; };
+		4ADA905F1B60ABD300826C69 /* ColorPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA905E1B60ABD300826C69 /* ColorPicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +54,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4A144D781B61C31B001A6094 /* HabitApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitApp.swift; sourceTree = "<group>"; };
 		4A1D08941B3E17E9006A9CA4 /* Habit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Habit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A1D08971B3E17E9006A9CA4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4A1D089F1B3E17E9006A9CA4 /* Habit.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Habit.xcdatamodel; sourceTree = "<group>"; };
@@ -82,11 +83,10 @@
 		4A4643801B44632400732389 /* FrequencySettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrequencySettings.swift; sourceTree = "<group>"; };
 		4A4643821B448B3300732389 /* MultiSelectControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSelectControl.swift; sourceTree = "<group>"; };
 		4A50A7851B55A5E8002D508B /* Bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bridge.h; sourceTree = "<group>"; };
-		4A5186ED1B54C87C0019BBDD /* AppSettings.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AppSettings.xib; sourceTree = "<group>"; };
-		4A5186EF1B54D0940019BBDD /* AppSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		4A6DB6FB1B4B8781008BC1B7 /* UIButton+Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Color.swift"; sourceTree = "<group>"; };
 		4A6DB6FD1B4C1587008BC1B7 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		4A7C8E491B4E02840081E8FB /* UIImage+ImageEffects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+ImageEffects.swift"; sourceTree = "<group>"; };
+		4ADA905E1B60ABD300826C69 /* ColorPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorPicker.swift; sourceTree = "<group>"; };
 		665F8C2916FF820599C8EF0C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		947E88BAF44C6A4867BE9E9A /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		C30FEA7A7703C78B572D2FEA /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -145,8 +145,9 @@
 		4A1D08961B3E17E9006A9CA4 /* Habit */ = {
 			isa = PBXGroup;
 			children = (
-				4A1D08971B3E17E9006A9CA4 /* AppDelegate.swift */,
 				4A1D08C81B3E1A7A006A9CA4 /* Fonts */,
+				4A1D08971B3E17E9006A9CA4 /* AppDelegate.swift */,
+				4A144D781B61C31B001A6094 /* HabitApp.swift */,
 				4A1D08DE1B404DF7006A9CA4 /* Models */,
 				4A9D5A391B41DD4B005F1277 /* TableViewCells */,
 				4A1D08E01B40C975006A9CA4 /* ViewControllers */,
@@ -205,9 +206,8 @@
 				4A1D08A31B3E17E9006A9CA4 /* LaunchScreen.storyboard */,
 				4A1D08D41B3E1E52006A9CA4 /* Main.storyboard */,
 				4A421C191B48960900F3186C /* FrequencySettings.xib */,
+				4ADA905E1B60ABD300826C69 /* ColorPicker.swift */,
 				4A4643801B44632400732389 /* FrequencySettings.swift */,
-				4A5186ED1B54C87C0019BBDD /* AppSettings.xib */,
-				4A5186EF1B54D0940019BBDD /* AppSettings.swift */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -362,7 +362,6 @@
 				4A1D08CE1B3E1A7A006A9CA4 /* Fonts in Resources */,
 				4A1D08D51B3E1E52006A9CA4 /* Main.storyboard in Resources */,
 				4A421C1A1B48960900F3186C /* FrequencySettings.xib in Resources */,
-				4A5186EE1B54C87C0019BBDD /* AppSettings.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -435,6 +434,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A144D791B61C31B001A6094 /* HabitApp.swift in Sources */,
 				4A1D08D91B3F4F03006A9CA4 /* Entry.swift in Sources */,
 				4A1D08D21B3E1A7A006A9CA4 /* MainViewController.swift in Sources */,
 				4A4643831B448B3300732389 /* MultiSelectControl.swift in Sources */,
@@ -444,11 +444,11 @@
 				4A4643811B44632400732389 /* FrequencySettings.swift in Sources */,
 				4A44D7871B5A29EC0017B34B /* SettingsViewController.swift in Sources */,
 				4A1D08D01B3E1A7A006A9CA4 /* HabitTableViewCell.swift in Sources */,
-				4A5186F01B54D0940019BBDD /* AppSettings.swift in Sources */,
 				4A7C8E4A1B4E02840081E8FB /* UIImage+ImageEffects.swift in Sources */,
 				4A1D08DD1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift in Sources */,
 				4A1D08CF1B3E1A7A006A9CA4 /* Habit.swift in Sources */,
 				4A1D08DC1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift in Sources */,
+				4ADA905F1B60ABD300826C69 /* ColorPicker.swift in Sources */,
 				4A44D7891B5A9A930017B34B /* SettingsTransition.swift in Sources */,
 				4A1D08D31B3E1A7A006A9CA4 /* SwipeTableViewCell.swift in Sources */,
 				4A1D08981B3E17E9006A9CA4 /* AppDelegate.swift in Sources */,

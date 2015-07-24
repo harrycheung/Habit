@@ -22,19 +22,6 @@ import FontAwesome_swift
 
 class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
   
-  // App colors
-  static let green = UIColor(red: 85.0 / 255.0, green: 213.0 / 255.0, blue: 80.0 / 255.0, alpha: 1)
-  static let yellow = UIColor(red: 254.0 / 255.0, green: 217.0 / 255.0, blue: 56.0 / 255.0, alpha: 1)
-  
-  // User color options
-  static let blueTint = UIColor(red: 42.0 / 255.0, green: 132.0 / 255.0, blue: 219.0 / 255.0, alpha: 1)
-  static let purpleTint = UIColor(red: 155.0 / 255.0, green: 79.0 / 255.0, blue: 172.0 / 255.0, alpha: 1)
-  static let greenTint = UIColor(red: 46.0 / 255.0, green: 180.0 / 255.0, blue: 113.0 / 255.0, alpha: 1)
-  static let darkBlueTint = UIColor(red: 52.0 / 255.0, green: 73.0 / 255.0, blue: 120.0 / 255.0, alpha: 1)
-  static let greyTint = UIColor(red: 130.0 / 255.0, green: 130.0 / 255.0, blue: 130.0 / 255.0, alpha: 1)
-  static let orangeTint = UIColor(red: 230.0 / 255.0, green: 146.0 / 255.0, blue: 45.0 / 255.0, alpha: 1)
-  static let colors = [blueTint, purpleTint, greenTint, darkBlueTint, greyTint, orangeTint]
-  
   let moContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
   
   // IB identifiers
@@ -58,15 +45,13 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     settingsTransition = SettingsTransition()
     
-    NSLog("MVC.viewDidLoad")
-    
     statusBar = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 20))
     view.addSubview(statusBar!)
     UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.LightContent, animated: false)
     
-    statusBar!.backgroundColor = MainViewController.colors[1]
+    statusBar!.backgroundColor = HabitApp.color
     // TODO: What's up with the "window!!"?
-    UIApplication.sharedApplication().delegate!.window!!.tintColor = MainViewController.colors[1]
+    UIApplication.sharedApplication().delegate!.window!!.tintColor = HabitApp.color
     
     let requestAny = NSFetchRequest(entityName: "Habit")
     do {
@@ -112,7 +97,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // Setup colors
     tableView.backgroundView = nil
     tableView.backgroundColor = UIColor.darkGrayColor()
-    // TODO: This was added when I switched to Xcode 7 beta 4. Probably a IB bug.
+    // TODO: This separatorStyle was added when I switched to Xcode 7 beta 4. Probably a IB bug.
     tableView.separatorStyle = .None
     titleBar.backgroundColor = UIApplication.sharedApplication().windows[0].tintColor
     newButton.backgroundColor = UIApplication.sharedApplication().windows[0].tintColor
@@ -179,7 +164,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     cell.setSwipeGesture(
       direction: .Right,
       view: UIImageView(image: UIImage(named: "Checkmark")),
-      color: MainViewController.green,
+      color: HabitApp.green,
       options: [.Rotate, .Alpha],
       completion: { (cell: SwipeTableViewCell) in
         completion(cell, skipped: false)
@@ -187,7 +172,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     cell.setSwipeGesture(
       direction: .Left,
       view: UIImageView(image: UIImage(named: "Clock")),
-      color: MainViewController.yellow,
+      color: HabitApp.yellow,
       options: [.Rotate, .Alpha],
       completion: { (cell: SwipeTableViewCell) in
         completion(cell, skipped: true)
@@ -220,12 +205,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       
       segue.destinationViewController.transitioningDelegate = settingsTransition
       segue.destinationViewController.modalPresentationStyle = .Custom
+      
+      (segue.destinationViewController as! SettingsViewController).mainVC = self
     }
   }
   
-  @IBAction func unwind(segue: UIStoryboardSegue) {
-    NSLog("MVC.unwind")
-    
+  @IBAction func unwind(segue: UIStoryboardSegue) {    
     if let vc = segue.sourceViewController as? HabitViewController {
       if activeCell == nil {
         if vc.habit != nil {
@@ -304,19 +289,21 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   @IBAction func changeColorLeft(sender: AnyObject) {
-    var currentColorIndex = MainViewController.colors.indexOf(titleBar.backgroundColor!)! - 1
+    var currentColorIndex = HabitApp.colors.indexOf(titleBar.backgroundColor!)! - 1
     if currentColorIndex == 0 {
-      currentColorIndex = MainViewController.colors.count - 1
+      currentColorIndex = HabitApp.colors.count - 1
     }
-    changeColor(MainViewController.colors[currentColorIndex])
+    changeColor(HabitApp.colors[currentColorIndex])
+    HabitApp.colorIndex = currentColorIndex
   }
 
   @IBAction func changeColorRight(sender: AnyObject) {
-    var currentColorIndex = MainViewController.colors.indexOf(titleBar.backgroundColor!)! + 1
-    if currentColorIndex == MainViewController.colors.count {
+    var currentColorIndex = HabitApp.colors.indexOf(titleBar.backgroundColor!)! + 1
+    if currentColorIndex == HabitApp.colors.count {
       currentColorIndex = 0
     }
-    changeColor(MainViewController.colors[currentColorIndex])
+    changeColor(HabitApp.colors[currentColorIndex])
+    HabitApp.colorIndex = currentColorIndex
   }
   
   // UIScrollView

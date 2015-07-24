@@ -11,10 +11,6 @@ import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-  
-  // User setting strings
-  static let timeZoneSetting = "timezone"
-  static let notificationSetting = "notification"
 
   var window: UIWindow?
 
@@ -22,16 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var attr = [NSObject: AnyObject]()
     attr[NSFontAttributeName] = UIFont(name: "Bariol-Regular", size: 15.0)!
     UISegmentedControl.appearance().setTitleTextAttributes(attr, forState: .Normal)
-    
-    // User settings
-    let userSettings = NSUserDefaults.standardUserDefaults()
-    let timezone = userSettings.stringForKey(AppDelegate.timeZoneSetting)
-    if timezone == nil {
-      // First time defaults
-      userSettings.setObject(NSTimeZone.localTimeZone().name, forKey: AppDelegate.timeZoneSetting)
-      userSettings.setBool(true, forKey: AppDelegate.notificationSetting)
-      userSettings.synchronize()
-    }
     
     return true
   }
