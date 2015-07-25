@@ -509,6 +509,7 @@
                                                     </constraints>
                                                 </view>
                                             </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <gestureRecognizers/>
                                             <constraints>
                                                 <constraint firstItem="1FL-kd-WCJ" firstAttribute="top" secondItem="3xy-47-OAN" secondAttribute="bottom" constant="6" id="2eA-xQ-kQW"/>
