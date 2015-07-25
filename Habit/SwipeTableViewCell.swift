@@ -204,6 +204,7 @@ class SwipeTableViewCell : UITableViewCell {
     case .Began:
       delegate?.startSwiping(self)
       setupSwipingView()
+      SwipeTableViewCell.swipeCellCount++
       fallthrough
     case .Changed:
       dragging = true
@@ -358,6 +359,7 @@ class SwipeTableViewCell : UITableViewCell {
       completion: { (finished: Bool) in
         self.blocks[direction.hashValue]!(self)
         self.recognizer!.enabled = true
+        SwipeTableViewCell.swipeCellCount--
         NSLog("finish done: \(unsafeAddressOf(self))")
       })
   }
@@ -391,7 +393,8 @@ class SwipeTableViewCell : UITableViewCell {
       completion: { (finished: Bool) in
         self.isExited = false
         self.uninstallSwipingView()
-        self.recognizer!.enabled = true
+        self.recognizer!.enabled = true        
+        SwipeTableViewCell.swipeCellCount--
         NSLog("reset done: \(unsafeAddressOf(self))")
       })
   }
