@@ -19,6 +19,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     attr[NSFontAttributeName] = UIFont(name: "Bariol-Regular", size: 15.0)!
     UISegmentedControl.appearance().setTitleTextAttributes(attr, forState: .Normal)
     
+    // Notifications
+    let notificationSettings = UIUserNotificationSettings(forTypes: [.Badge, .Sound, .Alert], categories: nil)
+    application.registerUserNotificationSettings(notificationSettings)
+    
     return true
   }
 

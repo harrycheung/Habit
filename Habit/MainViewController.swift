@@ -108,7 +108,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     newButton.layer.shadowOffset = CGSizeMake(0, 1)
     
     // Setup timers
-    refreshTimer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: "refreshTableView", userInfo: nil, repeats: true)
+    refreshTimer = NSTimer.scheduledTimerWithTimeInterval(5 * 60, target: self, selector: "refreshTableView", userInfo: nil, repeats: true)
     
 //    for family in UIFont.familyNames() {
 //      NSLog("\(family)")

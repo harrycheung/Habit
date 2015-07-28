@@ -300,6 +300,19 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
     } catch let error as NSError {
       NSLog("Could not save \(error), \(error.userInfo)")
     }
+    
+    if notification.on {
+//      if UIApplication.sharedApplication().currentUserNotificationSettings()!.types.contains(.Alert) {
+//        let local = UILocalNotification()
+//        local.fireDate = NSDate(timeIntervalSinceNow: 10)//habit!.dueIn)
+//        local.alertAction = "Time to habit!"
+//        local.alertBody = habit!.name
+//        //UIApplication.sharedApplication().presentLocalNotificationNow(local)
+//        UIApplication.sharedApplication().scheduleLocalNotification(local)
+//        NSLog("loca;l")
+//      }
+    }
+    
     performSegueWithIdentifier(UnwindSegueIdentifier, sender: self)
   }
   
