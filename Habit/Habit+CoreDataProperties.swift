@@ -26,7 +26,6 @@ extension Habit {
     @NSManaged var currentStreak: NSNumber?
     @NSManaged var longestStreak: NSNumber?
     @NSManaged var total: NSNumber?
-    @NSManaged var next: NSDate?
     @NSManaged var entries: NSOrderedSet?
 
 }

@@ -11,14 +11,15 @@ import CoreData
 
 @objc(Entry)
 class Entry: NSManagedObject {
-
-  class func create(moc moc: NSManagedObjectContext, habit: Habit) -> Entry {
-    let entry = NSEntityDescription.insertNewObjectForEntityForName("Entry", inManagedObjectContext: moc) as! Entry
-    entry.habit = habit
-    entry.createdAt = NSDate()
-    entry.createdAtTimeZone = NSTimeZone.localTimeZone().name
-    entry.skipped = false
-    return entry
+  
+  convenience init(context: NSManagedObjectContext, habit: Habit) {
+    let entityDescription = NSEntityDescription.entityForName("Entry", inManagedObjectContext: context)!
+    self.init(entity: entityDescription, insertIntoManagedObjectContext: context)
+    self.habit = habit
+    createdAt = NSDate()
+    createdAtTimeZone = NSTimeZone.localTimeZone().name
+    skipped = false
+    habit.total = habit.total!.integerValue + 1
   }
 
 }

@@ -1,0 +1,1 @@
+PODS_HABITUITESTS_FONTAWESOME_SWIFT_OTHER_LDFLAGS = -framework "CoreText" -framework "UIKit"

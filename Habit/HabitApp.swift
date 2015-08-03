@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import UIKit
+import CoreData
 
 class HabitApp {
   
@@ -29,6 +31,17 @@ class HabitApp {
   static let orangeTint = UIColor(red: 230.0 / 255.0, green: 146.0 / 255.0, blue: 45.0 / 255.0, alpha: 1)
   static let colors = [blueTint, purpleTint, greenTint, darkBlueTint, greyTint, orangeTint]
   static let colorsNameToIndex = ["blue": 0, "purple": 1, "green": 2, "darkBlue": 3, "grey": 4, "orange": 5]
+  
+  static let minSec = 60
+  static let hourSec = 60 * minSec
+  static let daySec = dayHours * hourSec
+  static let weekSec = 7 * daySec
+  static let dayHours = 24
+  static let weekHours = 7 * dayHours
+  
+  static var moContext: NSManagedObjectContext {
+    return (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+  }
   
   static var color: UIColor {
     return colors[colorIndex]
@@ -68,4 +81,29 @@ class HabitApp {
       NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: upcomingSettingKey)
     }
   }
+  
+  static var startOfDay: NSTimeInterval {
+    return 0 * 3600
+  }
+  
+  static var endOfDay: NSTimeInterval {
+    return 24 * 3600
+  }
+  
+  static func setUpInMemoryManagedObjectContext() -> NSManagedObjectContext {
+    let managedObjectModel = NSManagedObjectModel.mergedModelFromBundles([NSBundle.mainBundle()])!
+    
+    let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
+    do {
+      try persistentStoreCoordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: nil)
+    } catch let error as NSError {
+      NSLog("error: \(error)")
+    }
+    
+    let managedObjectContext = NSManagedObjectContext()
+    managedObjectContext.persistentStoreCoordinator = persistentStoreCoordinator
+    
+    return managedObjectContext
+  }
+  
 }

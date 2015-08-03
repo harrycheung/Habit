@@ -22,8 +22,6 @@ import FontAwesome_swift
 
 class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
   
-  let moContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
-  
   // IB identifiers
   let cellIdentifier = "HabitCell"
   let newHabitSegue = "NewHabit"
@@ -37,6 +35,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   var statusBar: UIView?
   var activeCell: HabitTableViewCell?
   var habits = [Habit]()
+  var todaysHabits = [Habit]()
+  var upcomingHabits = [Habit]()
   var refreshTimer: NSTimer?
   var settingsTransition: SettingsTransition?
   
@@ -55,30 +55,30 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     let requestAny = NSFetchRequest(entityName: "Habit")
     do {
-      habits = try moContext.executeFetchRequest(requestAny) as! [Habit]
+      habits = try HabitApp.moContext.executeFetchRequest(requestAny) as! [Habit]
       if habits.count == 0 {
-        Habit.create(moc: moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12)
-        Habit.create(moc: moContext, name: "2. Daily 8x", details: "", frequency: .Daily, times: 8)
-        Habit.create(moc: moContext, name: "3. Daily 4x", details: "", frequency: .Daily, times: 4)
-        Habit.create(moc: moContext, name: "4. Daily 1x", details: "", frequency: .Daily, times: 1)
-        Habit.create(moc: moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6)
-        Habit.create(moc: moContext, name: "6. Weekly 3x", details: "", frequency: .Weekly, times: 3)
-        Habit.create(moc: moContext, name: "7. Weekly 1x", details: "", frequency: .Weekly, times: 1)
-        Habit.create(moc: moContext, name: "8. Daily 12x", details: "", frequency: .Daily, times: 12)
-        Habit.create(moc: moContext, name: "9. Daily 8x", details: "", frequency: .Daily, times: 8)
-        Habit.create(moc: moContext, name: "10. Daily 4x", details: "", frequency: .Daily, times: 4)
-        Habit.create(moc: moContext, name: "11. Daily 1x", details: "", frequency: .Daily, times: 1)
-        Habit.create(moc: moContext, name: "12. Weekly 6x", details: "", frequency: .Weekly, times: 6)
-        Habit.create(moc: moContext, name: "13. Weekly 3x", details: "", frequency: .Weekly, times: 3)
-        Habit.create(moc: moContext, name: "14. Weekly 1x", details: "", frequency: .Weekly, times: 1)
-        Habit.create(moc: moContext, name: "15. Daily 12x", details: "", frequency: .Daily, times: 12)
-        Habit.create(moc: moContext, name: "16. Daily 8x", details: "", frequency: .Daily, times: 8)
-        Habit.create(moc: moContext, name: "17. Daily 4x", details: "", frequency: .Daily, times: 4)
-        Habit.create(moc: moContext, name: "18. Daily 1x", details: "", frequency: .Daily, times: 1)
-        Habit.create(moc: moContext, name: "19. Weekly 6x", details: "", frequency: .Weekly, times: 6)
-        Habit.create(moc: moContext, name: "20. Weekly 3x", details: "", frequency: .Weekly, times: 3)
-        Habit.create(moc: moContext, name: "21. Weekly 1x", details: "", frequency: .Weekly, times: 1)
-        try self.moContext.save()
+        let _ = Habit(context: HabitApp.moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12)
+        let _ = Habit(context: HabitApp.moContext, name: "2. Daily 8x", details: "", frequency: .Daily, times: 8)
+        let _ = Habit(context: HabitApp.moContext, name: "3. Daily 4x", details: "", frequency: .Daily, times: 4)
+        let _ = Habit(context: HabitApp.moContext, name: "4. Daily 1x", details: "", frequency: .Daily, times: 1)
+        let _ = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6)
+        let _ = Habit(context: HabitApp.moContext, name: "6. Weekly 3x", details: "", frequency: .Weekly, times: 3)
+        let _ = Habit(context: HabitApp.moContext, name: "7. Weekly 1x", details: "", frequency: .Weekly, times: 1)
+        let _ = Habit(context: HabitApp.moContext, name: "8. Daily 12x", details: "", frequency: .Daily, times: 12)
+        let _ = Habit(context: HabitApp.moContext, name: "9. Daily 8x", details: "", frequency: .Daily, times: 8)
+        let _ = Habit(context: HabitApp.moContext, name: "10. Daily 4x", details: "", frequency: .Daily, times: 4)
+        let _ = Habit(context: HabitApp.moContext, name: "11. Daily 1x", details: "", frequency: .Daily, times: 1)
+        let _ = Habit(context: HabitApp.moContext, name: "12. Weekly 6x", details: "", frequency: .Weekly, times: 6)
+        let _ = Habit(context: HabitApp.moContext, name: "13. Weekly 3x", details: "", frequency: .Weekly, times: 3)
+        let _ = Habit(context: HabitApp.moContext, name: "14. Weekly 1x", details: "", frequency: .Weekly, times: 1)
+        let _ = Habit(context: HabitApp.moContext, name: "15. Daily 12x", details: "", frequency: .Daily, times: 12)
+        let _ = Habit(context: HabitApp.moContext, name: "16. Daily 8x", details: "", frequency: .Daily, times: 8)
+        let _ = Habit(context: HabitApp.moContext, name: "17. Daily 4x", details: "", frequency: .Daily, times: 4)
+        let _ = Habit(context: HabitApp.moContext, name: "18. Daily 1x", details: "", frequency: .Daily, times: 1)
+        let _ = Habit(context: HabitApp.moContext, name: "19. Weekly 6x", details: "", frequency: .Weekly, times: 6)
+        let _ = Habit(context: HabitApp.moContext, name: "20. Weekly 3x", details: "", frequency: .Weekly, times: 3)
+        let _ = Habit(context: HabitApp.moContext, name: "21. Weekly 1x", details: "", frequency: .Weekly, times: 1)
+        try HabitApp.moContext.save()
       }
     } catch let error as NSError {
       NSLog("Could not save \(error), \(error.userInfo)")
@@ -86,13 +86,18 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       NSLog("Could not save")
     }
     
-    let request = NSFetchRequest(entityName: "Habit")
-    do {
-      habits = try moContext.executeFetchRequest(request) as! [Habit]
-      habits = habits.sort({ $0.dueIn < $1.dueIn })
-    } catch let error as NSError {
-      NSLog("Fetch failed: \(error.localizedDescription)")
-    }
+    habits = []
+    
+//    let request = NSFetchRequest(entityName: "Habit")
+//    do {
+//      habits = try HabitApp.moContext.executeFetchRequest(request) as! [Habit]
+//      for habit in habits {
+//        habit.updateNext(NSDate())
+//      }
+//      habits = habits.sort({ $0.dueIn < $1.dueIn })
+//    } catch let error as NSError {
+//      NSLog("Fetch failed: \(error.localizedDescription)")
+//    }
     
     // Setup colors
     tableView.backgroundView = nil
@@ -142,7 +147,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       let habit = self.habits.removeAtIndex(indexPath.row)
       tableView.endUpdates()
       
-      let entry = Entry.create(moc: self.moContext, habit: habit)
+      let entry = Entry(context: HabitApp.moContext, habit: habit)
       habit.last = entry.createdAt!
       habit.total = habit.total!.integerValue + 1
       if skipped {
@@ -155,7 +160,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
       }
       do {
-        try self.moContext.save()
+        try HabitApp.moContext.save()
       } catch let error as NSError {
         NSLog("Could not save \(error), \(error.userInfo)")
       } catch {
@@ -198,13 +203,33 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
   }
   
+  func insertHabit(habit: Habit) {
+    let insert = { (habit: Habit, index: Int) -> Void in
+      self.habits.insert(habit, atIndex: index)
+      self.tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)], withRowAnimation: .Fade)
+    }
+    
+    if habits.count > 0 {
+      for index in 0...habits.count {
+        if index == habits.count || habit.dueIn < habits[index].dueIn {
+          insert(habit, index)
+          break
+        }
+      }
+    } else {
+      insert(habit, 0)
+    }
+  }
+  
+  // Segue
+  
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if let vc = segue.destinationViewController as? HabitViewController {
       if segue.identifier == showHabitSegue {
         activeCell = sender as? HabitTableViewCell
         vc.habit = activeCell!.habit
       } else {
-        vc.habit = Habit.create(moc: moContext, name: "", details: "", frequency: .Daily, times: 1)
+        vc.habit = Habit(context: HabitApp.moContext, name: "", details: "", frequency: .Daily, times: 1)
         
         newButton.highlighted = false
       }
@@ -248,23 +273,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
   }
   
-  func insertHabit(habit: Habit) {
-    let insert = { (habit: Habit, index: Int) -> Void in
-      self.habits.insert(habit, atIndex: index)
-      self.tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)], withRowAnimation: .Fade)
-    }
-    
-    if habits.count > 0 {
-      for index in 0...habits.count {
-        if index == habits.count || habit.dueIn < habits[index].dueIn {
-          insert(habit, index)
-          break
-        }
-      }
-    } else {
-      insert(habit, 0)
-    }
-  }
+  // Colors
   
   func changeColor(color: UIColor) {
     // Snapshot previous color

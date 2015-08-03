@@ -1,0 +1,6 @@
+framework module Pods_HabitUITests {
+  umbrella header "Pods-HabitUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

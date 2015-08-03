@@ -20,8 +20,6 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   let MaxPriority: UILayoutPriority = 999
   let MinPriority: UILayoutPriority = 997
   
-  let moContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
-  
   var habit: Habit?
   var frequencySettings = [FrequencySettings?](count:3, repeatedValue: nil)
   var pickerRecognizers = [UITapGestureRecognizer?](count:3, repeatedValue: nil)
@@ -66,7 +64,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
     frequencySettings[0] = FrequencySettings(leftTitle: "Times a day",
       pickerCount: 12,
       rightTitle: "Parts of day",
-      multiSelectItems: ["Morning", "Mid-Morning", "Midday", "Mid-Afternoon", "Afternoon", "Evening"],
+      multiSelectItems: ["Morning", "Mid-Morning", "Midday", "Afternoon", "Late Afternoon", "Evening"],
       useTimes: habit!.useTimes,
       delegate: self)
     buildSettings(frequencySettings[0]!, centerX: 0.33333)
@@ -89,10 +87,10 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
     name.text = habit!.name;
     name.delegate = self
     frequency.selectedSegmentIndex = habit!.frequency!.integerValue - 1
-    if habit!.partsArray.isEmpty {
+    if habit!.useTimes {
       activeSettings.picker.selectRow(habit!.times!.integerValue - 1, inComponent: 0, animated: false)
     } else {
-      activeSettings.multiSelect.selectedIndexes = habit!.partsArray
+      activeSettings.multiSelect.selectedIndexes = habit!.partsArray.map { $0 - 1 }
     }
     notification.on = habit!.notifyBool
     
@@ -262,7 +260,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
       save.enabled = (settings.useTimes &&
                        (!habit!.useTimes || settings.picker.selectedRowInComponent(0) != habit!.timesInt - 1)) ||
                      (!settings.useTimes && !settings.multiSelect.selectedIndexes.isEmpty &&
-                       (habit!.useTimes || settings.multiSelect.selectedIndexes != habit!.partsArray))
+                       (habit!.useTimes || settings.multiSelect.selectedIndexes != habit!.partsArray.map { $0 - 1 } ))
     } else {
       // If either name or frequency is different, check frequency settings too
       save.enabled = !name.text!.isEmpty
@@ -274,7 +272,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   
   @IBAction func closeView(sender: AnyObject) {
     if habit!.isNew {
-      moContext.deleteObject(habit!)
+      HabitApp.moContext.deleteObject(habit!)
       habit = nil
     }
     performSegueWithIdentifier(UnwindSegueIdentifier, sender: self)
@@ -296,7 +294,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
       habit!.createdAt = NSDate()
     }
     do {
-      try moContext.save()
+      try HabitApp.moContext.save()
     } catch let error as NSError {
       NSLog("Could not save \(error), \(error.userInfo)")
     }
@@ -319,9 +317,9 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   @IBAction func deleteHabit(sender: AnyObject) {
     let alert = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
     let delete = UIAlertAction(title: "Delete habit", style: .Destructive, handler: { (UIAlertAction) -> Void in
-      self.moContext.deleteObject(self.habit!)
+      HabitApp.moContext.deleteObject(self.habit!)
       do {
-        try self.moContext.save()
+        try HabitApp.moContext.save()
       } catch let error as NSError {
         NSLog("Could not save \(error), \(error.userInfo)")
       } catch {
