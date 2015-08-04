@@ -275,8 +275,8 @@ class Habit: NSManagedObject {
           dateIterator = calendar.dateFromComponents(components)!
         }
       }
-      let currentComponents = calendar.components([.Hour, .Minute], fromDate: currentDate)
-      let currentTime = NSTimeInterval(currentComponents.hour * HabitApp.hourSec + currentComponents.minute * HabitApp.minSec)
+      let components = calendar.components([.Hour, .Minute], fromDate: currentDate)
+      let currentTime = NSTimeInterval(components.hour * HabitApp.hourSec + components.minute * HabitApp.minSec)
       if useTimes {
         let interval = (HabitApp.endOfDay - HabitApp.startOfDay) / times!.doubleValue
         let expectedCount = Int(currentTime / interval) - countBeforeCreatedAt(currentDate)
@@ -327,87 +327,95 @@ class Habit: NSManagedObject {
           dateIterator = calendar.dateFromComponents(components)!
         }
       }
-      let currentComponents = calendar.components([.Year, .Month, .Day, .Hour, .Weekday], fromDate: currentDate)
-      let currentTime = Double((currentComponents.weekday - 1) * HabitApp.dayHours + currentComponents.hour)
+      let components = calendar.components([.Year, .Month, .Day, .Hour, .Weekday], fromDate: currentDate)
+      let currentTime = Double((components.weekday - 1) * HabitApp.dayHours + components.hour)
       if useTimes {
         let interval = Double(HabitApp.weekHours) / times!.doubleValue
         let expectedCount = Int(currentTime / interval) - countBeforeCreatedAt(currentDate)
         if entriesThisWeek.count == expectedCount {
           // Already caught up
-          currentComponents.hour += Int(interval - currentTime % interval)
+          components.hour += Int(interval - currentTime % interval)
         } else {
           // Should never skip for -1 or expectedCount == 0, we -1 to test if we're halfway to the next expiry
           addSkipped(expectedCount - entriesThisWeek.count - 1, onDate: currentDate)
           if currentTime % interval / interval > 0.5 {
             // Skip if we're over halfway to the next expiry
             addSkipped(1, onDate: currentDate)
-            currentComponents.hour += Int(interval - currentTime % interval)
+            components.hour += Int(interval - currentTime % interval)
           } else {
-            currentComponents.hour -= Int(currentTime % interval)
+            components.hour -= Int(currentTime % interval)
           }
         }
       } else {
-        currentComponents.hour = 0
+        components.hour = 0
         for index in entriesThisWeek.count..<daysOfWeek.count {
           let dayOfWeek = daysOfWeek[index].rawValue
-          if currentComponents.weekday > dayOfWeek {
+          if components.weekday > dayOfWeek {
             // Skip if we've passed the day
             addSkipped(1, onDate: currentDate)
             if index == daysOfWeek.count - 1 {
               // We've reached the last part of the week
-              currentComponents.day += daysOfWeek[0].rawValue + (7 - currentComponents.weekday) + 1
+              components.day += daysOfWeek[0].rawValue + (7 - components.weekday) + 1
             }
           } else {
-            currentComponents.day += dayOfWeek - currentComponents.weekday + 1 // +1 for midnight
+            components.day += dayOfWeek - components.weekday + 1 // +1 for midnight
             break
           }
         }
       }
-      next = calendar.dateFromComponents(currentComponents)
+      next = calendar.dateFromComponents(components)
     case .Monthly:
       let entriesThisMonth = entriesOnMonth(currentDate)
       if entriesThisMonth.count == 0 {
-        // Today marks a new week so let's catch up the past
-        let expectedCount = useTimes ? times!.integerValue : daysOfWeek.count
+        // Today marks a new month so let's catch up the past
+        let expectedCount = useTimes ? times!.integerValue : partsOfMonth.count
         var dateIterator = last!
-        let components = calendar.components([.Year, .Month, .Day], fromDate: dateIterator)
-        while !calendar.isDate(dateIterator, equalToDate: currentDate, toUnitGranularity: .WeekOfYear) {
-          addSkipped(expectedCount - entriesOnWeek(dateIterator).count - countBeforeCreatedAt(currentDate), onDate: dateIterator)
+        let components = calendar.components([.Year, .Month], fromDate: dateIterator)
+        while !calendar.isDate(dateIterator, equalToDate: currentDate, toUnitGranularity: .Month) {
+          addSkipped(expectedCount - entriesOnMonth(dateIterator).count - countBeforeCreatedAt(dateIterator), onDate: dateIterator)
           components.month += 1
           dateIterator = calendar.dateFromComponents(components)!
         }
       }
-      let currentComponents = calendar.components([.Hour, .Minute, .Weekday], fromDate: currentDate)
-      let currentTime = NSTimeInterval((currentComponents.weekday - 1) * HabitApp.daySec + currentComponents.hour * HabitApp.hourSec + currentComponents.minute * HabitApp.minSec)
+      let components = calendar.components([.Year, .Month, .Day], fromDate: currentDate)
+      let currentDay = Double(components.day)
+      let daysInMonth = calendar.rangeOfUnit(.Day, inUnit: .Month, forDate: currentDate).length
       if useTimes {
-        let weeklyInterval = Double(HabitApp.weekSec) / times!.doubleValue
-        let expectedCount = Int(currentTime / weeklyInterval) - countBeforeCreatedAt(currentDate)
+        let interval = Double(daysInMonth) / times!.doubleValue
+        let expectedCount = Int(currentDay / interval) - countBeforeCreatedAt(currentDate)
         if entriesThisMonth.count == expectedCount {
           // Already caught up
-          next = NSDate(timeInterval: weeklyInterval - currentTime % weeklyInterval, sinceDate: currentDate)
+          components.day += Int(interval - currentDay % interval) + 1
         } else {
-          // Should never skip for -1 or expectedCount == 0
-          addSkipped(expectedCount - 1 - entriesThisMonth.count, onDate: currentDate)
-          if currentTime % weeklyInterval / weeklyInterval > 0.5 {
+          // Should never skip for -1 or expectedCount == 0, we -1 to test if we're halfway to the next expiry
+          addSkipped(expectedCount - entriesThisMonth.count - 1, onDate: currentDate)
+          if currentDay % interval / interval > 0.5 {
             // Skip if we're over halfway to the next expiry
             addSkipped(1, onDate: currentDate)
-            next = NSDate(timeInterval: weeklyInterval - currentTime % weeklyInterval, sinceDate: currentDate)
+            components.day += Int(interval - currentDay % interval) + 1
           } else {
-            next = NSDate(timeInterval: -currentTime % weeklyInterval, sinceDate: currentDate)
+            components.day -= Int(currentDay % interval) + 1
           }
         }
       } else {
-        for index in entriesThisMonth.count..<daysOfWeek.count {
-          let dayOfWeek = daysOfWeek[index].rawValue
-          if currentComponents.weekday > dayOfWeek {
+        for index in entriesThisMonth.count..<partsOfMonth.count {
+          let partOfMonthEnd = partsOfMonth[index].rawValue * daysInMonth / 3
+          if components.day > partOfMonthEnd {
             // Skip if we've passed the day
             addSkipped(1, onDate: currentDate)
+            if index == partsOfMonth.count - 1 {
+              // We've reached the last part of the week
+              components.month += 1
+              let daysInNextMonth = calendar.rangeOfUnit(.Day, inUnit: .Month, forDate: calendar.dateFromComponents(components)!).length
+              components.day = daysInNextMonth / 3 + 1
+            }
           } else {
-            next = NSDate(timeInterval: Double(dayOfWeek * HabitApp.daySec) - currentTime, sinceDate: currentDate)
+            components.day += partOfMonthEnd - Int(currentDay) + 1 // +1 for midnight
             break
           }
         }
       }
+      next = calendar.dateFromComponents(components)!
     default: ()
     }
   }

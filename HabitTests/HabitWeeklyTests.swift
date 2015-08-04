@@ -261,5 +261,9 @@ class HabitWeeklyTests: XCTestCase {
     components.weekday = 7 // Saturday
     expect(habit.next!) == calendar.dateFromComponents(components)!
   }
+  
+  func testPartsFullWeek() {
+    // TODO: 
+  }
 
 }
