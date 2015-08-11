@@ -168,12 +168,28 @@ class Habit: NSManagedObject {
     }
   }
   
+  func addEntry(onDate date: NSDate) {
+    let _ = Entry(context: self.managedObjectContext!, habit: self, createdAt: date)
+    last = date
+    total = total!.integerValue + 1
+    currentStreak = currentStreak!.integerValue + 1
+    if currentStreak!.integerValue > longestStreak!.integerValue {
+      longestStreak = currentStreak
+    }
+  }
+  
+  func addSkipped(onDate date: NSDate) {
+    addSkipped(1, onDate: date)
+  }
+  
   func addSkipped(count: Int, onDate date: NSDate) {
     for _ in 0..<count {
-      let entry = Entry(context: self.managedObjectContext!, habit: self)
+      let entry = Entry(context: self.managedObjectContext!, habit: self, createdAt: date)
       entry.createdAt = date
       entry.skipped = true
     }
+    last = date
+    total = total!.integerValue + count
     currentStreak = 0
   }
   

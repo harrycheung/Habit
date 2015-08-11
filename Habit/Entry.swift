@@ -12,14 +12,13 @@ import CoreData
 @objc(Entry)
 class Entry: NSManagedObject {
   
-  convenience init(context: NSManagedObjectContext, habit: Habit) {
+  convenience init(context: NSManagedObjectContext, habit: Habit, createdAt: NSDate) {
     let entityDescription = NSEntityDescription.entityForName("Entry", inManagedObjectContext: context)!
     self.init(entity: entityDescription, insertIntoManagedObjectContext: context)
     self.habit = habit
-    createdAt = NSDate()
+    self.createdAt = createdAt
     createdAtTimeZone = NSTimeZone.localTimeZone().name
     skipped = false
-    habit.total = habit.total!.integerValue + 1
   }
 
 }

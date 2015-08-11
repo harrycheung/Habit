@@ -71,22 +71,19 @@ class HabitDailyTests: XCTestCase {
     components.day += 1
     for _ in 0...5 {
       components.hour += 1
-      let entry = Entry(context: context!, habit: habit)
-      entry.createdAt = calendar.dateFromComponents(components)
+      habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     }
     
     components.day += 1
     for _ in 0...5 {
       components.hour += 1
-      let entry = Entry(context: context!, habit: habit)
-      entry.createdAt = calendar.dateFromComponents(components)
+      habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     }
     
     components.day += 1
     for _ in 0...5 {
       components.hour += 1
-      let entry = Entry(context: context!, habit: habit)
-      entry.createdAt = calendar.dateFromComponents(components)
+      habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     }
     
     expect(habit.totalCount()) == 18
@@ -111,12 +108,9 @@ class HabitDailyTests: XCTestCase {
     expect(habit.progress()) == 0
     
     components.hour = 1
-    let entryA = Entry(context: context!, habit: habit)
-    entryA.createdAt = calendar.dateFromComponents(components)!
+    habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     components.hour = 3
-    let entryB = Entry(context: context!, habit: habit)
-    entryB.createdAt = calendar.dateFromComponents(components)!
-    entryB.skipped = NSNumber(bool: true)
+    habit.addSkipped(onDate: calendar.dateFromComponents(components)!)
     
     expect(habit.totalCount()) == 2
     expect(habit.completedCount()) == 1
@@ -160,12 +154,9 @@ class HabitDailyTests: XCTestCase {
     expect(habit.progress()) == 0
     
     components.hour = 8
-    var entry = Entry(context: context!, habit: habit)
-    entry.createdAt = calendar.dateFromComponents(components)!
+    habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     components.hour = 12
-    entry = Entry(context: context!, habit: habit)
-    entry.createdAt = calendar.dateFromComponents(components)!
-    entry.skipped = NSNumber(bool: true)
+    habit.addSkipped(onDate: calendar.dateFromComponents(components)!)
     
     expect(habit.totalCount()) == 2
     expect(habit.completedCount()) == 1
@@ -416,11 +407,9 @@ class HabitDailyTests: XCTestCase {
     habit.last = createdAt
     
     components.minute = 30
-    var entry = Entry(context: context!, habit: habit)
-    entry.createdAt = calendar.dateFromComponents(components)!
+    habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     components.hour = 1
-    entry = Entry(context: context!, habit: habit)
-    entry.createdAt = calendar.dateFromComponents(components)!
+    habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     components.minute = 45
     habit.updateNext(calendar.dateFromComponents(components)!)
     
@@ -442,11 +431,9 @@ class HabitDailyTests: XCTestCase {
     habit.last = createdAt
     
     components.minute = 30
-    var entry = Entry(context: context!, habit: habit)
-    entry.createdAt = calendar.dateFromComponents(components)!
+    habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     components.hour = 1
-    entry = Entry(context: context!, habit: habit)
-    entry.createdAt = calendar.dateFromComponents(components)!
+    habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     components.minute = 45
     habit.updateNext(calendar.dateFromComponents(components)!)
     
@@ -469,8 +456,7 @@ class HabitDailyTests: XCTestCase {
     components.minute = 30
     for _ in 0..<8 {
       components.minute += 1
-      let entry = Entry(context: context!, habit: habit)
-      entry.createdAt = calendar.dateFromComponents(components)!
+      habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     }
     components.minute = 45
     habit.updateNext(calendar.dateFromComponents(components)!)
@@ -496,8 +482,7 @@ class HabitDailyTests: XCTestCase {
     components.minute = 30
     for _ in 0..<3 {
       components.minute += 1
-      let entry = Entry(context: context!, habit: habit)
-      entry.createdAt = calendar.dateFromComponents(components)!
+      habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     }
     components.minute = 45
     habit.updateNext(calendar.dateFromComponents(components)!)

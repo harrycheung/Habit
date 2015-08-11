@@ -149,18 +149,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       let habit = self.habits.removeAtIndex(indexPath.row)
       tableView.endUpdates()
       
-      let entry = Entry(context: HabitApp.moContext, habit: habit)
-      habit.last = entry.createdAt!
-      habit.total = habit.total!.integerValue + 1
-      if skipped {
-        entry.skipped = true
-        habit.currentStreak = 0
-      } else {
-        habit.currentStreak = habit.currentStreak!.integerValue + 1
-        if habit.currentStreak!.integerValue > habit.longestStreak!.integerValue {
-          habit.longestStreak = habit.currentStreak
-        }
-      }
+      habit.addEntry(onDate: NSDate())
       do {
         try HabitApp.moContext.save()
       } catch let error as NSError {

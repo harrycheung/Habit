@@ -65,24 +65,21 @@ class HabitMonthlyTests: XCTestCase {
     
     for _ in 0...2 {
       components.day += 3
-      let entry = Entry(context: context!, habit: habit)
-      entry.createdAt = calendar.dateFromComponents(components)
+      habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     }
     
     components.month += 1
     components.day = 5
     for _ in 0...2 {
       components.day += 5
-      let entry = Entry(context: context!, habit: habit)
-      entry.createdAt = calendar.dateFromComponents(components)
+      habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     }
     
     components.month += 1
     components.day = 10
     for _ in 0...2 {
       components.day += 2
-      let entry = Entry(context: context!, habit: habit)
-      entry.createdAt = calendar.dateFromComponents(components)
+      habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     }
     
     expect(habit.totalCount()) == 9
@@ -108,12 +105,9 @@ class HabitMonthlyTests: XCTestCase {
     expect(habit.progress()) == 0
     
     components.day = 11
-    let entryA = Entry(context: context!, habit: habit)
-    entryA.createdAt = calendar.dateFromComponents(components)!
+    habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     components.day = 17
-    let entryB = Entry(context: context!, habit: habit)
-    entryB.createdAt = calendar.dateFromComponents(components)!
-    entryB.skipped = NSNumber(bool: true)
+    habit.addSkipped(onDate: calendar.dateFromComponents(components)!)
     
     expect(habit.totalCount()) == 2
     expect(habit.completedCount()) == 1
@@ -156,12 +150,9 @@ class HabitMonthlyTests: XCTestCase {
     expect(habit.progress()) == 0
     
     components.day = 11
-    let entryA = Entry(context: context!, habit: habit)
-    entryA.createdAt = calendar.dateFromComponents(components)!
+    habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     components.day = 17
-    let entryB = Entry(context: context!, habit: habit)
-    entryB.createdAt = calendar.dateFromComponents(components)!
-    entryB.skipped = NSNumber(bool: true)
+    habit.addSkipped(onDate: calendar.dateFromComponents(components)!)
     
     expect(habit.totalCount()) == 2
     expect(habit.completedCount()) == 1
@@ -292,8 +283,7 @@ class HabitMonthlyTests: XCTestCase {
     components.day = 4
     for _ in 0..<3 {
       components.day += 1
-      let entry = Entry(context: context!, habit: habit)
-      entry.createdAt = calendar.dateFromComponents(components)!
+      habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     }
     habit.updateNext(calendar.dateFromComponents(components)!)
     
@@ -316,8 +306,7 @@ class HabitMonthlyTests: XCTestCase {
     habit.last = createdAt
     
     components.day = 6
-    let entry = Entry(context: context!, habit: habit)
-    entry.createdAt = calendar.dateFromComponents(components)!
+    habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     components.day = 9
     habit.updateNext(calendar.dateFromComponents(components)!)
     
@@ -341,8 +330,7 @@ class HabitMonthlyTests: XCTestCase {
     components.day = 4
     for _ in 0..<4 {
       components.day += 1
-      let entry = Entry(context: context!, habit: habit)
-      entry.createdAt = calendar.dateFromComponents(components)!
+      habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     }
     habit.updateNext(calendar.dateFromComponents(components)!)
     
@@ -367,8 +355,7 @@ class HabitMonthlyTests: XCTestCase {
     components.day = 4
     for _ in 0..<2 {
       components.day += 1
-      let entry = Entry(context: context!, habit: habit)
-      entry.createdAt = calendar.dateFromComponents(components)!
+      habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     }
     habit.updateNext(calendar.dateFromComponents(components)!)
     
