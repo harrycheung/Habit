@@ -9,12 +9,12 @@
 // TODO
 // 1. Check timezone changes on load
 // 2. done - Snooze behavior
-// 3. Sort habits based on time periods
+// 3. done - Sort habits based on time periods
 // 4. github style history graph
 // 5. 25% - Habit info page
 // 6. done - App settings
 // 7. Local notifications
-// 8. Expire habits periodically
+// 8. done - Expire habits periodically
 
 import UIKit
 import CoreData
