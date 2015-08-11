@@ -36,7 +36,7 @@ class Habit: NSManagedObject {
   // TODO: Check all usages of partsArray to see if we can just map - 1 here.
   var partsArray: [Int] {
     get {
-      return split(parts!.characters, isSeparator: { $0 == "," }).map { Int(String($0))! }
+      return parts!.characters.split(isSeparator: { $0 == "," }).map { Int(String($0))! }
     }
     set {
       parts = ",".join(newValue.map { String($0) })
@@ -45,7 +45,7 @@ class Habit: NSManagedObject {
   
   var partsOfDay: [PartOfDay] {
     get {
-      return split(parts!.characters, isSeparator: { $0 == "," }).map { PartOfDay(rawValue: Int(String($0))!)! }
+      return parts!.characters.split(isSeparator: { $0 == "," }).map { PartOfDay(rawValue: Int(String($0))!)! }
     }
     set {
       parts = ",".join(newValue.map { String($0.rawValue) })
@@ -54,7 +54,7 @@ class Habit: NSManagedObject {
   
   var daysOfWeek: [DayOfWeek] {
     get {
-      return split(parts!.characters, isSeparator: { $0 == "," }).map { DayOfWeek(rawValue: Int(String($0))!)! }
+      return parts!.characters.split(isSeparator: { $0 == "," }).map { DayOfWeek(rawValue: Int(String($0))!)! }
     }
     set {
       parts = ",".join(newValue.map { String($0.rawValue) })
@@ -63,7 +63,7 @@ class Habit: NSManagedObject {
   
   var partsOfMonth: [PartOfMonth] {
     get {
-      return split(parts!.characters, isSeparator: { $0 == "," }).map { PartOfMonth(rawValue: Int(String($0))!)! }
+      return parts!.characters.split(isSeparator: { $0 == "," }).map { PartOfMonth(rawValue: Int(String($0))!)! }
     }
     set {
       parts = ",".join(newValue.map { String($0.rawValue) })
@@ -314,7 +314,6 @@ class Habit: NSManagedObject {
         }
       }
     case .Weekly:
-      // TODO: Round to the nearest hour
       let entriesThisWeek = entriesOnWeek(currentDate)
       if entriesThisWeek.count == 0 {
         // Today marks a new week so let's catch up the past
