@@ -41,8 +41,8 @@ class HabitTableViewCell : SwipeTableViewCell {
     // Not sure why this tint needs be set here, but otherwise, it picks up the global tint sometimes.
     name.tintColor = UIColor.whiteColor()
     name.text = habit!.name
-    //due.text = habit!.dueText
-    let dueIn = 8000 //habit!.dueIn
+    due.text = habit!.dueText
+    let dueIn = habit!.dueIn
     var alpha = MinimumAlpha
     if dueIn < 10 * 60 {
       alpha = 1.0

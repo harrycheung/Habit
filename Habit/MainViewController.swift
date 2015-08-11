@@ -86,18 +86,16 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       NSLog("Could not save")
     }
     
-    habits = []
-    
-//    let request = NSFetchRequest(entityName: "Habit")
-//    do {
-//      habits = try HabitApp.moContext.executeFetchRequest(request) as! [Habit]
-//      for habit in habits {
-//        habit.updateNext(NSDate())
-//      }
-//      habits = habits.sort({ $0.dueIn < $1.dueIn })
-//    } catch let error as NSError {
-//      NSLog("Fetch failed: \(error.localizedDescription)")
-//    }
+    let request = NSFetchRequest(entityName: "Habit")
+    do {
+      habits = try HabitApp.moContext.executeFetchRequest(request) as! [Habit]
+      for habit in habits {
+        habit.updateNext(NSDate())
+      }
+      habits = habits.sort({ $0.dueIn < $1.dueIn })
+    } catch let error as NSError {
+      NSLog("Fetch failed: \(error.localizedDescription)")
+    }
     
     // Setup colors
     tableView.backgroundView = nil
@@ -134,6 +132,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   func refreshTableView() {
     if !SwipeTableViewCell.isSwiping {
+      for habit in habits {
+        habit.updateNext(NSDate())
+      }
+      habits = habits.sort({ $0.dueIn < $1.dueIn })
       tableView.reloadData()
     }
   }

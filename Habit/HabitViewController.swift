@@ -293,6 +293,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
       habit!.last = NSDate()
       habit!.createdAt = NSDate()
     }
+    habit!.updateNext(NSDate())
     do {
       try HabitApp.moContext.save()
     } catch let error as NSError {
