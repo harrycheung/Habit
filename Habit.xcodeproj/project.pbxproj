@@ -34,7 +34,6 @@
 		4A56B1511B6ED4D80092B98A /* HabitMonthlyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A56B1501B6ED4D80092B98A /* HabitMonthlyTests.swift */; };
 		4A6DB6FC1B4B8781008BC1B7 /* UIButton+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6DB6FB1B4B8781008BC1B7 /* UIButton+Color.swift */; };
 		4A6DB6FE1B4C1587008BC1B7 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DB6FD1B4C1587008BC1B7 /* Podfile */; };
-		4A7C8E4A1B4E02840081E8FB /* UIImage+ImageEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8E491B4E02840081E8FB /* UIImage+ImageEffects.swift */; };
 		4ADA905F1B60ABD300826C69 /* ColorPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA905E1B60ABD300826C69 /* ColorPicker.swift */; };
 		861BECF906C6AC6A210325FA /* Pods_HabitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA0F26F75A2786B986189DB2 /* Pods_HabitTests.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E5516A33B694E124AFFB4FEF /* Pods_HabitUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E64B698848D2B19C57A77B12 /* Pods_HabitUITests.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -92,7 +91,6 @@
 		4A56B1501B6ED4D80092B98A /* HabitMonthlyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitMonthlyTests.swift; sourceTree = "<group>"; };
 		4A6DB6FB1B4B8781008BC1B7 /* UIButton+Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Color.swift"; sourceTree = "<group>"; };
 		4A6DB6FD1B4C1587008BC1B7 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		4A7C8E491B4E02840081E8FB /* UIImage+ImageEffects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+ImageEffects.swift"; sourceTree = "<group>"; };
 		4ADA905E1B60ABD300826C69 /* ColorPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorPicker.swift; sourceTree = "<group>"; };
 		665F8C2916FF820599C8EF0C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		816BADC7051735CA72D1148F /* Pods-HabitUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HabitUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HabitUITests/Pods-HabitUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -234,7 +232,6 @@
 				4A1D08CD1B3E1A7A006A9CA4 /* SwipeTableViewCell.swift */,
 				4A4643821B448B3300732389 /* MultiSelectControl.swift */,
 				4A6DB6FB1B4B8781008BC1B7 /* UIButton+Color.swift */,
-				4A7C8E491B4E02840081E8FB /* UIImage+ImageEffects.swift */,
 			);
 			name = Custom;
 			sourceTree = "<group>";
@@ -546,7 +543,6 @@
 				4A4643811B44632400732389 /* FrequencySettings.swift in Sources */,
 				4A44D7871B5A29EC0017B34B /* SettingsViewController.swift in Sources */,
 				4A1D08D01B3E1A7A006A9CA4 /* HabitTableViewCell.swift in Sources */,
-				4A7C8E4A1B4E02840081E8FB /* UIImage+ImageEffects.swift in Sources */,
 				4A1D08DD1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift in Sources */,
 				4A1D08CF1B3E1A7A006A9CA4 /* Habit.swift in Sources */,
 				4A1D08DC1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift in Sources */,
