@@ -257,25 +257,146 @@ class HabitMonthlyTests: XCTestCase {
     let components = NSDateComponents()
     components.year = 2015
     components.month = 3
-    components.day = 10
+    components.day = 14
     let createdAt = calendar.dateFromComponents(components)!
     let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 0)
     habit.partsOfMonth = [.Beginning, .End]
     habit.createdAt = createdAt
     habit.last = createdAt
     
-    components.day = 12
+    components.day = 15
     habit.updateNext(calendar.dateFromComponents(components)!)
-    expect(habit.totalCount()) == 1
+    expect(habit.totalCount()) == 0
     components.day = 1
     components.month += 1
     expect(habit.next!) == calendar.dateFromComponents(components)!
     
     components.day = 5
     habit.updateNext(calendar.dateFromComponents(components)!)
-    expect(habit.totalCount()) == 2
+    expect(habit.totalCount()) == 1
     components.day = 31 / 3 + 1
     expect(habit.next!) == calendar.dateFromComponents(components)!
+  }
+  
+  func testTimesEarlyCompletion() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 3
+    components.day = 2
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 4)
+    habit.createdAt = createdAt
+    habit.last = createdAt
+    
+    components.day = 4
+    for _ in 0..<3 {
+      components.day += 1
+      let entry = Entry(context: context!, habit: habit)
+      entry.createdAt = calendar.dateFromComponents(components)!
+    }
+    habit.updateNext(calendar.dateFromComponents(components)!)
+    
+    expect(habit.totalCount()) == 3
+    components.day = 1
+    components.month += 1
+    expect(habit.next!) == calendar.dateFromComponents(components)
+  }
+  
+  func testPartsEarlyCompletion() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 3
+    components.day = 5
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 0)
+    habit.partsOfMonth = [.Middle, .End]
+    habit.createdAt = createdAt
+    habit.last = createdAt
+    
+    components.day = 6
+    let entry = Entry(context: context!, habit: habit)
+    entry.createdAt = calendar.dateFromComponents(components)!
+    components.day = 9
+    habit.updateNext(calendar.dateFromComponents(components)!)
+    
+    expect(habit.totalCount()) == 1
+    components.month += 1
+    components.day = 1
+    expect(habit.next!) == calendar.dateFromComponents(components)
+  }
+  
+  func testTimesEarlyFullCompletion() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 3
+    components.day = 2
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 4)
+    habit.createdAt = createdAt
+    habit.last = createdAt
+    
+    components.day = 4
+    for _ in 0..<4 {
+      components.day += 1
+      let entry = Entry(context: context!, habit: habit)
+      entry.createdAt = calendar.dateFromComponents(components)!
+    }
+    habit.updateNext(calendar.dateFromComponents(components)!)
+    
+    expect(habit.totalCount()) == 4
+    components.day = 31 / 4 + 1
+    components.month += 1
+    expect(habit.next!) == calendar.dateFromComponents(components)
+  }
+  
+  func testPartsEarlyFullCompletion() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 3
+    components.day = 5
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 0)
+    habit.partsOfMonth = [.Middle, .End]
+    habit.createdAt = createdAt
+    habit.last = createdAt
+    
+    components.day = 4
+    for _ in 0..<2 {
+      components.day += 1
+      let entry = Entry(context: context!, habit: habit)
+      entry.createdAt = calendar.dateFromComponents(components)!
+    }
+    habit.updateNext(calendar.dateFromComponents(components)!)
+    
+    expect(habit.totalCount()) == 2
+    components.day = 2 * 31 / 3 + 1
+    components.month += 1
+    expect(habit.next!) == calendar.dateFromComponents(components)
+  }
+  
+  func testPartsSkipWholeMonth() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 3
+    components.day = 5
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 0)
+    habit.partsOfMonth = [.Beginning, .Middle]
+    habit.createdAt = createdAt
+    habit.last = createdAt
+    
+    components.day = 30
+    habit.updateNext(calendar.dateFromComponents(components)!)
+    
+    expect(habit.totalCount()) == 2
+    components.day = 31 / 3 + 1
+    components.month += 1
+    expect(habit.next!) == calendar.dateFromComponents(components)
   }
   
 }

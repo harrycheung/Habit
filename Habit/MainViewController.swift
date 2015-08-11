@@ -169,6 +169,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         NSLog("Could not save")
       }
       
+      habit.updateNext(NSDate())
       self.insertHabit(habit)
     }
     

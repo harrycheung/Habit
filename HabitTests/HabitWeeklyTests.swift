@@ -243,27 +243,148 @@ class HabitWeeklyTests: XCTestCase {
   func testPartsPartial() {
     let calendar = NSCalendar.currentCalendar()
     let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: NSDate())
-    components.weekday = 2 // Monday
+    components.weekday = 4 // Wednesday
     let createdAt = calendar.dateFromComponents(components)!
     let habit = Habit(context: context!, name: "Weekly parts", details: "", frequency: .Weekly, times: 0)
     habit.daysOfWeek = [.Monday, .Tuesday, .Thursday, .Friday]
     habit.createdAt = createdAt
     habit.last = createdAt
     
-    components.weekday = 4 // Thursday
+    components.weekday = 5 // Thursday
     habit.updateNext(calendar.dateFromComponents(components)!)
-    expect(habit.totalCount()) == 2
+    expect(habit.totalCount()) == 0
     components.weekday = 6 // Friday
     expect(habit.next!) == calendar.dateFromComponents(components)!
     
     habit.updateNext(calendar.dateFromComponents(components)!)
-    expect(habit.totalCount()) == 3
+    expect(habit.totalCount()) == 1
     components.weekday = 7 // Saturday
     expect(habit.next!) == calendar.dateFromComponents(components)!
   }
   
-  func testPartsFullWeek() {
-    // TODO: 
+  func testTimesEarlyCompletion() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = calendar.components([.Year, .WeekOfYear, .Weekday, .Hour], fromDate: NSDate())
+    components.weekday = 1 // Sunday
+    components.hour = 0
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "Weekly 7 times", details: "", frequency: .Weekly, times: 7)
+    habit.createdAt = createdAt
+    habit.last = createdAt
+    
+    components.hour = 6
+    var entry = Entry(context: context!, habit: habit)
+    entry.createdAt = calendar.dateFromComponents(components)!
+    components.hour = 12
+    entry = Entry(context: context!, habit: habit)
+    entry.createdAt = calendar.dateFromComponents(components)!
+    components.hour = 18
+    habit.updateNext(calendar.dateFromComponents(components)!)
+    
+    expect(habit.totalCount()) == 2
+    components.weekday = 4
+    components.hour = 0
+    expect(habit.next!) == calendar.dateFromComponents(components)
+  }
+  
+  func testPartsEarlyCompletion() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: NSDate())
+    components.weekday = 1 // Sunday
+    components.hour = 0
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "Weekly parts", details: "", frequency: .Weekly, times: 0)
+    habit.daysOfWeek = [.Monday, .Tuesday, .Thursday]
+    habit.createdAt = createdAt
+    habit.last = createdAt
+    
+    components.hour = 6
+    var entry = Entry(context: context!, habit: habit)
+    entry.createdAt = calendar.dateFromComponents(components)!
+    components.hour = 12
+    entry = Entry(context: context!, habit: habit)
+    entry.createdAt = calendar.dateFromComponents(components)!
+    components.hour = 18
+    habit.updateNext(calendar.dateFromComponents(components)!)
+    
+    expect(habit.totalCount()) == 2
+    components.weekday = 6
+    components.hour = 0
+    expect(habit.next!) == calendar.dateFromComponents(components)
+  }
+  
+  func testTimesEarlyFullCompletion() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = calendar.components([.Year, .WeekOfYear, .Weekday, .Hour], fromDate: NSDate())
+    components.weekday = 1 // Sunday
+    components.hour = 0
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "Weekly 7 times", details: "", frequency: .Weekly, times: 7)
+    habit.createdAt = createdAt
+    habit.last = createdAt
+    
+    components.hour = 4
+    for _ in 0..<7 {
+      components.hour += 1
+      let entry = Entry(context: context!, habit: habit)
+      entry.createdAt = calendar.dateFromComponents(components)!
+    }
+    components.hour = 18
+    habit.updateNext(calendar.dateFromComponents(components)!)
+    
+    expect(habit.totalCount()) == 7
+    components.weekOfYear += 1
+    components.weekday = 2
+    components.hour = 0
+    expect(habit.next!) == calendar.dateFromComponents(components)
+  }
+  
+  func testPartsEarlyFullCompletion() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: NSDate())
+    components.weekday = 1 // Sunday
+    components.hour = 0
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "Weekly parts", details: "", frequency: .Weekly, times: 0)
+    habit.daysOfWeek = [.Monday, .Tuesday, .Thursday]
+    habit.createdAt = createdAt
+    habit.last = createdAt
+    
+    components.hour = 4
+    for _ in 0..<3 {
+      components.hour += 1
+      let entry = Entry(context: context!, habit: habit)
+      entry.createdAt = calendar.dateFromComponents(components)!
+    }
+    components.hour = 18
+    habit.updateNext(calendar.dateFromComponents(components)!)
+    
+    expect(habit.totalCount()) == 3
+    components.weekOfYear += 1
+    components.weekday = 3
+    components.hour = 0
+    expect(habit.next!) == calendar.dateFromComponents(components)
+  }
+  
+  func testPartsSkipWholeWeek() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: NSDate())
+    components.weekday = 1 // Sunday
+    components.hour = 0
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "Weekly parts", details: "", frequency: .Weekly, times: 0)
+    habit.daysOfWeek = [.Monday, .Tuesday, .Thursday]
+    habit.createdAt = createdAt
+    habit.last = createdAt
+    
+    components.weekday = 6
+    habit.updateNext(calendar.dateFromComponents(components)!)
+    
+    expect(habit.totalCount()) == 3
+    components.weekOfYear += 1
+    components.weekday = 3
+    components.hour = 0
+    expect(habit.next!) == calendar.dateFromComponents(components)
   }
 
 }

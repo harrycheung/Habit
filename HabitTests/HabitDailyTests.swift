@@ -148,7 +148,7 @@ class HabitDailyTests: XCTestCase {
     let components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
     components.hour = 0
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Daily, times: 12)
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Daily, times: 0)
     habit.partsOfDay = [.Morning, .MidDay, .Afternoon]
     habit.createdAt = createdAt
     habit.last = createdAt
@@ -160,12 +160,12 @@ class HabitDailyTests: XCTestCase {
     expect(habit.progress()) == 0
     
     components.hour = 8
-    let entryA = Entry(context: context!, habit: habit)
-    entryA.createdAt = calendar.dateFromComponents(components)!
+    var entry = Entry(context: context!, habit: habit)
+    entry.createdAt = calendar.dateFromComponents(components)!
     components.hour = 12
-    let entryB = Entry(context: context!, habit: habit)
-    entryB.createdAt = calendar.dateFromComponents(components)!
-    entryB.skipped = NSNumber(bool: true)
+    entry = Entry(context: context!, habit: habit)
+    entry.createdAt = calendar.dateFromComponents(components)!
+    entry.skipped = NSNumber(bool: true)
     
     expect(habit.totalCount()) == 2
     expect(habit.completedCount()) == 1
@@ -189,6 +189,7 @@ class HabitDailyTests: XCTestCase {
     components.day += 1
     let expectedNext = calendar.dateFromComponents(components)
     expect(habit.next!) == expectedNext
+    
     components.hour = 20
     components.minute = 10
     components.day -= 1
@@ -401,6 +402,131 @@ class HabitDailyTests: XCTestCase {
     expect(habit.totalCount()) == 6
     components.day += 2
     components.hour = 9
+    expect(habit.next!) == calendar.dateFromComponents(components)
+  }
+  
+  func testTimesEarlyCompletion() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: NSDate())
+    components.hour = 0
+    components.minute = 0
+    let createdAt = calendar.dateFromComponents(components)
+    let habit = Habit(context: context!, name: "2 days ago daily 8 times", details: "", frequency: .Daily, times: 12)
+    habit.createdAt = createdAt
+    habit.last = createdAt
+    
+    components.minute = 30
+    var entry = Entry(context: context!, habit: habit)
+    entry.createdAt = calendar.dateFromComponents(components)!
+    components.hour = 1
+    entry = Entry(context: context!, habit: habit)
+    entry.createdAt = calendar.dateFromComponents(components)!
+    components.minute = 45
+    habit.updateNext(calendar.dateFromComponents(components)!)
+    
+    expect(habit.totalCount()) == 2
+    components.minute = 0
+    components.hour = 6
+    expect(habit.next!) == calendar.dateFromComponents(components)
+  }
+  
+  func testPartsEarlyCompletion() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: NSDate())
+    components.hour = 0
+    components.minute = 0
+    let createdAt = calendar.dateFromComponents(components)
+    let habit = Habit(context: context!, name: "2 days ago daily 8 times", details: "", frequency: .Daily, times: 0)
+    habit.partsOfDay = [.Morning, .MidMorning, .MidDay]
+    habit.createdAt = createdAt
+    habit.last = createdAt
+    
+    components.minute = 30
+    var entry = Entry(context: context!, habit: habit)
+    entry.createdAt = calendar.dateFromComponents(components)!
+    components.hour = 1
+    entry = Entry(context: context!, habit: habit)
+    entry.createdAt = calendar.dateFromComponents(components)!
+    components.minute = 45
+    habit.updateNext(calendar.dateFromComponents(components)!)
+    
+    expect(habit.totalCount()) == 2
+    components.minute = 0
+    components.hour = 13
+    expect(habit.next!) == calendar.dateFromComponents(components)
+  }
+  
+  func testTimesEarlyFullCompletion() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: NSDate())
+    components.hour = 0
+    components.minute = 0
+    let createdAt = calendar.dateFromComponents(components)
+    let habit = Habit(context: context!, name: "2 days ago daily 8 times", details: "", frequency: .Daily, times: 8)
+    habit.createdAt = createdAt
+    habit.last = createdAt
+    
+    components.minute = 30
+    for _ in 0..<8 {
+      components.minute += 1
+      let entry = Entry(context: context!, habit: habit)
+      entry.createdAt = calendar.dateFromComponents(components)!
+    }
+    components.minute = 45
+    habit.updateNext(calendar.dateFromComponents(components)!)
+    
+    expect(habit.totalCount()) == 8
+    components.minute = 0
+    components.hour = 3
+    components.day += 1
+    expect(habit.next!) == calendar.dateFromComponents(components)
+  }
+  
+  func testPartsEarlyFullCompletion() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: NSDate())
+    components.hour = 0
+    components.minute = 0
+    let createdAt = calendar.dateFromComponents(components)
+    let habit = Habit(context: context!, name: "2 days ago daily 8 times", details: "", frequency: .Daily, times: 0)
+    habit.partsOfDay = [.Morning, .MidMorning, .MidDay]
+    habit.createdAt = createdAt
+    habit.last = createdAt
+    
+    components.minute = 30
+    for _ in 0..<3 {
+      components.minute += 1
+      let entry = Entry(context: context!, habit: habit)
+      entry.createdAt = calendar.dateFromComponents(components)!
+    }
+    components.minute = 45
+    habit.updateNext(calendar.dateFromComponents(components)!)
+    
+    expect(habit.totalCount()) == 3
+    components.minute = 0
+    components.hour = 9
+    components.day += 1
+    expect(habit.next!) == calendar.dateFromComponents(components)
+  }
+  
+  func testPartsSkipWholeDay() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: NSDate())
+    components.hour = 0
+    components.minute = 0
+    let createdAt = calendar.dateFromComponents(components)
+    let habit = Habit(context: context!, name: "2 days ago daily 8 times", details: "", frequency: .Daily, times: 0)
+    habit.partsOfDay = [.Morning, .MidMorning, .MidDay]
+    habit.createdAt = createdAt
+    habit.last = createdAt
+    
+    components.hour = 20
+    habit.updateNext(calendar.dateFromComponents(components)!)
+    
+    expect(habit.totalCount()) == 3
+    components.minute = 0
+    components.hour = 9
+    components.day += 1
     expect(habit.next!) == calendar.dateFromComponents(components)
   }
   
