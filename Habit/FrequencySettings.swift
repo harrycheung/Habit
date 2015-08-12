@@ -13,7 +13,7 @@ import SnapKit
 @objc(FrequencySettingsDelegate)
 protocol FrequencySettingsDelegate {
   
-  func frequencySettingsChanged() -> Void
+  func frequencySettingsChanged()
   
 }
 
@@ -51,7 +51,7 @@ class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, 
     leftOverlay!.translatesAutoresizingMaskIntoConstraints = false
     leftOverlay!.backgroundColor = UIColor.whiteColor()
     addSubview(leftOverlay!)
-    leftOverlay!.snp_makeConstraints { (make) -> Void in
+    leftOverlay!.snp_makeConstraints {(make) in
       make.centerX.equalTo(self).multipliedBy(0.5)
       make.centerY.equalTo(self)
       make.width.equalTo(self).multipliedBy(0.5)
@@ -61,7 +61,7 @@ class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, 
     rightOverlay!.translatesAutoresizingMaskIntoConstraints = false
     rightOverlay!.backgroundColor = UIColor.whiteColor()
     addSubview(rightOverlay!)
-    rightOverlay!.snp_makeConstraints { (make) -> Void in
+    rightOverlay!.snp_makeConstraints {(make) in
       make.centerX.equalTo(self).multipliedBy(1.5)
       make.centerY.equalTo(self)
       make.width.equalTo(self).multipliedBy(0.5)

@@ -43,6 +43,15 @@ class Habit: NSManagedObject {
     }
   }
   
+  var frequency: Frequency {
+    get {
+      return Frequency(rawValue: frequencyNum!.integerValue)!
+    }
+    set {
+      frequencyNum = newValue.rawValue
+    }
+  }
+  
   var partsOfDay: [PartOfDay] {
     get {
       return parts!.characters.split(isSeparator: { $0 == "," }).map { PartOfDay(rawValue: Int(String($0))!)! }
@@ -69,7 +78,6 @@ class Habit: NSManagedObject {
       parts = ",".join(newValue.map { String($0.rawValue) })
     }
   }
-
 
   var timesInt: Int {
     return times!.integerValue
@@ -124,7 +132,7 @@ class Habit: NSManagedObject {
     self.init(entity: entityDescription, insertIntoManagedObjectContext: context)
     self.name = name
     self.details = details
-    self.frequency = frequency.hashValue
+    self.frequency = frequency
     self.times = times
     parts = ""
     notifyBool = true
@@ -196,7 +204,7 @@ class Habit: NSManagedObject {
   func countBeforeCreatedAt(date: NSDate) -> Int {
     var count = 0
     let calendar = NSCalendar.currentCalendar()
-    switch Frequency(rawValue: frequency!.integerValue)! {
+    switch frequency {
     case .Daily:
       if calendar.isDate(date, inSameDayAsDate: createdAt!) {
         let createdComponents = calendar.components([.Hour, .Minute], fromDate: createdAt!)
@@ -247,32 +255,58 @@ class Habit: NSManagedObject {
     return count
   }
   
-  func entriesOnDay(day: NSDate) -> [Entry] {
-    let calendar = NSCalendar.currentCalendar()
-    let components = calendar.components([.Year, .Month, .Day], fromDate: day)
-    let startDate = calendar.dateFromComponents(components)!
-    components.day += 1
-    let endDate = calendar.dateFromComponents(components)!
-    return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "createdAt >= %@ AND createdAt < %@", startDate, endDate)).array as! [Entry]
+  func entriesOnDate(date: NSDate) -> [Entry] {
+    return entriesOnDate(date, predicates: [])
   }
   
-  func entriesOnWeek(day: NSDate) -> [Entry] {
-    let calendar = NSCalendar.currentCalendar()
-    let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: day)
-    components.weekday = 1
-    let startDate = calendar.dateFromComponents(components)!
-    components.weekOfYear += 1
-    let endDate = calendar.dateFromComponents(components)!
-    return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "createdAt >= %@ AND createdAt < %@", startDate, endDate)).array as! [Entry]
+  func completedOnDate(date: NSDate) -> [Entry] {
+    return entriesOnDate(date, predicates: [NSPredicate(format: "skipped == NO")])
   }
   
-  func entriesOnMonth(day: NSDate) -> [Entry] {
+  func percentageOnDate(date: NSDate) -> CGFloat {
+    let entries = CGFloat(entriesOnDate(date).count)
+    if entries == 0 {
+      return 0
+    } else {
+      return CGFloat(completedOnDate(date).count) / entries
+    }
+  }
+  
+  func entriesOnDate(date: NSDate, var predicates: [NSPredicate]) -> [Entry] {
     let calendar = NSCalendar.currentCalendar()
-    let components = calendar.components([.Year, .Month], fromDate: day)
-    let startDate = calendar.dateFromComponents(components)!
-    components.month += 1
-    let endDate = calendar.dateFromComponents(components)!
-    return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "createdAt >= %@ AND createdAt < %@", startDate, endDate)).array as! [Entry]
+    var startDate = NSDate()
+    var endDate = NSDate()
+    switch frequency {
+    case .Daily:
+      let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: date)
+      components.hour = 0
+      components.minute = 0
+      startDate = calendar.dateFromComponents(components)!
+      components.day += 1
+      endDate = calendar.dateFromComponents(components)!
+    case .Weekly:
+      let components = calendar.components([.Year, .WeekOfYear, .Weekday, .Hour, .Minute], fromDate: date)
+      components.hour = 0
+      components.minute = 0
+      components.weekday = 1
+      startDate = calendar.dateFromComponents(components)!
+      components.weekOfYear += 1
+      endDate = calendar.dateFromComponents(components)!
+    case .Monthly:
+      let components = calendar.components([.Year, .Month, .Hour, .Minute], fromDate: date)
+      components.hour = 0
+      components.minute = 0
+      startDate = calendar.dateFromComponents(components)!
+      components.month += 1
+      endDate = calendar.dateFromComponents(components)!
+    default: ()
+    }
+    predicates.append(NSPredicate(format: "createdAt >= %@ AND createdAt < %@", startDate, endDate))
+    return entries!.filteredOrderedSetUsingPredicate(NSCompoundPredicate(andPredicateWithSubpredicates: predicates)).array as! [Entry]
+  }
+  
+  func expectedCount() -> Int {
+    return useTimes ? times!.integerValue : partsOfDay.count
   }
   
   func updateNext(currentDate: NSDate) {
@@ -280,16 +314,19 @@ class Habit: NSManagedObject {
       return
     }
     let calendar = NSCalendar.currentCalendar()
-    switch Frequency(rawValue: frequency!.integerValue)! {
+    switch frequency {
     case .Daily:
-      let entriesToday = entriesOnDay(currentDate)
+      let entriesToday = entriesOnDate(currentDate)
       if entriesToday.count == 0 {
         // Today is a new day so let's catch up the past
         let expectedCount = useTimes ? times!.integerValue : partsOfDay.count
         var dateIterator = last!
         let components = calendar.components([.Year, .Month, .Day], fromDate: dateIterator)
-        while !calendar.isDateInToday(dateIterator) {
-          addSkipped(expectedCount - entriesOnDay(dateIterator).count - countBeforeCreatedAt(dateIterator), onDate: dateIterator)
+        while !calendar.isDate(dateIterator, inSameDayAsDate: currentDate) {
+          let skipCount = expectedCount - entriesOnDate(dateIterator).count - countBeforeCreatedAt(dateIterator)
+          if skipCount > 0 {
+            addSkipped(skipCount, onDate: dateIterator)
+          }
           components.day += 1
           dateIterator = calendar.dateFromComponents(components)!
         }
@@ -334,14 +371,17 @@ class Habit: NSManagedObject {
         }
       }
     case .Weekly:
-      let entriesThisWeek = entriesOnWeek(currentDate)
+      let entriesThisWeek = entriesOnDate(currentDate)
       if entriesThisWeek.count == 0 {
         // Today marks a new week so let's catch up the past
         let expectedCount = useTimes ? times!.integerValue : daysOfWeek.count
         var dateIterator = last!
         let components = calendar.components([.Year, .Month, .Day], fromDate: dateIterator)
         while !calendar.isDate(dateIterator, equalToDate: currentDate, toUnitGranularity: .WeekOfYear) {
-          addSkipped(expectedCount - entriesOnWeek(dateIterator).count - countBeforeCreatedAt(dateIterator), onDate: dateIterator)
+          let skipCount = expectedCount - entriesOnDate(dateIterator).count - countBeforeCreatedAt(dateIterator)
+          if skipCount > 0 {
+            addSkipped(skipCount, onDate: dateIterator)
+          }
           components.day += 7
           dateIterator = calendar.dateFromComponents(components)!
         }
@@ -386,14 +426,17 @@ class Habit: NSManagedObject {
       }
       next = calendar.dateFromComponents(components)
     case .Monthly:
-      let entriesThisMonth = entriesOnMonth(currentDate)
+      let entriesThisMonth = entriesOnDate(currentDate)
       if entriesThisMonth.count == 0 {
         // Today marks a new month so let's catch up the past
         let expectedCount = useTimes ? times!.integerValue : partsOfMonth.count
         var dateIterator = last!
         let components = calendar.components([.Year, .Month], fromDate: dateIterator)
         while !calendar.isDate(dateIterator, equalToDate: currentDate, toUnitGranularity: .Month) {
-          addSkipped(expectedCount - entriesOnMonth(dateIterator).count - countBeforeCreatedAt(dateIterator), onDate: dateIterator)
+          let skipCount = expectedCount - entriesOnDate(dateIterator).count - countBeforeCreatedAt(dateIterator)
+          if skipCount > 0 {
+            addSkipped(skipCount, onDate: dateIterator)
+          }
           components.month += 1
           dateIterator = calendar.dateFromComponents(components)!
         }

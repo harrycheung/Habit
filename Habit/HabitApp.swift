@@ -39,6 +39,8 @@ class HabitApp {
   static let dayHours = 24
   static let weekHours = 7 * dayHours
   
+  static let MinimumAlpha: CGFloat = 0.4
+  
   static var moContext: NSManagedObjectContext {
     return (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
   }

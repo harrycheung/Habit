@@ -11,8 +11,6 @@ import UIKit
 
 class HabitTableViewCell : SwipeTableViewCell {
   
-  let MinimumAlpha:CGFloat = 0.4
-  
   var habit: Habit?
   var bottomBorder: CALayer?
   
@@ -43,20 +41,14 @@ class HabitTableViewCell : SwipeTableViewCell {
     name.text = habit!.name
     due.text = habit!.dueText
     let dueIn = habit!.dueIn
-    var alpha = MinimumAlpha
+    var alpha = HabitApp.MinimumAlpha
     if dueIn < 10 * 60 {
       alpha = 1.0
     } else if dueIn < 24 * 3600 {
-      alpha = MinimumAlpha + (1 - MinimumAlpha) * pow(1000, -CGFloat(dueIn) / (24 * 3600))
+      alpha = HabitApp.MinimumAlpha + (1 - HabitApp.MinimumAlpha) * pow(1000, -CGFloat(dueIn) / (24 * 3600))
     }
     if contentView.backgroundColor != nil {
-      var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0
-      tintColor.getRed(&red, green: &green, blue: &blue, alpha: nil)
-      alpha = 1 - alpha
-      red += (1 - red) * alpha
-      green += (1 - green) * alpha
-      blue += (1 - blue) * alpha
-      contentView.backgroundColor = UIColor(red: red, green: green, blue: blue, alpha: 1)
+      contentView.backgroundColor = UIColor(color: tintColor, fadeToAlpha: alpha)
     } else {
       contentView.alpha = alpha
     }

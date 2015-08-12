@@ -47,6 +47,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   @IBOutlet weak var longestStreak: UILabel!
   @IBOutlet weak var skipped: UILabel!
   @IBOutlet weak var total: UILabel!
+  @IBOutlet weak var habitHistory: HabitHistory!
   
   var activeSettings: FrequencySettings {
     return frequencySettings[frequency.selectedSegmentIndex]!
@@ -86,7 +87,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
     // Fill out the form
     name.text = habit!.name;
     name.delegate = self
-    frequency.selectedSegmentIndex = habit!.frequency!.integerValue - 1
+    frequency.selectedSegmentIndex = habit!.frequencyNum!.integerValue - 1
     if habit!.useTimes {
       activeSettings.picker.selectRow(habit!.times!.integerValue - 1, inComponent: 0, animated: false)
     } else {
@@ -134,6 +135,8 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
     green += (1 - green) * 0.8
     blue += (1 - blue) * 0.8
     toolbar.backgroundColor = UIColor(red: red, green: green, blue: blue, alpha: 1)
+    
+    habitHistory.habit = habit!
   }
   
   override func viewWillAppear(animated: Bool) {
@@ -152,14 +155,14 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
     skipped.text = "\(habit!.skippedCount())"
     total.text = "\(habit!.total!)"
     
-    switch habit!.frequency!.integerValue {
-    case Habit.Frequency.Daily.rawValue:
+    switch habit!.frequency {
+    case .Daily:
       progressPeriod.text = "Past 30 days"
       break
-    case Habit.Frequency.Weekly.rawValue:
+    case .Weekly:
       progressPeriod.text = "Past 12 weeks"
       break
-    case Habit.Frequency.Monthly.rawValue:
+    case .Monthly:
       progressPeriod.text = "Past 6 months"
       break
     default: ()
@@ -170,7 +173,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   func buildSettings(settings: FrequencySettings, centerX: CGFloat) {
     settings.translatesAutoresizingMaskIntoConstraints = false
     frequencyScrollerContent.addSubview(settings)
-    settings.snp_makeConstraints { (make) -> Void in
+    settings.snp_makeConstraints {(make) in
       make.centerX.equalTo(frequencyScrollerContent).multipliedBy(centerX)
       make.centerY.equalTo(frequencyScrollerContent)
       make.width.equalTo(frequencyScrollerContent).multipliedBy(0.33333)
@@ -255,7 +258,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   func enableSave() {
     let settings = activeSettings
     if !habit!.isNew && name.text! == habit!.name! && notification.on == habit!.notifyBool &&
-       frequency.selectedSegmentIndex == habit!.frequency!.integerValue - 1 {
+       frequency.selectedSegmentIndex == habit!.frequencyNum!.integerValue - 1 {
       // If name and frequency is the same, test frequency settings
       save.enabled = (settings.useTimes &&
                        (!habit!.useTimes || settings.picker.selectedRowInComponent(0) != habit!.timesInt - 1)) ||
@@ -281,7 +284,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   @IBAction func saveHabit(sender: AnyObject) {
     // TODO: set habit!.next
     habit!.name = name.text!
-    habit!.frequency = frequency.selectedSegmentIndex + 1
+    habit!.frequencyNum = frequency.selectedSegmentIndex + 1
     if activeSettings.useTimes {
       habit!.times = activeSettings.picker!.selectedRowInComponent(0) + 1
       habit!.partsArray = []
@@ -317,7 +320,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   
   @IBAction func deleteHabit(sender: AnyObject) {
     let alert = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-    let delete = UIAlertAction(title: "Delete habit", style: .Destructive, handler: { (UIAlertAction) -> Void in
+    let delete = UIAlertAction(title: "Delete habit", style: .Destructive, handler: { (UIAlertAction) in
       HabitApp.moContext.deleteObject(self.habit!)
       do {
         try HabitApp.moContext.save()
@@ -330,10 +333,11 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
       self.performSegueWithIdentifier(self.UnwindSegueIdentifier, sender: self)
     })
     alert.addAction(delete)
-    let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: { (UIAlertAction) -> Void in
+    let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: { (UIAlertAction) in
       alert.dismissViewControllerAnimated(true, completion: nil)
     })
     alert.addAction(cancel)
     presentViewController(alert, animated: true, completion: nil)
   }
+  
 }

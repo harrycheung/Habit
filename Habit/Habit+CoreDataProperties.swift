@@ -17,7 +17,7 @@ extension Habit {
     @NSManaged var createdAt: NSDate?
     @NSManaged var createdAtTimeZone: String?
     @NSManaged var details: String?
-    @NSManaged var frequency: NSNumber?
+    @NSManaged var frequencyNum: NSNumber?
     @NSManaged var last: NSDate?
     @NSManaged var name: String?
     @NSManaged var notify: NSNumber?

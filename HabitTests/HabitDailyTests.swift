@@ -89,7 +89,7 @@ class HabitDailyTests: XCTestCase {
     expect(habit.totalCount()) == 18
     expect(habit.completedCount()) == 18
     components.day -= 1
-    expect(habit.entriesOnDay(calendar.dateFromComponents(components)!).count) == 6
+    expect(habit.entriesOnDate(calendar.dateFromComponents(components)!).count) == 6
   }
   
   func testTimes() {

@@ -19,7 +19,7 @@ protocol ColorPickerDataSource {
 @objc(ColorPickerDelegate)
 protocol ColorPickerDelegate {
   
-  func colorPicked(colorPicker: ColorPicker, colorIndex: Int) -> Void
+  func colorPicked(colorPicker: ColorPicker, colorIndex: Int)
   
 }
 
@@ -57,7 +57,7 @@ class ColorPicker: UIView {
       let button = ColorPickerButton(diameter: diameter)
       buttons.append(button)
       addSubview(button)
-      button.snp_makeConstraints({ (make) -> Void in
+      button.snp_makeConstraints({ (make) in
         make.centerX.equalTo(self).multipliedBy(CGFloat(1 + 2 * index) / CGFloat(count))
         make.centerY.equalTo(self)
         make.width.height.equalTo(diameter)

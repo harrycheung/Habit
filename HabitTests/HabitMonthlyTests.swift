@@ -85,7 +85,7 @@ class HabitMonthlyTests: XCTestCase {
     expect(habit.totalCount()) == 9
     expect(habit.completedCount()) == 9
     components.month -= 1
-    expect(habit.entriesOnMonth(calendar.dateFromComponents(components)!).count) == 3
+    expect(habit.entriesOnDate(calendar.dateFromComponents(components)!).count) == 3
   }
   
   func testTimes() {
