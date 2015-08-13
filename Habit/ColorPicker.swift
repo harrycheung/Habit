@@ -54,7 +54,7 @@ class ColorPicker: UIView {
     super.init(coder: aDecoder)
     
     for index in 0..<count {
-      let button = ColorPickerButton(diameter: diameter)
+      let button = ColorPickerButton(diameter: diameter, index: index)
       buttons.append(button)
       addSubview(button)
       button.snp_makeConstraints({ (make) in
@@ -77,9 +77,9 @@ class ColorPicker: UIView {
   }
   
   func itemTapped(sender: AnyObject) {
-    let clickedButton = sender as! UIButton
+    let clickedButton = sender as! ColorPickerButton
     for (index, button) in buttons.enumerate() {
-      if button.isEqual(clickedButton) {
+      if index == clickedButton.index {
         button.selected = true
         delegate?.colorPicked(self, colorIndex: index)
       } else {
@@ -90,7 +90,10 @@ class ColorPicker: UIView {
   
   class ColorPickerButton: UIButton {
     
-    init(diameter: CGFloat) {
+    var index: Int
+    
+    init(diameter: CGFloat, index: Int) {
+      self.index = index
       super.init(frame: CGRectMake(0, 0, 0, 0))
       
       setTitle("", forState: .Normal)
