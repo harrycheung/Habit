@@ -89,13 +89,11 @@ class SwipeTableViewCell : UITableViewCell {
   
   override func prepareForReuse() {
     super.prepareForReuse()
-    NSLog("prepareForReuse: \(unsafeAddressOf(self))")
     uninstallSwipingView()
     initDefaults()
   }
   
   func setupSwipingView() {
-    NSLog("setupSwipingView: \(screenshotView == nil) \((self as! HabitTableViewCell).habit!.name!)")
     uninstallSwipingView()
     if screenshotView != nil {
       return
@@ -114,7 +112,6 @@ class SwipeTableViewCell : UITableViewCell {
   }
   
   func uninstallSwipingView() {
-    NSLog("uninstallSwipingView: \(screenshotView != nil) \((self as! HabitTableViewCell).habit!.name!)")
     if screenshotView == nil {
       return
     }
@@ -178,20 +175,6 @@ class SwipeTableViewCell : UITableViewCell {
     if isExited {
       return
     }
-    
-    switch recognizer.state {
-    case .Began:
-      NSLog("handlePan: began")
-    case .Changed:
-      NSLog("handlePan: changed")
-    case .Cancelled:
-      NSLog("handlePan: cancelled")
-    case .Ended:
-      NSLog("handlePan: ended")
-    default:
-      NSLog("handlePan: default")
-    }
-    
     var currentX: CGFloat = 0
     if screenshotView != nil {
       currentX = screenshotView!.frame.origin.x
@@ -336,7 +319,6 @@ class SwipeTableViewCell : UITableViewCell {
   }
   
   func finish(duration duration: CGFloat, direction: Direction) {
-    NSLog("finish: \(unsafeAddressOf(self)) \((self as! HabitTableViewCell).habit!.name!)")
     recognizer!.enabled = false
     isExited = true
     var originX: CGFloat = bounds.width
@@ -360,12 +342,10 @@ class SwipeTableViewCell : UITableViewCell {
         self.blocks[direction.hashValue]!(self)
         self.recognizer!.enabled = true
         SwipeTableViewCell.swipeCellCount--
-        NSLog("finish done: \(unsafeAddressOf(self))")
       })
   }
   
   func reset() {
-    NSLog("reset: \(unsafeAddressOf(self)) \((self as! HabitTableViewCell).habit!.name!)")
     recognizer!.enabled = false
     colorView!.backgroundColor = UIColor.clearColor()
     let leftColorView = UIView(frame: CGRectMake(0, 0, frame.width / 2, frame.height))
@@ -395,7 +375,6 @@ class SwipeTableViewCell : UITableViewCell {
         self.uninstallSwipingView()
         self.recognizer!.enabled = true        
         SwipeTableViewCell.swipeCellCount--
-        NSLog("reset done: \(unsafeAddressOf(self))")
       })
   }
 }
