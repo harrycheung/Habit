@@ -10,8 +10,19 @@ import Foundation
 import UIKit
 import SnapKit
 
+@objc(HabitHistoryDelegate)
+protocol HabitHistoryDelegate {
+  
+  func habitHistory(habitHistory: HabitHistory, selectedHistory: History)
+  
+}
+
 @IBDesignable
 class HabitHistory: UIView, UIScrollViewDelegate {
+  
+  @IBOutlet var delegate: HabitHistoryDelegate?
+
+  let minimumAlpha: CGFloat = 0.1
   
   var habit: Habit?
   var scrollView: UIScrollView?
@@ -45,57 +56,45 @@ class HabitHistory: UIView, UIScrollViewDelegate {
   }
   
   override func layoutSubviews() {    
-//    scrollViewContent!.layer.borderColor = UIColor.redColor().CGColor
-//    scrollViewContent!.layer.borderWidth = 1.0
+//    scrollView!.layer.borderColor = UIColor.redColor().CGColor
+//    scrollView!.layer.borderWidth = 1.0
+    scrollViewContent!.layoutIfNeeded()
+    let contentFrame = scrollViewContent!.frame
     if habit != nil && squares.isEmpty {
       let color = UIApplication.sharedApplication().windows[0].tintColor
       let calendar = NSCalendar.currentCalendar()
-      let today = NSDate()
-      var rightConstraint = scrollViewContent!.snp_right
-      var rightOffset:CGFloat = 0
-      var totalWidth: CGFloat = 0
       
       switch habit!.frequency {
       case .Daily:
+        let side = (contentFrame.height + spacing / 2) / 7.0
+        var offset: CGFloat = 0
         var lastDistance = 0
-        for element in habit!.histories!.reverseObjectEnumerator() {
+        for element in habit!.histories! {
           let history = element as! History
-          if history.percentage == 0 && history.date!.compare(habit!.createdAt!) == .OrderedAscending {
-            break
-          }
-          let square = UIView()
-          let alpha = HabitApp.MinimumAlpha + (1 - HabitApp.MinimumAlpha) * pow(1000, -history.percentage)
-          square.backgroundColor = UIColor(color: color, fadeToAlpha: alpha)
           let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: history.date!)
           let weekday = components.weekday
-          let distance = calendar.components([.Year, .WeekOfYear], fromDate: today).weekOfYear -
+          let distance = calendar.components([.Year, .WeekOfYear], fromDate: habit!.createdAt!).weekOfYear -
             calendar.components([.Year, .WeekOfYear], fromDate: history.date!).weekOfYear
           if distance != lastDistance {
-            let lastSquare = squares[squares.endIndex - 1]
             lastDistance = distance
-            rightConstraint = lastSquare.snp_left
-            rightOffset = -spacing / 2.0
-            
-            lastSquare.layoutIfNeeded()
-            totalWidth += lastSquare.frame.width + spacing / 2.0
+            offset += side
           }
+          let frame = CGRectMake(offset, CGFloat(weekday - 1) * side, side - spacing / 2, side - spacing / 2)
+          let square = SquareView(frame: frame, history: history)
+          square.translatesAutoresizingMaskIntoConstraints = true
+          let alpha = minimumAlpha + (1 - minimumAlpha) * history.percentage
+          square.backgroundColor = UIColor(color: color, fadeToAlpha: alpha)
           scrollViewContent!.addSubview(square)
-          square.snp_makeConstraints({ (make) in
-            make.right.equalTo(rightConstraint).offset(rightOffset)
-            make.centerY.equalTo(scrollViewContent!).multipliedBy(CGFloat(1 + 2 * (weekday - 1)) / 7.0)
-            make.height.equalTo(scrollViewContent!).multipliedBy(1 / 7.0).offset(-spacing / 2.0)
-            make.width.equalTo(square.snp_height)
-          })
           squares.append(square)
+          
+          square.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "squareTap:"))
         }
         
         // Reset width constraint
-        let lastSquare = squares[squares.endIndex - 1]
-        lastSquare.layoutIfNeeded()
-        totalWidth += lastSquare.frame.width
         scrollViewContentWidth!.uninstall()
+        offset += side - spacing / 2
         scrollViewContent!.snp_makeConstraints({ (make) in
-          scrollViewContentWidth = make.width.equalTo(totalWidth).constraint
+          scrollViewContentWidth = make.width.equalTo(offset).constraint
         })
         scrollView!.layoutIfNeeded()
         let bottomOffset = CGPointMake(scrollViewContent!.frame.width - scrollView!.frame.width, 0)
@@ -105,6 +104,26 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       default: ()
       }
     }
+  }
+  
+  func squareTap(recognizer: UITapGestureRecognizer) {
+    let squareView = recognizer.view as! SquareView
+    delegate?.habitHistory(self, selectedHistory: squareView.history!)
+  }
+  
+  class SquareView: UIView {
+    
+    var history: History?
+    
+    init(frame: CGRect, history: History) {
+      super.init(frame: frame)
+      self.history = history
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
+    }
+    
   }
   
 }

@@ -2,7 +2,7 @@
 //  History+CoreDataProperties.swift
 //  Habit
 //
-//  Created by harry on 8/12/15.
+//  Created by harry on 8/13/15.
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 //  Delete this file and regenerate it using "Create NSManagedObject Subclass…"
@@ -17,7 +17,7 @@ extension History {
     @NSManaged var completed: NSNumber?
     @NSManaged var date: NSDate?
     @NSManaged var frequencyNum: NSNumber?
-    @NSManaged var total: NSNumber?
+    @NSManaged var skipped: NSNumber?
     @NSManaged var habit: Habit?
 
 }

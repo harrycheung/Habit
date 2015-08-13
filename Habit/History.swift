@@ -21,7 +21,7 @@ class History: NSManagedObject {
   }
   
   var percentage: CGFloat {
-    let denom = CGFloat(total!)
+    let denom = CGFloat(completed!.integerValue + skipped!.integerValue)
     if denom == 0 {
       return 0
     }

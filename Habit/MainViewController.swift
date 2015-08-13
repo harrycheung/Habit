@@ -73,7 +73,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         h.createdAt = date
         h.last = date
         while !calendar.isDateInToday(date) {
-          for _ in 0..<Int(arc4random_uniform(12)) {
+          for _ in 0..<Int(arc4random_uniform(13)) {
             h.addEntry(onDate: date)
           }
           date = NSDate(timeInterval: 24 * 3600, sinceDate: date)
@@ -236,7 +236,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! HabitTableViewCell
     cell.load(habits[indexPath.row])
-    NSLog("cellFor: \(unsafeAddressOf(cell)) \(cell.habit!.name!)")
     
     cell.setSwipeGesture(
       direction: .Right,

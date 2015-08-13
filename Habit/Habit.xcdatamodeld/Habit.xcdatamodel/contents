@@ -26,7 +26,7 @@
         <attribute name="completed" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="frequencyNum" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="total" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="skipped" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <relationship name="habit" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Habit" inverseName="histories" inverseEntity="Habit" syncable="YES"/>
     </entity>
     <elements>

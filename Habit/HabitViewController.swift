@@ -13,7 +13,7 @@ import SnapKit
 import KAProgressLabel
 import FontAwesome_swift
 
-class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySettingsDelegate, UIGestureRecognizerDelegate, UIActionSheetDelegate {
+class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySettingsDelegate, UIGestureRecognizerDelegate, UIActionSheetDelegate, HabitHistoryDelegate {
   
   let UnwindSegueIdentifier = "HabitUnwind"
   let AnimateSwitchModeDuration = 0.4
@@ -46,11 +46,33 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   @IBOutlet weak var currentStreak: UILabel!
   @IBOutlet weak var longestStreak: UILabel!
   @IBOutlet weak var skipped: UILabel!
-  @IBOutlet weak var total: UILabel!
+  @IBOutlet weak var completed: UILabel!
   @IBOutlet weak var habitHistory: HabitHistory!
   
   var activeSettings: FrequencySettings {
     return frequencySettings[frequency.selectedSegmentIndex]!
+  }
+  
+  struct AnimationNumbers {
+    var completedStart: Int = 0
+    var completedEnd: Int = 0
+    var percentageStart: CGFloat = 0
+    var percentageEnd: CGFloat = 0
+    var skippedStart: Int = 0
+    var skippedEnd: Int = 0
+  }
+  var animationNumbers = AnimationNumbers()
+  
+  func animateNumbers(progress: CGFloat) {
+    let percentage = CGFloat(progress - animationNumbers.percentageStart) / CGFloat(animationNumbers.percentageEnd - animationNumbers.percentageStart)
+    let currentCompleted = CGFloat(animationNumbers.completedEnd - animationNumbers.completedStart) * percentage + CGFloat(animationNumbers.completedStart)
+    let currentSkipped = CGFloat(animationNumbers.skippedEnd - animationNumbers.skippedStart) * percentage + CGFloat(animationNumbers.skippedStart)
+    if currentCompleted.isNormal {
+      completed.text = "\(Int(currentCompleted))"
+    }
+    if currentSkipped.isNormal {
+      skipped.text = "\(Int(currentSkipped))"
+    }
   }
   
   override func viewDidLoad() {
@@ -58,8 +80,9 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
     
     progressLabel.labelVCBlock = { (label) in
       self.progressPercentage.text = "\(Int(label.progress * 100))%"
+      self.animateNumbers(label.progress)
     }
-    progressLabel.progressColor = UIApplication.sharedApplication().windows[0].tintColor
+    progressLabel.progressColor = HabitApp.color
     
     // Setup settings views for each frequency
     frequencySettings[0] = FrequencySettings(leftTitle: "Times a day",
@@ -153,7 +176,7 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
     currentStreak.text = "\(habit!.currentStreak!)"
     longestStreak.text = "\(habit!.longestStreak!)"
     skipped.text = "\(habit!.skippedCount())"
-    total.text = "\(habit!.total!)"
+    completed.text = "\(habit!.completedCount())"
     
     switch habit!.frequency {
     case .Daily:
@@ -311,7 +334,6 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
 //        local.alertBody = habit!.name
 //        //UIApplication.sharedApplication().presentLocalNotificationNow(local)
 //        UIApplication.sharedApplication().scheduleLocalNotification(local)
-//        NSLog("loca;l")
 //      }
     }
     
@@ -338,6 +360,18 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
     })
     alert.addAction(cancel)
     presentViewController(alert, animated: true, completion: nil)
+  }
+  
+  // HabitHistory
+  
+  func habitHistory(habitHistory: HabitHistory, selectedHistory history: History) {
+    progressLabel.setProgress(history.percentage, timing: TPPropertyAnimationTimingEaseOut, duration: 0.5, delay: 0)
+    animationNumbers.percentageStart = progressLabel.progress
+    animationNumbers.percentageEnd = history.percentage
+    animationNumbers.completedStart = Int(completed.text!)!
+    animationNumbers.completedEnd = history.completed!.integerValue
+    animationNumbers.skippedStart = Int(skipped.text!)!
+    animationNumbers.skippedEnd = history.skipped!.integerValue
   }
   
 }

@@ -224,18 +224,19 @@ class Habit: NSManagedObject {
     if currentStreak!.integerValue > longestStreak!.integerValue {
       longestStreak = currentStreak
     }
+    updateHistory(onDate: date, completed: 1, skipped: 0)
+  }
+  
+  func updateHistory(onDate date: NSDate, completed: Int, skipped: Int) {
     let (startDate, endDate) = dateRange(date)
     let predicate = NSPredicate(format: "date >= %@ AND date < %@", startDate, endDate)
     if let history = histories!.filteredOrderedSetUsingPredicate(predicate).firstObject as? History {
-      history.completed = history.completed!.integerValue + 1
+      history.completed = history.completed!.integerValue + completed
+      history.skipped = history.skipped!.integerValue + skipped
     } else {
       let history = History(context: self.managedObjectContext!, habit: self, frequency: frequency, date: date)
-      history.completed = history.completed!.integerValue + 1
-      history.total = useTimes ? times : partsArray.count
-      let calendar = NSCalendar.currentCalendar()
-      if calendar.isDate(date, inSameDayAsDate: createdAt!) {
-        history.total = history.total!.integerValue - countBeforeCreatedAt(date)
-      }
+      history.completed = history.completed!.integerValue + completed
+      history.skipped = history.skipped!.integerValue + skipped
     }
   }
   
@@ -252,6 +253,7 @@ class Habit: NSManagedObject {
     last = date
     total = total!.integerValue + count
     currentStreak = 0
+    updateHistory(onDate: date, completed: 0, skipped: count)
   }
   
   func countBeforeCreatedAt(date: NSDate) -> Int {

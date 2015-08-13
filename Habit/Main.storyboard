@@ -214,7 +214,7 @@
             </objects>
             <point key="canvasLocation" x="454.5" y="454.5"/>
         </scene>
-        <!--Habit View Controller-->
+        <!--Delegate-->
         <scene sceneID="vFa-WD-a9P">
             <objects>
                 <viewController id="fuZ-7k-oQj" customClass="HabitViewController" customModule="Habit" customModuleProvider="target" sceneMemberID="viewController">
@@ -291,7 +291,6 @@
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0%" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WIj-DL-2OL">
                                                             <rect key="frame" x="46" y="45" width="30.5" height="22"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Bold" family="Bariol" pointSize="22"/>
-                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Past 30 days" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="99P-bg-ZH8">
@@ -315,8 +314,8 @@
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LRA-0y-pjI">
-                                                            <rect key="frame" x="122" y="83" width="32.5" height="17"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Completed" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LRA-0y-pjI" userLabel="Completed">
+                                                            <rect key="frame" x="122" y="83" width="74.5" height="17"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
@@ -341,8 +340,11 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e0Y-XF-jWk" customClass="HabitHistory" customModule="Habit" customModuleProvider="target">
-                                                            <rect key="frame" x="15" y="108" width="274" height="127"/>
+                                                            <rect key="frame" x="15" y="115" width="274" height="120"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <connections>
+                                                                <outlet property="delegate" destination="fuZ-7k-oQj" id="kLG-1U-wTP"/>
+                                                            </connections>
                                                         </view>
                                                     </subviews>
                                                     <constraints>
@@ -366,7 +368,7 @@
                                                         <constraint firstItem="4pu-p3-7re" firstAttribute="top" secondItem="XaG-Rd-09s" secondAttribute="bottom" constant="8" id="eRW-Ar-Nla"/>
                                                         <constraint firstItem="WIj-DL-2OL" firstAttribute="centerY" secondItem="Nbs-xv-gfN" secondAttribute="centerY" constant="2" id="g5W-NA-xGI"/>
                                                         <constraint firstAttribute="bottom" secondItem="e0Y-XF-jWk" secondAttribute="bottom" constant="15" id="lfw-V7-aUu"/>
-                                                        <constraint firstItem="e0Y-XF-jWk" firstAttribute="top" secondItem="6qS-vQ-Vac" secondAttribute="bottom" constant="8" id="lg8-sT-Kx0"/>
+                                                        <constraint firstItem="e0Y-XF-jWk" firstAttribute="top" secondItem="6qS-vQ-Vac" secondAttribute="bottom" constant="15" id="lg8-sT-Kx0"/>
                                                         <constraint firstAttribute="trailing" secondItem="e0Y-XF-jWk" secondAttribute="trailing" constant="15" id="nrw-76-gmh"/>
                                                         <constraint firstAttribute="height" priority="999" constant="250" id="obW-Ni-fzU"/>
                                                         <constraint firstItem="WIj-DL-2OL" firstAttribute="centerX" secondItem="Nbs-xv-gfN" secondAttribute="centerX" id="rNW-LD-DQv"/>
@@ -563,6 +565,7 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="back" destination="szx-TS-hjw" id="ZdS-NF-Bcn"/>
+                        <outlet property="completed" destination="6qS-vQ-Vac" id="j4Q-l2-seh"/>
                         <outlet property="currentStreak" destination="JAf-Dl-Cfa" id="tvJ-yq-EGW"/>
                         <outlet property="deleteWidth" destination="Pqc-ND-kQp" id="UsL-hG-x9S"/>
                         <outlet property="frequency" destination="0tr-LV-M4N" id="scQ-SV-J2P"/>
@@ -585,7 +588,6 @@
                         <outlet property="statsView" destination="1FL-kd-WCJ" id="xIi-HC-pgK"/>
                         <outlet property="switchMode" destination="frh-Nc-I6b" id="WSY-MO-B9I"/>
                         <outlet property="toolbar" destination="xwd-yK-LX5" id="ajZ-tK-TnM"/>
-                        <outlet property="total" destination="6qS-vQ-Vac" id="euH-9v-gZ3"/>
                         <segue destination="Xjg-bp-os8" kind="unwind" identifier="HabitUnwind" unwindAction="unwind:" id="3rV-iZ-u0R"/>
                     </connections>
                 </viewController>
