@@ -1,5 +1,5 @@
 //
-//  Entry+CoreDataProperties.swift
+//  History+CoreDataProperties.swift
 //  Habit
 //
 //  Created by harry on 8/12/15.
@@ -12,11 +12,12 @@
 import Foundation
 import CoreData
 
-extension Entry {
+extension History {
 
-    @NSManaged var createdAt: NSDate?
-    @NSManaged var createdAtTimeZone: String?
-    @NSManaged var skipped: NSNumber?
+    @NSManaged var completed: NSNumber?
+    @NSManaged var date: NSDate?
+    @NSManaged var frequencyNum: NSNumber?
+    @NSManaged var total: NSNumber?
     @NSManaged var habit: Habit?
 
 }

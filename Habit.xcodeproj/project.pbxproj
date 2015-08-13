@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		401129C628C7DAC83C65C9A3 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C30FEA7A7703C78B572D2FEA /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		4A040C4F1B7C4D610081CF85 /* History+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A040C4D1B7C4D610081CF85 /* History+CoreDataProperties.swift */; };
+		4A040C501B7C4D610081CF85 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A040C4E1B7C4D610081CF85 /* History.swift */; };
 		4A144D791B61C31B001A6094 /* HabitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A144D781B61C31B001A6094 /* HabitApp.swift */; };
 		4A1D08981B3E17E9006A9CA4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D08971B3E17E9006A9CA4 /* AppDelegate.swift */; };
 		4A1D08A01B3E17E9006A9CA4 /* Habit.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D089E1B3E17E9006A9CA4 /* Habit.xcdatamodeld */; };
@@ -60,6 +62,8 @@
 
 /* Begin PBXFileReference section */
 		4368692B34E65F6BF8A58F49 /* Pods-HabitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HabitTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HabitTests/Pods-HabitTests.release.xcconfig"; sourceTree = "<group>"; };
+		4A040C4D1B7C4D610081CF85 /* History+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		4A040C4E1B7C4D610081CF85 /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
 		4A144D781B61C31B001A6094 /* HabitApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitApp.swift; sourceTree = "<group>"; };
 		4A1D08941B3E17E9006A9CA4 /* Habit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Habit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A1D08971B3E17E9006A9CA4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -200,9 +204,11 @@
 			isa = PBXGroup;
 			children = (
 				4A1D08D71B3F4F03006A9CA4 /* Entry.swift */,
-				4A1D08DB1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift */,
 				4A1D08C91B3E1A7A006A9CA4 /* Habit.swift */,
+				4A040C4E1B7C4D610081CF85 /* History.swift */,
+				4A1D08DB1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift */,
 				4A1D08DA1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift */,
+				4A040C4D1B7C4D610081CF85 /* History+CoreDataProperties.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -543,10 +549,12 @@
 				4A1D08D91B3F4F03006A9CA4 /* Entry.swift in Sources */,
 				4A1D08D21B3E1A7A006A9CA4 /* MainViewController.swift in Sources */,
 				4A4643831B448B3300732389 /* MultiSelectControl.swift in Sources */,
+				4A040C4F1B7C4D610081CF85 /* History+CoreDataProperties.swift in Sources */,
 				4A6DB6FC1B4B8781008BC1B7 /* UIButton+Color.swift in Sources */,
 				4A1D08A01B3E17E9006A9CA4 /* Habit.xcdatamodeld in Sources */,
 				4A1D08D11B3E1A7A006A9CA4 /* HabitViewController.swift in Sources */,
 				4A4643811B44632400732389 /* FrequencySettings.swift in Sources */,
+				4A040C501B7C4D610081CF85 /* History.swift in Sources */,
 				4A44D7871B5A29EC0017B34B /* SettingsViewController.swift in Sources */,
 				4A1D08D01B3E1A7A006A9CA4 /* HabitTableViewCell.swift in Sources */,
 				4A1D08DD1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift in Sources */,

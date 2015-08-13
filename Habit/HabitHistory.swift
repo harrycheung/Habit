@@ -57,22 +57,19 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       
       switch habit!.frequency {
       case .Daily:
-        let oneDay = NSDateComponents()
-        oneDay.day = -1
-        var dateIterator = today
         var lastDistance = 0
-        while true {
-          let percentage = habit!.percentageOnDate(dateIterator)
-          if percentage == 0 && dateIterator.compare(habit!.createdAt!) == .OrderedAscending {
+        for element in habit!.histories!.reverseObjectEnumerator() {
+          let history = element as! History
+          if history.percentage == 0 && history.date!.compare(habit!.createdAt!) == .OrderedAscending {
             break
           }
           let square = UIView()
-          let alpha = 0.4 + (1 - 0.4) * pow(1000, -percentage)
+          let alpha = HabitApp.MinimumAlpha + (1 - HabitApp.MinimumAlpha) * pow(1000, -history.percentage)
           square.backgroundColor = UIColor(color: color, fadeToAlpha: alpha)
-          let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: dateIterator)
+          let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: history.date!)
           let weekday = components.weekday
           let distance = calendar.components([.Year, .WeekOfYear], fromDate: today).weekOfYear -
-            calendar.components([.Year, .WeekOfYear], fromDate: dateIterator).weekOfYear
+            calendar.components([.Year, .WeekOfYear], fromDate: history.date!).weekOfYear
           if distance != lastDistance {
             let lastSquare = squares[squares.endIndex - 1]
             lastDistance = distance
@@ -90,7 +87,6 @@ class HabitHistory: UIView, UIScrollViewDelegate {
             make.width.equalTo(square.snp_height)
           })
           squares.append(square)
-          dateIterator = calendar.dateByAddingComponents(oneDay, toDate: dateIterator, options: [])!
         }
         
         // Reset width constraint

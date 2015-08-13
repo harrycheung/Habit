@@ -9,7 +9,6 @@
 import Foundation
 import CoreData
 
-@objc(Entry)
 class Entry: NSManagedObject {
   
   convenience init(context: NSManagedObjectContext, habit: Habit, createdAt: NSDate) {

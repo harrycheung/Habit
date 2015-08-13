@@ -69,27 +69,32 @@ class HabitDailyTests: XCTestCase {
     expect(habit.progress()) == 0
     
     components.day += 1
-    for _ in 0...5 {
+    for _ in 0...8 {
       components.hour += 1
       habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     }
     
     components.day += 1
-    for _ in 0...5 {
+    for _ in 0...4 {
       components.hour += 1
       habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     }
     
     components.day += 1
-    for _ in 0...5 {
+    for _ in 0...6 {
       components.hour += 1
       habit.addEntry(onDate: calendar.dateFromComponents(components)!)
     }
     
-    expect(habit.totalCount()) == 18
-    expect(habit.completedCount()) == 18
+    expect(habit.totalCount()) == 21
+    expect(habit.completedCount()) == 21
     components.day -= 1
-    expect(habit.entriesOnDate(calendar.dateFromComponents(components)!).count) == 6
+    expect(habit.entriesOnDate(calendar.dateFromComponents(components)!).count) == 5
+    expect(habit.histories!.count) == 3
+    let histories = habit.histories!.array as! [History]
+    expect(histories[0].completed) == 9
+    expect(histories[1].completed) == 5
+    expect(histories[2].completed) == 7
   }
   
   func testTimes() {

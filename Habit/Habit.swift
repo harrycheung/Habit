@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 import CoreData
 
-@objc(Habit)
 class Habit: NSManagedObject {
   
   enum Frequency: Int {
@@ -176,6 +175,47 @@ class Habit: NSManagedObject {
     }
   }
   
+  func dateRange(date: NSDate) -> (NSDate, NSDate) {
+    let calendar = NSCalendar.currentCalendar()
+    var startDate = NSDate()
+    var endDate = NSDate()
+    switch frequency {
+    case .Daily:
+      let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute, .Second], fromDate: date)
+      components.hour = 0
+      components.minute = 0
+      components.second = 0
+      startDate = calendar.dateFromComponents(components)!
+      components.day += 1
+      endDate = calendar.dateFromComponents(components)!
+    case .Weekly:
+      let components = calendar.components([.Year, .WeekOfYear, .Weekday, .Hour, .Minute, .Second], fromDate: date)
+      components.hour = 0
+      components.minute = 0
+      components.second = 0
+      components.weekday = 1
+      startDate = calendar.dateFromComponents(components)!
+      components.weekOfYear += 1
+      endDate = calendar.dateFromComponents(components)!
+    case .Monthly:
+      let components = calendar.components([.Year, .Month, .Hour, .Minute, .Second], fromDate: date)
+      components.hour = 0
+      components.minute = 0
+      components.second = 0
+      startDate = calendar.dateFromComponents(components)!
+      components.month += 1
+      endDate = calendar.dateFromComponents(components)!
+    default: ()
+    }
+    return (startDate, endDate)
+  }
+  
+  func historyOnDate(date: NSDate) -> History? {
+    let (startDate, endDate) = dateRange(date)
+    let predicate = NSPredicate(format: "date >= %@ AND date < %@", startDate, endDate)
+    return histories!.filteredOrderedSetUsingPredicate(predicate).firstObject as? History
+  }
+  
   func addEntry(onDate date: NSDate) {
     let _ = Entry(context: self.managedObjectContext!, habit: self, createdAt: date)
     last = date
@@ -183,6 +223,19 @@ class Habit: NSManagedObject {
     currentStreak = currentStreak!.integerValue + 1
     if currentStreak!.integerValue > longestStreak!.integerValue {
       longestStreak = currentStreak
+    }
+    let (startDate, endDate) = dateRange(date)
+    let predicate = NSPredicate(format: "date >= %@ AND date < %@", startDate, endDate)
+    if let history = histories!.filteredOrderedSetUsingPredicate(predicate).firstObject as? History {
+      history.completed = history.completed!.integerValue + 1
+    } else {
+      let history = History(context: self.managedObjectContext!, habit: self, frequency: frequency, date: date)
+      history.completed = history.completed!.integerValue + 1
+      history.total = useTimes ? times : partsArray.count
+      let calendar = NSCalendar.currentCalendar()
+      if calendar.isDate(date, inSameDayAsDate: createdAt!) {
+        history.total = history.total!.integerValue - countBeforeCreatedAt(date)
+      }
     }
   }
   
@@ -273,34 +326,7 @@ class Habit: NSManagedObject {
   }
   
   func entriesOnDate(date: NSDate, var predicates: [NSPredicate]) -> [Entry] {
-    let calendar = NSCalendar.currentCalendar()
-    var startDate = NSDate()
-    var endDate = NSDate()
-    switch frequency {
-    case .Daily:
-      let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: date)
-      components.hour = 0
-      components.minute = 0
-      startDate = calendar.dateFromComponents(components)!
-      components.day += 1
-      endDate = calendar.dateFromComponents(components)!
-    case .Weekly:
-      let components = calendar.components([.Year, .WeekOfYear, .Weekday, .Hour, .Minute], fromDate: date)
-      components.hour = 0
-      components.minute = 0
-      components.weekday = 1
-      startDate = calendar.dateFromComponents(components)!
-      components.weekOfYear += 1
-      endDate = calendar.dateFromComponents(components)!
-    case .Monthly:
-      let components = calendar.components([.Year, .Month, .Hour, .Minute], fromDate: date)
-      components.hour = 0
-      components.minute = 0
-      startDate = calendar.dateFromComponents(components)!
-      components.month += 1
-      endDate = calendar.dateFromComponents(components)!
-    default: ()
-    }
+    let (startDate, endDate) = dateRange(date)
     predicates.append(NSPredicate(format: "createdAt >= %@ AND createdAt < %@", startDate, endDate))
     return entries!.filteredOrderedSetUsingPredicate(NSCompoundPredicate(andPredicateWithSubpredicates: predicates)).array as! [Entry]
   }
