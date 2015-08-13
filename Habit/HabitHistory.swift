@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SnapKit
 
 @IBDesignable
 class HabitHistory: UIView, UIScrollViewDelegate {
@@ -15,9 +16,10 @@ class HabitHistory: UIView, UIScrollViewDelegate {
   var habit: Habit?
   var scrollView: UIScrollView?
   var scrollViewContent: UIView?
+  var scrollViewContentWidth: Constraint?
   var squares: [UIView] = []
 
-  @IBInspectable var spacing: CGFloat = 3
+  @IBInspectable var spacing: CGFloat = 4
   
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
@@ -25,10 +27,12 @@ class HabitHistory: UIView, UIScrollViewDelegate {
     scrollView = UIScrollView()
     scrollView!.delegate = self
     scrollView!.showsVerticalScrollIndicator = false
+    scrollView!.showsHorizontalScrollIndicator = false
     scrollViewContent = UIView()
     scrollView!.addSubview(scrollViewContent!)
     scrollViewContent!.snp_makeConstraints({ (make) in
-      make.edges.width.height.equalTo(scrollView!)
+      make.edges.height.equalTo(scrollView!)
+      scrollViewContentWidth = make.width.equalTo(scrollView!).constraint
     })
     addSubview(scrollView!)
     scrollView!.snp_makeConstraints({ (make) in
@@ -41,14 +45,15 @@ class HabitHistory: UIView, UIScrollViewDelegate {
   }
   
   override func layoutSubviews() {    
-    scrollViewContent!.layer.borderColor = UIColor.redColor().CGColor
-    scrollViewContent!.layer.borderWidth = 1.0
+//    scrollViewContent!.layer.borderColor = UIColor.redColor().CGColor
+//    scrollViewContent!.layer.borderWidth = 1.0
     if habit != nil && squares.isEmpty {
       let color = UIApplication.sharedApplication().windows[0].tintColor
       let calendar = NSCalendar.currentCalendar()
       let today = NSDate()
       var rightConstraint = scrollViewContent!.snp_right
       var rightOffset:CGFloat = 0
+      var totalWidth: CGFloat = 0
       
       switch habit!.frequency {
       case .Daily:
@@ -62,17 +67,20 @@ class HabitHistory: UIView, UIScrollViewDelegate {
             break
           }
           let square = UIView()
-//          square.layer.borderColor = UIColor.redColor().CGColor
-//          square.layer.borderWidth = 1.0
           let alpha = 0.4 + (1 - 0.4) * pow(1000, -percentage)
           square.backgroundColor = UIColor(color: color, fadeToAlpha: alpha)
           let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: dateIterator)
           let weekday = components.weekday
-          let distance = calendar.components([.Year, .WeekOfYear], fromDate: today).weekOfYear - calendar.components([.Year, .WeekOfYear], fromDate: dateIterator).weekOfYear
+          let distance = calendar.components([.Year, .WeekOfYear], fromDate: today).weekOfYear -
+            calendar.components([.Year, .WeekOfYear], fromDate: dateIterator).weekOfYear
           if distance != lastDistance {
+            let lastSquare = squares[squares.endIndex - 1]
             lastDistance = distance
-            rightConstraint = squares[squares.endIndex - 1].snp_left
+            rightConstraint = lastSquare.snp_left
             rightOffset = -spacing / 2.0
+            
+            lastSquare.layoutIfNeeded()
+            totalWidth += lastSquare.frame.width + spacing / 2.0
           }
           scrollViewContent!.addSubview(square)
           square.snp_makeConstraints({ (make) in
@@ -84,6 +92,18 @@ class HabitHistory: UIView, UIScrollViewDelegate {
           squares.append(square)
           dateIterator = calendar.dateByAddingComponents(oneDay, toDate: dateIterator, options: [])!
         }
+        
+        // Reset width constraint
+        let lastSquare = squares[squares.endIndex - 1]
+        lastSquare.layoutIfNeeded()
+        totalWidth += lastSquare.frame.width
+        scrollViewContentWidth!.uninstall()
+        scrollViewContent!.snp_makeConstraints({ (make) in
+          scrollViewContentWidth = make.width.equalTo(totalWidth).constraint
+        })
+        scrollView!.layoutIfNeeded()
+        let bottomOffset = CGPointMake(scrollViewContent!.frame.width - scrollView!.frame.width, 0)
+        scrollView!.setContentOffset(bottomOffset, animated: false)
       case .Weekly: ()
       case .Monthly: ()
       default: ()
