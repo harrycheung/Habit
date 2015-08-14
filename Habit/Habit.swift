@@ -126,21 +126,22 @@ class Habit: NSManagedObject {
     return "\(absDue / factor) \(text)" + (absDue < 2 * factor ? "" : "s") + (due < 0 ? " ago" : "")
   }
   
-  convenience init(context: NSManagedObjectContext, name: String, details: String, frequency: Frequency, times: Int) {
+  convenience init(context: NSManagedObjectContext, name: String, details: String, frequency: Frequency, times: Int, createdAt: NSDate) {
     let entityDescription = NSEntityDescription.entityForName("Habit", inManagedObjectContext: context)!
     self.init(entity: entityDescription, insertIntoManagedObjectContext: context)
     self.name = name
     self.details = details
     self.frequency = frequency
     self.times = times
+    self.createdAt = createdAt
     parts = ""
     notifyBool = true
-    createdAt = NSDate()
     createdAtTimeZone = NSTimeZone.localTimeZone().name
     last = self.createdAt
     currentStreak = 0
     longestStreak = 0
     total = 0
+    let _ = History(context: self.managedObjectContext!, habit: self, frequency: frequency, date: createdAt)
   }
   
   func skippedCount(since: NSDate? = nil) -> Int {
@@ -233,10 +234,14 @@ class Habit: NSManagedObject {
     if let history = histories!.filteredOrderedSetUsingPredicate(predicate).firstObject as? History {
       history.completed = history.completed!.integerValue + completed
       history.skipped = history.skipped!.integerValue + skipped
+      let t = useTimes ? times?.integerValue : partsArray.count
+      if (history.completed!.integerValue + history.skipped!.integerValue) > t {
+        NSLog("houston, we have a problem")
+      }
     } else {
       let history = History(context: self.managedObjectContext!, habit: self, frequency: frequency, date: date)
-      history.completed = history.completed!.integerValue + completed
-      history.skipped = history.skipped!.integerValue + skipped
+      history.completed = completed
+      history.skipped = skipped
     }
   }
   

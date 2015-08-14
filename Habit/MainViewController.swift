@@ -65,13 +65,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       habits = try HabitApp.moContext.executeFetchRequest(requestAny) as! [Habit]
       if habits.count == 0 {
         let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: NSDate())
-        components.month -= 18
+        var components = calendar.components([.Year, .WeekOfYear, .Weekday, .Hour], fromDate: NSDate())
+        components.weekOfYear -= 40
+        components.weekday = 1
         components.hour = 1
-        var h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6)
         var date = calendar.dateFromComponents(components)!
-        h.createdAt = date
-        h.last = date
+        var h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: date)
         while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
           for _ in 0..<Int(arc4random_uniform(7)) {
             h.addEntry(onDate: date)
@@ -79,27 +78,30 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
           date = NSDate(timeInterval: 24 * 3600 * 7, sinceDate: date)
           h.updateNext(date)
         }
-        h = Habit(context: HabitApp.moContext, name: "5. Monthly 4x", details: "", frequency: .Monthly, times: 4)
+        components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
+        components.month -= 20
+        components.day = 3
+        components.hour = 1
         date = calendar.dateFromComponents(components)!
-        h.createdAt = date
-        h.last = date
+        h = Habit(context: HabitApp.moContext, name: "5. Monthly 4x", details: "", frequency: .Monthly, times: 4, createdAt: date)
         while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Month) {
           for _ in 0..<Int(arc4random_uniform(4)) {
             h.addEntry(onDate: date)
           }
-          date = NSDate(timeInterval: 24 * 3600 * 30, sinceDate: date)
+          components.month += 1
+          date = calendar.dateFromComponents(components)!
           h.updateNext(date)
         }
-        components.month += 12
+        let oneDay = NSDateComponents()
+        oneDay.day = 1
+        components.month -= 3
         date = calendar.dateFromComponents(components)!
-        h = Habit(context: HabitApp.moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12)
-        h.createdAt = date
-        h.last = date
+        h = Habit(context: HabitApp.moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12, createdAt: date)
         while !calendar.isDateInToday(date) {
           for _ in 0..<Int(arc4random_uniform(13)) {
             h.addEntry(onDate: date)
           }
-          date = NSDate(timeInterval: 24 * 3600, sinceDate: date)
+          date = calendar.dateByAddingComponents(oneDay, toDate: date, options: NSCalendarOptions(rawValue: 0))!
           h.updateNext(date)
         }
 //        h = Habit(context: HabitApp.moContext, name: "2. Daily 8x", details: "", frequency: .Daily, times: 8)
@@ -312,7 +314,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         activeCell = sender as? HabitTableViewCell
         vc.habit = activeCell!.habit
       } else {
-        vc.habit = Habit(context: HabitApp.moContext, name: "", details: "", frequency: .Daily, times: 1)
+        vc.habit = Habit(context: HabitApp.moContext, name: "", details: "", frequency: .Daily, times: 1, createdAt: NSDate())
         
         newButton.highlighted = false
       }

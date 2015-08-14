@@ -23,6 +23,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
   @IBOutlet var delegate: HabitHistoryDelegate?
 
   let minimumAlpha: CGFloat = 0.1
+  let titleBarHeight: CGFloat = 20
   
   var habit: Habit?
   var scrollView: UIScrollView?
@@ -68,10 +69,24 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       self.squares.append(square)
       
       square.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "squareTap:"))
-      
     }
+    
+    let addLabel = { (date: NSDate) in
+      let dateFormatter = NSDateFormatter()
+      dateFormatter.dateFormat = "MMM"
+      let label = UILabel()
+      label.text = dateFormatter.stringFromDate(date)
+      label.font = UIFont(name: "Bariol-Regular", size: 13.0)!
+      label.textColor = UIColor.blackColor()
+      self.scrollViewContent!.addSubview(label)
+      label.snp_makeConstraints({ (make) in
+        make.centerX.equalTo(self.squares[self.squares.endIndex - 1])
+        make.centerY.equalTo(self.scrollViewContent!.snp_top).offset(self.titleBarHeight / 2)
+      })
+    }
+    
     scrollViewContent!.layoutIfNeeded()
-    let contentHeight = scrollViewContent!.frame.height
+    let contentHeight = scrollViewContent!.frame.height - 20
     if habit != nil && squares.isEmpty {
       let calendar = NSCalendar.currentCalendar()
       var side: CGFloat = 0
@@ -83,7 +98,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
         var lastDistance = 0
         for element in habit!.histories! {
           let history = element as! History
-          let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: history.date!)
+          let components = calendar.components([.Year, .WeekOfYear, .Weekday, .Day], fromDate: history.date!)
           let weekday = components.weekday
           let distance = calendar.components([.Year, .WeekOfYear], fromDate: habit!.createdAt!).weekOfYear -
             calendar.components([.Year, .WeekOfYear], fromDate: history.date!).weekOfYear
@@ -91,17 +106,31 @@ class HabitHistory: UIView, UIScrollViewDelegate {
             lastDistance = distance
             offset += side
           }
-          let frame = CGRectMake(offset, CGFloat(weekday - 1) * side, side - spacing / 2, side - spacing / 2)
+          let frame = CGRectMake(offset, titleBarHeight + CGFloat(weekday - 1) * side, side - spacing / 2, side - spacing / 2)
           addSquare(frame, history)
+          
+          if components.day == 1 {
+            addLabel(history.date!)
+          }
         }
       case .Weekly:
         fallthrough
       case.Monthly:
+        var lastMonth = calendar.components([.Month], fromDate: habit!.createdAt!).month
         side = (contentHeight + spacing / 2) / 6.0
+        var count = 3
         for element in habit!.histories! {
+          let history = element as! History
           offset += side
-          let frame = CGRectMake(offset, 0, side - spacing / 2, contentHeight)
-          addSquare(frame, element as! History)
+          let frame = CGRectMake(offset, titleBarHeight, side - spacing / 2, contentHeight - titleBarHeight)
+          addSquare(frame, history)
+          let month = calendar.components([.Month], fromDate: history.date!).month
+          if (habit!.frequency == .Weekly && lastMonth != month) ||
+            (habit!.frequency == .Monthly && count % 4 == 0) {
+            addLabel(history.date!)
+            lastMonth = month
+          }
+          count += 1
         }
       default: ()
       }
