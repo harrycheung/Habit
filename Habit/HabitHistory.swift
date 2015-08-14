@@ -28,9 +28,10 @@ class HabitHistory: UIView, UIScrollViewDelegate {
   var scrollView: UIScrollView?
   var scrollViewContent: UIView?
   var scrollViewContentWidth: Constraint?
-  var squares: [UIView] = []
+  var squares: [SquareView] = []
+  var selectedSquare: SquareView?
 
-  @IBInspectable var spacing: CGFloat = 4
+  @IBInspectable var spacing: CGFloat = 3
   
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
@@ -55,19 +56,30 @@ class HabitHistory: UIView, UIScrollViewDelegate {
     super.init(frame: frame)
   }
   
-  override func layoutSubviews() {    
+  override func layoutSubviews() {
 //    scrollView!.layer.borderColor = UIColor.redColor().CGColor
 //    scrollView!.layer.borderWidth = 1.0
+    let addSquare = { (frame: CGRect, history: History) in
+      let square = SquareView(frame: frame, history: history)
+      square.translatesAutoresizingMaskIntoConstraints = true
+      let alpha = self.minimumAlpha + (1 - self.minimumAlpha) * history.percentage
+      square.backgroundColor = UIColor(color: HabitApp.color, fadeToAlpha: alpha)
+      self.scrollViewContent!.addSubview(square)
+      self.squares.append(square)
+      
+      square.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "squareTap:"))
+      
+    }
     scrollViewContent!.layoutIfNeeded()
-    let contentFrame = scrollViewContent!.frame
+    let contentHeight = scrollViewContent!.frame.height
     if habit != nil && squares.isEmpty {
-      let color = UIApplication.sharedApplication().windows[0].tintColor
       let calendar = NSCalendar.currentCalendar()
+      var side: CGFloat = 0
+      var offset: CGFloat = 0
       
       switch habit!.frequency {
       case .Daily:
-        let side = (contentFrame.height + spacing / 2) / 7.0
-        var offset: CGFloat = 0
+        side = (contentHeight + spacing / 2) / 7.0
         var lastDistance = 0
         for element in habit!.histories! {
           let history = element as! History
@@ -80,34 +92,38 @@ class HabitHistory: UIView, UIScrollViewDelegate {
             offset += side
           }
           let frame = CGRectMake(offset, CGFloat(weekday - 1) * side, side - spacing / 2, side - spacing / 2)
-          let square = SquareView(frame: frame, history: history)
-          square.translatesAutoresizingMaskIntoConstraints = true
-          let alpha = minimumAlpha + (1 - minimumAlpha) * history.percentage
-          square.backgroundColor = UIColor(color: color, fadeToAlpha: alpha)
-          scrollViewContent!.addSubview(square)
-          squares.append(square)
-          
-          square.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "squareTap:"))
+          addSquare(frame, history)
         }
-        
-        // Reset width constraint
-        scrollViewContentWidth!.uninstall()
-        offset += side - spacing / 2
-        scrollViewContent!.snp_makeConstraints({ (make) in
-          scrollViewContentWidth = make.width.equalTo(offset).constraint
-        })
-        scrollView!.layoutIfNeeded()
-        let bottomOffset = CGPointMake(scrollViewContent!.frame.width - scrollView!.frame.width, 0)
-        scrollView!.setContentOffset(bottomOffset, animated: false)
-      case .Weekly: ()
-      case .Monthly: ()
+      case .Weekly:
+        fallthrough
+      case.Monthly:
+        side = (contentHeight + spacing / 2) / 6.0
+        for element in habit!.histories! {
+          offset += side
+          let frame = CGRectMake(offset, 0, side - spacing / 2, contentHeight)
+          addSquare(frame, element as! History)
+        }
       default: ()
       }
+      
+      // Reset width constraint
+      scrollViewContentWidth!.uninstall()
+      offset += side - spacing / 2
+      scrollViewContent!.snp_makeConstraints({ (make) in
+        scrollViewContentWidth = make.width.equalTo(offset).constraint
+      })
+      scrollView!.layoutIfNeeded()
+      let rightOffset = CGPointMake(scrollViewContent!.frame.width - scrollView!.frame.width, 0)
+      scrollView!.setContentOffset(rightOffset, animated: false)
     }
   }
   
   func squareTap(recognizer: UITapGestureRecognizer) {
+    selectedSquare?.layer.borderColor = UIColor.clearColor().CGColor
     let squareView = recognizer.view as! SquareView
+    selectedSquare = squareView
+    selectedSquare!.layer.borderColor = UIColor.blackColor().CGColor
+    selectedSquare!.layer.borderWidth = 1
     delegate?.habitHistory(self, selectedHistory: squareView.history!)
   }
   

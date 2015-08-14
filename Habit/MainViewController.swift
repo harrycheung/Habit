@@ -66,10 +66,33 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       if habits.count == 0 {
         let calendar = NSCalendar.currentCalendar()
         let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: NSDate())
-        components.month -= 5
+        components.month -= 18
         components.hour = 1
+        var h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6)
         var date = calendar.dateFromComponents(components)!
-        let h = Habit(context: HabitApp.moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12)
+        h.createdAt = date
+        h.last = date
+        while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
+          for _ in 0..<Int(arc4random_uniform(7)) {
+            h.addEntry(onDate: date)
+          }
+          date = NSDate(timeInterval: 24 * 3600 * 7, sinceDate: date)
+          h.updateNext(date)
+        }
+        h = Habit(context: HabitApp.moContext, name: "5. Monthly 4x", details: "", frequency: .Monthly, times: 4)
+        date = calendar.dateFromComponents(components)!
+        h.createdAt = date
+        h.last = date
+        while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Month) {
+          for _ in 0..<Int(arc4random_uniform(4)) {
+            h.addEntry(onDate: date)
+          }
+          date = NSDate(timeInterval: 24 * 3600 * 30, sinceDate: date)
+          h.updateNext(date)
+        }
+        components.month += 12
+        date = calendar.dateFromComponents(components)!
+        h = Habit(context: HabitApp.moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12)
         h.createdAt = date
         h.last = date
         while !calendar.isDateInToday(date) {
@@ -86,9 +109,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 //        h.createdAt = createdAt
 //        h.last = createdAt
 //        h = Habit(context: HabitApp.moContext, name: "4. Daily 1x", details: "", frequency: .Daily, times: 1)
-//        h.createdAt = createdAt
-//        h.last = createdAt
-//        h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6)
 //        h.createdAt = createdAt
 //        h.last = createdAt
 //        h = Habit(context: HabitApp.moContext, name: "6. Weekly 3x", details: "", frequency: .Weekly, times: 3)
