@@ -94,7 +94,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         let oneDay = NSDateComponents()
         oneDay.day = 1
-        components.month -= 3
+        components.month -= 8
         date = calendar.dateFromComponents(components)!
         h = Habit(context: HabitApp.moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12, createdAt: date)
         while !calendar.isDateInToday(date) {

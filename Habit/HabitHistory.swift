@@ -86,7 +86,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
     }
     
     scrollViewContent!.layoutIfNeeded()
-    let contentHeight = scrollViewContent!.frame.height - 20
+    let contentHeight = scrollViewContent!.frame.height - titleBarHeight
     if habit != nil && squares.isEmpty {
       let calendar = NSCalendar.currentCalendar()
       var side: CGFloat = 0
@@ -122,7 +122,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
         for element in habit!.histories! {
           let history = element as! History
           offset += side
-          let frame = CGRectMake(offset, titleBarHeight, side - spacing / 2, contentHeight - titleBarHeight)
+          let frame = CGRectMake(offset, titleBarHeight, side - spacing / 2, contentHeight)
           addSquare(frame, history)
           let month = calendar.components([.Month], fromDate: history.date!).month
           if (habit!.frequency == .Weekly && lastMonth != month) ||
