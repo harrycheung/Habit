@@ -55,16 +55,21 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // TODO: What's up with the "window!!"?
     UIApplication.sharedApplication().delegate!.window!!.tintColor = HabitApp.color
     
-    let requestAny = NSFetchRequest(entityName: "Habit")
+    let habitRequest = NSFetchRequest(entityName: "Habit")
     do {
       if #available(iOS 9.0, *) {
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: requestAny)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: habitRequest)
         try HabitApp.moContext.executeRequest(deleteRequest)
       } else {
-          // Fallback on earlier versions
+        var habitsToDelete = try HabitApp.moContext.executeFetchRequest(habitRequest)
+        for habit in habitsToDelete {
+          HabitApp.moContext.deleteObject(habit as! NSManagedObject)
+        }
+        habitsToDelete.removeAll(keepCapacity: false)
+        try HabitApp.moContext.save()
       }
       
-      habits = try HabitApp.moContext.executeFetchRequest(requestAny) as! [Habit]
+      habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
       if habits.count == 0 {
         let calendar = NSCalendar.currentCalendar()
         var components = calendar.components([.Year, .WeekOfYear, .Weekday, .Hour], fromDate: NSDate())
