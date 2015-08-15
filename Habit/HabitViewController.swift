@@ -177,19 +177,6 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
     longestStreak.text = "\(habit!.longestStreak!)"
     skipped.text = "\(habit!.skippedCount())"
     completed.text = "\(habit!.completedCount())"
-    
-    switch habit!.frequency {
-    case .Daily:
-      progressPeriod.text = "Past 30 days"
-      break
-    case .Weekly:
-      progressPeriod.text = "Past 12 weeks"
-      break
-    case .Monthly:
-      progressPeriod.text = "Past 6 months"
-      break
-    default: ()
-    }
     progressLabel.setProgress(habit!.progress(), timing: TPPropertyAnimationTimingEaseOut, duration: 0.5, delay: 0.3)
   }
   
@@ -364,14 +351,88 @@ class HabitViewController : UIViewController, UITextFieldDelegate, FrequencySett
   
   // HabitHistory
   
-  func habitHistory(habitHistory: HabitHistory, selectedHistory history: History) {
-    progressLabel.setProgress(history.percentage, timing: TPPropertyAnimationTimingEaseOut, duration: 0.5, delay: 0)
+  private static var dailyFormatter: NSDateFormatter = {
+    let formatter = NSDateFormatter()
+    formatter.dateFormat = "MMM d"
+    return formatter
+  }()
+  private static var dailyYearFormatter: NSDateFormatter = {
+    let formatter = NSDateFormatter()
+    formatter.dateFormat = "MMM d, yyyy"
+    return formatter
+  }()
+  private static var weeklyStartFormatter: NSDateFormatter = {
+    let formatter = NSDateFormatter()
+    formatter.dateFormat = "MMM d -\n"
+    return formatter
+  }()
+  private static var monthlyFormatter: NSDateFormatter = {
+    let formatter = NSDateFormatter()
+    formatter.dateFormat = "MMM"
+    return formatter
+  }()
+  private static var monthlyYearFormatter: NSDateFormatter = {
+    let formatter = NSDateFormatter()
+    formatter.dateFormat = "MMM yyyy"
+    return formatter
+  }()
+  
+  func updateStats(when: AnyObject?, percentage: CGFloat, completedCount: Int, skippedCount: Int) {
+    progressLabel.setProgress(percentage, timing: TPPropertyAnimationTimingEaseOut, duration: 0.5, delay: 0)
     animationNumbers.percentageStart = progressLabel.progress
-    animationNumbers.percentageEnd = history.percentage
+    animationNumbers.percentageEnd = percentage
     animationNumbers.completedStart = Int(completed.text!)!
-    animationNumbers.completedEnd = history.completed!.integerValue
+    animationNumbers.completedEnd = completedCount
     animationNumbers.skippedStart = Int(skipped.text!)!
-    animationNumbers.skippedEnd = history.skipped!.integerValue
+    animationNumbers.skippedEnd = skippedCount
+    
+    if let date = when as? NSDate {
+      let calendar = NSCalendar.currentCalendar()
+      switch habit!.frequency {
+      case .Daily:
+        progressPeriod.numberOfLines = 1
+        if !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Year) {
+          progressPeriod.text = HabitViewController.dailyYearFormatter.stringFromDate(date)
+        } else {
+          progressPeriod.text = HabitViewController.dailyFormatter.stringFromDate(date)
+        }
+      case .Weekly:
+        progressPeriod.numberOfLines = 2
+        let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: date)
+        components.weekday = 1
+        let startDate = calendar.dateFromComponents(components)!
+        components.weekday = 7
+        let endDate = calendar.dateFromComponents(components)!
+        if !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Year) {
+          progressPeriod.text = HabitViewController.weeklyStartFormatter.stringFromDate(startDate) +
+            HabitViewController.dailyYearFormatter.stringFromDate(endDate)
+        } else {
+          progressPeriod.text = HabitViewController.weeklyStartFormatter.stringFromDate(startDate) +
+            HabitViewController.dailyFormatter.stringFromDate(endDate)
+        }
+      case .Monthly:
+        progressPeriod.numberOfLines = 1
+        if !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Year) {
+          progressPeriod.text = HabitViewController.monthlyYearFormatter.stringFromDate(date)
+        } else {
+          progressPeriod.text = HabitViewController.monthlyFormatter.stringFromDate(date)
+        }
+      default: ()
+      }
+    } else {
+      progressPeriod.text = when as? String
+    }
+  
+  }
+  
+  @IBAction func allTimeProgress(sender: AnyObject) {
+    updateStats("All Time", percentage: habit!.progress(),
+      completedCount: habit!.completedCount(), skippedCount: habit!.skippedCount())
+  }
+  
+  func habitHistory(habitHistory: HabitHistory, selectedHistory history: History) {
+    updateStats(history.date, percentage: history.percentage,
+      completedCount: history.completed!.integerValue, skippedCount: history.skipped!.integerValue)
   }
   
 }

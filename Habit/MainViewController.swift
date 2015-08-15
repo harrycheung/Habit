@@ -11,10 +11,12 @@
 // 2. done - Snooze behavior
 // 3. done - Sort habits based on time periods
 // 4. github style history graph
-// 5. 25% - Habit info page
+// 5. 75% - Habit info page
 // 6. done - App settings
 // 7. Local notifications
 // 8. done - Expire habits periodically
+// 9. Split HabitViewController
+// 10. Use Entry for tableview
 
 import UIKit
 import CoreData

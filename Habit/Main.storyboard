@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8173.3" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="EoV-sV-T6s">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8173.3" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="EoV-sV-T6s">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8142"/>
@@ -284,19 +284,23 @@
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nbs-xv-gfN" customClass="KAProgressLabel">
                                                             <rect key="frame" x="15" y="8" width="92" height="92"/>
+                                                            <gestureRecognizers/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="Nbs-xv-gfN" secondAttribute="height" multiplier="1:1" id="HHt-D2-yg0"/>
                                                             </constraints>
+                                                            <connections>
+                                                                <outletCollection property="gestureRecognizers" destination="RDt-Og-eI0" appends="YES" id="G5d-7m-MyF"/>
+                                                            </connections>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0%" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WIj-DL-2OL">
-                                                            <rect key="frame" x="46" y="45" width="30.5" height="22"/>
-                                                            <fontDescription key="fontDescription" name="Bariol-Bold" family="Bariol" pointSize="22"/>
+                                                            <rect key="frame" x="43" y="43" width="36" height="26"/>
+                                                            <fontDescription key="fontDescription" name="Bariol-Bold" family="Bariol" pointSize="26"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Past 30 days" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="99P-bg-ZH8">
-                                                            <rect key="frame" x="27" y="104" width="67" height="13"/>
-                                                            <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="13"/>
-                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hdc-Rn-Qe6">
+                                                            <rect key="frame" x="46.5" y="67" width="30.5" height="10"/>
+                                                            <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="10"/>
+                                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current streak" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XaG-Rd-09s">
@@ -359,6 +363,8 @@
                                                         <constraint firstItem="W4j-ld-gLm" firstAttribute="leading" secondItem="4pu-p3-7re" secondAttribute="leading" id="KKc-tb-7RF"/>
                                                         <constraint firstAttribute="trailing" secondItem="6qS-vQ-Vac" secondAttribute="trailing" constant="15" id="M8F-vu-anD"/>
                                                         <constraint firstItem="Nbs-xv-gfN" firstAttribute="top" secondItem="XaG-Rd-09s" secondAttribute="top" id="PxC-Qr-vCw"/>
+                                                        <constraint firstItem="Hdc-Rn-Qe6" firstAttribute="centerX" secondItem="WIj-DL-2OL" secondAttribute="centerX" id="RYP-va-5si"/>
+                                                        <constraint firstItem="Hdc-Rn-Qe6" firstAttribute="top" secondItem="WIj-DL-2OL" secondAttribute="bottom" constant="-2" id="ScX-Ud-5Cg"/>
                                                         <constraint firstItem="Nbs-xv-gfN" firstAttribute="top" secondItem="1FL-kd-WCJ" secondAttribute="top" constant="8" id="V6n-wz-ykQ"/>
                                                         <constraint firstItem="VSf-GP-wQ1" firstAttribute="top" secondItem="W4j-ld-gLm" secondAttribute="top" id="XQo-jF-KeX"/>
                                                         <constraint firstItem="LRA-0y-pjI" firstAttribute="top" secondItem="W4j-ld-gLm" secondAttribute="bottom" constant="8" id="XUg-Y3-j42"/>
@@ -373,9 +379,7 @@
                                                         <constraint firstAttribute="height" priority="999" constant="250" id="obW-Ni-fzU"/>
                                                         <constraint firstItem="WIj-DL-2OL" firstAttribute="centerX" secondItem="Nbs-xv-gfN" secondAttribute="centerX" id="rNW-LD-DQv"/>
                                                         <constraint firstAttribute="trailing" secondItem="qT7-ha-qFs" secondAttribute="trailing" constant="15" id="spq-dD-OZp"/>
-                                                        <constraint firstItem="99P-bg-ZH8" firstAttribute="top" secondItem="Nbs-xv-gfN" secondAttribute="bottom" constant="4" id="tUk-Rz-55A"/>
                                                         <constraint firstAttribute="trailing" secondItem="JAf-Dl-Cfa" secondAttribute="trailing" constant="15" id="v13-J0-XOh"/>
-                                                        <constraint firstItem="99P-bg-ZH8" firstAttribute="centerX" secondItem="Nbs-xv-gfN" secondAttribute="centerX" id="vxF-Pv-Px0"/>
                                                         <constraint firstItem="4pu-p3-7re" firstAttribute="leading" secondItem="XaG-Rd-09s" secondAttribute="leading" id="yDD-1U-TzD"/>
                                                     </constraints>
                                                 </view>
@@ -578,7 +582,7 @@
                         <outlet property="notification" destination="CR2-zc-eqm" id="SPK-3N-pLP"/>
                         <outlet property="progressLabel" destination="Nbs-xv-gfN" id="rkc-6S-okv"/>
                         <outlet property="progressPercentage" destination="WIj-DL-2OL" id="rJ1-hH-kUv"/>
-                        <outlet property="progressPeriod" destination="99P-bg-ZH8" id="I5g-UA-QA3"/>
+                        <outlet property="progressPeriod" destination="Hdc-Rn-Qe6" id="45a-cV-Hjk"/>
                         <outlet property="save" destination="rmt-ez-nkv" id="C5S-jO-4pa"/>
                         <outlet property="settings" destination="9hC-uO-pGM" id="q2w-oj-f86"/>
                         <outlet property="settingsHeight" destination="DOd-y4-u9s" id="LQI-vB-3zK"/>
@@ -596,6 +600,11 @@
                 <tapGestureRecognizer cancelsTouchesInView="NO" id="N00-DT-dwT">
                     <connections>
                         <action selector="closeView:" destination="fuZ-7k-oQj" id="mee-TC-kwj"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="RDt-Og-eI0">
+                    <connections>
+                        <action selector="allTimeProgress:" destination="fuZ-7k-oQj" id="oNZ-n9-nQW"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>

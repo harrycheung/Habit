@@ -234,10 +234,6 @@ class Habit: NSManagedObject {
     if let history = histories!.filteredOrderedSetUsingPredicate(predicate).firstObject as? History {
       history.completed = history.completed!.integerValue + completed
       history.skipped = history.skipped!.integerValue + skipped
-      let t = useTimes ? times?.integerValue : partsArray.count
-      if (history.completed!.integerValue + history.skipped!.integerValue) > t {
-        NSLog("houston, we have a problem")
-      }
     } else {
       let history = History(context: self.managedObjectContext!, habit: self, frequency: frequency, date: date)
       history.completed = completed
