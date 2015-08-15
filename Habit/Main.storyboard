@@ -233,7 +233,7 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nb4-LA-0rc" userLabel="Habit View">
-                                            <rect key="frame" x="8" y="128" width="304" height="332"/>
+                                            <rect key="frame" x="8" y="103" width="304" height="382"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xwd-yK-LX5" userLabel="Toolbar View">
                                                     <rect key="frame" x="0.0" y="0.0" width="304" height="40"/>
@@ -280,7 +280,7 @@
                                                     </connections>
                                                 </textField>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1FL-kd-WCJ" userLabel="Stats">
-                                                    <rect key="frame" x="0.0" y="82" width="304" height="250"/>
+                                                    <rect key="frame" x="0.0" y="82" width="304" height="300"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nbs-xv-gfN" customClass="KAProgressLabel">
                                                             <rect key="frame" x="15" y="8" width="92" height="92"/>
@@ -344,7 +344,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e0Y-XF-jWk" customClass="HabitHistory" customModule="Habit" customModuleProvider="target">
-                                                            <rect key="frame" x="15" y="115" width="274" height="120"/>
+                                                            <rect key="frame" x="15" y="115" width="274" height="170"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <connections>
                                                                 <outlet property="delegate" destination="fuZ-7k-oQj" id="kLG-1U-wTP"/>
@@ -376,7 +376,7 @@
                                                         <constraint firstAttribute="bottom" secondItem="e0Y-XF-jWk" secondAttribute="bottom" constant="15" id="lfw-V7-aUu"/>
                                                         <constraint firstItem="e0Y-XF-jWk" firstAttribute="top" secondItem="6qS-vQ-Vac" secondAttribute="bottom" constant="15" id="lg8-sT-Kx0"/>
                                                         <constraint firstAttribute="trailing" secondItem="e0Y-XF-jWk" secondAttribute="trailing" constant="15" id="nrw-76-gmh"/>
-                                                        <constraint firstAttribute="height" priority="999" constant="250" id="obW-Ni-fzU"/>
+                                                        <constraint firstAttribute="height" priority="999" constant="300" id="obW-Ni-fzU"/>
                                                         <constraint firstItem="WIj-DL-2OL" firstAttribute="centerX" secondItem="Nbs-xv-gfN" secondAttribute="centerX" id="rNW-LD-DQv"/>
                                                         <constraint firstAttribute="trailing" secondItem="qT7-ha-qFs" secondAttribute="trailing" constant="15" id="spq-dD-OZp"/>
                                                         <constraint firstAttribute="trailing" secondItem="JAf-Dl-Cfa" secondAttribute="trailing" constant="15" id="v13-J0-XOh"/>
@@ -384,7 +384,7 @@
                                                     </constraints>
                                                 </view>
                                                 <view hidden="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9hC-uO-pGM" userLabel="Settings">
-                                                    <rect key="frame" x="0.0" y="82" width="304" height="250"/>
+                                                    <rect key="frame" x="0.0" y="82" width="304" height="300"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aGJ-Yw-Dyh" userLabel="Splitter">
                                                             <rect key="frame" x="8" y="0.0" width="288" height="1"/>
@@ -408,10 +408,10 @@
                                                             </connections>
                                                         </segmentedControl>
                                                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g9g-gL-H8l">
-                                                            <rect key="frame" x="15" y="42" width="274" height="114"/>
+                                                            <rect key="frame" x="15" y="42" width="274" height="164"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LXJ-7i-RmO">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="822" height="114"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="822" height="164"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                 </view>
                                                             </subviews>
@@ -427,14 +427,14 @@
                                                             </connections>
                                                         </scrollView>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wBh-6s-Zys" userLabel="Splitter">
-                                                            <rect key="frame" x="8" y="162" width="288" height="1"/>
+                                                            <rect key="frame" x="8" y="212" width="288" height="1"/>
                                                             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="1" id="kOV-0K-ave"/>
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Receive notification" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7EJ-04-AhZ">
-                                                            <rect key="frame" x="15" y="169" width="129" height="31"/>
+                                                            <rect key="frame" x="15" y="219" width="129" height="31"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="129" id="oUD-Od-105"/>
                                                             </constraints>
@@ -443,7 +443,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CR2-zc-eqm">
-                                                            <rect key="frame" x="240" y="169" width="51" height="31"/>
+                                                            <rect key="frame" x="240" y="219" width="51" height="31"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="31" id="6ar-9O-6wS"/>
                                                                 <constraint firstAttribute="width" constant="49" id="kNu-DT-Fn6"/>
@@ -453,14 +453,14 @@
                                                             </connections>
                                                         </switch>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OVC-bp-FSI" userLabel="Splitter">
-                                                            <rect key="frame" x="8" y="206" width="288" height="1"/>
+                                                            <rect key="frame" x="8" y="256" width="288" height="1"/>
                                                             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="1" id="dFG-MF-sNX"/>
                                                             </constraints>
                                                         </view>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dfw-Po-VLz">
-                                                            <rect key="frame" x="0.0" y="207" width="152" height="43"/>
+                                                            <rect key="frame" x="0.0" y="257" width="152" height="43"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="43" id="2DJ-ld-5Kb"/>
                                                                 <constraint firstAttribute="width" priority="997" id="pVZ-9a-4Aw"/>
@@ -477,7 +477,7 @@
                                                             </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rmt-ez-nkv">
-                                                            <rect key="frame" x="152" y="207" width="151.5" height="43"/>
+                                                            <rect key="frame" x="152" y="257" width="151.5" height="43"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
                                                             <state key="normal" title="Save"/>
                                                             <state key="disabled">
