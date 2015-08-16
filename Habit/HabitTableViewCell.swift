@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class HabitTableViewCell : SwipeTableViewCell {
+class HabitTableViewCell: SwipeTableViewCell {
   
   var habit: Habit?
   var bottomBorder: CALayer?

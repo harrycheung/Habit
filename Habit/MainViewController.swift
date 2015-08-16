@@ -26,7 +26,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   // IB identifiers
   let cellIdentifier = "HabitCell"
-  let newHabitSegue = "NewHabit"
   let showHabitSegue = "ShowHabit"
 
   @IBOutlet weak var tableView: UITableView!
@@ -40,12 +39,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   var todaysHabits = [Habit]()
   var upcomingHabits = [Habit]()
   var refreshTimer: NSTimer?
-  var settingsTransition: SettingsTransition?
+  var appSettingsTransition: AppSettingsTransition?
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    settingsTransition = SettingsTransition()
+    appSettingsTransition = AppSettingsTransition()
     
     statusBar = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 20))
     view.addSubview(statusBar!)
@@ -317,21 +316,20 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if let vc = segue.destinationViewController as? HabitViewController {
-      if segue.identifier == showHabitSegue {
-        activeCell = sender as? HabitTableViewCell
-        vc.habit = activeCell!.habit
-      } else {
-        vc.habit = Habit(context: HabitApp.moContext, name: "", details: "", frequency: .Daily, times: 1, createdAt: NSDate())
-        
-        newButton.highlighted = false
-      }
-    } else {
+      activeCell = sender as? HabitTableViewCell
+      vc.habit = activeCell!.habit
+    } else if let vc = segue.destinationViewController as? HabitSettingsViewController {
+      vc.habit = Habit(context: HabitApp.moContext, name: "", details: "", frequency: .Daily, times: 1, createdAt: NSDate())
+
+      // TODO: needed?
+      newButton.highlighted = false
+    } else if let vc = segue.destinationViewController as? AppSettingsViewController {
       super.prepareForSegue(segue, sender: sender)
       
-      segue.destinationViewController.transitioningDelegate = settingsTransition
-      segue.destinationViewController.modalPresentationStyle = .Custom
+      vc.mainVC = self
       
-      (segue.destinationViewController as! SettingsViewController).mainVC = self
+      segue.destinationViewController.transitioningDelegate = appSettingsTransition
+      segue.destinationViewController.modalPresentationStyle = .Custom
     }
   }
   

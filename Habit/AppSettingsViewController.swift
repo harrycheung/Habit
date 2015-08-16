@@ -1,5 +1,5 @@
 //
-//  SettingsViewController.swift
+//  AppSettingsViewController.swift
 //  Habit
 //
 //  Created by harry on 7/17/15.
@@ -9,11 +9,10 @@
 import Foundation
 import UIKit
 
-class SettingsViewController: UIViewController, ColorPickerDataSource, ColorPickerDelegate {
+class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorPickerDelegate {
   
   var mainVC: MainViewController?
   
-  @IBOutlet weak var settingsHeight: NSLayoutConstraint!
   @IBOutlet weak var close: UIButton!
   @IBOutlet weak var colorPicker: ColorPicker!
   @IBOutlet weak var upcoming: UISwitch!

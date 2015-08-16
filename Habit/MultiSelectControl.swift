@@ -25,7 +25,7 @@ protocol MultiSelectControlDelegate {
   
 }
 
-class MultiSelectControl : UIView {
+class MultiSelectControl: UIView {
   
   @IBOutlet var dataSource: MultiSelectControlDataSource?
   @IBOutlet var delegate: MultiSelectControlDelegate?

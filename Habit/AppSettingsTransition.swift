@@ -1,5 +1,5 @@
 //
-//  SettingsTransition.swift
+//  AppSettingsTransition.swift
 //  Habit
 //
 //  Created by harry on 7/18/15.
@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class SettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
+class AppSettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
   
   var presenting: Bool = false
   
@@ -26,7 +26,7 @@ class SettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UIVie
   }
   
   func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
-    return 0.5
+    return 0.4
   }
   
   func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
@@ -37,10 +37,8 @@ class SettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UIVie
     let containerView = transitionContext.containerView()!
 
     if presenting {
-      let settingsHeight = (toVC as! SettingsViewController).settingsHeight.constant
+      let settingsHeight = toVC.view.frame.height
       toVC.view.frame = CGRectMake(0, settingsHeight, screenWidth, screenHeight)
-      // TODO: I'm really unhappy that I got to 'hack' this with the comments to make work.
-      //containerView.addSubview(fromVC.view)
       containerView.addSubview(toVC.view)
       
       UIView.animateWithDuration(transitionDuration(transitionContext),
@@ -54,10 +52,8 @@ class SettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UIVie
           transitionContext.completeTransition(true)
         })
     } else {
-      let settingsHeight = (fromVC as! SettingsViewController).settingsHeight.constant
-      //containerView.addSubview(toVC.view)
-      //containerView.addSubview(fromVC.view)
-
+      let settingsHeight = toVC.view.frame.height
+      
       UIView.animateWithDuration(transitionDuration(transitionContext),
         animations: {
           fromVC.view.frame = CGRectMake(0, settingsHeight, screenWidth, screenHeight)

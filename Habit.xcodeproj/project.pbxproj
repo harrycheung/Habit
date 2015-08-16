@@ -11,6 +11,8 @@
 		4A040C4F1B7C4D610081CF85 /* History+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A040C4D1B7C4D610081CF85 /* History+CoreDataProperties.swift */; };
 		4A040C501B7C4D610081CF85 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A040C4E1B7C4D610081CF85 /* History.swift */; };
 		4A144D791B61C31B001A6094 /* HabitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A144D781B61C31B001A6094 /* HabitApp.swift */; };
+		4A16FDC11B7ED48A00DF9DFC /* HabitSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A16FDC01B7ED48A00DF9DFC /* HabitSettingsViewController.swift */; };
+		4A16FDC31B7F7CA000DF9DFC /* HabitSettingsTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A16FDC21B7F7CA000DF9DFC /* HabitSettingsTransition.swift */; };
 		4A1D08981B3E17E9006A9CA4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D08971B3E17E9006A9CA4 /* AppDelegate.swift */; };
 		4A1D08A01B3E17E9006A9CA4 /* Habit.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D089E1B3E17E9006A9CA4 /* Habit.xcdatamodeld */; };
 		4A1D08A21B3E17E9006A9CA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A1D08A11B3E17E9006A9CA4 /* Assets.xcassets */; };
@@ -28,8 +30,8 @@
 		4A1D08DC1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D08DA1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift */; };
 		4A1D08DD1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D08DB1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift */; };
 		4A421C1A1B48960900F3186C /* FrequencySettings.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A421C191B48960900F3186C /* FrequencySettings.xib */; };
-		4A44D7871B5A29EC0017B34B /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A44D7861B5A29EC0017B34B /* SettingsViewController.swift */; };
-		4A44D7891B5A9A930017B34B /* SettingsTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A44D7881B5A9A930017B34B /* SettingsTransition.swift */; };
+		4A44D7871B5A29EC0017B34B /* AppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A44D7861B5A29EC0017B34B /* AppSettingsViewController.swift */; };
+		4A44D7891B5A9A930017B34B /* AppSettingsTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A44D7881B5A9A930017B34B /* AppSettingsTransition.swift */; };
 		4A4643811B44632400732389 /* FrequencySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4643801B44632400732389 /* FrequencySettings.swift */; };
 		4A4643831B448B3300732389 /* MultiSelectControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4643821B448B3300732389 /* MultiSelectControl.swift */; };
 		4A4D4DA21B6D9618005C86AF /* HabitWeeklyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4D4DA11B6D9618005C86AF /* HabitWeeklyTests.swift */; };
@@ -65,6 +67,8 @@
 		4A040C4D1B7C4D610081CF85 /* History+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4A040C4E1B7C4D610081CF85 /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
 		4A144D781B61C31B001A6094 /* HabitApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitApp.swift; sourceTree = "<group>"; };
+		4A16FDC01B7ED48A00DF9DFC /* HabitSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitSettingsViewController.swift; sourceTree = "<group>"; };
+		4A16FDC21B7F7CA000DF9DFC /* HabitSettingsTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitSettingsTransition.swift; sourceTree = "<group>"; };
 		4A1D08941B3E17E9006A9CA4 /* Habit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Habit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A1D08971B3E17E9006A9CA4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4A1D089F1B3E17E9006A9CA4 /* Habit.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Habit.xcdatamodel; sourceTree = "<group>"; };
@@ -88,8 +92,8 @@
 		4A1D08DA1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Habit+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4A1D08DB1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Entry+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4A421C191B48960900F3186C /* FrequencySettings.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FrequencySettings.xib; sourceTree = "<group>"; };
-		4A44D7861B5A29EC0017B34B /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		4A44D7881B5A9A930017B34B /* SettingsTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTransition.swift; sourceTree = "<group>"; };
+		4A44D7861B5A29EC0017B34B /* AppSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSettingsViewController.swift; sourceTree = "<group>"; };
+		4A44D7881B5A9A930017B34B /* AppSettingsTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSettingsTransition.swift; sourceTree = "<group>"; };
 		4A4643801B44632400732389 /* FrequencySettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrequencySettings.swift; sourceTree = "<group>"; };
 		4A4643821B448B3300732389 /* MultiSelectControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSelectControl.swift; sourceTree = "<group>"; };
 		4A4D4DA11B6D9618005C86AF /* HabitWeeklyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitWeeklyTests.swift; sourceTree = "<group>"; };
@@ -217,9 +221,11 @@
 			isa = PBXGroup;
 			children = (
 				4A1D08CB1B3E1A7A006A9CA4 /* HabitViewController.swift */,
+				4A16FDC01B7ED48A00DF9DFC /* HabitSettingsViewController.swift */,
 				4A1D08CC1B3E1A7A006A9CA4 /* MainViewController.swift */,
-				4A44D7861B5A29EC0017B34B /* SettingsViewController.swift */,
-				4A44D7881B5A9A930017B34B /* SettingsTransition.swift */,
+				4A44D7861B5A29EC0017B34B /* AppSettingsViewController.swift */,
+				4A44D7881B5A9A930017B34B /* AppSettingsTransition.swift */,
+				4A16FDC21B7F7CA000DF9DFC /* HabitSettingsTransition.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -553,16 +559,18 @@
 				4A6DB6FC1B4B8781008BC1B7 /* UIButton+Color.swift in Sources */,
 				4A1D08A01B3E17E9006A9CA4 /* Habit.xcdatamodeld in Sources */,
 				4A1D08D11B3E1A7A006A9CA4 /* HabitViewController.swift in Sources */,
+				4A16FDC11B7ED48A00DF9DFC /* HabitSettingsViewController.swift in Sources */,
 				4A4643811B44632400732389 /* FrequencySettings.swift in Sources */,
 				4A040C501B7C4D610081CF85 /* History.swift in Sources */,
-				4A44D7871B5A29EC0017B34B /* SettingsViewController.swift in Sources */,
+				4A44D7871B5A29EC0017B34B /* AppSettingsViewController.swift in Sources */,
 				4A1D08D01B3E1A7A006A9CA4 /* HabitTableViewCell.swift in Sources */,
+				4A16FDC31B7F7CA000DF9DFC /* HabitSettingsTransition.swift in Sources */,
 				4A1D08DD1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift in Sources */,
 				4A1D08CF1B3E1A7A006A9CA4 /* Habit.swift in Sources */,
 				4A1D08DC1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift in Sources */,
 				4ADA905F1B60ABD300826C69 /* ColorPicker.swift in Sources */,
 				4AAA3C1C1B7AF9B7006572F8 /* UIColor+Custom.swift in Sources */,
-				4A44D7891B5A9A930017B34B /* SettingsTransition.swift in Sources */,
+				4A44D7891B5A9A930017B34B /* AppSettingsTransition.swift in Sources */,
 				4A1D08D31B3E1A7A006A9CA4 /* SwipeTableViewCell.swift in Sources */,
 				4A1D08981B3E17E9006A9CA4 /* AppDelegate.swift in Sources */,
 				4AA4AED81B7A73B100A1562F /* HabitHistory.swift in Sources */,

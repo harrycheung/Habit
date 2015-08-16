@@ -17,7 +17,7 @@ protocol FrequencySettingsDelegate {
   
 }
 
-class FrequencySettings : UIView, UIPickerViewDelegate, UIPickerViewDataSource, MultiSelectControlDelegate, MultiSelectControlDataSource {
+class FrequencySettings: UIView, UIPickerViewDelegate, UIPickerViewDataSource, MultiSelectControlDelegate, MultiSelectControlDataSource {
   
   let deactivatedAlpha: CGFloat = 0.8
   

@@ -15,7 +15,7 @@ protocol SwipeTableViewCellDelegate {
   func endSwiping(cell: SwipeTableViewCell)
 }
 
-class SwipeTableViewCell : UITableViewCell {
+class SwipeTableViewCell: UITableViewCell {
   
   struct Defaults {
     static let Trigger: CGFloat           = 0.33 // Percentage limit to trigger the First action
