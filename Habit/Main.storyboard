@@ -728,7 +728,9 @@
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sob-Ta-QNB">
                                                     <rect key="frame" x="275" y="6" width="30" height="30"/>
-                                                    <state key="normal" title="V"/>
+                                                    <state key="normal" title="V">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
                                                     <connections>
                                                         <segue destination="USX-qH-n4Q" kind="unwind" unwindAction="unwind:" id="0JU-x4-bV1"/>
                                                     </connections>
