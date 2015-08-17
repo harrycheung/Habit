@@ -27,6 +27,11 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     colorPicker.selectedIndex = HabitApp.colorIndex
     upcoming.on = HabitApp.upcoming
     notification.on = HabitApp.notification
+    
+    view.layer.shadowColor = UIColor.blackColor().CGColor
+    view.layer.shadowOpacity = 0.5
+    view.layer.shadowRadius = 4
+    view.layer.shadowOffset = CGSizeMake(0, -1)
   }
   
   @IBAction func panning(recognizer: UIPanGestureRecognizer) {
