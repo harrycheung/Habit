@@ -40,7 +40,6 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    NSLog("HSVC.viewDidLoad")
     
     // Setup settings views for each frequency
     frequencySettings[0] = FrequencySettings(leftTitle: "Times a day",

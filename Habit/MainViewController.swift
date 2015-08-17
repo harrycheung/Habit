@@ -10,13 +10,15 @@
 // 1. Check timezone changes on load
 // 2. done - Snooze behavior
 // 3. done - Sort habits based on time periods
-// 4. github style history graph
+// 4. done - github style history graph
 // 5. 75% - Habit info page
 // 6. done - App settings
 // 7. Local notifications
 // 8. done - Expire habits periodically
-// 9. Split HabitViewController
+// 9. done - Split HabitViewController
 // 10. Use Entry for tableview
+// 11. done - Debug flash when changing color
+// 12. Debug flash when dismising habit settings
 
 import UIKit
 import CoreData
@@ -367,9 +369,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   func changeColor(color: UIColor) {
     // Snapshot previous color
-    let snapshotView = UIScreen.mainScreen().snapshotViewAfterScreenUpdates(true)
-    overlayView.addSubview(snapshotView)
-    overlayView.hidden = false
+    UIGraphicsBeginImageContextWithOptions(UIScreen.mainScreen().bounds.size, false, UIScreen.mainScreen().scale)
+    view.drawViewHierarchyInRect(UIScreen.mainScreen().bounds, afterScreenUpdates: true)
+    let image = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    let imageView = UIImageView(image: image)
+    overlayView.addSubview(imageView)
     overlayView.alpha = 1
     view.bringSubviewToFront(overlayView)
 
@@ -379,7 +384,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     statusBar!.backgroundColor = color
     newButton.backgroundColor = color
     tableView.reloadData()
-    UILabel.appearance().textColor = color
     
     // Animate color change
     UIView.animateWithDuration(0.5,
@@ -388,10 +392,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       animations: {
         self.overlayView.alpha = 0
       }, completion: { (value: Bool) in
-        self.overlayView.hidden = true
-        for subview in self.overlayView.subviews {
-          subview.removeFromSuperview()
-        }
+        imageView.removeFromSuperview()
     })
   }
   

@@ -20,7 +20,7 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
   var habit: Habit?  
   var habitSettingsTransition: HabitSettingsTransition?
   
-  @IBOutlet weak var name: UITextField!
+  @IBOutlet weak var name: UILabel!
   @IBOutlet weak var switchMode: UIButton!
   @IBOutlet weak var progressLabel: KAProgressLabel!
   @IBOutlet weak var progressPercentage: UILabel!
@@ -70,7 +70,6 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
     }
     progressLabel.progressColor = HabitApp.color
     
-    // Fill out the form
     name.text = habit!.name;
     
     back.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
@@ -189,7 +188,6 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
   }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    NSLog("HVC.prepareForSegue")
     if let vc = segue.destinationViewController as? HabitSettingsViewController {
       super.prepareForSegue(segue, sender: sender)
       
@@ -201,7 +199,6 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
   }
   
   @IBAction func unwindToHabit(segue: UIStoryboardSegue) {
-    NSLog("unwindToHabit")
   }
   
 }

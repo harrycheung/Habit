@@ -16,12 +16,11 @@ class HabitTableViewCell: SwipeTableViewCell {
   
   @IBOutlet weak var name: UILabel!
   @IBOutlet weak var due: UILabel!
-  @IBOutlet weak var entries: UILabel!
   
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     
-    contentView.backgroundColor = tintColor
+    contentView.backgroundColor = HabitApp.color
     
     bottomBorder = CALayer()
     let frame = contentView.frame
@@ -52,6 +51,5 @@ class HabitTableViewCell: SwipeTableViewCell {
     } else {
       contentView.alpha = alpha
     }
-    entries.text = String(habit!.entries!.count)
   }
 }
