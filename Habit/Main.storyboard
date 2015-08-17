@@ -812,7 +812,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="500" id="pOY-GB-iPf"/>
                                 </constraints>
-                                <blurEffect style="light"/>
+                                <blurEffect style="dark"/>
                             </visualEffectView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JCU-ZP-Prf">
                                 <rect key="frame" x="16" y="20" width="288" height="348"/>
