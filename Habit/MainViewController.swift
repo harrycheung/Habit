@@ -18,7 +18,9 @@
 // 9. done - Split HabitViewController
 // 10. Use Entry for tableview
 // 11. done - Debug flash when changing color
-// 12. Debug flash when dismising habit settings
+// 12. done - Debug flash when dismising habit settings
+// 13. simulator only - Debug flash on color picker button
+// 14. Clean up AppDelegate
 
 import UIKit
 import CoreData

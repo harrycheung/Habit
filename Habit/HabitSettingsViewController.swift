@@ -112,6 +112,7 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
     } else {
       switchMode.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
       switchMode.setTitle(String.fontAwesomeIconWithName(.Close), forState: .Normal)
+      back.hidden = true
     }
     
     back.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
