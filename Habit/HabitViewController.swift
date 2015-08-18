@@ -178,6 +178,7 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
   }
   
   @IBAction func allTimeProgress(sender: AnyObject) {
+    habitHistory.clearSelection()
     updateStats("All Time", percentage: habit!.progress(),
       completedCount: habit!.completedCount(), skippedCount: habit!.skippedCount())
   }
