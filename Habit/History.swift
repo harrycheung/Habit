@@ -12,12 +12,7 @@ import CoreData
 class History: NSManagedObject {
 
   var frequency: Habit.Frequency {
-    get {
-      return Habit.Frequency(rawValue: frequencyNum!.integerValue)!
-    }
-    set {
-      frequencyNum = newValue.rawValue
-    }
+    return habit!.frequency
   }
   
   var percentage: CGFloat {
@@ -28,11 +23,10 @@ class History: NSManagedObject {
     return CGFloat(completed!) / denom
   }
   
-  convenience init(context: NSManagedObjectContext, habit: Habit, frequency: Habit.Frequency, date: NSDate) {
+  convenience init(context: NSManagedObjectContext, habit: Habit, date: NSDate) {
     let entityDescription = NSEntityDescription.entityForName("History", inManagedObjectContext: context)!
     self.init(entity: entityDescription, insertIntoManagedObjectContext: context)
     self.habit = habit
-    self.frequency = frequency
     self.date = date
   }
 

@@ -11,7 +11,7 @@ import UIKit
 
 class HabitTableViewCell: SwipeTableViewCell {
   
-  var habit: Habit?
+  var entry: Entry?
   var bottomBorder: CALayer?
   
   @IBOutlet weak var name: UILabel!
@@ -29,17 +29,17 @@ class HabitTableViewCell: SwipeTableViewCell {
     layer.addSublayer(bottomBorder!)
   }
   
-  func load(habit: Habit) {
-    self.habit = habit;
+  func load(entry: Entry) {
+    self.entry = entry
     reload()
   }
 
   func reload() {
     // Not sure why this tint needs be set here, but otherwise, it picks up the global tint sometimes.
     name.tintColor = UIColor.whiteColor()
-    name.text = habit!.name
-    due.text = habit!.dueText
-    let dueIn = habit!.dueIn
+    name.text = entry!.habit!.name
+    due.text = entry!.dueText
+    let dueIn = entry!.dueIn
     var alpha = HabitApp.MinimumAlpha
     if dueIn < 10 * 60 {
       alpha = 1.0

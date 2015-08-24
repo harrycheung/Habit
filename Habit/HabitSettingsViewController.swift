@@ -67,7 +67,7 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
     // Fill out the form
     name.text = habit!.name;
     name.delegate = self
-    frequency.selectedSegmentIndex = habit!.frequencyNum!.integerValue - 1
+    frequency.selectedSegmentIndex = habit!.frequencyRaw!.integerValue - 1
     if habit!.useTimes {
       activeSettings.picker.selectRow(habit!.times!.integerValue - 1, inComponent: 0, animated: false)
     } else {
@@ -189,7 +189,7 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
   func enableSave() {
     let settings = activeSettings
     if !habit!.isNew && name.text! == habit!.name! && notification.on == habit!.notifyBool &&
-      frequency.selectedSegmentIndex == habit!.frequencyNum!.integerValue - 1 {
+      frequency.selectedSegmentIndex == habit!.frequencyRaw!.integerValue - 1 {
         // If name and frequency is the same, test frequency settings
         save.enabled = (settings.useTimes &&
           (!habit!.useTimes || settings.picker.selectedRowInComponent(0) != habit!.timesInt - 1)) ||
@@ -215,7 +215,7 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
   @IBAction func saveHabit(sender: AnyObject) {
     // TODO: set habit!.next
     habit!.name = name.text!
-    habit!.frequencyNum = frequency.selectedSegmentIndex + 1
+    habit!.frequencyRaw = frequency.selectedSegmentIndex + 1
     if activeSettings.useTimes {
       habit!.times = activeSettings.picker!.selectedRowInComponent(0) + 1
       habit!.partsArray = []
@@ -227,7 +227,7 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
       habit!.last = NSDate()
       habit!.createdAt = NSDate()
     }
-    habit!.updateNext(NSDate())
+    habit!.update(NSDate())
     do {
       try HabitApp.moContext.save()
     } catch let error as NSError {

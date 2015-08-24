@@ -39,9 +39,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   var statusBar: UIView?
   var activeCell: HabitTableViewCell?
-  var habits = [Habit]()
-  var todaysHabits = [Habit]()
-  var upcomingHabits = [Habit]()
+  var entries = [Entry]()
   var refreshTimer: NSTimer?
   var appSettingsTransition: AppSettingsTransition?
   
@@ -58,101 +56,101 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // TODO: What's up with the "window!!"?
     UIApplication.sharedApplication().delegate!.window!!.tintColor = HabitApp.color
     
-    let habitRequest = NSFetchRequest(entityName: "Habit")
-    do {
-      if #available(iOS 9.0, *) {
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: habitRequest)
-        try HabitApp.moContext.executeRequest(deleteRequest)
-      } else {
-        var habitsToDelete = try HabitApp.moContext.executeFetchRequest(habitRequest)
-        for habit in habitsToDelete {
-          HabitApp.moContext.deleteObject(habit as! NSManagedObject)
-        }
-        habitsToDelete.removeAll(keepCapacity: false)
-        try HabitApp.moContext.save()
-      }
-      
-      habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
-      if habits.count == 0 {
-        let calendar = NSCalendar.currentCalendar()
-        var components = calendar.components([.Year, .WeekOfYear, .Weekday, .Hour], fromDate: NSDate())
-        components.weekOfYear -= 40
-        components.weekday = 1
-        components.hour = 1
-        var date = calendar.dateFromComponents(components)!
-        var h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: date)
-        while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
-          for _ in 0..<Int(arc4random_uniform(7)) {
-            h.addEntry(onDate: date)
-          }
-          date = NSDate(timeInterval: 24 * 3600 * 7, sinceDate: date)
-          h.updateNext(date)
-        }
-        components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
-        components.month -= 20
-        components.day = 3
-        components.hour = 1
-        date = calendar.dateFromComponents(components)!
-        h = Habit(context: HabitApp.moContext, name: "5. Monthly 4x", details: "", frequency: .Monthly, times: 4, createdAt: date)
-        while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Month) {
-          for _ in 0..<Int(arc4random_uniform(4)) {
-            h.addEntry(onDate: date)
-          }
-          components.month += 1
-          date = calendar.dateFromComponents(components)!
-          h.updateNext(date)
-        }
-        let oneDay = NSDateComponents()
-        oneDay.day = 1
-        components.month -= 8
-        date = calendar.dateFromComponents(components)!
-        h = Habit(context: HabitApp.moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12, createdAt: date)
-        while !calendar.isDateInToday(date) {
-          for _ in 0..<Int(arc4random_uniform(13)) {
-            h.addEntry(onDate: date)
-          }
-          date = calendar.dateByAddingComponents(oneDay, toDate: date, options: NSCalendarOptions(rawValue: 0))!
-          h.updateNext(date)
-        }
-        let createdAt = NSDate()
-        let _ = Habit(context: HabitApp.moContext, name: "2. Daily 8x", details: "", frequency: .Daily, times: 8, createdAt: createdAt)
-        let _ = Habit(context: HabitApp.moContext, name: "3. Daily 4x", details: "", frequency: .Daily, times: 4, createdAt: createdAt)
-        let _ = Habit(context: HabitApp.moContext, name: "4. Daily 1x", details: "", frequency: .Daily, times: 1, createdAt: createdAt)
-        let _ = Habit(context: HabitApp.moContext, name: "6. Weekly 3x", details: "", frequency: .Weekly, times: 3, createdAt: createdAt)
-        let _ = Habit(context: HabitApp.moContext, name: "7. Weekly 1x", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
-        let _ = Habit(context: HabitApp.moContext, name: "8. Daily 12x", details: "", frequency: .Daily, times: 12, createdAt: createdAt)
-        let _ = Habit(context: HabitApp.moContext, name: "9. Daily 8x", details: "", frequency: .Daily, times: 8, createdAt: createdAt)
-        let _ = Habit(context: HabitApp.moContext, name: "10. Daily 4x", details: "", frequency: .Daily, times: 4, createdAt: createdAt)
-        let _ = Habit(context: HabitApp.moContext, name: "11. Daily 1x", details: "", frequency: .Daily, times: 1, createdAt: createdAt)
-        let _ = Habit(context: HabitApp.moContext, name: "12. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
-        let _ = Habit(context: HabitApp.moContext, name: "13. Weekly 3x", details: "", frequency: .Weekly, times: 3, createdAt: createdAt)
-        let _ = Habit(context: HabitApp.moContext, name: "14. Weekly 1x", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
-        let _ = Habit(context: HabitApp.moContext, name: "15. Daily 12x", details: "", frequency: .Daily, times: 12, createdAt: createdAt)
-        let _ = Habit(context: HabitApp.moContext, name: "16. Daily 8x", details: "", frequency: .Daily, times: 8, createdAt: createdAt)
-        let _ = Habit(context: HabitApp.moContext, name: "17. Daily 4x", details: "", frequency: .Daily, times: 4, createdAt: createdAt)
-        let _ = Habit(context: HabitApp.moContext, name: "18. Daily 1x", details: "", frequency: .Daily, times: 1, createdAt: createdAt)
-        let _ = Habit(context: HabitApp.moContext, name: "19. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
-        let _ = Habit(context: HabitApp.moContext, name: "20. Weekly 3x", details: "", frequency: .Weekly, times: 3, createdAt: createdAt)
-        let _ = Habit(context: HabitApp.moContext, name: "21. Weekly 1x", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
-        try HabitApp.moContext.save()
-      }
-    } catch let error as NSError {
-      NSLog("Could not save \(error), \(error.userInfo)")
-    } catch {
-      NSLog("Could not save")
-    }
-    
-    let request = NSFetchRequest(entityName: "Habit")
-    do {
-      habits = try HabitApp.moContext.executeFetchRequest(request) as! [Habit]
-      for habit in habits {
-        habit.updateNext(NSDate())
-      }
-      habits = habits.sort({ $0.dueIn < $1.dueIn })
-      try HabitApp.moContext.save()
-    } catch let error as NSError {
-      NSLog("Fetch failed: \(error.localizedDescription)")
-    }
+    let entryRequest = NSFetchRequest(entityName: "Entry")
+//    do {
+//      if #available(iOS 9.0, *) {
+//        let deleteRequest = NSBatchDeleteRequest(fetchRequest: habitRequest)
+//        try HabitApp.moContext.executeRequest(deleteRequest)
+//      } else {
+//        var habitsToDelete = try HabitApp.moContext.executeFetchRequest(habitRequest)
+//        for habit in habitsToDelete {
+//          HabitApp.moContext.deleteObject(habit as! NSManagedObject)
+//        }
+//        habitsToDelete.removeAll(keepCapacity: false)
+//        try HabitApp.moContext.save()
+//      }
+//      
+//      habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
+//      if habits.count == 0 {
+//        let calendar = NSCalendar.currentCalendar()
+//        var components = calendar.components([.Year, .WeekOfYear, .Weekday, .Hour], fromDate: NSDate())
+//        components.weekOfYear -= 40
+//        components.weekday = 1
+//        components.hour = 1
+//        var date = calendar.dateFromComponents(components)!
+//        var h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: date)
+//        while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
+//          for _ in 0..<Int(arc4random_uniform(7)) {
+//            h.addEntry(onDate: date)
+//          }
+//          date = NSDate(timeInterval: 24 * 3600 * 7, sinceDate: date)
+//          hupdate(date)
+//        }
+//        components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
+//        components.month -= 20
+//        components.day = 3
+//        components.hour = 1
+//        date = calendar.dateFromComponents(components)!
+//        h = Habit(context: HabitApp.moContext, name: "5. Monthly 4x", details: "", frequency: .Monthly, times: 4, createdAt: date)
+//        while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Month) {
+//          for _ in 0..<Int(arc4random_uniform(4)) {
+//            h.addEntry(onDate: date)
+//          }
+//          components.month += 1
+//          date = calendar.dateFromComponents(components)!
+//          hupdate(date)
+//        }
+//        let oneDay = NSDateComponents()
+//        oneDay.day = 1
+//        components.month -= 8
+//        date = calendar.dateFromComponents(components)!
+//        h = Habit(context: HabitApp.moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12, createdAt: date)
+//        while !calendar.isDateInToday(date) {
+//          for _ in 0..<Int(arc4random_uniform(13)) {
+//            h.addEntry(onDate: date)
+//          }
+//          date = calendar.dateByAddingComponents(oneDay, toDate: date, options: NSCalendarOptions(rawValue: 0))!
+//          hupdate(date)
+//        }
+//        let createdAt = NSDate()
+//        let _ = Habit(context: HabitApp.moContext, name: "2. Daily 8x", details: "", frequency: .Daily, times: 8, createdAt: createdAt)
+//        let _ = Habit(context: HabitApp.moContext, name: "3. Daily 4x", details: "", frequency: .Daily, times: 4, createdAt: createdAt)
+//        let _ = Habit(context: HabitApp.moContext, name: "4. Daily 1x", details: "", frequency: .Daily, times: 1, createdAt: createdAt)
+//        let _ = Habit(context: HabitApp.moContext, name: "6. Weekly 3x", details: "", frequency: .Weekly, times: 3, createdAt: createdAt)
+//        let _ = Habit(context: HabitApp.moContext, name: "7. Weekly 1x", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
+//        let _ = Habit(context: HabitApp.moContext, name: "8. Daily 12x", details: "", frequency: .Daily, times: 12, createdAt: createdAt)
+//        let _ = Habit(context: HabitApp.moContext, name: "9. Daily 8x", details: "", frequency: .Daily, times: 8, createdAt: createdAt)
+//        let _ = Habit(context: HabitApp.moContext, name: "10. Daily 4x", details: "", frequency: .Daily, times: 4, createdAt: createdAt)
+//        let _ = Habit(context: HabitApp.moContext, name: "11. Daily 1x", details: "", frequency: .Daily, times: 1, createdAt: createdAt)
+//        let _ = Habit(context: HabitApp.moContext, name: "12. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
+//        let _ = Habit(context: HabitApp.moContext, name: "13. Weekly 3x", details: "", frequency: .Weekly, times: 3, createdAt: createdAt)
+//        let _ = Habit(context: HabitApp.moContext, name: "14. Weekly 1x", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
+//        let _ = Habit(context: HabitApp.moContext, name: "15. Daily 12x", details: "", frequency: .Daily, times: 12, createdAt: createdAt)
+//        let _ = Habit(context: HabitApp.moContext, name: "16. Daily 8x", details: "", frequency: .Daily, times: 8, createdAt: createdAt)
+//        let _ = Habit(context: HabitApp.moContext, name: "17. Daily 4x", details: "", frequency: .Daily, times: 4, createdAt: createdAt)
+//        let _ = Habit(context: HabitApp.moContext, name: "18. Daily 1x", details: "", frequency: .Daily, times: 1, createdAt: createdAt)
+//        let _ = Habit(context: HabitApp.moContext, name: "19. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
+//        let _ = Habit(context: HabitApp.moContext, name: "20. Weekly 3x", details: "", frequency: .Weekly, times: 3, createdAt: createdAt)
+//        let _ = Habit(context: HabitApp.moContext, name: "21. Weekly 1x", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
+//        try HabitApp.moContext.save()
+//      }
+//    } catch let error as NSError {
+//      NSLog("Could not save \(error), \(error.userInfo)")
+//    } catch {
+//      NSLog("Could not save")
+//    }
+//    
+//    let request = NSFetchRequest(entityName: "Habit")
+//    do {
+//      habits = try HabitApp.moContext.executeFetchRequest(request) as! [Habit]
+//      for habit in habits {
+//        habit.update(NSDate())
+//      }
+//      habits = habits.sort({ $0.dueIn < $1.dueIn })
+//      try HabitApp.moContext.save()
+//    } catch let error as NSError {
+//      NSLog("Fetch failed: \(error.localizedDescription)")
+//    }
     
     // Setup colors
     tableView.backgroundView = nil
@@ -188,18 +186,18 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   // Table view
   
   func refreshTableView() {
-    if !SwipeTableViewCell.isSwiping {
-      for habit in habits {
-        habit.updateNext(NSDate())
-      }
-      do {
-        try HabitApp.moContext.save()
-      } catch let error as NSError {
-        NSLog("Error saving: \(error.localizedDescription)")
-      }
-      habits = habits.sort({ $0.dueIn < $1.dueIn })
-      tableView.reloadData()
-    }
+//    if !SwipeTableViewCell.isSwiping {
+//      for habit in habits {
+//        habit.update(NSDate())
+//      }
+//      do {
+//        try HabitApp.moContext.save()
+//      } catch let error as NSError {
+//        NSLog("Error saving: \(error.localizedDescription)")
+//      }
+//      habits = habits.sort({ $0.dueIn < $1.dueIn })
+//      tableView.reloadData()
+//    }
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -208,29 +206,20 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       tableView.beginUpdates()
       let indexPath = tableView.indexPathForCell(cell)!
       tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
-      let habit = self.habits.removeAtIndex(indexPath.row)
+      let entry = self.entries.removeAtIndex(indexPath.row)
       tableView.endUpdates()
-      
-      habit.addEntry(onDate: NSDate())
-      do {
-        try HabitApp.moContext.save()
-      } catch let error as NSError {
-        NSLog("Could not save \(error), \(error.userInfo)")
-      } catch {
-        NSLog("Could not save")
-      }
-      
-      habit.updateNext(NSDate())
-      do {
-        try HabitApp.moContext.save()
-      } catch let error {
-        NSLog("Error saving: \(error)")
-      }
-      self.insertHabit(habit)
+//      
+//      habit.update(NSDate())
+//      do {
+//        try HabitApp.moContext.save()
+//      } catch let error {
+//        NSLog("Error saving: \(error)")
+//      }
+//      self.insertHabit(habit)
     }
     
     let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! HabitTableViewCell
-    cell.load(habits[indexPath.row])
+    cell.load(entries[indexPath.row])
     
     cell.setSwipeGesture(
       direction: .Right,
@@ -252,7 +241,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return habits.count
+    return entries.count
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -262,21 +251,21 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func insertHabit(habit: Habit) {
-    let insert = { (habit: Habit, index: Int) -> Void in
-      self.habits.insert(habit, atIndex: index)
-      self.tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)], withRowAnimation: .Fade)
-    }
-    
-    if habits.count > 0 {
-      for index in 0...habits.count {
-        if index == habits.count || habit.dueIn < habits[index].dueIn {
-          insert(habit, index)
-          break
-        }
-      }
-    } else {
-      insert(habit, 0)
-    }
+//    let insert = { (habit: Habit, index: Int) -> Void in
+//      self.habits.insert(habit, atIndex: index)
+//      self.tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)], withRowAnimation: .Fade)
+//    }
+//    
+//    if habits.count > 0 {
+//      for index in 0...habits.count {
+//        if index == habits.count || habit.dueIn < habits[index].dueIn {
+//          insert(habit, index)
+//          break
+//        }
+//      }
+//    } else {
+//      insert(habit, 0)
+//    }
   }
   
   // Segue
@@ -284,7 +273,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if let vc = segue.destinationViewController as? HabitViewController {
       activeCell = sender as? HabitTableViewCell
-      vc.habit = activeCell!.habit
+      vc.habit = activeCell!.entry!.habit!
     } else if let vc = segue.destinationViewController as? HabitSettingsViewController {
       vc.habit = Habit(context: HabitApp.moContext, name: "", details: "", frequency: .Daily, times: 1, createdAt: NSDate())
 
@@ -310,12 +299,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let indexPath = tableView.indexPathForCell(activeCell!)
         tableView.deselectRowAtIndexPath(indexPath!, animated: false)
         if vc.habit == nil {
-          habits.removeAtIndex(indexPath!.row)
+          entries.removeAtIndex(indexPath!.row)
           tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Top)
         } else {
-          let habit = habits[indexPath!.row]
-          habits = habits.sort({ $0.dueIn < $1.dueIn })
-          let newIndex = habits.indexOf(habit)
+          let entry = entries[indexPath!.row]
+          entries = entries.sort({ $0.dueIn < $1.dueIn })
+          let newIndex = entries.indexOf(entry)
           if indexPath!.row != newIndex {
             tableView.beginUpdates()
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Top)

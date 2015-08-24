@@ -36,6 +36,7 @@ class HabitApp {
   static let hourSec = 60 * minSec
   static let daySec = dayHours * hourSec
   static let weekSec = 7 * daySec
+  static let dayMinutes = 60 * dayHours
   static let dayHours = 24
   static let weekHours = 7 * dayHours
   
@@ -82,6 +83,10 @@ class HabitApp {
     set {
       NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: upcomingSettingKey)
     }
+  }
+  
+  static var calendar: NSCalendar {
+    return NSCalendar.currentCalendar()
   }
   
   static var startOfDay: NSTimeInterval {
