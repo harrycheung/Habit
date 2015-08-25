@@ -62,6 +62,33 @@ class HabitWeeklyTests: XCTestCase {
     expect(end) == calendar.dateFromComponents(components)
   }
   
+  func testTimesSkipBefore() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: NSDate())
+    components.weekday = 4
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
+    components.weekOfYear += 2
+    let now = calendar.dateFromComponents(components)!
+    habit.update(now)
+    expect(habit.skipBefore(now)) == 4 + 6 + 2
+    expect(habit.skippedCount()) == 12
+  }
+  
+  func testPartsSkipBefore() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: NSDate())
+    components.weekday = 4
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    habit.daysOfWeek = [.Sunday, .Tuesday, .Thursday, .Friday, .Saturday]
+    components.weekOfYear += 2
+    let now = calendar.dateFromComponents(components)!
+    habit.update(now)
+    expect(habit.skipBefore(now)) == 3 + 5 + 2
+    expect(habit.skippedCount()) == 10
+  }
+  
   func testEntriesOnWeek() {
     let calendar = NSCalendar.currentCalendar()
     let components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())

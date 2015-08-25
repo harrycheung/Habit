@@ -65,6 +65,37 @@ class HabitMonthlyTests: XCTestCase {
     expect(end) == calendar.dateFromComponents(components)
   }
   
+  func testTimesSkipBefore() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 3
+    components.day = 15
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 5, createdAt: createdAt)
+    components.month = 5
+    let now = calendar.dateFromComponents(components)!
+    habit.update(now)
+    expect(habit.skipBefore(now)) == 3 + 5 + 2
+    expect(habit.skippedCount()) == 10
+  }
+  
+  func testPartsSkipBefore() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 3
+    components.day = 15
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
+    habit.partsOfMonth = [.Beginning, .End]
+    components.month = 5
+    let now = calendar.dateFromComponents(components)!
+    habit.update(now)
+    expect(habit.skipBefore(now)) == 1 + 2 + 1
+    expect(habit.skippedCount()) == 4
+  }
+  
   func testEntriesOnMonth() {
     let calendar = NSCalendar.currentCalendar()
     let components = NSDateComponents()
