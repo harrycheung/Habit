@@ -96,15 +96,11 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       switch habit!.frequency {
       case .Daily:
         side = (contentHeight + spacing / 2) / 7.0
-        var lastDistance = 0
         for element in habit!.histories! {
           let history = element as! History
-          let components = calendar.components([.Year, .WeekOfYear, .Weekday, .Day], fromDate: history.date!)
+          let components = calendar.components([.Weekday, .Day], fromDate: history.date!)
           let weekday = components.weekday
-          let distance = calendar.components([.Year, .WeekOfYear], fromDate: habit!.createdAt!).weekOfYear -
-            calendar.components([.Year, .WeekOfYear], fromDate: history.date!).weekOfYear
-          if distance != lastDistance {
-            lastDistance = distance
+          if weekday == Habit.DayOfWeek.Sunday.rawValue {
             offset += side
           }
           let frame = CGRectMake(offset, titleBarHeight + CGFloat(weekday - 1) * side, side - spacing / 2, side - spacing / 2)
@@ -117,7 +113,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
         offset += side - spacing / 2
       case .Weekly:
         fallthrough
-      case.Monthly:
+      case .Monthly:
         var lastMonth = calendar.components([.Month], fromDate: habit!.createdAt!).month
         side = (contentHeight + spacing / 2) / 6.0
         var count = 3

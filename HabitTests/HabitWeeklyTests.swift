@@ -54,12 +54,14 @@ class HabitWeeklyTests: XCTestCase {
     expect(start) == calendar.dateFromComponents(components)
     components.day = 23
     expect(end) == calendar.dateFromComponents(components)
+    
     components.day = 30
     (start, end) = habit.dateRange(calendar.dateFromComponents(components)!)
     components.day = 23
     expect(start) == calendar.dateFromComponents(components)
     components.day = 30
     expect(end) == calendar.dateFromComponents(components)
+    
     components.year = 2014
     components.month = 12
     components.day = 28
@@ -70,6 +72,19 @@ class HabitWeeklyTests: XCTestCase {
     components.year = 2015
     components.month = 1
     components.day = 4
+    expect(end) == calendar.dateFromComponents(components)
+    
+    components.year = 2015
+    components.month = 1
+    components.day = 1
+    (start, end) = Habit.dateRange(calendar.dateFromComponents(components)!, frequency: .Weekly, includeEnd: false)
+    components.year = 2014
+    components.month = 12
+    components.day = 28
+    expect(start) == calendar.dateFromComponents(components)
+    components.year = 2015
+    components.month = 1
+    components.day = 3
     expect(end) == calendar.dateFromComponents(components)
   }
   
@@ -319,6 +334,7 @@ class HabitWeeklyTests: XCTestCase {
     components.weekOfYear += 2
     components.weekday = 6 // Friday
     let now = calendar.dateFromComponents(components)!
+    print("update")
     habit.update(now)
     habit.skipBefore(now)
     expect(habit.completedCount()) == 2

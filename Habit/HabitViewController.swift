@@ -150,11 +150,7 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
         }
       case .Weekly:
         progressPeriod.numberOfLines = 2
-        let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: date)
-        components.weekday = 1
-        let startDate = calendar.dateFromComponents(components)!
-        components.weekday = 7
-        let endDate = calendar.dateFromComponents(components)!
+        let (startDate, endDate) = Habit.dateRange(date, frequency: .Weekly, includeEnd: false)
         if !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Year) {
           progressPeriod.text = HabitViewController.weeklyStartFormatter.stringFromDate(startDate) +
             HabitViewController.dailyYearFormatter.stringFromDate(endDate)
