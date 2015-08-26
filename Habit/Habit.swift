@@ -156,8 +156,7 @@ class Habit: NSManagedObject {
         components.second = 0
       }
       startDate = calendar.dateFromComponents(components)!
-      components.day += 1
-      endDate = calendar.dateFromComponents(components)!
+      endDate = calendar.dateByAddingUnit(.Day, value: 1, toDate: startDate, options: NSCalendarOptions(rawValue: 0))!
     case .Weekly:
       let components = calendar.components([.Year, .WeekOfYear, .Weekday, .Hour, .Minute, .Second], fromDate: date)
       if (components.weekday == 1 && components.hour == 0 && components.minute == 0 && components.second == 0) {
@@ -169,8 +168,7 @@ class Habit: NSManagedObject {
         components.second = 0
       }
       startDate = calendar.dateFromComponents(components)!
-      components.weekOfYear += 1
-      endDate = calendar.dateFromComponents(components)!
+      endDate = calendar.dateByAddingUnit(.Day, value: 7, toDate: startDate, options: NSCalendarOptions(rawValue: 0))!
     case .Monthly:
       let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute, .Second], fromDate: date)
       if (components.day == 1 && components.hour == 0 && components.minute == 0 && components.second == 0) {
@@ -182,8 +180,7 @@ class Habit: NSManagedObject {
         components.second = 0
       }
       startDate = calendar.dateFromComponents(components)!
-      components.month += 1
-      endDate = calendar.dateFromComponents(components)!
+      endDate = calendar.dateByAddingUnit(.Month, value: 1, toDate: startDate, options: NSCalendarOptions(rawValue: 0))!
     default: ()
     }
     return (startDate, endDate)
@@ -278,7 +275,11 @@ class Habit: NSManagedObject {
   }
   
   func entriesOnDate(date: NSDate, var predicates: [NSPredicate]) -> [Entry] {
+    let formatter = NSDateFormatter();
+    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ";
+    formatter.timeZone = NSTimeZone(abbreviation: "PST");
     let (startDate, endDate) = dateRange(date)
+    print("entriesOnDate: \(formatter.stringFromDate(startDate)) \(formatter.stringFromDate(endDate))")
     predicates.append(NSPredicate(format: "due > %@ AND due <= %@", startDate, endDate))
     return entries!.filteredOrderedSetUsingPredicate(NSCompoundPredicate(andPredicateWithSubpredicates: predicates)).array as! [Entry]
   }
@@ -362,6 +363,7 @@ class Habit: NSManagedObject {
         if components.hour != 24 && calendar.isDate(lastDue, inSameDayAsDate: dayAfterTomorrow) {
           break
         }
+        print("new entry: \(formatter.stringFromDate(lastDue))")
         let entry = Entry(context: managedObjectContext!, habit: self, due: lastDue)
         entry.number = dayCount
         total = total!.integerValue + 1
@@ -370,44 +372,44 @@ class Habit: NSManagedObject {
       let futureComponents = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: currentDate)
       futureComponents.weekOfYear += 2
       let weekAfterNext = calendar.dateFromComponents(futureComponents)!
+      print("weekafterNext: \(formatter.stringFromDate(weekAfterNext))")
       var lastDue = lastEntry
       var weekCount = entriesOnDate(lastDue).count
-      var startOffset = countBeforeCreatedAt(lastDue)
+      if lastDue.compare(createdAt!) == .OrderedSame {
+        print("createdAt: \(formatter.stringFromDate(createdAt!))")
+        let components = calendar.components([.Weekday], fromDate: createdAt!)
+        let offset = useTimes ? 1 : 0
+        lastDue = calendar.dateByAddingUnit(.Day, value: offset - components.weekday, toDate: lastDue, options: NSCalendarOptions(rawValue: 0))!
+        lastDue = calendar.dateFromComponents(calendar.components([.Year, .Month, .Day], fromDate: lastDue))!
+        print("new last due: \(formatter.stringFromDate(lastDue))")
+      }
       while true {
-        let components = calendar.components([.Year, .WeekOfYear, .Weekday, .Hour, .Minute], fromDate: lastDue)
         let expectedCount = useTimes ? times!.integerValue : daysOfWeek.count
-        if weekCount == expectedCount - startOffset {
+        if weekCount == expectedCount {
           weekCount = 0
-          startOffset = 0
-          // TODO: Add other checks for midnight?
-          if components.weekday != 1 {
-            components.weekOfYear += 1
-          }
+          print("new week")
         }
         weekCount += 1
         if useTimes {
-          let dueTime = (7 * HabitApp.dayMinutes / times!.integerValue) * (weekCount + startOffset)
-          components.weekday = dueTime / HabitApp.dayMinutes + 1
-          components.hour = (dueTime % HabitApp.dayMinutes) / 60
-          components.minute = (dueTime % HabitApp.dayMinutes) % 60
-          if components.weekday == 8 {
-            components.weekday = 7
-            components.hour = 24
-            components.minute = 0
-          }
+          lastDue = calendar.dateByAddingUnit(.Second, value: HabitApp.weekSec / times!.integerValue, toDate: lastDue, options: NSCalendarOptions(rawValue: 0))!
         } else {
-          components.weekday = daysOfWeek[weekCount + startOffset - 1].rawValue
-          components.hour = 24
-          components.minute = 0
+          let components = calendar.components([.Weekday], fromDate: lastDue)
+          let increment = daysOfWeek[weekCount - 1].rawValue + (weekCount == 1 ? 7 : 0) - (components.weekday == 1 ? 8 : components.weekday) + 1
+          print("increment: \(increment)")
+          lastDue = calendar.dateByAddingUnit(.Day, value: increment, toDate: lastDue, options: NSCalendarOptions(rawValue: 0))!
         }
-        lastDue = calendar.dateFromComponents(components)!
-        if components.weekday != 7 && calendar.isDate(lastDue, equalToDate: weekAfterNext, toUnitGranularity: .WeekOfYear) {
+        let components = calendar.components([.Weekday], fromDate: lastDue)
+        if components.weekday != 1 && calendar.isDate(lastDue, equalToDate: weekAfterNext, toUnitGranularity: .WeekOfYear) {
           break
         }
-        //print("new entry: \(formatter.stringFromDate(lastDue))")
-        let entry = Entry(context: managedObjectContext!, habit: self, due: lastDue)
-        entry.number = weekCount
-        total = total!.integerValue + 1
+        print("new entry: \(formatter.stringFromDate(lastDue))")
+        if lastDue.compare(createdAt!) == .OrderedDescending {
+          let entry = Entry(context: managedObjectContext!, habit: self, due: lastDue)
+          entry.number = weekCount
+          total = total!.integerValue + 1
+        } else {
+          print("skipped")
+        }
       }
     case .Monthly:
       let futureComponents = calendar.components([.Year, .Month], fromDate: currentDate)
@@ -446,6 +448,7 @@ class Habit: NSManagedObject {
         if components.day != daysInMonth && calendar.isDate(lastDue, equalToDate: monthAfterNext, toUnitGranularity: .Month) {
           break
         }
+        print("new entry: \(formatter.stringFromDate(lastDue))")
         let entry = Entry(context: managedObjectContext!, habit: self, due: lastDue)
         entry.number = monthCount
         total = total!.integerValue + 1

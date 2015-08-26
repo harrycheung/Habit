@@ -60,6 +60,17 @@ class HabitWeeklyTests: XCTestCase {
     expect(start) == calendar.dateFromComponents(components)
     components.day = 30
     expect(end) == calendar.dateFromComponents(components)
+    components.year = 2014
+    components.month = 12
+    components.day = 28
+    components.hour = 8
+    (start, end) = habit.dateRange(calendar.dateFromComponents(components)!)
+    components.hour = 0
+    expect(start) == calendar.dateFromComponents(components)
+    components.year = 2015
+    components.month = 1
+    components.day = 4
+    expect(end) == calendar.dateFromComponents(components)
   }
   
   func testTimesSkipBefore() {
@@ -78,7 +89,7 @@ class HabitWeeklyTests: XCTestCase {
   func testPartsSkipBefore() {
     let calendar = NSCalendar.currentCalendar()
     let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: NSDate())
-    components.weekday = 4
+    components.weekday = 4 // Wednesday
     let createdAt = calendar.dateFromComponents(components)!
     let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
     habit.daysOfWeek = [.Sunday, .Tuesday, .Thursday, .Friday, .Saturday]
@@ -136,7 +147,7 @@ class HabitWeeklyTests: XCTestCase {
     habit.update(today)
     
     expect(habit.totalCount(today)) == 4 + 5 + 1
-    expect(habit.totalCount()) == 19
+    expect(habit.totalCount()) == 4 + 5 + 5 + 5
     expect(habit.skippedCount()) == 0
     expect(habit.skipBefore(today)) == 10
     expect(habit.skippedCount()) == 10
@@ -155,7 +166,7 @@ class HabitWeeklyTests: XCTestCase {
     habit.update(today)
     
     expect(habit.totalCount(today)) == 3 + 5 + 2
-    expect(habit.totalCount()) == 18
+    expect(habit.totalCount()) == 3 + 5 + 5 + 5
     expect(habit.skippedCount()) == 0
     expect(habit.skipBefore(today)) == 10
     expect(habit.skippedCount()) == 10
@@ -221,17 +232,17 @@ class HabitWeeklyTests: XCTestCase {
       entries[1].complete()
       components.weekday = 6 // Friday
       var now = calendar.dateFromComponents(components)
-      expect(habit.totalCount(now)) == 2
+      expect(habit.totalCount(now)) == 3
       expect(habit.completedCount()) == 2
       expect(habit.skippedCount()) == 0
-      expect(habit.progress(now)) == 1
+      expect(habit.progress(now)) == 2 / 3.0
       entries[2].skip()
       components.weekday = 7 // Saturday
       now = calendar.dateFromComponents(components)
-      expect(habit.totalCount(now)) == 3
+      expect(habit.totalCount(now)) == 4
       expect(habit.completedCount()) == 2
       expect(habit.skippedCount()) == 1
-      expect(habit.progress(now)) == 2 / 3.0
+      expect(habit.progress(now)) == 2 / 4.0
     } catch let error as NSError {
       NSLog("error: \(error)")
       fail()
@@ -311,13 +322,13 @@ class HabitWeeklyTests: XCTestCase {
     habit.update(now)
     habit.skipBefore(now)
     expect(habit.completedCount()) == 2
-    expect(habit.skippedCount()) == 1 + 4 + 3
-    expect(habit.totalCount(now)) == 3 + 4 + 3
-    expect(habit.progress(now)) == 2 / 10.0
+    expect(habit.skippedCount()) == 2 + 4 + 3
+    expect(habit.totalCount(now)) == 4 + 4 + 3
+    expect(habit.progress(now)) == 2 / 11.0
     let histories = habit.histories!.array as! [History]
     expect(histories.count) == 4
     expect(histories[0].completed) == 2
-    expect(histories[0].skipped) == 1
+    expect(histories[0].skipped) == 2
     expect(histories[1].completed) == 0
     expect(histories[1].skipped) == 4
     expect(histories[2].completed) == 0
