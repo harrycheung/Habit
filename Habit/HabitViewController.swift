@@ -15,8 +15,6 @@ import FontAwesome_swift
 
 class HabitViewController: UIViewController, HabitHistoryDelegate {
   
-  let UnwindSegueIdentifier = "HabitUnwind"
-  
   var habit: Habit?  
   var habitSettingsTransition: HabitSettingsTransition?
   
@@ -98,7 +96,7 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
   }
   
   @IBAction func closeView(sender: AnyObject) {
-    performSegueWithIdentifier(UnwindSegueIdentifier, sender: self)
+    presentingViewController!.dismissViewControllerAnimated(true, completion: nil)
   }
   
   // HabitHistory
@@ -197,7 +195,6 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
   }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    print("HVC.prepareForSegue")
     if let vc = segue.destinationViewController as? HabitSettingsViewController {
       super.prepareForSegue(segue, sender: sender)
       
@@ -208,8 +205,13 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
     }
   }
   
-  @IBAction func unwindToHabit(segue: UIStoryboardSegue) {
-    print("HVC.unwindToHabit")
+  @IBAction func goToSettings() {
+    let hvsc = storyboard!.instantiateViewControllerWithIdentifier("HabitSettingsViewController") as! HabitSettingsViewController
+    hvsc.transitioningDelegate = habitSettingsTransition
+    hvsc.modalPresentationStyle = .Custom
+    hvsc.providesPresentationContextTransitionStyle = true
+    hvsc.habit = habit!
+    presentViewController(hvsc, animated: true, completion: nil)
   }
   
 }

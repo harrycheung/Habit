@@ -16,8 +16,6 @@ import FontAwesome_swift
 
 class HabitSettingsViewController: UIViewController, UITextFieldDelegate, FrequencySettingsDelegate, UIGestureRecognizerDelegate {
   
-  let UnwindSegueIdentifier = "HabitSettingsUnwind"
-  
   var habit: Habit?
   var frequencySettings = [FrequencySettings?](count:3, repeatedValue: nil)
   var pickerRecognizers = [UITapGestureRecognizer?](count:3, repeatedValue: nil)
@@ -209,7 +207,7 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
       HabitApp.moContext.deleteObject(habit!)
       habit = nil
     }
-    performSegueWithIdentifier(UnwindSegueIdentifier, sender: self)
+    presentingViewController!.dismissViewControllerAnimated(true, completion: nil)
   }
   
   @IBAction func saveHabit(sender: AnyObject) {
@@ -245,7 +243,7 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
       //      }
     }
     
-    performSegueWithIdentifier(UnwindSegueIdentifier, sender: self)
+    presentingViewController!.dismissViewControllerAnimated(true, completion: nil)
   }
   
   @IBAction func deleteHabit(sender: AnyObject) {
@@ -261,8 +259,12 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
       }
       self.habit = nil
       self.presentingViewController!.view.hidden = true
-//      self.presentingViewController!.presentingViewController!.dismissViewControllerAnimated(true, completion: nil)
-      self.performSegueWithIdentifier(self.UnwindSegueIdentifier, sender: self)
+      let mvc = self.presentingViewController!.presentingViewController as! MainViewController
+      mvc.reloadEntries()
+      mvc.tableView.reloadData()
+      self.presentingViewController!.dismissViewControllerAnimated(true, completion: {
+        mvc.dismissViewControllerAnimated(false, completion: nil)
+      })
     })
     alert.addAction(delete)
     let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: { (UIAlertAction) in

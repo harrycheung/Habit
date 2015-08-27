@@ -30,8 +30,9 @@ class HabitSettingsTransition: NSObject, UIViewControllerTransitioningDelegate, 
   }
   
   func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
-    if let fromVC = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey) as? HabitViewController,
-      toVC = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) as? HabitSettingsViewController {
+    if presenting {
+      let fromVC = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey) as! HabitViewController
+      let toVC = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) as! HabitSettingsViewController
       transitionContext.containerView()!.addSubview(toVC.view)
       toVC.view.alpha = 0
       let startHeight = fromVC.height.constant
@@ -49,8 +50,9 @@ class HabitSettingsTransition: NSObject, UIViewControllerTransitioningDelegate, 
         fromVC.height.constant = startHeight
         fromVC.view.layoutIfNeeded()
       })
-    } else if let fromVC = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey) as? HabitSettingsViewController,
-      toVC = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) as? HabitViewController {
+    } else if !presenting {
+      let fromVC = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey) as! HabitSettingsViewController
+      let toVC = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) as! HabitViewController
       let startHeight = fromVC.height.constant
       let endHeight = toVC.height.constant
       toVC.height.constant = startHeight

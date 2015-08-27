@@ -246,7 +246,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     dispatch_async(dispatch_get_main_queue()) {
-      self.performSegueWithIdentifier(self.showHabitSegue, sender: tableView.cellForRowAtIndexPath(indexPath))
+      self.activeCell = tableView.cellForRowAtIndexPath(indexPath) as? HabitTableViewCell
+      let hvc = self.storyboard!.instantiateViewControllerWithIdentifier("HabitViewController") as! HabitViewController
+      hvc.modalTransitionStyle = .CrossDissolve
+      hvc.modalPresentationStyle = .OverCurrentContext
+      hvc.habit = self.activeCell!.entry!.habit!
+      self.presentViewController(hvc, animated: true, completion: nil)
     }
   }
   
@@ -272,9 +277,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   @IBAction func unwind(segue: UIStoryboardSegue) {
-    print("MVC.unwind")
-    print(segue)
     if let vc = segue.sourceViewController as? HabitSettingsViewController {
+      // TODO: Never gets called now
       if activeCell == nil {
         if vc.habit != nil {
           vc.habit!.update(NSDate())

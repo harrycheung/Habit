@@ -204,7 +204,7 @@
         <!--Delegate-->
         <scene sceneID="vFa-WD-a9P">
             <objects>
-                <viewController id="fuZ-7k-oQj" customClass="HabitViewController" customModule="Habit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HabitViewController" id="fuZ-7k-oQj" customClass="HabitViewController" customModule="Habit" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="7l0-3q-qB9"/>
                         <viewControllerLayoutGuide type="bottom" id="cSw-LG-uKR"/>
@@ -234,7 +234,7 @@
                                                             <fontDescription key="fontDescription" name="FontAwesome" family="FontAwesome" pointSize="20"/>
                                                             <state key="normal" title="X"/>
                                                             <connections>
-                                                                <segue destination="Y0I-la-TF4" kind="show" id="IoW-Hm-48H"/>
+                                                                <action selector="goToSettings" destination="fuZ-7k-oQj" eventType="touchUpInside" id="o74-Lv-IIH"/>
                                                             </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="szx-TS-hjw">
@@ -250,7 +250,7 @@
                                                                 <constraint firstAttribute="height" constant="21" id="oey-fv-0W1"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="18"/>
-                                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
@@ -289,7 +289,7 @@
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hdc-Rn-Qe6">
                                                             <rect key="frame" x="46" y="59" width="30.5" height="10"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="10"/>
-                                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current streak" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XaG-Rd-09s">
@@ -444,7 +444,7 @@
         <!--Habit Settings View Controller-->
         <scene sceneID="0yX-QE-JbH">
             <objects>
-                <viewController id="Y0I-la-TF4" customClass="HabitSettingsViewController" customModule="Habit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HabitSettingsViewController" id="Y0I-la-TF4" customClass="HabitSettingsViewController" customModule="Habit" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Hs3-Ue-1JE"/>
                         <viewControllerLayoutGuide type="bottom" id="65D-MU-p4U"/>
@@ -468,7 +468,7 @@
                                                 <fontDescription key="fontDescription" name="FontAwesome" family="FontAwesome" pointSize="20"/>
                                                 <state key="normal" title="X"/>
                                                 <connections>
-                                                    <segue destination="JYB-xV-WYE" kind="unwind" unwindAction="unwindToHabit:" id="ljM-O2-w9r"/>
+                                                    <action selector="closeView:" destination="Y0I-la-TF4" eventType="touchUpInside" id="Mzp-Wo-qtN"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3dC-T2-avL">
@@ -680,11 +680,9 @@
                         <outlet property="save" destination="luf-9z-XNg" id="pV4-8U-sO3"/>
                         <outlet property="switchMode" destination="OJE-rZ-KfC" id="2fE-NQ-woi"/>
                         <outlet property="toolbar" destination="atw-2D-5S1" id="2CH-CW-RYc"/>
-                        <segue destination="JYB-xV-WYE" kind="unwind" identifier="HabitSettingsUnwind" unwindAction="unwind:" id="SAq-mA-JuF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sui-Pz-YwZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="JYB-xV-WYE" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1227" y="454"/>
         </scene>
@@ -861,7 +859,4 @@
             <point key="canvasLocation" x="1623" y="454"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="gNH-CL-0sT"/>
-    </inferredMetricsTieBreakers>
 </document>
