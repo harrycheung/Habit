@@ -19,8 +19,11 @@
 // 10. Use Entry for tableview
 // 11. done - Debug flash when changing color
 // 12. done - Debug flash when dismising habit settings
-// 13. simulator only - Debug flash on color picker button
+// 13. done - simulator only - Debug flash on color picker button
 // 14. Clean up AppDelegate
+// 15. Auto-skip
+// 16. If a lot to be done, ask to skip all
+// 17. Skip comment
 
 import UIKit
 import CoreData
@@ -56,36 +59,43 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // TODO: What's up with the "window!!"?
     UIApplication.sharedApplication().delegate!.window!!.tintColor = HabitApp.color
     
-    let entryRequest = NSFetchRequest(entityName: "Entry")
-//    do {
-//      if #available(iOS 9.0, *) {
-//        let deleteRequest = NSBatchDeleteRequest(fetchRequest: habitRequest)
-//        try HabitApp.moContext.executeRequest(deleteRequest)
-//      } else {
-//        var habitsToDelete = try HabitApp.moContext.executeFetchRequest(habitRequest)
-//        for habit in habitsToDelete {
-//          HabitApp.moContext.deleteObject(habit as! NSManagedObject)
-//        }
-//        habitsToDelete.removeAll(keepCapacity: false)
-//        try HabitApp.moContext.save()
-//      }
-//      
-//      habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
-//      if habits.count == 0 {
-//        let calendar = NSCalendar.currentCalendar()
-//        var components = calendar.components([.Year, .WeekOfYear, .Weekday, .Hour], fromDate: NSDate())
-//        components.weekOfYear -= 40
-//        components.weekday = 1
-//        components.hour = 1
-//        var date = calendar.dateFromComponents(components)!
-//        var h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: date)
-//        while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
-//          for _ in 0..<Int(arc4random_uniform(7)) {
-//            h.addEntry(onDate: date)
-//          }
-//          date = NSDate(timeInterval: 24 * 3600 * 7, sinceDate: date)
-//          hupdate(date)
-//        }
+    do {
+      let habitRequest = NSFetchRequest(entityName: "Habit")
+      if #available(iOS 9.0, *) {
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: habitRequest)
+        try HabitApp.moContext.executeRequest(deleteRequest)
+      } else {
+        var habitsToDelete = try HabitApp.moContext.executeFetchRequest(habitRequest)
+        for habit in habitsToDelete {
+          HabitApp.moContext.deleteObject(habit as! NSManagedObject)
+        }
+        habitsToDelete.removeAll(keepCapacity: false)
+        try HabitApp.moContext.save()
+      }
+      
+      let formatter = NSDateFormatter();
+      formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ";
+      formatter.timeZone = NSTimeZone(abbreviation: "PST");
+      let habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
+      if habits.count == 0 {
+        let calendar = NSCalendar.currentCalendar()
+        var date = calendar.dateByAddingUnit(.WeekOfYear, value: -40, toDate: NSDate())!
+        let h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: date)
+        h.update(NSDate())
+        while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
+          //print(formatter.stringFromDate(date))
+          let entries = h.entriesOnDate(date)
+          //print("c: \(entries.count)")
+          for i in 0..<Int(arc4random_uniform(UInt32(entries.count))) {
+            entries[i].complete()
+          }
+          for entry in entries {
+            if entry.state == .Todo {
+              entry.skip()
+            }
+          }
+          date = NSDate(timeInterval: 24 * 3600 * 7, sinceDate: date)
+        }
 //        components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
 //        components.month -= 20
 //        components.day = 3
@@ -109,7 +119,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 //          for _ in 0..<Int(arc4random_uniform(13)) {
 //            h.addEntry(onDate: date)
 //          }
-//          date = calendar.dateByAddingComponents(oneDay, toDate: date, options: NSCalendarOptions(rawValue: 0))!
+//          date = calendar.dateByAddingComponents(oneDay, toDate: date)!
 //          hupdate(date)
 //        }
 //        let createdAt = NSDate()
@@ -132,25 +142,15 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 //        let _ = Habit(context: HabitApp.moContext, name: "19. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
 //        let _ = Habit(context: HabitApp.moContext, name: "20. Weekly 3x", details: "", frequency: .Weekly, times: 3, createdAt: createdAt)
 //        let _ = Habit(context: HabitApp.moContext, name: "21. Weekly 1x", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
-//        try HabitApp.moContext.save()
-//      }
-//    } catch let error as NSError {
-//      NSLog("Could not save \(error), \(error.userInfo)")
-//    } catch {
-//      NSLog("Could not save")
-//    }
-//    
-//    let request = NSFetchRequest(entityName: "Habit")
-//    do {
-//      habits = try HabitApp.moContext.executeFetchRequest(request) as! [Habit]
-//      for habit in habits {
-//        habit.update(NSDate())
-//      }
-//      habits = habits.sort({ $0.dueIn < $1.dueIn })
-//      try HabitApp.moContext.save()
-//    } catch let error as NSError {
-//      NSLog("Fetch failed: \(error.localizedDescription)")
-//    }
+        try HabitApp.moContext.save()
+      }
+    } catch let error as NSError {
+      NSLog("Could not save \(error), \(error.userInfo)")
+    } catch {
+      NSLog("Could not save")
+    }
+    
+    reloadEntries()
     
     // Setup colors
     tableView.backgroundView = nil
@@ -166,7 +166,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     newButton.layer.shadowOffset = CGSizeMake(0, 1)
     
     // Setup timers
-    refreshTimer = NSTimer.scheduledTimerWithTimeInterval(5 * 60, target: self, selector: "refreshTableView", userInfo: nil, repeats: true)
+    refreshTimer = NSTimer.scheduledTimerWithTimeInterval(5 * 60, target: tableView, selector: "reloadData", userInfo: nil, repeats: true)
     
 //    for family in UIFont.familyNames() {
 //      NSLog("\(family)")
@@ -183,39 +183,39 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // Dispose of any resources that can be recreated.
   }
   
-  // Table view
-  
-  func refreshTableView() {
-//    if !SwipeTableViewCell.isSwiping {
-//      for habit in habits {
-//        habit.update(NSDate())
-//      }
-//      do {
-//        try HabitApp.moContext.save()
-//      } catch let error as NSError {
-//        NSLog("Error saving: \(error.localizedDescription)")
-//      }
-//      habits = habits.sort({ $0.dueIn < $1.dueIn })
-//      tableView.reloadData()
-//    }
+  func reloadEntries() {
+    do {
+      let request = NSFetchRequest(entityName: "Entry")
+      request.predicate = NSPredicate(format: "stateRaw == %@", Entry.State.Todo.rawValue)
+      let fetchedEntries = try HabitApp.moContext.executeFetchRequest(request) as! [Entry]
+      let now = NSDate()
+      for entry in fetchedEntries {
+        entry.habit!.update(now)
+      }
+      try HabitApp.moContext.save()
+      entries = fetchedEntries.sort({ $0.dueIn < $1.dueIn })
+    } catch let error as NSError {
+      NSLog("Fetch failed: \(error.localizedDescription)")
+    }
   }
+  
+  // Table view
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let completion = { (cell: SwipeTableViewCell, skipped skipped: Bool) -> Void in
-      // TODO: Remove updates and delay insert
-      tableView.beginUpdates()
       let indexPath = tableView.indexPathForCell(cell)!
       tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
       let entry = self.entries.removeAtIndex(indexPath.row)
-      tableView.endUpdates()
-//      
-//      habit.update(NSDate())
-//      do {
-//        try HabitApp.moContext.save()
-//      } catch let error {
-//        NSLog("Error saving: \(error)")
-//      }
-//      self.insertHabit(habit)
+      if skipped {
+        entry.skip()
+      } else {
+        entry.complete()
+      }
+      do {
+        try HabitApp.moContext.save()
+      } catch let error {
+        NSLog("Error saving: \(error)")
+      }
     }
     
     let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! HabitTableViewCell
@@ -250,24 +250,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
   }
   
-  func insertHabit(habit: Habit) {
-//    let insert = { (habit: Habit, index: Int) -> Void in
-//      self.habits.insert(habit, atIndex: index)
-//      self.tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)], withRowAnimation: .Fade)
-//    }
-//    
-//    if habits.count > 0 {
-//      for index in 0...habits.count {
-//        if index == habits.count || habit.dueIn < habits[index].dueIn {
-//          insert(habit, index)
-//          break
-//        }
-//      }
-//    } else {
-//      insert(habit, 0)
-//    }
-  }
-  
   // Segue
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -289,30 +271,37 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
   }
   
-  @IBAction func unwind(segue: UIStoryboardSegue) {    
-    if let vc = segue.sourceViewController as? HabitViewController {
+  @IBAction func unwind(segue: UIStoryboardSegue) {
+    print("MVC.unwind")
+    print(segue)
+    if let vc = segue.sourceViewController as? HabitSettingsViewController {
       if activeCell == nil {
         if vc.habit != nil {
-          insertHabit(vc.habit!)
+          vc.habit!.update(NSDate())
+          reloadEntries()
+          tableView.reloadData()
         }
       } else {
         let indexPath = tableView.indexPathForCell(activeCell!)
         tableView.deselectRowAtIndexPath(indexPath!, animated: false)
         if vc.habit == nil {
-          entries.removeAtIndex(indexPath!.row)
-          tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Top)
+          // Delete all entries
+          print("delete")
+          reloadEntries()
+          tableView.reloadData()
         } else {
-          let entry = entries[indexPath!.row]
-          entries = entries.sort({ $0.dueIn < $1.dueIn })
-          let newIndex = entries.indexOf(entry)
-          if indexPath!.row != newIndex {
-            tableView.beginUpdates()
-            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Top)
-            tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: newIndex!, inSection: 0)], withRowAnimation: .Top)
-            tableView.endUpdates()
-          } else {
-            (tableView.cellForRowAtIndexPath(indexPath!) as! HabitTableViewCell).reload()
-          }
+          print("habit is not nill")
+//          let entry = entries[indexPath!.row]
+//          entries = entries.sort({ $0.dueIn < $1.dueIn })
+//          let newIndex = entries.indexOf(entry)
+//          if indexPath!.row != newIndex {
+//            tableView.beginUpdates()
+//            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Top)
+//            tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: newIndex!, inSection: 0)], withRowAnimation: .Top)
+//            tableView.endUpdates()
+//          } else {
+//            (tableView.cellForRowAtIndexPath(indexPath!) as! HabitTableViewCell).reload()
+//          }
         }
         activeCell = nil
       }
@@ -371,7 +360,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   // UIScrollView
   
   func scrollViewDidScroll(scrollView: UIScrollView) {
-    NSLog("\(scrollView.contentOffset)")
+//    NSLog("\(scrollView.contentOffset)")
   }
   
   func scrollViewWillBeginDragging(scrollView: UIScrollView) {

@@ -260,6 +260,8 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
         // something
       }
       self.habit = nil
+      self.presentingViewController!.view.hidden = true
+//      self.presentingViewController!.presentingViewController!.dismissViewControllerAnimated(true, completion: nil)
       self.performSegueWithIdentifier(self.UnwindSegueIdentifier, sender: self)
     })
     alert.addAction(delete)

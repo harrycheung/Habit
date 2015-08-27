@@ -197,10 +197,11 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
   }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    print("HVC.prepareForSegue")
     if let vc = segue.destinationViewController as? HabitSettingsViewController {
       super.prepareForSegue(segue, sender: sender)
       
-      vc.habit = habit!
+      vc.habit = self.habit!
       
       segue.destinationViewController.transitioningDelegate = habitSettingsTransition
       segue.destinationViewController.modalPresentationStyle = .Custom
@@ -208,6 +209,7 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
   }
   
   @IBAction func unwindToHabit(segue: UIStoryboardSegue) {
+    print("HVC.unwindToHabit")
   }
   
 }
