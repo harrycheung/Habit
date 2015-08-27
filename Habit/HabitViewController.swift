@@ -143,27 +143,39 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
       switch habit!.frequency {
       case .Daily:
         progressPeriod.numberOfLines = 1
-        if !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Year) {
-          progressPeriod.text = HabitViewController.dailyYearFormatter.stringFromDate(date)
+        if calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Year) {
+          if calendar.isDateInToday(NSDate()) {
+            progressPeriod.text = "Today"
+          } else {
+            progressPeriod.text = HabitViewController.dailyFormatter.stringFromDate(date)
+          }
         } else {
-          progressPeriod.text = HabitViewController.dailyFormatter.stringFromDate(date)
+          progressPeriod.text = HabitViewController.dailyYearFormatter.stringFromDate(date)
         }
       case .Weekly:
         progressPeriod.numberOfLines = 2
         let (startDate, endDate) = Habit.dateRange(date, frequency: .Weekly, includeEnd: false)
-        if !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Year) {
-          progressPeriod.text = HabitViewController.weeklyStartFormatter.stringFromDate(startDate) +
-            HabitViewController.dailyYearFormatter.stringFromDate(endDate)
+        if calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Year) {
+          if calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
+            progressPeriod.text = "This week"
+          } else {
+            progressPeriod.text = HabitViewController.weeklyStartFormatter.stringFromDate(startDate) +
+              HabitViewController.dailyFormatter.stringFromDate(endDate)
+          }
         } else {
           progressPeriod.text = HabitViewController.weeklyStartFormatter.stringFromDate(startDate) +
-            HabitViewController.dailyFormatter.stringFromDate(endDate)
+            HabitViewController.dailyYearFormatter.stringFromDate(endDate)
         }
       case .Monthly:
         progressPeriod.numberOfLines = 1
-        if !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Year) {
-          progressPeriod.text = HabitViewController.monthlyYearFormatter.stringFromDate(date)
+        if calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Year) {
+          if calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Month) {
+            progressPeriod.text = "This month"
+          } else {
+            progressPeriod.text = HabitViewController.monthlyFormatter.stringFromDate(date)
+          }
         } else {
-          progressPeriod.text = HabitViewController.monthlyFormatter.stringFromDate(date)
+          progressPeriod.text = HabitViewController.monthlyYearFormatter.stringFromDate(date)
         }
       default: ()
       }
