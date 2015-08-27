@@ -89,7 +89,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
     scrollViewContent!.layoutIfNeeded()
     let contentHeight = scrollViewContent!.frame.height - titleBarHeight
     if habit != nil && squares.isEmpty {
-      let calendar = NSCalendar.currentCalendar()
+      let calendar = HabitApp.calendar
       var side: CGFloat = 0
       var offset: CGFloat = 0
       
@@ -105,9 +105,11 @@ class HabitHistory: UIView, UIScrollViewDelegate {
           }
           let frame = CGRectMake(offset, titleBarHeight + CGFloat(weekday - 1) * side, side - spacing / 2, side - spacing / 2)
           addSquare(frame, history)
-          
           if components.day == 1 {
             addLabel(history.date!)
+          }
+          if calendar.isDate(history.date!, equalToDate: NSDate(), toUnitGranularity: .Day) {
+            break
           }
         }
         offset += side - spacing / 2
@@ -129,6 +131,10 @@ class HabitHistory: UIView, UIScrollViewDelegate {
           }
           offset += side
           count += 1
+          if (habit!.frequency == .Weekly && calendar.isDate(history.date!, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear)) ||
+            (habit!.frequency == .Monthly && calendar.isDate(history.date!, equalToDate: NSDate(), toUnitGranularity: .Month)) {
+            break
+          }
         }
       default: ()
       }
