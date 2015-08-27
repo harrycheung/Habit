@@ -16,7 +16,7 @@
 // 7. Local notifications
 // 8. done - Expire habits periodically
 // 9. done - Split HabitViewController
-// 10. Use Entry for tableview
+// 10. done - Use Entry for tableview
 // 11. done - Debug flash when changing color
 // 12. done - Debug flash when dismising habit settings
 // 13. done - simulator only - Debug flash on color picker button
@@ -61,23 +61,23 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     do {
       let habitRequest = NSFetchRequest(entityName: "Habit")
-      if #available(iOS 9.0, *) {
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: habitRequest)
-        try HabitApp.moContext.executeRequest(deleteRequest)
-      } else {
-        var habitsToDelete = try HabitApp.moContext.executeFetchRequest(habitRequest)
-        for habit in habitsToDelete {
-          HabitApp.moContext.deleteObject(habit as! NSManagedObject)
-        }
-        habitsToDelete.removeAll(keepCapacity: false)
-        try HabitApp.moContext.save()
-      }
+//      if #available(iOS 9.0, *) {
+//        let deleteRequest = NSBatchDeleteRequest(fetchRequest: habitRequest)
+//        try HabitApp.moContext.executeRequest(deleteRequest)
+//      } else {
+//        var habitsToDelete = try HabitApp.moContext.executeFetchRequest(habitRequest)
+//        for habit in habitsToDelete {
+//          HabitApp.moContext.deleteObject(habit as! NSManagedObject)
+//        }
+//        habitsToDelete.removeAll(keepCapacity: false)
+//        try HabitApp.moContext.save()
+//      }
       
       let formatter = NSDateFormatter();
       formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ";
       formatter.timeZone = NSTimeZone(abbreviation: "PST");
       let habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
-      if habits.count == 0 {
+      if habits.count == 3 {
         let calendar = NSCalendar.currentCalendar()
         var date = calendar.dateByAddingUnit(.WeekOfYear, value: -40, toDate: NSDate())!
         let h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: date)
@@ -186,7 +186,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   func reloadEntries() {
     do {
       let request = NSFetchRequest(entityName: "Entry")
-      request.predicate = NSPredicate(format: "stateRaw == %@", Entry.State.Todo.rawValue)
+      var predicates = [NSPredicate(format: "stateRaw == %@", Entry.State.Todo.rawValue)]
+      if !HabitApp.upcoming {
+        let tonight = HabitApp.calendar.zeroTime(HabitApp.calendar.dateByAddingUnit(.Day, value: 1, toDate: NSDate())!)
+        predicates.append(NSPredicate(format: "due <= %@", tonight))
+      }
+      request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
       let fetchedEntries = try HabitApp.moContext.executeFetchRequest(request) as! [Entry]
       let now = NSDate()
       for entry in fetchedEntries {
@@ -204,8 +209,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let completion = { (cell: SwipeTableViewCell, skipped skipped: Bool) -> Void in
       let indexPath = tableView.indexPathForCell(cell)!
-      tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
       let entry = self.entries.removeAtIndex(indexPath.row)
+      tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
       if skipped {
         entry.skip()
       } else {
@@ -258,59 +263,16 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   // Segue
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    if let vc = segue.destinationViewController as? HabitViewController {
-      activeCell = sender as? HabitTableViewCell
-      vc.habit = activeCell!.entry!.habit!
-    } else if let vc = segue.destinationViewController as? HabitSettingsViewController {
-      vc.habit = Habit(context: HabitApp.moContext, name: "", details: "", frequency: .Daily, times: 1, createdAt: NSDate())
-
-      // TODO: needed?
-      newButton.highlighted = false
-    } else if let vc = segue.destinationViewController as? AppSettingsViewController {
-      super.prepareForSegue(segue, sender: sender)
-      
-      vc.mainVC = self
-      
+    super.prepareForSegue(segue, sender: sender)
+    if segue.destinationViewController is AppSettingsViewController {
       segue.destinationViewController.transitioningDelegate = appSettingsTransition
       segue.destinationViewController.modalPresentationStyle = .Custom
+    } else if let vc = segue.destinationViewController as? HabitSettingsViewController {
+      vc.habit = Habit(context: HabitApp.moContext, name: "", details: "", frequency: .Daily, times: 1, createdAt: NSDate())
     }
   }
   
-  @IBAction func unwind(segue: UIStoryboardSegue) {
-    if let vc = segue.sourceViewController as? HabitSettingsViewController {
-      // TODO: Never gets called now
-      if activeCell == nil {
-        if vc.habit != nil {
-          vc.habit!.update(NSDate())
-          reloadEntries()
-          tableView.reloadData()
-        }
-      } else {
-        let indexPath = tableView.indexPathForCell(activeCell!)
-        tableView.deselectRowAtIndexPath(indexPath!, animated: false)
-        if vc.habit == nil {
-          // Delete all entries
-          print("delete")
-          reloadEntries()
-          tableView.reloadData()
-        } else {
-          print("habit is not nill")
-//          let entry = entries[indexPath!.row]
-//          entries = entries.sort({ $0.dueIn < $1.dueIn })
-//          let newIndex = entries.indexOf(entry)
-//          if indexPath!.row != newIndex {
-//            tableView.beginUpdates()
-//            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Top)
-//            tableView.insertRowsAtIndexPaths([NSIndexPath(forItem: newIndex!, inSection: 0)], withRowAnimation: .Top)
-//            tableView.endUpdates()
-//          } else {
-//            (tableView.cellForRowAtIndexPath(indexPath!) as! HabitTableViewCell).reload()
-//          }
-        }
-        activeCell = nil
-      }
-    }
-  }
+  @IBAction func unwind(segue: UIStoryboardSegue) { }
   
   // Colors
   

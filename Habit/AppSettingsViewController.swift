@@ -11,7 +11,7 @@ import UIKit
 
 class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorPickerDelegate {
   
-  var mainVC: MainViewController?
+  var mvc: MainViewController?
   
   @IBOutlet weak var close: UIButton!
   @IBOutlet weak var colorPicker: ColorPicker!
@@ -32,6 +32,8 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     view.layer.shadowOpacity = 0.5
     view.layer.shadowRadius = 4
     view.layer.shadowOffset = CGSizeMake(0, -1)
+    
+    mvc = presentingViewController as? MainViewController
   }
   
   @IBAction func panning(recognizer: UIPanGestureRecognizer) {
@@ -49,12 +51,14 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
   }
   
   func colorPicked(colorPicker: ColorPicker, colorIndex index: Int) {
-    mainVC!.changeColor(HabitApp.colors[index])
+    mvc!.changeColor(HabitApp.colors[index])
     HabitApp.colorIndex = index
   }
   
   @IBAction func upcomingChanged(sender: AnyObject) {
     HabitApp.upcoming = upcoming.on
+    mvc!.reloadEntries()
+    mvc!.tableView.reloadData()
   }
   
   @IBAction func notificationChanged(sender: AnyObject) {

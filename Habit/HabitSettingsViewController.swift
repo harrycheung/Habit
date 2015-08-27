@@ -211,6 +211,7 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
   }
   
   @IBAction func saveHabit(sender: AnyObject) {
+    let now = NSDate()
     // TODO: set habit!.next
     habit!.name = name.text!
     habit!.frequencyRaw = frequency.selectedSegmentIndex + 1
@@ -218,12 +219,12 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
       habit!.times = activeSettings.picker!.selectedRowInComponent(0) + 1
       habit!.partsArray = []
     } else {
-      habit!.partsArray = activeSettings.multiSelect.selectedIndexes
+      habit!.partsArray = activeSettings.multiSelect.selectedIndexes.map({ $0 + 1 })
     }
     habit!.notifyBool = notification.on
     if habit!.isNew {
-      habit!.last = NSDate()
-      habit!.createdAt = NSDate()
+      habit!.last = now
+      habit!.createdAt = now
     }
     habit!.update(NSDate())
     do {
@@ -243,7 +244,10 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
       //      }
     }
     
-    presentingViewController!.dismissViewControllerAnimated(true, completion: nil)
+    let mvc = presentingViewController as! MainViewController
+    mvc.reloadEntries()
+    mvc.tableView.reloadData()
+    mvc.dismissViewControllerAnimated(true, completion: nil)
   }
   
   @IBAction func deleteHabit(sender: AnyObject) {
