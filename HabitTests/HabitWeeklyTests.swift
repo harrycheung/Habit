@@ -352,5 +352,38 @@ class HabitWeeklyTests: XCTestCase {
     expect(histories[3].completed) == 0
     expect(histories[3].skipped) == 0
   }
+  
+  func testDaylightSpringForward() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 3
+    components.day = 7
+    components.hour = 8
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
+    components.day = 12
+    let now = calendar.dateFromComponents(components)!
+    habit.update(now)
+    let entries = habit.entriesOnDate(now)
+    expect(entries.count) == 6
+  }
+  
+  func testDaylightFallBackward() {
+    let calendar = NSCalendar.currentCalendar()
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 10
+    components.day = 25
+    components.hour = 8
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
+    components.month = 11
+    components.day = 1
+    let now = calendar.dateFromComponents(components)!
+    habit.update(now)
+    let entries = habit.entriesOnDate(now)
+    expect(entries.count) == 6
+  }
 
 }

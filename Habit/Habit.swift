@@ -252,7 +252,12 @@ class Habit: NSManagedObject {
   }
   
   func entriesOnDate(date: NSDate, var predicates: [NSPredicate]) -> [Entry] {
+    let formatter = NSDateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+    formatter.timeZone = NSTimeZone(abbreviation: "PST")
+
     let (startDate, endDate) = dateRange(date)
+    //print("entries: \(formatter.stringFromDate(startDate)) \(formatter.stringFromDate(endDate))")
     predicates.append(NSPredicate(format: "due > %@ AND due <= %@", startDate, endDate))
     return entries!.filteredOrderedSetUsingPredicate(NSCompoundPredicate(andPredicateWithSubpredicates: predicates)).array as! [Entry]
   }
@@ -299,9 +304,10 @@ class Habit: NSManagedObject {
   
   func update(currentDate: NSDate) {
 //    TODO: Remove
-//    let formatter = NSDateFormatter();
-//    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ";
-//    formatter.timeZone = NSTimeZone(abbreviation: "PST");
+    let formatter = NSDateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+    formatter.timeZone = NSTimeZone(abbreviation: "PST")
+    //print("update: \(formatter.stringFromDate(currentDate))")
     
     if currentDate.compare(last!) != .OrderedDescending {
       return
@@ -360,15 +366,18 @@ class Habit: NSManagedObject {
       while true {
         if weekCount == expected {
           weekCount = 1
+          //print("new week")
         } else {
           weekCount += 1
         }
         if useTimes {
           // Calculate from beginning of week
           lastDue = beginningOfWeek(lastDue, true)
-          lastDue = calendar.dateByAddingUnit(.Second, value: weekCount * HabitApp.weekSec / times!.integerValue, toDate: lastDue)!
-          // Round to the hour
-          lastDue = calendar.dateFromComponents(calendar.components([.Year, .Month, .Day, .Hour], fromDate: lastDue))!
+          let increment = weekCount * HabitApp.weekSec / times!.integerValue
+          let day = increment / HabitApp.daySec
+          lastDue = calendar.dateByAddingUnit(.Day, value: day, toDate: lastDue)!
+          let hour = (increment % HabitApp.daySec) / HabitApp.hourSec
+          lastDue = calendar.dateByAddingUnit(.Hour, value: hour, toDate: lastDue)!
         } else {
           let weekday = calendar.components([.Weekday], fromDate: lastDue).weekday
           let increment = daysOfWeek[weekCount - 1].rawValue + (weekCount == 1 ? 7 : 0) - (weekday == 1 ? 8 : weekday) + 1
@@ -381,6 +390,7 @@ class Habit: NSManagedObject {
         }
         // Since we do calculations based on the beginning of the week, only create if we past createdAt
         if lastDue.compare(createdAt!) == .OrderedDescending {
+          //print("new entry: \(formatter.stringFromDate(lastDue))")
           let entry = Entry(context: managedObjectContext!, habit: self, due: lastDue)
           entry.number = weekCount
           total = total!.integerValue + 1
