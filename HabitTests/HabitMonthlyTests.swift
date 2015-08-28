@@ -65,6 +65,17 @@ class HabitMonthlyTests: XCTestCase {
     expect(end) == calendar.dateFromComponents(components)
   }
   
+  func testOneTimeAMonth() {
+    let calendar = NSCalendar.currentCalendar()
+    let createdAt = NSDate()
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 1, createdAt: createdAt)
+    let now = calendar.dateByAddingUnit(.Hour, value: 1, toDate: createdAt)!
+    habit.update(now)
+    let nextMonth = calendar.dateByAddingUnit(.Month, value: 1, toDate: now)
+    expect(habit.totalCount()) == 2
+    expect(habit.totalCount(nextMonth)) == 1
+  }
+  
   func testTimesSkipBefore() {
     let calendar = NSCalendar.currentCalendar()
     let components = NSDateComponents()

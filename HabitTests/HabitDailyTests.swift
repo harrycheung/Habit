@@ -135,6 +135,17 @@ class HabitDailyTests: XCTestCase {
     expect(history.skipped) == 2
   }
   
+  func testOneTimeADay() {
+    let calendar = NSCalendar.currentCalendar()
+    let createdAt = calendar.dateBySettingHour(8, minute: 0, second: 0, ofDate: NSDate(), options: NSCalendarOptions(rawValue: 0))!
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Daily, times: 1, createdAt: createdAt)
+    let now = calendar.dateBySettingHour(10, minute: 0, second: 0, ofDate: NSDate(), options: NSCalendarOptions(rawValue: 0))!
+    habit.update(now)
+    let tomorrow = calendar.dateByAddingUnit(.Day, value: 1, toDate: now)
+    expect(habit.totalCount()) == 2
+    expect(habit.totalCount(tomorrow)) == 1
+  }
+  
   func testTimesYesterday() {
     let calendar = NSCalendar.currentCalendar()
     let components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())

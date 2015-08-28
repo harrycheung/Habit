@@ -316,7 +316,7 @@ class Habit: NSManagedObject {
     switch frequency {
     case .Daily:
       let expected = expectedCount
-      let dayAfterTomorrow = calendar.dateByAddingUnit(.Day, value: 2, toDate: currentDate)!
+      let dayAfterTomorrow = calendar.dateByAddingUnit(.Day, value: expected == 1 ? 3 : 2, toDate: currentDate)!
       var lastDue = lastEntry
       var dayCount = entriesOnDate(lastDue).count
       var startOffset = countBeforeCreatedAt(lastDue)
@@ -340,9 +340,11 @@ class Habit: NSManagedObject {
           components.minute = 0
         }
         lastDue = calendar.dateFromComponents(components)!
-        if components.hour != 24 && calendar.isDate(lastDue, inSameDayAsDate: dayAfterTomorrow) {
+        // Need to special case the 1 time a day habit
+        if (expected == 1 || components.hour != 24) && calendar.isDate(lastDue, inSameDayAsDate: dayAfterTomorrow) {
           break
         }
+        //print(formatter.stringFromDate(lastDue))
         let entry = Entry(context: managedObjectContext!, habit: self, due: lastDue)
         entry.number = dayCount
         total = total!.integerValue + 1
@@ -357,7 +359,7 @@ class Habit: NSManagedObject {
         return HabitApp.calendar.dateFromComponents(calendar.components([.Year, .Month, .Day], fromDate: date))!
       }
       let expected = expectedCount
-      let weekAfterNext = calendar.dateByAddingUnit(.WeekOfYear, value: 2, toDate: currentDate)!
+      let weekAfterNext = calendar.dateByAddingUnit(.WeekOfYear, value: expected == 1 ? 3 : 2, toDate: currentDate)!
       var lastDue = lastEntry
       var weekCount = entriesOnDate(lastDue).count
       if !useTimes && lastDue.compare(createdAt!) == .OrderedSame {
@@ -385,7 +387,7 @@ class Habit: NSManagedObject {
         }
         // If we are about the past our lookahead, stop
         let weekday = calendar.components([.Weekday], fromDate: lastDue).weekday
-        if weekday != 1 && calendar.isDate(lastDue, equalToDate: weekAfterNext, toUnitGranularity: .WeekOfYear) {
+        if (expected == 1 || weekday != 1) && calendar.isDate(lastDue, equalToDate: weekAfterNext, toUnitGranularity: .WeekOfYear) {
           break
         }
         // Since we do calculations based on the beginning of the week, only create if we past createdAt
@@ -398,7 +400,7 @@ class Habit: NSManagedObject {
       }
     case .Monthly:
       let expected = expectedCount
-      let monthAfterNext = calendar.dateByAddingUnit(.Month, value: 2, toDate: currentDate)!
+      let monthAfterNext = calendar.dateByAddingUnit(.Month, value: expected == 1 ? 3 : 2, toDate: currentDate)!
       var lastDue = lastEntry
       var monthCount = entriesOnDate(lastDue).count
       var startOffset = countBeforeCreatedAt(lastDue)
@@ -428,7 +430,7 @@ class Habit: NSManagedObject {
           components.minute = 0
         }
         lastDue = calendar.dateFromComponents(components)!
-        if components.day != daysInMonth && calendar.isDate(lastDue, equalToDate: monthAfterNext, toUnitGranularity: .Month) {
+        if (expected == 1 || components.day != daysInMonth) && calendar.isDate(lastDue, equalToDate: monthAfterNext, toUnitGranularity: .Month) {
           break
         }
         let entry = Entry(context: managedObjectContext!, habit: self, due: lastDue)

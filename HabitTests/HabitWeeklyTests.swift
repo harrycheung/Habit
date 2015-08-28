@@ -88,6 +88,17 @@ class HabitWeeklyTests: XCTestCase {
     expect(end) == calendar.dateFromComponents(components)
   }
   
+  func testOneTimeAWeek() {
+    let calendar = NSCalendar.currentCalendar()
+    let createdAt = calendar.dateBySettingHour(8, minute: 0, second: 0, ofDate: NSDate(), options: NSCalendarOptions(rawValue: 0))!
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
+    let now = calendar.dateBySettingHour(12, minute: 0, second: 0, ofDate: NSDate(), options: NSCalendarOptions(rawValue: 0))!
+    habit.update(now)
+    let nextWeek = calendar.dateByAddingUnit(.Day, value: 7, toDate: now)!
+    expect(habit.totalCount()) == 2
+    expect(habit.totalCount(nextWeek)) == 1
+  }
+  
   func testTimesSkipBefore() {
     let calendar = NSCalendar.currentCalendar()
     let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: NSDate())
