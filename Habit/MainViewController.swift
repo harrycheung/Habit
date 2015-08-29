@@ -26,7 +26,7 @@
 // 17. Pretify show upcoming animation
 // 18. Pretify insert new habit
 // 19. Warn when changing habit frequency and handle
-// 20. Skip icon
+// 20. done - Skip icon
 // 21. done - Hide add button when swiping
 // 22. done - Switch to gregorian calendar
 // 23. done - Fix blank delegate methods
@@ -322,7 +322,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     })
     cell.setSwipeGesture(
       direction: .Left,
-      view: UIImageView(image: UIImage.fontAwesomeIconWithName(.FastBackward, textColor: UIColor.whiteColor(), size: CGSizeMake(24, 24))),
+      view: UIImageView(image: UIImage.fontAwesomeIconWithName(.History, textColor: UIColor.whiteColor(), size: CGSizeMake(24, 24))),
       color: HabitApp.yellow,
       options: [.Rotate, .Alpha],
       completion: { (cell: SwipeTableViewCell) in
