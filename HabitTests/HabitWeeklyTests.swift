@@ -423,7 +423,6 @@ class HabitWeeklyTests: XCTestCase {
     components.weekOfYear += 2
     components.weekday = 6 // Friday
     let now = calendar.dateFromComponents(components)!
-    print("update")
     habit.update(now)
     habit.skipBefore(now)
     expect(habit.completedCount()) == 2

@@ -526,4 +526,53 @@ class HabitDailyTests: XCTestCase {
     expect(histories[3].skipped) == 0
   }
   
+  func testTimesSkipInMiddle() {
+    let calendar = HabitApp.calendar
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 8
+    components.day = 27
+    components.hour = 7
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "2 days ago daily 8 times", details: "", frequency: .Daily, times: 8, createdAt: createdAt)
+    habit.update(createdAt)
+    
+    do {
+      let request = NSFetchRequest(entityName: "Habit")
+      let results = try context!.executeFetchRequest(request)
+      let entries = (results[0] as! Habit).entries!.array as! [Entry]
+      entries[3].skip()
+    } catch let error as NSError {
+      NSLog("error: \(error)")
+      fail()
+    }
+    components.hour = 9
+    expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
+  }
+  
+  func testPartsSkipInMiddle() {
+    let calendar = HabitApp.calendar
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 8
+    components.day = 27
+    components.hour = 7
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "2 days ago daily 8 times", details: "", frequency: .Daily, times: 0, createdAt: createdAt)
+    habit.partsOfDay = [.Morning, .MidMorning, .MidDay, .Afternoon, .Evening]
+    habit.update(createdAt)
+    
+    do {
+      let request = NSFetchRequest(entityName: "Habit")
+      let results = try context!.executeFetchRequest(request)
+      let entries = (results[0] as! Habit).entries!.array as! [Entry]
+      entries[2].skip()
+    } catch let error as NSError {
+      NSLog("error: \(error)")
+      fail()
+    }
+    components.hour = 9
+    expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
+  }
+  
 }
