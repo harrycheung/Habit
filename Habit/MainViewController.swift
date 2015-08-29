@@ -21,12 +21,14 @@
 // 12. done - Debug flash when dismising habit settings
 // 13. done - simulator only - Debug flash on color picker button
 // 14. Clean up AppDelegate
-// 15. Auto-skip
+// 15. done - Auto-skip
 // 16. done - If a lot to be done, ask to skip all
 // 17. Pretify show upcoming animation
 // 18. Pretify insert new habit
 // 19. Warn when changing habit frequency and handle
 // 20. Skip icon
+// 21. Hide add button when swiping
+// 22. Switch to gregorian calendar
 
 import UIKit
 import CoreData
@@ -205,6 +207,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       let now = NSDate()
       for entry in fetchedEntries {
         entry.habit!.update(now)
+        if HabitApp.autoskip {
+          entry.habit!.skipBefore(now)
+        }
       }
       try HabitApp.moContext.save()
       entries = fetchedEntries.sort({ $0.dueIn < $1.dueIn })

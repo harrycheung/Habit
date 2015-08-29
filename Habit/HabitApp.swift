@@ -17,6 +17,7 @@ class HabitApp {
   static let notificationSettingKey = "notification"
   static let colorSettingKey = "color"
   static let upcomingSettingKey = "upcoming"
+  static let autoskipSettingKey = "autoskip"
   
   // App colors
   static let green = UIColor(red: 85.0 / 255.0, green: 213.0 / 255.0, blue: 80.0 / 255.0, alpha: 1)
@@ -68,21 +69,18 @@ class HabitApp {
   }
   
   static var notification: Bool {
-    get {
-      return NSUserDefaults.standardUserDefaults().boolForKey(notificationSettingKey)
-    }
-    set {
-      NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: notificationSettingKey)
-    }
+    get { return NSUserDefaults.standardUserDefaults().boolForKey(notificationSettingKey) }
+    set { NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: notificationSettingKey) }
   }
   
   static var upcoming: Bool {
-    get {
-      return NSUserDefaults.standardUserDefaults().boolForKey(upcomingSettingKey)
-    }
-    set {
-      NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: upcomingSettingKey)
-    }
+    get { return NSUserDefaults.standardUserDefaults().boolForKey(upcomingSettingKey) }
+    set { NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: upcomingSettingKey) }
+  }
+  
+  static var autoskip: Bool {
+    get { return NSUserDefaults.standardUserDefaults().boolForKey(autoskipSettingKey) }
+    set { NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: autoskipSettingKey) }
   }
   
   static var calendar: NSCalendar {

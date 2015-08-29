@@ -17,6 +17,7 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
   @IBOutlet weak var colorPicker: ColorPicker!
   @IBOutlet weak var upcoming: UISwitch!
   @IBOutlet weak var notification: UISwitch!
+  @IBOutlet weak var autoskip: UISwitch!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -27,6 +28,7 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     colorPicker.selectedIndex = HabitApp.colorIndex
     upcoming.on = HabitApp.upcoming
     notification.on = HabitApp.notification
+    autoskip.on = HabitApp.autoskip
     
     view.layer.shadowColor = UIColor.blackColor().CGColor
     view.layer.shadowOpacity = 0.5
@@ -63,6 +65,10 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
   
   @IBAction func notificationChanged(sender: AnyObject) {
     HabitApp.notification = notification.on
+  }
+  
+  @IBAction func autoskipChanged(sender: AnyObject) {
+    HabitApp.autoskip = autoskip.on
   }
   
 }
