@@ -9,10 +9,10 @@
 import UIKit
 import Swift
 
-protocol SwipeTableViewCellDelegate {
-  func startSwiping(cell: SwipeTableViewCell)
-  func swiping(cell: SwipeTableViewCell, percentage: CGFloat)
-  func endSwiping(cell: SwipeTableViewCell)
+@objc protocol SwipeTableViewCellDelegate {
+  optional func startSwiping(cell: SwipeTableViewCell)
+  optional func swiping(cell: SwipeTableViewCell, percentage: CGFloat)
+  optional func endSwiping(cell: SwipeTableViewCell)
 }
 
 class SwipeTableViewCell: UITableViewCell {
@@ -185,7 +185,7 @@ class SwipeTableViewCell: UITableViewCell {
     
     switch (recognizer.state) {
     case .Began:
-      delegate?.startSwiping(self)
+      delegate?.startSwiping?(self)
       setupSwipingView()
       SwipeTableViewCell.swipeCellCount++
       fallthrough
@@ -201,7 +201,7 @@ class SwipeTableViewCell: UITableViewCell {
       animateSwipe(direction, percentage: percent)
       recognizer.setTranslation(CGPointMake(0, 0), inView: self)
     
-      delegate?.swiping(self, percentage: percent)
+      delegate?.swiping?(self, percentage: percent)
     case .Cancelled, .Ended:
       let velocity = recognizer.velocityInView(self)
       dragging = false
@@ -213,7 +213,7 @@ class SwipeTableViewCell: UITableViewCell {
         reset()
       }
       
-      delegate?.endSwiping(self)
+      delegate?.endSwiping?(self)
     default: ()
     }
   }

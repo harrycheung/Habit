@@ -10,8 +10,7 @@ import Foundation
 import UIKit
 import SnapKit
 
-@objc(HabitHistoryDelegate)
-protocol HabitHistoryDelegate {
+@objc protocol HabitHistoryDelegate {
   
   func habitHistory(habitHistory: HabitHistory, selectedHistory: History)
   

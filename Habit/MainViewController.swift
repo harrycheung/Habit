@@ -29,7 +29,7 @@
 // 20. Skip icon
 // 21. done - Hide add button when swiping
 // 22. Switch to gregorian calendar
-// 23. Fix blank delegate methods
+// 23. done - Fix blank delegate methods
 
 import UIKit
 import CoreData
@@ -261,6 +261,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         if skipOne {
           removeEntry(indexPath, true)
+          UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
+            self.newButton.alpha = 1
+          })
         } else {
           let sdvc = self.storyboard!.instantiateViewControllerWithIdentifier("SwipeDialogViewController") as! SwipeDialogViewController
           sdvc.modalTransitionStyle = .CrossDissolve
@@ -274,24 +277,30 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.reloadEntries()
             self.tableView.deleteRowsAtIndexPaths(indexPaths, withRowAnimation: .Top)
             self.dismissViewControllerAnimated(true, completion: nil)
+            UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
+              self.newButton.alpha = 1
+            })
           }
           sdvc.noCompletion = { () in
             removeEntry(indexPath, true)
             self.dismissViewControllerAnimated(true, completion: nil)
+            UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
+              self.newButton.alpha = 1
+            })
           }
           self.presentViewController(sdvc, animated: true, completion: nil)
         }
       } else {
         removeEntry(indexPath, false)
+        UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
+          self.newButton.alpha = 1
+        })
       }
       do {
         try HabitApp.moContext.save()
       } catch let error {
         NSLog("Error saving: \(error)")
       }
-      UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
-        self.newButton.alpha = 1
-      })
     }
     
     let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! HabitTableViewCell
@@ -426,14 +435,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
       self.newButton.alpha = 0
     })
-  }
-  
-  func swiping(cell: SwipeTableViewCell, percentage: CGFloat) {
-    // do nothing
-  }
-  
-  func endSwiping(cell: SwipeTableViewCell) {
-    // do nothing
   }
   
 }

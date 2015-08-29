@@ -10,8 +10,7 @@ import Foundation
 import UIKit
 import SnapKit
 
-@objc(FrequencySettingsDelegate)
-protocol FrequencySettingsDelegate {
+@objc protocol FrequencySettingsDelegate {
   
   func frequencySettingsChanged()
   
