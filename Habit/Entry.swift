@@ -29,32 +29,28 @@ class Entry: NSManagedObject {
   }
   
   var dueIn: NSTimeInterval {
-    return max(-NSDate().timeIntervalSinceDate(due!), 0)
+    return NSDate().timeIntervalSinceDate(due!)
   }
   
   var dueText: String {
-    let due = Int(dueIn)
-    let absDue = abs(due)
-    var factor = 1
-    let frequency = Habit.frequencyStrings[habit!.frequency]!
-    var text = ""
-    if absDue < 5 * HabitApp.minSec {
-      return "now"
-    } else if absDue < HabitApp.hourSec {
-      factor = HabitApp.minSec
-      text = "minute"
-    } else if absDue < HabitApp.daySec {
-      factor = HabitApp.hourSec
-      text = "hour"
-    } else if absDue < HabitApp.weekSec {
-      factor = HabitApp.daySec
-      text = "day"
-    } else {
-      factor = HabitApp.weekSec
-      text = "week"
+    var ratio = "\(number!) of \(habit!.expectedCount)"
+    if !habit!.useTimes {
+      switch habit!.frequency {
+      case .Daily:
+        ratio = "\(ratio) \(habit!.partsOfDay[number!.integerValue - 1].description)"
+      case .Weekly:
+        ratio = "\(habit!.daysOfWeek[number!.integerValue - 1].shortDescription) \(ratio)"
+      case .Monthly:
+        ratio = "\(ratio) \(habit!.partsOfMonth[number!.integerValue - 1].description)"
+      default: ()
+      }
     }
-    return "\(absDue / factor) \(text)" + (absDue < 2 * factor ? "" : "s") + (due < 0 ? " ago" : "")
-    //return "\(frequency): "
+    var text = due!.timeAgoSinceNow()
+    if dueIn > 0 {
+      let endIndex = text.characters.count - 4
+      text = "in \(text.substringToIndex(advance(text.startIndex, endIndex)))"
+    }
+    return "\(Habit.frequencyStrings[habit!.frequency]!) (\(ratio)): \(text)"
   }
   
   func complete() {

@@ -48,6 +48,7 @@ code_sign() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework 'DateTools.framework'
   install_framework 'FontAwesome_swift.framework'
   install_framework 'KAProgressLabel.framework'
   install_framework 'Nimble.framework'
@@ -55,6 +56,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'SnapKit.framework'
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework 'DateTools.framework'
   install_framework 'FontAwesome_swift.framework'
   install_framework 'KAProgressLabel.framework'
   install_framework 'Nimble.framework'

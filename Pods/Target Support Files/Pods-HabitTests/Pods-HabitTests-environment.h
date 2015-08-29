@@ -6,6 +6,12 @@
 // project.
 
 
+// DateTools
+#define COCOAPODS_POD_AVAILABLE_DateTools
+#define COCOAPODS_VERSION_MAJOR_DateTools 1
+#define COCOAPODS_VERSION_MINOR_DateTools 6
+#define COCOAPODS_VERSION_PATCH_DateTools 1
+
 // FontAwesome.swift
 #define COCOAPODS_POD_AVAILABLE_FontAwesome_swift
 #define COCOAPODS_VERSION_MAJOR_FontAwesome_swift 0

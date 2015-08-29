@@ -80,7 +80,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       h = Habit(context: HabitApp.moContext, name: "Will not show skip dialog", details: "", frequency: .Weekly, times: 6, createdAt: date)
       h.update(NSDate())
       date = calendar.dateByAddingUnit(.WeekOfYear, value: -3, toDate: NSDate())!
-      h = Habit(context: HabitApp.moContext, name: "Will show skip dialog", details: "", frequency: .Weekly, times: 6, createdAt: date)
+      h = Habit(context: HabitApp.moContext, name: "Will show skip dialog", details: "", frequency: .Weekly, times: 0, createdAt: date)
+      h.daysOfWeek = [.Monday, .Tuesday, .Wednesday, .Friday, .Saturday]
       h.update(NSDate())
       //        components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
       //        components.month -= 20
@@ -185,8 +186,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     newButton.backgroundColor = UIApplication.sharedApplication().windows[0].tintColor
     newButton.layer.cornerRadius = 28
     newButton.layer.shadowColor = UIColor.blackColor().CGColor
-    newButton.layer.shadowOpacity = 0.5
-    newButton.layer.shadowRadius = 3
+    newButton.layer.shadowOpacity = 0.6
+    newButton.layer.shadowRadius = 5
     newButton.layer.shadowOffset = CGSizeMake(0, 1)
     
     // Setup timers
@@ -337,6 +338,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       hvc.habit = self.activeCell!.entry!.habit!
       self.presentViewController(hvc, animated: true, completion: nil)
     }
+  }
+  
+  func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    return 70
   }
   
   // Segue

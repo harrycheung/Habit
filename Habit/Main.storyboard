@@ -135,9 +135,8 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="in 5 mins" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fhm-ox-pDU">
-                                                    <rect key="frame" x="192" y="24" width="120" height="12"/>
+                                                    <rect key="frame" x="8" y="24" width="304" height="12"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="120" id="Dfi-zH-kMm"/>
                                                         <constraint firstAttribute="height" constant="12" id="qFQ-uA-kga"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="12"/>
@@ -150,6 +149,7 @@
                                                 <constraint firstItem="fj9-m5-H5A" firstAttribute="trailing" secondItem="vCE-hH-7MT" secondAttribute="trailingMargin" id="2fJ-8Q-nUB"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="fhm-ox-pDU" secondAttribute="trailing" id="9Ji-mA-2vd"/>
                                                 <constraint firstItem="fj9-m5-H5A" firstAttribute="centerY" secondItem="vCE-hH-7MT" secondAttribute="centerY" constant="1" id="Nsc-ZU-639"/>
+                                                <constraint firstAttribute="leadingMargin" secondItem="fhm-ox-pDU" secondAttribute="leading" id="UBI-au-xd8"/>
                                                 <constraint firstItem="fj9-m5-H5A" firstAttribute="leading" secondItem="vCE-hH-7MT" secondAttribute="leadingMargin" id="XF3-FB-Bd0"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="fhm-ox-pDU" secondAttribute="bottom" id="nyc-7w-ytj"/>
                                             </constraints>

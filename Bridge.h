@@ -10,5 +10,6 @@
 #define Bridge_h
 
 #import "KAProgressLabel/KAProgressLabel.h"
+#import "DateTools/DateTools.h"
 
 #endif /* Bridge_h */
