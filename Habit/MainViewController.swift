@@ -28,7 +28,7 @@
 // 19. Warn when changing habit frequency and handle
 // 20. Skip icon
 // 21. done - Hide add button when swiping
-// 22. Switch to gregorian calendar
+// 22. done - Switch to gregorian calendar
 // 23. done - Fix blank delegate methods
 
 import UIKit
@@ -54,11 +54,11 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   @IBAction func fill(sender: AnyObject) {
     do {
-      let formatter = NSDateFormatter()
-      formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
-      formatter.timeZone = NSTimeZone(abbreviation: "PST")
+//      let formatter = NSDateFormatter()
+//      formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+//      formatter.timeZone = NSTimeZone(abbreviation: "PST")
       
-      let calendar = NSCalendar.currentCalendar()
+      let calendar = HabitApp.calendar
       var date = calendar.dateByAddingUnit(.WeekOfYear, value: -40, toDate: NSDate())!
       var h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: date)
       h.update(NSDate())
@@ -249,7 +249,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       if skipped {
         var skipOne = true
         let entry = self.entries[indexPath.row]
-        print(entry.habit!.firstTodo!.due!)
         switch entry.habit!.frequency {
         case .Daily:
           skipOne = HabitApp.calendar.components([.Day], fromDate: entry.habit!.firstTodo!.due!, toDate: NSDate()).day <= 2

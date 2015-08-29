@@ -151,7 +151,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
   
   func squareTap(recognizer: UITapGestureRecognizer) {
     clearSelection()
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let square = recognizer.view as! SquareView
     let frame = square.frame
     var (xOffset, yOffset, widthOffset, heightOffset) = (-enlargement, CGFloat(0), 2 * enlargement, 2 * enlargement)
@@ -183,7 +183,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
   }
   
   func clearSelection() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     if let square = selectedSquare {
       square.layer.borderColor = UIColor.clearColor().CGColor
       let frame = square.frame

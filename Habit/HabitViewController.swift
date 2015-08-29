@@ -137,7 +137,7 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
     animationNumbers.skippedEnd = skippedCount
     
     if let date = when as? NSDate {
-      let calendar = NSCalendar.currentCalendar()
+      let calendar = HabitApp.calendar
       switch habit!.frequency {
       case .Daily:
         progressPeriod.numberOfLines = 1

@@ -27,7 +27,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testCountBeforeCreatedDaily() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
     components.hour = 13
     let createdAt = calendar.dateFromComponents(components)!
@@ -49,7 +49,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testDateRange() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = NSDateComponents()
     components.year = 2015
     components.month = 8
@@ -74,7 +74,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testTimesSkipBefore() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
     components.hour = 8
     let createdAt = calendar.dateFromComponents(components)!
@@ -92,7 +92,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testPartsSkipBefore() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
     components.hour = 8
     let createdAt = calendar.dateFromComponents(components)!
@@ -111,7 +111,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testEntriesOnDay() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
     components.day -= 3
     components.hour = 0
@@ -124,7 +124,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testUpdateHistory() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
     components.day -= 3
     components.hour = 0
@@ -147,7 +147,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testOneTimeADay() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let createdAt = calendar.dateBySettingHour(8, minute: 0, second: 0, ofDate: NSDate(), options: NSCalendarOptions(rawValue: 0))!
     let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Daily, times: 1, createdAt: createdAt)
     let now = calendar.dateBySettingHour(10, minute: 0, second: 0, ofDate: NSDate(), options: NSCalendarOptions(rawValue: 0))!
@@ -161,7 +161,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testTimesYesterday() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
     components.hour = 15
     let today = calendar.dateFromComponents(components)!
@@ -185,7 +185,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testPartsYesterday() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
     components.hour = 15
     let today = calendar.dateFromComponents(components)!
@@ -210,7 +210,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testTimesTodayPartial() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: NSDate())
     components.hour = 8
     components.minute = 0
@@ -232,7 +232,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testPartsTodayPartial() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: NSDate())
     components.hour = 9
     components.minute = 0
@@ -255,7 +255,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testTimesYesterdayPartial() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: NSDate())
     components.day -= 1
     components.hour = 8
@@ -279,7 +279,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testPartsYesterdayPartial() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: NSDate())
     components.day -= 1
     components.hour = 9
@@ -304,7 +304,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testTimesTwoDaysAgo() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
     components.hour = 9
     let today = calendar.dateFromComponents(components)!
@@ -326,7 +326,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testPartsTwoDaysAgo() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
     components.hour = 9
     let today = calendar.dateFromComponents(components)!
@@ -349,7 +349,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testTimesCompletion() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: NSDate())
     components.hour = 9
     components.minute = 0
@@ -391,7 +391,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testPartsCompletion() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: NSDate())
     components.hour = 9
     components.minute = 0
@@ -433,7 +433,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testTimesSkipADay() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: NSDate())
     components.day -= 2
     components.hour = 9
@@ -480,7 +480,7 @@ class HabitDailyTests: XCTestCase {
   }
   
   func testPartsSkipADay() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: NSDate())
     components.day -= 2
     components.hour = 12

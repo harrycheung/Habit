@@ -27,7 +27,7 @@ class HabitMonthlyTests: XCTestCase {
   }
   
   func testCountBeforeCreatedMonthly() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = NSDateComponents()
     components.year = 2015
     components.month = 3
@@ -45,7 +45,7 @@ class HabitMonthlyTests: XCTestCase {
   }
   
   func testDateRange() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = NSDateComponents()
     components.year = 2015
     components.month = 8
@@ -67,7 +67,7 @@ class HabitMonthlyTests: XCTestCase {
   }
   
   func testOneTimeAMonth() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let createdAt = NSDate()
     let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 1, createdAt: createdAt)
     let now = calendar.dateByAddingUnit(.Hour, value: 1, toDate: createdAt)!
@@ -83,7 +83,7 @@ class HabitMonthlyTests: XCTestCase {
   }
   
   func testTimesSkipBefore() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = NSDateComponents()
     components.year = 2015
     components.month = 3
@@ -104,7 +104,7 @@ class HabitMonthlyTests: XCTestCase {
   }
   
   func testPartsSkipBefore() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = NSDateComponents()
     components.year = 2015
     components.month = 3
@@ -126,7 +126,7 @@ class HabitMonthlyTests: XCTestCase {
   }
   
   func testEntriesOnMonth() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = NSDateComponents()
     components.year = 2015
     components.month = 3
@@ -140,7 +140,7 @@ class HabitMonthlyTests: XCTestCase {
   }
   
   func testUpdateHistory() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = NSDateComponents()
     components.year = 2015
     components.month = 3
@@ -163,7 +163,7 @@ class HabitMonthlyTests: XCTestCase {
   }
   
   func testTimes2MonthsAgo() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = NSDateComponents()
     components.year = 2015
     components.month = 3
@@ -188,7 +188,7 @@ class HabitMonthlyTests: XCTestCase {
   }
   
   func testParts2MonthsAgo() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = NSDateComponents()
     components.year = 2015
     components.month = 3
@@ -214,7 +214,7 @@ class HabitMonthlyTests: XCTestCase {
   }
   
   func testTimesCompletion() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = NSDateComponents()
     components.year = 2015
     components.month = 3
@@ -263,7 +263,7 @@ class HabitMonthlyTests: XCTestCase {
   }
   
   func testPartsCompletion() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = NSDateComponents()
     components.year = 2015
     components.month = 3
@@ -313,7 +313,7 @@ class HabitMonthlyTests: XCTestCase {
   }
     
   func testTimesSkipAMonth() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = NSDateComponents()
     components.year = 2015
     components.month = 3 // March
@@ -363,7 +363,7 @@ class HabitMonthlyTests: XCTestCase {
   }
   
   func testPartsSkipAMonth() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = NSDateComponents()
     components.year = 2015
     components.month = 3

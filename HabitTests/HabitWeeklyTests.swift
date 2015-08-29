@@ -27,7 +27,7 @@ class HabitWeeklyTests: XCTestCase {
   }
   
   func testCountBeforeCreatedWeekly() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: NSDate())
     components.weekday = 5
     let createdAt = calendar.dateFromComponents(components)!
@@ -44,7 +44,7 @@ class HabitWeeklyTests: XCTestCase {
   }
   
   func testDateRange() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = NSDateComponents()
     components.year = 2015
     components.month = 8
@@ -91,7 +91,7 @@ class HabitWeeklyTests: XCTestCase {
   }
   
   func testOneTimeAWeek() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = NSDateComponents()
     components.year = 2015
     components.month = 8
@@ -113,7 +113,7 @@ class HabitWeeklyTests: XCTestCase {
   }
   
   func testTimesSkipBefore() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = NSDateComponents()
     components.year = 2015
     components.month = 8
@@ -137,7 +137,7 @@ class HabitWeeklyTests: XCTestCase {
   }
   
   func testPartsSkipBefore() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: NSDate())
     components.weekday = 4 // Wednesday
     let createdAt = calendar.dateFromComponents(components)!
@@ -156,7 +156,7 @@ class HabitWeeklyTests: XCTestCase {
   }
   
   func testEntriesOnWeek() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
     components.day -= 22
     components.hour = 0
@@ -169,7 +169,7 @@ class HabitWeeklyTests: XCTestCase {
   }
   
   func testUpdateHistory() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
     components.day -= 22
     components.hour = 0
@@ -191,7 +191,7 @@ class HabitWeeklyTests: XCTestCase {
   }
 
   func testTimes2WeeksAgo() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .WeekOfYear, .Weekday, .Hour], fromDate: NSDate())
     components.weekday = 3 // Tuesday
     components.hour = 0
@@ -216,7 +216,7 @@ class HabitWeeklyTests: XCTestCase {
   }
 
   func testParts2WeeksAgo() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: NSDate())
     components.weekday = 3 // Tuesday
     components.hour = 8
@@ -242,7 +242,7 @@ class HabitWeeklyTests: XCTestCase {
   }
   
   func testTimesCompletion() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .WeekOfYear, .Weekday, .Hour], fromDate: NSDate())
     components.weekday = 3 // Tuesday
     components.hour = 8
@@ -298,7 +298,7 @@ class HabitWeeklyTests: XCTestCase {
   }
   
   func testPartsCompletion() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .WeekOfYear, .Weekday, .Hour], fromDate: NSDate())
     components.weekday = 2 // Monday
     components.hour = 8
@@ -346,7 +346,7 @@ class HabitWeeklyTests: XCTestCase {
   }
   
   func testTimesSkipAWeek() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .WeekOfYear, .Weekday, .Hour], fromDate: NSDate())
     components.weekday = 3 // Tuesday
     components.hour = 8
@@ -398,7 +398,7 @@ class HabitWeeklyTests: XCTestCase {
   }
   
   func testPartsSkipAWeek() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = calendar.components([.Year, .WeekOfYear, .Weekday, .Hour], fromDate: NSDate())
     components.weekday = 2 // Monday
     components.hour = 8
@@ -450,7 +450,7 @@ class HabitWeeklyTests: XCTestCase {
   }
   
   func testDaylightSpringForward() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = NSDateComponents()
     components.year = 2015
     components.month = 3
@@ -472,7 +472,7 @@ class HabitWeeklyTests: XCTestCase {
   }
   
   func testDaylightFallBackward() {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     let components = NSDateComponents()
     components.year = 2015
     components.month = 10

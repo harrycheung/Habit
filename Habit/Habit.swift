@@ -113,7 +113,7 @@ class Habit: NSManagedObject {
   }
   
   static func dateRange(date: NSDate, frequency: Frequency, includeEnd: Bool) -> (NSDate, NSDate) {
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     var startDate = NSDate()
     var endDate = NSDate()
     switch frequency {
@@ -181,7 +181,7 @@ class Habit: NSManagedObject {
   
   func countBeforeCreatedAt(date: NSDate) -> Int {
     var count = 0
-    let calendar = NSCalendar.currentCalendar()
+    let calendar = HabitApp.calendar
     switch frequency {
     case .Daily:
       if calendar.isDate(date, inSameDayAsDate: createdAt!) {

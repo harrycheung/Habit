@@ -44,6 +44,8 @@ class HabitApp {
   static let MinimumAlpha: CGFloat = 0.4
   static let NewButtonAnimationDuration: NSTimeInterval = 0.2
   
+  static let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)!
+  
   static var moContext: NSManagedObjectContext {
     return (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
   }
@@ -82,10 +84,6 @@ class HabitApp {
   static var autoskip: Bool {
     get { return NSUserDefaults.standardUserDefaults().boolForKey(autoskipSettingKey) }
     set { NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: autoskipSettingKey) }
-  }
-  
-  static var calendar: NSCalendar {
-    return NSCalendar.currentCalendar()
   }
   
   static var startOfDay: NSTimeInterval {
