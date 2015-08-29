@@ -51,19 +51,93 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   var refreshTimer: NSTimer?
   var appSettingsTransition: AppSettingsTransition?
   
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    
-    appSettingsTransition = AppSettingsTransition()
-    
-    statusBar = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 20))
-    view.addSubview(statusBar!)
-    UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.LightContent, animated: false)
-    
-    statusBar!.backgroundColor = HabitApp.color
-    // TODO: What's up with the "window!!"?
-    UIApplication.sharedApplication().delegate!.window!!.tintColor = HabitApp.color
-    
+  @IBAction func fill(sender: AnyObject) {
+    do {
+      let formatter = NSDateFormatter()
+      formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+      formatter.timeZone = NSTimeZone(abbreviation: "PST")
+      
+      let calendar = NSCalendar.currentCalendar()
+      var date = calendar.dateByAddingUnit(.WeekOfYear, value: -40, toDate: NSDate())!
+      var h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: date)
+      h.update(NSDate())
+      while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
+        //print(formatter.stringFromDate(date))
+        let entries = h.entriesOnDate(date)
+        //print("c: \(entries.count)")
+        for i in 0..<Int(arc4random_uniform(UInt32(entries.count))) {
+          entries[i].complete()
+        }
+        for entry in entries {
+          if entry.state == .Todo {
+            entry.skip()
+          }
+        }
+        date = NSDate(timeInterval: 24 * 3600 * 7, sinceDate: date)
+      }
+      date = calendar.dateByAddingUnit(.WeekOfYear, value: -2, toDate: NSDate())!
+      h = Habit(context: HabitApp.moContext, name: "Will not show skip dialog", details: "", frequency: .Weekly, times: 6, createdAt: date)
+      h.update(NSDate())
+      date = calendar.dateByAddingUnit(.WeekOfYear, value: -3, toDate: NSDate())!
+      h = Habit(context: HabitApp.moContext, name: "Will show skip dialog", details: "", frequency: .Weekly, times: 6, createdAt: date)
+      h.update(NSDate())
+      //        components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
+      //        components.month -= 20
+      //        components.day = 3
+      //        components.hour = 1
+      //        date = calendar.dateFromComponents(components)!
+      //        h = Habit(context: HabitApp.moContext, name: "5. Monthly 4x", details: "", frequency: .Monthly, times: 4, createdAt: date)
+      //        while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Month) {
+      //          for _ in 0..<Int(arc4random_uniform(4)) {
+      //            h.addEntry(onDate: date)
+      //          }
+      //          components.month += 1
+      //          date = calendar.dateFromComponents(components)!
+      //          hupdate(date)
+      //        }
+      //        let oneDay = NSDateComponents()
+      //        oneDay.day = 1
+      //        components.month -= 8
+      //        date = calendar.dateFromComponents(components)!
+      //        h = Habit(context: HabitApp.moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12, createdAt: date)
+      //        while !calendar.isDateInToday(date) {
+      //          for _ in 0..<Int(arc4random_uniform(13)) {
+      //            h.addEntry(onDate: date)
+      //          }
+      //          date = calendar.dateByAddingComponents(oneDay, toDate: date)!
+      //          hupdate(date)
+      //        }
+      //        let createdAt = NSDate()
+      //        let _ = Habit(context: HabitApp.moContext, name: "2. Daily 8x", details: "", frequency: .Daily, times: 8, createdAt: createdAt)
+      //        let _ = Habit(context: HabitApp.moContext, name: "3. Daily 4x", details: "", frequency: .Daily, times: 4, createdAt: createdAt)
+      //        let _ = Habit(context: HabitApp.moContext, name: "4. Daily 1x", details: "", frequency: .Daily, times: 1, createdAt: createdAt)
+      //        let _ = Habit(context: HabitApp.moContext, name: "6. Weekly 3x", details: "", frequency: .Weekly, times: 3, createdAt: createdAt)
+      //        let _ = Habit(context: HabitApp.moContext, name: "7. Weekly 1x", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
+      //        let _ = Habit(context: HabitApp.moContext, name: "8. Daily 12x", details: "", frequency: .Daily, times: 12, createdAt: createdAt)
+      //        let _ = Habit(context: HabitApp.moContext, name: "9. Daily 8x", details: "", frequency: .Daily, times: 8, createdAt: createdAt)
+      //        let _ = Habit(context: HabitApp.moContext, name: "10. Daily 4x", details: "", frequency: .Daily, times: 4, createdAt: createdAt)
+      //        let _ = Habit(context: HabitApp.moContext, name: "11. Daily 1x", details: "", frequency: .Daily, times: 1, createdAt: createdAt)
+      //        let _ = Habit(context: HabitApp.moContext, name: "12. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
+      //        let _ = Habit(context: HabitApp.moContext, name: "13. Weekly 3x", details: "", frequency: .Weekly, times: 3, createdAt: createdAt)
+      //        let _ = Habit(context: HabitApp.moContext, name: "14. Weekly 1x", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
+      //        let _ = Habit(context: HabitApp.moContext, name: "15. Daily 12x", details: "", frequency: .Daily, times: 12, createdAt: createdAt)
+      //        let _ = Habit(context: HabitApp.moContext, name: "16. Daily 8x", details: "", frequency: .Daily, times: 8, createdAt: createdAt)
+      //        let _ = Habit(context: HabitApp.moContext, name: "17. Daily 4x", details: "", frequency: .Daily, times: 4, createdAt: createdAt)
+      //        let _ = Habit(context: HabitApp.moContext, name: "18. Daily 1x", details: "", frequency: .Daily, times: 1, createdAt: createdAt)
+      //        let _ = Habit(context: HabitApp.moContext, name: "19. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
+      //        let _ = Habit(context: HabitApp.moContext, name: "20. Weekly 3x", details: "", frequency: .Weekly, times: 3, createdAt: createdAt)
+      //        let _ = Habit(context: HabitApp.moContext, name: "21. Weekly 1x", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
+      try HabitApp.moContext.save()
+    } catch let error as NSError {
+      NSLog("Could not save \(error), \(error.userInfo)")
+    } catch {
+      NSLog("Could not save")
+    }
+    reloadEntries()
+    tableView.reloadData()
+  }
+  
+  @IBAction func deleteAll(sender: AnyObject) {
     do {
       let habitRequest = NSFetchRequest(entityName: "Habit")
       if #available(iOS 9.0, *) {
@@ -77,89 +151,27 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         habitsToDelete.removeAll(keepCapacity: false)
         try HabitApp.moContext.save()
       }
-      
-      let formatter = NSDateFormatter();
-      formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ";
-      formatter.timeZone = NSTimeZone(abbreviation: "PST");
-      let habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
-      if habits.count == 0 {
-        let calendar = NSCalendar.currentCalendar()
-        var date = calendar.dateByAddingUnit(.WeekOfYear, value: -40, toDate: NSDate())!
-        var h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: date)
-        h.update(NSDate())
-        while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
-          //print(formatter.stringFromDate(date))
-          let entries = h.entriesOnDate(date)
-          //print("c: \(entries.count)")
-          for i in 0..<Int(arc4random_uniform(UInt32(entries.count))) {
-            entries[i].complete()
-          }
-          for entry in entries {
-            if entry.state == .Todo {
-              entry.skip()
-            }
-          }
-          date = NSDate(timeInterval: 24 * 3600 * 7, sinceDate: date)
-        }
-        date = calendar.dateByAddingUnit(.WeekOfYear, value: -2, toDate: NSDate())!
-        h = Habit(context: HabitApp.moContext, name: "Will not show skip dialog", details: "", frequency: .Weekly, times: 6, createdAt: date)
-        h.update(NSDate())
-        date = calendar.dateByAddingUnit(.WeekOfYear, value: -3, toDate: NSDate())!
-        h = Habit(context: HabitApp.moContext, name: "Will show skip dialog", details: "", frequency: .Weekly, times: 6, createdAt: date)
-        h.update(NSDate())
-//        components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
-//        components.month -= 20
-//        components.day = 3
-//        components.hour = 1
-//        date = calendar.dateFromComponents(components)!
-//        h = Habit(context: HabitApp.moContext, name: "5. Monthly 4x", details: "", frequency: .Monthly, times: 4, createdAt: date)
-//        while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Month) {
-//          for _ in 0..<Int(arc4random_uniform(4)) {
-//            h.addEntry(onDate: date)
-//          }
-//          components.month += 1
-//          date = calendar.dateFromComponents(components)!
-//          hupdate(date)
-//        }
-//        let oneDay = NSDateComponents()
-//        oneDay.day = 1
-//        components.month -= 8
-//        date = calendar.dateFromComponents(components)!
-//        h = Habit(context: HabitApp.moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12, createdAt: date)
-//        while !calendar.isDateInToday(date) {
-//          for _ in 0..<Int(arc4random_uniform(13)) {
-//            h.addEntry(onDate: date)
-//          }
-//          date = calendar.dateByAddingComponents(oneDay, toDate: date)!
-//          hupdate(date)
-//        }
-//        let createdAt = NSDate()
-//        let _ = Habit(context: HabitApp.moContext, name: "2. Daily 8x", details: "", frequency: .Daily, times: 8, createdAt: createdAt)
-//        let _ = Habit(context: HabitApp.moContext, name: "3. Daily 4x", details: "", frequency: .Daily, times: 4, createdAt: createdAt)
-//        let _ = Habit(context: HabitApp.moContext, name: "4. Daily 1x", details: "", frequency: .Daily, times: 1, createdAt: createdAt)
-//        let _ = Habit(context: HabitApp.moContext, name: "6. Weekly 3x", details: "", frequency: .Weekly, times: 3, createdAt: createdAt)
-//        let _ = Habit(context: HabitApp.moContext, name: "7. Weekly 1x", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
-//        let _ = Habit(context: HabitApp.moContext, name: "8. Daily 12x", details: "", frequency: .Daily, times: 12, createdAt: createdAt)
-//        let _ = Habit(context: HabitApp.moContext, name: "9. Daily 8x", details: "", frequency: .Daily, times: 8, createdAt: createdAt)
-//        let _ = Habit(context: HabitApp.moContext, name: "10. Daily 4x", details: "", frequency: .Daily, times: 4, createdAt: createdAt)
-//        let _ = Habit(context: HabitApp.moContext, name: "11. Daily 1x", details: "", frequency: .Daily, times: 1, createdAt: createdAt)
-//        let _ = Habit(context: HabitApp.moContext, name: "12. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
-//        let _ = Habit(context: HabitApp.moContext, name: "13. Weekly 3x", details: "", frequency: .Weekly, times: 3, createdAt: createdAt)
-//        let _ = Habit(context: HabitApp.moContext, name: "14. Weekly 1x", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
-//        let _ = Habit(context: HabitApp.moContext, name: "15. Daily 12x", details: "", frequency: .Daily, times: 12, createdAt: createdAt)
-//        let _ = Habit(context: HabitApp.moContext, name: "16. Daily 8x", details: "", frequency: .Daily, times: 8, createdAt: createdAt)
-//        let _ = Habit(context: HabitApp.moContext, name: "17. Daily 4x", details: "", frequency: .Daily, times: 4, createdAt: createdAt)
-//        let _ = Habit(context: HabitApp.moContext, name: "18. Daily 1x", details: "", frequency: .Daily, times: 1, createdAt: createdAt)
-//        let _ = Habit(context: HabitApp.moContext, name: "19. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
-//        let _ = Habit(context: HabitApp.moContext, name: "20. Weekly 3x", details: "", frequency: .Weekly, times: 3, createdAt: createdAt)
-//        let _ = Habit(context: HabitApp.moContext, name: "21. Weekly 1x", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
-        try HabitApp.moContext.save()
-      }
     } catch let error as NSError {
       NSLog("Could not save \(error), \(error.userInfo)")
     } catch {
       NSLog("Could not save")
     }
+    reloadEntries()
+    tableView.reloadData()
+  }
+
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    appSettingsTransition = AppSettingsTransition()
+    
+    statusBar = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 20))
+    view.addSubview(statusBar!)
+    UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.LightContent, animated: false)
+    
+    statusBar!.backgroundColor = HabitApp.color
+    // TODO: What's up with the "window!!"?
+    UIApplication.sharedApplication().delegate!.window!!.tintColor = HabitApp.color
     
     reloadEntries()
     
