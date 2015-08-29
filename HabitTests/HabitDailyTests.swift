@@ -45,6 +45,7 @@ class HabitDailyTests: XCTestCase {
     let habitYesterday = Habit(context: context!, name: "A habit", details: "", frequency: .Daily, times: 12, createdAt: yesterday)
     
     expect(habitYesterday.countBeforeCreatedAt(createdAt)) == 0
+    expect(habitYesterday.firstTodo).to(beNil())
   }
   
   func testDateRange() {
@@ -67,9 +68,9 @@ class HabitDailyTests: XCTestCase {
     components.month = 7
     components.day = 31
     components.hour = 0
-    expect(start) == calendar.dateFromComponents(components)
+    expect(start) == calendar.dateFromComponents(components)!
     components.hour = 24
-    expect(end) == calendar.dateFromComponents(components)
+    expect(end) == calendar.dateFromComponents(components)!
   }
   
   func testTimesSkipBefore() {
@@ -81,8 +82,13 @@ class HabitDailyTests: XCTestCase {
     components.day += 2
     let now = calendar.dateFromComponents(components)!
     habit.update(now)
-    expect(habit.skipBefore(now)) == 4 + 6 + 2
+    expect(habit.skipBefore(now).count) == 4 + 6 + 2
     expect(habit.skippedCount()) == 12
+    components.hour = 12
+    expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
+    components.day += 2
+    components.hour = 0
+    expect(habit.lastEntry) == calendar.dateFromComponents(components)!
   }
   
   func testPartsSkipBefore() {
@@ -95,8 +101,13 @@ class HabitDailyTests: XCTestCase {
     components.day += 2
     let now = calendar.dateFromComponents(components)!
     habit.update(now)
-    expect(habit.skipBefore(now)) == 4 + 4 + 0
+    expect(habit.skipBefore(now).count) == 4 + 4 + 0
     expect(habit.skippedCount()) == 8
+    components.hour = 9
+    expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
+    components.day += 2
+    components.hour = 0
+    expect(habit.lastEntry) == calendar.dateFromComponents(components)!
   }
   
   func testEntriesOnDay() {
@@ -141,9 +152,12 @@ class HabitDailyTests: XCTestCase {
     let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Daily, times: 1, createdAt: createdAt)
     let now = calendar.dateBySettingHour(10, minute: 0, second: 0, ofDate: NSDate(), options: NSCalendarOptions(rawValue: 0))!
     habit.update(now)
-    let tomorrow = calendar.dateByAddingUnit(.Day, value: 1, toDate: now)
+    let tomorrow = calendar.dateByAddingUnit(.Day, value: 1, toDate: now)!
     expect(habit.totalCount()) == 2
     expect(habit.totalCount(tomorrow)) == 1
+    let first = calendar.dateBySettingHour(0, minute: 0, second: 0, ofDate: tomorrow, options: NSCalendarOptions(rawValue: 0))!
+    expect(habit.firstTodo!.due!) == first
+    expect(habit.lastEntry) == calendar.dateByAddingUnit(.Day, value: 1, toDate: first)
   }
   
   func testTimesYesterday() {
@@ -160,8 +174,14 @@ class HabitDailyTests: XCTestCase {
     expect(habit.totalCount(today)) == 14
     expect(habit.totalCount()) == 31
     expect(habit.skippedCount()) == 0
-    expect(habit.skipBefore(today)) == 14
+    expect(habit.skipBefore(today).count) == 14
     expect(habit.skippedCount()) == 14
+    components.day += 1 // today
+    components.hour = 16
+    expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
+    components.day += 2 // day after tomorrow
+    components.hour = 0
+    expect(habit.lastEntry) == calendar.dateFromComponents(components)!
   }
   
   func testPartsYesterday() {
@@ -179,8 +199,14 @@ class HabitDailyTests: XCTestCase {
     expect(habit.totalCount(today)) == 3
     expect(habit.totalCount()) == 7
     expect(habit.skippedCount()) == 0
-    expect(habit.skipBefore(today)) == 3
+    expect(habit.skipBefore(today).count) == 3
     expect(habit.skippedCount()) == 3
+    components.day += 2
+    components.hour = 0
+    expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
+    components.day += 1
+    components.hour = 0
+    expect(habit.lastEntry) == calendar.dateFromComponents(components)!
   }
   
   func testTimesTodayPartial() {
@@ -196,8 +222,13 @@ class HabitDailyTests: XCTestCase {
     habit.update(now)
     expect(habit.totalCount(now)) == 2
     expect(habit.totalCount()) == 20
-    expect(habit.skipBefore(now)) == 2
+    expect(habit.skipBefore(now).count) == 2
     expect(habit.skippedCount()) == 2
+    components.hour = 14
+    expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
+    components.day += 2
+    components.hour = 0
+    expect(habit.lastEntry) == calendar.dateFromComponents(components)!
   }
   
   func testPartsTodayPartial() {
@@ -214,8 +245,13 @@ class HabitDailyTests: XCTestCase {
     habit.update(now)
     expect(habit.totalCount(now)) == 1
     expect(habit.totalCount()) == 5
-    expect(habit.skipBefore(now)) == 1
+    expect(habit.skipBefore(now).count) == 1
     expect(habit.skippedCount()) == 1
+    components.hour = 15
+    expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
+    components.day += 1
+    components.hour = 15
+    expect(habit.lastEntry) == calendar.dateFromComponents(components)!
   }
   
   func testTimesYesterdayPartial() {
@@ -233,8 +269,13 @@ class HabitDailyTests: XCTestCase {
     habit.update(now)
     expect(habit.totalCount(now)) == 14
     expect(habit.totalCount()) == 32
-    expect(habit.skipBefore(now)) == 14
+    expect(habit.skipBefore(now).count) == 14
     expect(habit.skippedCount()) == 14
+    components.hour = 14
+    expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
+    components.day += 2
+    components.hour = 0
+    expect(habit.lastEntry) == calendar.dateFromComponents(components)!
   }
   
   func testPartsYesterdayPartial() {
@@ -253,8 +294,13 @@ class HabitDailyTests: XCTestCase {
     habit.update(now)
     expect(habit.totalCount(now)) == 4
     expect(habit.totalCount()) == 8
-    expect(habit.skipBefore(now)) == 4
+    expect(habit.skipBefore(now).count) == 4
     expect(habit.skippedCount()) == 4
+    components.hour = 15
+    expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
+    components.day += 1
+    components.hour = 15
+    expect(habit.lastEntry) == calendar.dateFromComponents(components)!
   }
   
   func testTimesTwoDaysAgo() {
@@ -269,8 +315,14 @@ class HabitDailyTests: XCTestCase {
     
     expect(habit.totalCount(today)) == 16
     expect(habit.totalCount()) == 29
-    expect(habit.skipBefore(today)) == 16
+    expect(habit.skipBefore(today).count) == 16
     expect(habit.skippedCount()) == 16
+    components.day += 2
+    components.hour = 12
+    expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
+    components.day += 2
+    components.hour = 0
+    expect(habit.lastEntry) == calendar.dateFromComponents(components)!
   }
   
   func testPartsTwoDaysAgo() {
@@ -286,8 +338,14 @@ class HabitDailyTests: XCTestCase {
     
     expect(habit.totalCount(today)) == 6
     expect(habit.totalCount()) == 11
-    expect(habit.skipBefore(today)) == 6
+    expect(habit.skipBefore(today).count) == 6
     expect(habit.skippedCount()) == 6
+    components.day += 2
+    components.hour = 13
+    expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
+    components.day += 2
+    components.hour = 0
+    expect(habit.lastEntry) == calendar.dateFromComponents(components)!
   }
   
   func testTimesCompletion() {
@@ -301,18 +359,21 @@ class HabitDailyTests: XCTestCase {
     components.minute = 10
     habit.update(calendar.dateFromComponents(components)!)
     
-    let request = NSFetchRequest(entityName: "Habit")
     do {
+      let request = NSFetchRequest(entityName: "Habit")
       let results = try context!.executeFetchRequest(request)
       let entries = (results[0] as! Habit).entries!.array as! [Entry]
       entries[0].complete()
       entries[1].complete()
       components.hour = 17
+      components.minute = 0
       var now = calendar.dateFromComponents(components)
       expect(habit.totalCount(now)) == 2
       expect(habit.completedCount()) == 2
       expect(habit.skippedCount()) == 0
       expect(habit.progress(now)) == 1
+      components.hour = 18
+      expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
       entries[2].skip()
       entries[3].complete()
       components.hour = 23
@@ -321,6 +382,8 @@ class HabitDailyTests: XCTestCase {
       expect(habit.completedCount()) == 3
       expect(habit.skippedCount()) == 1
       expect(habit.progress(now)) == 3 / 4.0
+      components.hour = 24
+      expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
     } catch let error as NSError {
       NSLog("error: \(error)")
       fail()
@@ -339,18 +402,21 @@ class HabitDailyTests: XCTestCase {
     components.minute = 10
     habit.update(calendar.dateFromComponents(components)!)
     
-    let request = NSFetchRequest(entityName: "Habit")
     do {
+      let request = NSFetchRequest(entityName: "Habit")
       let results = try context!.executeFetchRequest(request)
       let entries = (results[0] as! Habit).entries!.array as! [Entry]
       entries[0].complete()
       entries[1].complete()
       components.hour = 14
+      components.minute = 0
       var now = calendar.dateFromComponents(components)
       expect(habit.totalCount(now)) == 2
       expect(habit.completedCount()) == 2
       expect(habit.skippedCount()) == 0
       expect(habit.progress(now)) == 1
+      components.hour = 15
+      expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
       entries[2].skip()
       components.hour = 23
       now = calendar.dateFromComponents(components)
@@ -358,6 +424,8 @@ class HabitDailyTests: XCTestCase {
       expect(habit.completedCount()) == 2
       expect(habit.skippedCount()) == 1
       expect(habit.progress(now)) == 2 / 3.0
+      components.hour = 24
+      expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
     } catch let error as NSError {
       NSLog("error: \(error)")
       fail()
@@ -375,8 +443,8 @@ class HabitDailyTests: XCTestCase {
     components.minute = 10
     habit.update(calendar.dateFromComponents(components)!)
     
-    let request = NSFetchRequest(entityName: "Habit")
     do {
+      let request = NSFetchRequest(entityName: "Habit")
       let results = try context!.executeFetchRequest(request)
       let entries = (results[0] as! Habit).entries!.array as! [Entry]
       entries[0].complete()
@@ -389,6 +457,7 @@ class HabitDailyTests: XCTestCase {
     }
     components.day += 2
     components.hour = 11
+    components.minute = 0
     let now = calendar.dateFromComponents(components)!
     habit.update(now)
     habit.skipBefore(now)
@@ -396,6 +465,8 @@ class HabitDailyTests: XCTestCase {
     expect(habit.skippedCount()) == 2 + 8 + 3
     expect(habit.totalCount(now)) == 16
     expect(habit.progress(now)) == 3 / 16.0
+    components.hour = 12
+    expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
     let histories = habit.histories!.array as! [History]
     expect(histories.count) == 4
     expect(histories[0].completed) == 3
@@ -420,8 +491,8 @@ class HabitDailyTests: XCTestCase {
     components.minute = 10
     habit.update(calendar.dateFromComponents(components)!)
     
-    let request = NSFetchRequest(entityName: "Habit")
     do {
+      let request = NSFetchRequest(entityName: "Habit")
       let results = try context!.executeFetchRequest(request)
       let entries = (results[0] as! Habit).entries!.array as! [Entry]
       entries[0].complete()
@@ -433,6 +504,7 @@ class HabitDailyTests: XCTestCase {
     }
     components.day += 2
     components.hour = 14
+    components.minute = 0
     let now = calendar.dateFromComponents(components)!
     habit.update(now)
     habit.skipBefore(now)
@@ -440,6 +512,8 @@ class HabitDailyTests: XCTestCase {
     expect(habit.skippedCount()) == 1 + 5 + 3
     expect(habit.totalCount(now)) == 11
     expect(habit.progress(now)) == 2 / 11.0
+    components.hour = 15
+    expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
     let histories = habit.histories!.array as! [History]
     expect(histories.count) == 4
     expect(histories[0].completed) == 2

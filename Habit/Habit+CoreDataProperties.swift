@@ -25,7 +25,6 @@ extension Habit {
     @NSManaged var parts: String?
     @NSManaged var times: NSNumber?
     @NSManaged var total: NSNumber?
-    @NSManaged var last: NSDate?
     @NSManaged var entries: NSOrderedSet?
     @NSManaged var histories: NSOrderedSet?
 

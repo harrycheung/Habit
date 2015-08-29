@@ -223,10 +223,9 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
     }
     habit!.notifyBool = notification.on
     if habit!.isNew {
-      habit!.last = now
       habit!.createdAt = now
     }
-    habit!.update(NSDate())
+    habit!.update(now)
     do {
       try HabitApp.moContext.save()
     } catch let error as NSError {

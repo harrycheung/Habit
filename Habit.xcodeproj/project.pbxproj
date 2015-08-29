@@ -36,6 +36,7 @@
 		4A4643831B448B3300732389 /* MultiSelectControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4643821B448B3300732389 /* MultiSelectControl.swift */; };
 		4A4D4DA21B6D9618005C86AF /* HabitWeeklyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4D4DA11B6D9618005C86AF /* HabitWeeklyTests.swift */; };
 		4A56B1511B6ED4D80092B98A /* HabitMonthlyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A56B1501B6ED4D80092B98A /* HabitMonthlyTests.swift */; };
+		4A67ABAB1B8FCEBD00DA641B /* SwipeDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A67ABAA1B8FCEBD00DA641B /* SwipeDialogViewController.swift */; };
 		4A6DB6FC1B4B8781008BC1B7 /* UIButton+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6DB6FB1B4B8781008BC1B7 /* UIButton+Color.swift */; };
 		4A6DB6FE1B4C1587008BC1B7 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DB6FD1B4C1587008BC1B7 /* Podfile */; };
 		4AA4AED81B7A73B100A1562F /* HabitHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA4AED71B7A73B100A1562F /* HabitHistory.swift */; };
@@ -100,6 +101,7 @@
 		4A4D4DA11B6D9618005C86AF /* HabitWeeklyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitWeeklyTests.swift; sourceTree = "<group>"; };
 		4A50A7851B55A5E8002D508B /* Bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bridge.h; sourceTree = "<group>"; };
 		4A56B1501B6ED4D80092B98A /* HabitMonthlyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitMonthlyTests.swift; sourceTree = "<group>"; };
+		4A67ABAA1B8FCEBD00DA641B /* SwipeDialogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeDialogViewController.swift; sourceTree = "<group>"; };
 		4A6DB6FB1B4B8781008BC1B7 /* UIButton+Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Color.swift"; sourceTree = "<group>"; };
 		4A6DB6FD1B4C1587008BC1B7 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		4AA4AED71B7A73B100A1562F /* HabitHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitHistory.swift; sourceTree = "<group>"; };
@@ -222,10 +224,11 @@
 		4A1D08E01B40C975006A9CA4 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				4A1D08CC1B3E1A7A006A9CA4 /* MainViewController.swift */,
 				4A1D08CB1B3E1A7A006A9CA4 /* HabitViewController.swift */,
 				4A16FDC01B7ED48A00DF9DFC /* HabitSettingsViewController.swift */,
-				4A1D08CC1B3E1A7A006A9CA4 /* MainViewController.swift */,
 				4A44D7861B5A29EC0017B34B /* AppSettingsViewController.swift */,
+				4A67ABAA1B8FCEBD00DA641B /* SwipeDialogViewController.swift */,
 				4A44D7881B5A9A930017B34B /* AppSettingsTransition.swift */,
 				4A16FDC21B7F7CA000DF9DFC /* HabitSettingsTransition.swift */,
 			);
@@ -559,6 +562,7 @@
 				4A1D08D21B3E1A7A006A9CA4 /* MainViewController.swift in Sources */,
 				4A4643831B448B3300732389 /* MultiSelectControl.swift in Sources */,
 				4A040C4F1B7C4D610081CF85 /* History+CoreDataProperties.swift in Sources */,
+				4A67ABAB1B8FCEBD00DA641B /* SwipeDialogViewController.swift in Sources */,
 				4A6DB6FC1B4B8781008BC1B7 /* UIButton+Color.swift in Sources */,
 				4A1D08A01B3E17E9006A9CA4 /* Habit.xcdatamodeld in Sources */,
 				4A1D08D11B3E1A7A006A9CA4 /* HabitViewController.swift in Sources */,

@@ -22,8 +22,11 @@
 // 13. done - simulator only - Debug flash on color picker button
 // 14. Clean up AppDelegate
 // 15. Auto-skip
-// 16. If a lot to be done, ask to skip all
-// 17. Skip comment
+// 16. done - If a lot to be done, ask to skip all
+// 17. Pretify show upcoming animation
+// 18. Pretify insert new habit
+// 19. Warn when changing habit frequency and handle
+// 20. Skip icon
 
 import UIKit
 import CoreData
@@ -61,26 +64,26 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     do {
       let habitRequest = NSFetchRequest(entityName: "Habit")
-//      if #available(iOS 9.0, *) {
-//        let deleteRequest = NSBatchDeleteRequest(fetchRequest: habitRequest)
-//        try HabitApp.moContext.executeRequest(deleteRequest)
-//      } else {
-//        var habitsToDelete = try HabitApp.moContext.executeFetchRequest(habitRequest)
-//        for habit in habitsToDelete {
-//          HabitApp.moContext.deleteObject(habit as! NSManagedObject)
-//        }
-//        habitsToDelete.removeAll(keepCapacity: false)
-//        try HabitApp.moContext.save()
-//      }
+      if #available(iOS 9.0, *) {
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: habitRequest)
+        try HabitApp.moContext.executeRequest(deleteRequest)
+      } else {
+        var habitsToDelete = try HabitApp.moContext.executeFetchRequest(habitRequest)
+        for habit in habitsToDelete {
+          HabitApp.moContext.deleteObject(habit as! NSManagedObject)
+        }
+        habitsToDelete.removeAll(keepCapacity: false)
+        try HabitApp.moContext.save()
+      }
       
       let formatter = NSDateFormatter();
       formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ";
       formatter.timeZone = NSTimeZone(abbreviation: "PST");
       let habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
-      if habits.count == 3 {
+      if habits.count == 0 {
         let calendar = NSCalendar.currentCalendar()
         var date = calendar.dateByAddingUnit(.WeekOfYear, value: -40, toDate: NSDate())!
-        let h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: date)
+        var h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: date)
         h.update(NSDate())
         while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
           //print(formatter.stringFromDate(date))
@@ -96,6 +99,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
           }
           date = NSDate(timeInterval: 24 * 3600 * 7, sinceDate: date)
         }
+        date = calendar.dateByAddingUnit(.WeekOfYear, value: -2, toDate: NSDate())!
+        h = Habit(context: HabitApp.moContext, name: "Will not show skip dialog", details: "", frequency: .Weekly, times: 6, createdAt: date)
+        h.update(NSDate())
+        date = calendar.dateByAddingUnit(.WeekOfYear, value: -3, toDate: NSDate())!
+        h = Habit(context: HabitApp.moContext, name: "Will show skip dialog", details: "", frequency: .Weekly, times: 6, createdAt: date)
+        h.update(NSDate())
 //        components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
 //        components.month -= 20
 //        components.day = 3
@@ -207,14 +216,55 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   // Table view
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let completion = { (cell: SwipeTableViewCell, skipped skipped: Bool) -> Void in
-      let indexPath = tableView.indexPathForCell(cell)!
+    let removeEntry = { (indexPath: NSIndexPath, skip: Bool) in
       let entry = self.entries.removeAtIndex(indexPath.row)
-      tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
-      if skipped {
+      if (skip) {
         entry.skip()
       } else {
         entry.complete()
+      }
+      self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
+    }
+    
+    let completion = { (cell: SwipeTableViewCell, skipped skipped: Bool) in
+      let indexPath = tableView.indexPathForCell(cell)!
+      if skipped {
+        var skipOne = true
+        let entry = self.entries[indexPath.row]
+        print(entry.habit!.firstTodo!.due!)
+        switch entry.habit!.frequency {
+        case .Daily:
+          skipOne = HabitApp.calendar.components([.Day], fromDate: entry.habit!.firstTodo!.due!, toDate: NSDate()).day <= 2
+        case .Weekly:
+          skipOne = HabitApp.calendar.components([.Day], fromDate: entry.habit!.firstTodo!.due!, toDate: NSDate()).day <= 14
+        case .Monthly:
+          skipOne = HabitApp.calendar.components([.Month], fromDate: entry.habit!.firstTodo!.due!, toDate: NSDate()).month <= 2
+        default: ()
+        }
+        if skipOne {
+          removeEntry(indexPath, true)
+        } else {
+          let sdvc = self.storyboard!.instantiateViewControllerWithIdentifier("SwipeDialogViewController") as! SwipeDialogViewController
+          sdvc.modalTransitionStyle = .CrossDissolve
+          sdvc.modalPresentationStyle = .OverCurrentContext
+          sdvc.yesCompletion = { () in
+            var indexPaths: [NSIndexPath] = []
+            let skippedEntries = entry.habit!.skipBefore(NSDate())
+            for e in skippedEntries {
+              indexPaths.append(NSIndexPath(forRow: self.entries.indexOf(e)!, inSection: 0))
+            }
+            self.reloadEntries()
+            self.tableView.deleteRowsAtIndexPaths(indexPaths, withRowAnimation: .Top)
+            self.dismissViewControllerAnimated(true, completion: nil)
+          }
+          sdvc.noCompletion = { () in
+            removeEntry(indexPath, true)
+            self.dismissViewControllerAnimated(true, completion: nil)
+          }
+          self.presentViewController(sdvc, animated: true, completion: nil)
+        }
+      } else {
+        removeEntry(indexPath, false)
       }
       do {
         try HabitApp.moContext.save()

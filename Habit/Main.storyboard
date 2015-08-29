@@ -32,6 +32,9 @@
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
+            <string>Bariol-Regular</string>
+            <string>Bariol-Regular</string>
+            <string>Bariol-Regular</string>
         </mutableArray>
         <mutableArray key="FontAwesome.otf">
             <string>FontAwesome</string>
@@ -574,6 +577,18 @@
                                                     <constraint firstAttribute="height" constant="1" id="jid-N8-gbS"/>
                                                 </constraints>
                                             </view>
+                                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="luf-9z-XNg">
+                                                <rect key="frame" x="152" y="337" width="151.5" height="43"/>
+                                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
+                                                <state key="normal" title="Save"/>
+                                                <state key="disabled">
+                                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="saveHabit:" destination="fuZ-7k-oQj" eventType="touchUpInside" id="2iF-gd-gzr"/>
+                                                    <action selector="saveHabit:" destination="Y0I-la-TF4" eventType="touchUpInside" id="vMY-PM-dVs"/>
+                                                </connections>
+                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CLe-rJ-teb">
                                                 <rect key="frame" x="0.0" y="337" width="152" height="43"/>
                                                 <constraints>
@@ -590,18 +605,6 @@
                                                 <connections>
                                                     <action selector="deleteHabit:" destination="fuZ-7k-oQj" eventType="touchUpInside" id="DN0-be-ljX"/>
                                                     <action selector="deleteHabit:" destination="Y0I-la-TF4" eventType="touchUpInside" id="Tjl-mX-33A"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="luf-9z-XNg">
-                                                <rect key="frame" x="152" y="337" width="151.5" height="43"/>
-                                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
-                                                <state key="normal" title="Save"/>
-                                                <state key="disabled">
-                                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="saveHabit:" destination="fuZ-7k-oQj" eventType="touchUpInside" id="2iF-gd-gzr"/>
-                                                    <action selector="saveHabit:" destination="Y0I-la-TF4" eventType="touchUpInside" id="vMY-PM-dVs"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -686,10 +689,102 @@
             </objects>
             <point key="canvasLocation" x="1227" y="454"/>
         </scene>
+        <!--Swipe Dialog View Controller-->
+        <scene sceneID="jUb-OT-2no">
+            <objects>
+                <viewController storyboardIdentifier="SwipeDialogViewController" id="2gW-ox-fER" customClass="SwipeDialogViewController" customModule="Habit" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="uGN-TP-ueC"/>
+                        <viewControllerLayoutGuide type="bottom" id="wsj-ym-53K"/>
+                    </layoutGuides>
+                    <view key="view" opaque="NO" alpha="0.20000000000000001" contentMode="scaleToFill" id="6HA-sy-c4k">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view alpha="0.10000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tr2-jA-2YO" userLabel="Background View">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4W2-Id-zql" userLabel="Content View">
+                                <rect key="frame" x="15" y="209" width="290" height="150"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="It's been a while. Want to skip the rest of this habit until today?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hhq-NG-vNN">
+                                        <rect key="frame" x="8" y="8" width="274" height="91"/>
+                                        <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="21"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D1f-pb-Hao">
+                                        <rect key="frame" x="0.0" y="107" width="145" height="43"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="43" id="nrw-rq-goX"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
+                                        <state key="normal" title="No">
+                                            <color key="titleColor" red="0.90588235289999997" green="0.29803921570000003" blue="0.23529411759999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <state key="disabled">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="deleteHabit:" destination="fuZ-7k-oQj" eventType="touchUpInside" id="31F-fa-2SJ"/>
+                                            <action selector="deleteHabit:" destination="Y0I-la-TF4" eventType="touchUpInside" id="CTf-ap-Eni"/>
+                                            <action selector="no:" destination="2gW-ox-fER" eventType="touchUpInside" id="YIq-Vf-oH4"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oZt-5R-g19">
+                                        <rect key="frame" x="145" y="107" width="145" height="43"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="43" id="oz6-HY-7VA"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
+                                        <state key="normal" title="Yes"/>
+                                        <state key="disabled">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="deleteHabit:" destination="fuZ-7k-oQj" eventType="touchUpInside" id="9TR-8T-Nfc"/>
+                                            <action selector="deleteHabit:" destination="Y0I-la-TF4" eventType="touchUpInside" id="Xvf-xb-o1r"/>
+                                            <action selector="yes:" destination="2gW-ox-fER" eventType="touchUpInside" id="FMb-jL-lub"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="oZt-5R-g19" secondAttribute="trailing" id="4hK-sF-bbe"/>
+                                    <constraint firstAttribute="bottom" secondItem="oZt-5R-g19" secondAttribute="bottom" id="5eU-uv-RTe"/>
+                                    <constraint firstItem="hhq-NG-vNN" firstAttribute="top" secondItem="4W2-Id-zql" secondAttribute="top" constant="8" id="5qt-h3-iaa"/>
+                                    <constraint firstItem="oZt-5R-g19" firstAttribute="width" secondItem="4W2-Id-zql" secondAttribute="width" multiplier="0.5" id="6vb-5q-JjX"/>
+                                    <constraint firstItem="oZt-5R-g19" firstAttribute="top" secondItem="hhq-NG-vNN" secondAttribute="bottom" constant="8" id="GEA-RK-VGF"/>
+                                    <constraint firstAttribute="bottom" secondItem="D1f-pb-Hao" secondAttribute="bottom" id="OCm-yf-p2j"/>
+                                    <constraint firstItem="D1f-pb-Hao" firstAttribute="leading" secondItem="4W2-Id-zql" secondAttribute="leading" id="UHB-B5-86z"/>
+                                    <constraint firstItem="hhq-NG-vNN" firstAttribute="leading" secondItem="4W2-Id-zql" secondAttribute="leading" constant="8" id="Wbc-0a-53t"/>
+                                    <constraint firstItem="D1f-pb-Hao" firstAttribute="width" secondItem="4W2-Id-zql" secondAttribute="width" multiplier="0.5" id="WpE-D0-t59"/>
+                                    <constraint firstAttribute="trailing" secondItem="hhq-NG-vNN" secondAttribute="trailing" constant="8" id="ZGt-qp-ZTr"/>
+                                    <constraint firstAttribute="height" constant="150" id="wzM-VD-eyH"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="tr2-jA-2YO" firstAttribute="top" secondItem="uGN-TP-ueC" secondAttribute="bottom" constant="-20" id="43g-DK-SaK"/>
+                            <constraint firstItem="tr2-jA-2YO" firstAttribute="leading" secondItem="6HA-sy-c4k" secondAttribute="leading" id="OiC-1a-drf"/>
+                            <constraint firstItem="4W2-Id-zql" firstAttribute="leading" secondItem="6HA-sy-c4k" secondAttribute="leading" constant="15" id="Qdr-dQ-fCx"/>
+                            <constraint firstItem="4W2-Id-zql" firstAttribute="centerY" secondItem="6HA-sy-c4k" secondAttribute="centerY" id="UdQ-QX-egp"/>
+                            <constraint firstItem="wsj-ym-53K" firstAttribute="top" secondItem="tr2-jA-2YO" secondAttribute="bottom" id="VE1-9H-am2"/>
+                            <constraint firstAttribute="trailing" secondItem="4W2-Id-zql" secondAttribute="trailing" constant="15" id="lKN-sI-kAS"/>
+                            <constraint firstAttribute="trailing" secondItem="tr2-jA-2YO" secondAttribute="trailing" id="x0y-Gh-0Bb"/>
+                        </constraints>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hvc-tX-YnP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1617" y="454"/>
+        </scene>
         <!--Data Source-->
         <scene sceneID="G1Z-5I-rjw">
             <objects>
-                <viewController id="g8Q-E4-o4d" customClass="AppSettingsViewController" customModule="Habit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="App Settings View Controller" id="g8Q-E4-o4d" customClass="AppSettingsViewController" customModule="Habit" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2f0-pD-A8a"/>
                         <viewControllerLayoutGuide type="bottom" id="qe5-sL-ghR"/>
@@ -856,7 +951,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1623" y="454"/>
+            <point key="canvasLocation" x="2021" y="454"/>
         </scene>
     </scenes>
 </document>

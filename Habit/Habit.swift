@@ -82,7 +82,6 @@ class Habit: NSManagedObject {
     parts = ""
     notifyBool = true
     createdAtTimeZone = NSTimeZone.localTimeZone().name
-    last = self.createdAt
     currentStreak = 0
     longestStreak = 0
     total = 0
@@ -262,14 +261,14 @@ class Habit: NSManagedObject {
     return entries!.filteredOrderedSetUsingPredicate(NSCompoundPredicate(andPredicateWithSubpredicates: predicates)).array as! [Entry]
   }
   
-  func skipBefore(currentDate: NSDate) -> Int {
+  func skipBefore(currentDate: NSDate) -> [Entry] {
     var count = 0
     let todoEntries = entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "due <= %@ AND stateRaw == %@", currentDate, Entry.State.Todo.rawValue)).array as! [Entry]
     for entry in todoEntries {
       entry.skip()
       count += 1
     }
-    return count
+    return todoEntries
 //    let request = NSBatchUpdateRequest(entityName: "Entry")
 //    request.predicate = NSPredicate(format: "habit == %@ AND due > %@ AND due <= %@ AND stateRaw == %@",
 //      self, last!, currentDate, Entry.State.Todo.rawValue)
@@ -285,20 +284,16 @@ class Habit: NSManagedObject {
 //    }
   }
   
+  var firstTodo: Entry? {
+    let predicate = NSPredicate(format: "stateRaw == %@", Entry.State.Todo.rawValue)
+    return entries!.filteredOrderedSetUsingPredicate(predicate).firstObject as? Entry
+  }
+  
   var lastEntry: NSDate {
-    let request = NSFetchRequest(entityName: "Entry")
-    request.fetchLimit = 1
-    request.sortDescriptors = [NSSortDescriptor(key: "due", ascending: false)]
-    request.predicate = NSPredicate(format: "habit == %@", self)
-    do {
-      let entries = try managedObjectContext!.executeFetchRequest(request) as! [Entry]
-      if entries.count == 0 {
-        return createdAt!
-      } else {
-        return entries[0].due!
-      }
-    } catch {
+    if entries!.count == 0 {
       return createdAt!
+    } else {
+      return (entries!.lastObject as! Entry).due!
     }
   }
   
@@ -309,9 +304,6 @@ class Habit: NSManagedObject {
     formatter.timeZone = NSTimeZone(abbreviation: "PST")
     //print("update: \(formatter.stringFromDate(currentDate))")
     
-    if currentDate.compare(last!) != .OrderedDescending {
-      return
-    }
     let calendar = HabitApp.calendar
     switch frequency {
     case .Daily:
@@ -359,7 +351,9 @@ class Habit: NSManagedObject {
         return HabitApp.calendar.dateFromComponents(calendar.components([.Year, .Month, .Day], fromDate: date))!
       }
       let expected = expectedCount
+      //print("expected: \(expected)")
       let weekAfterNext = calendar.dateByAddingUnit(.WeekOfYear, value: expected == 1 ? 3 : 2, toDate: currentDate)!
+      //print("weekafternext: \(formatter.stringFromDate(weekAfterNext)) from \(formatter.stringFromDate(currentDate))")
       var lastDue = lastEntry
       var weekCount = entriesOnDate(lastDue).count
       if !useTimes && lastDue.compare(createdAt!) == .OrderedSame {
@@ -416,7 +410,7 @@ class Habit: NSManagedObject {
         monthCount += 1
         let daysInMonth = calendar.rangeOfUnit(.Day, inUnit: .Month, forDate: lastDue).length
         if useTimes {
-          let dueDay = (daysInMonth / times!.integerValue) * (monthCount + startOffset)
+          let dueDay = (monthCount + startOffset) * daysInMonth / times!.integerValue
           components.day = dueDay
           components.hour = 24
           components.minute = 0
@@ -433,6 +427,7 @@ class Habit: NSManagedObject {
         if (expected == 1 || components.day != daysInMonth) && calendar.isDate(lastDue, equalToDate: monthAfterNext, toUnitGranularity: .Month) {
           break
         }
+        //print("lastdue: \(formatter.stringFromDate(lastDue))")
         let entry = Entry(context: managedObjectContext!, habit: self, due: lastDue)
         entry.number = monthCount
         total = total!.integerValue + 1
