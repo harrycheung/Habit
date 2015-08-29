@@ -61,25 +61,25 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       let calendar = HabitApp.calendar
       var date = calendar.dateByAddingUnit(.WeekOfYear, value: -40, toDate: NSDate())!
       var h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: date)
-      h.update(NSDate())
-      while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
-        //print(formatter.stringFromDate(date))
-        let entries = h.entriesOnDate(date)
-        //print("c: \(entries.count)")
-        for i in 0..<Int(arc4random_uniform(UInt32(entries.count))) {
-          entries[i].complete()
-        }
-        for entry in entries {
-          if entry.state == .Todo {
-            entry.skip()
-          }
-        }
-        date = NSDate(timeInterval: 24 * 3600 * 7, sinceDate: date)
-      }
+//      h.update(NSDate())
+//      while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
+//        //print(formatter.stringFromDate(date))
+//        let entries = h.entriesOnDate(date)
+//        //print("c: \(entries.count)")
+//        for i in 0..<Int(arc4random_uniform(UInt32(entries.count))) {
+//          entries[i].complete()
+//        }
+//        for entry in entries {
+//          if entry.state == .Todo {
+//            entry.skip()
+//          }
+//        }
+//        date = NSDate(timeInterval: 24 * 3600 * 7, sinceDate: date)
+//      }
       date = calendar.dateByAddingUnit(.WeekOfYear, value: -2, toDate: NSDate())!
-      h = Habit(context: HabitApp.moContext, name: "Will not show skip dialog", details: "", frequency: .Weekly, times: 6, createdAt: date)
-      h.update(NSDate())
-      date = calendar.dateByAddingUnit(.WeekOfYear, value: -3, toDate: NSDate())!
+//      h = Habit(context: HabitApp.moContext, name: "Will not show skip dialog", details: "", frequency: .Weekly, times: 6, createdAt: date)
+//      h.update(NSDate())
+      date = calendar.dateByAddingUnit(.WeekOfYear, value: -5, toDate: NSDate())!
       h = Habit(context: HabitApp.moContext, name: "Will show skip dialog", details: "", frequency: .Weekly, times: 0, createdAt: date)
       h.daysOfWeek = [.Monday, .Tuesday, .Wednesday, .Friday, .Saturday]
       h.update(NSDate())
@@ -270,22 +270,28 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
           sdvc.modalPresentationStyle = .OverCurrentContext
           sdvc.yesCompletion = { () in
             var indexPaths: [NSIndexPath] = []
+            if entry.due!.compare(NSDate()) == .OrderedDescending {
+              entry.skip()
+              indexPaths.append(indexPath)
+            }
             let skippedEntries = entry.habit!.skipBefore(NSDate())
             for e in skippedEntries {
               indexPaths.append(NSIndexPath(forRow: self.entries.indexOf(e)!, inSection: 0))
             }
             self.reloadEntries()
             self.tableView.deleteRowsAtIndexPaths(indexPaths, withRowAnimation: .Top)
-            self.dismissViewControllerAnimated(true, completion: nil)
-            UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
-              self.newButton.alpha = 1
+            self.dismissViewControllerAnimated(true, completion: {
+              UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
+                self.newButton.alpha = 1
+              })
             })
           }
           sdvc.noCompletion = { () in
             removeEntry(indexPath, true)
-            self.dismissViewControllerAnimated(true, completion: nil)
-            UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
-              self.newButton.alpha = 1
+            self.dismissViewControllerAnimated(true, completion: {
+              UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
+                self.newButton.alpha = 1
+              })
             })
           }
           self.presentViewController(sdvc, animated: true, completion: nil)
@@ -308,7 +314,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     cell.delegate = self
     cell.setSwipeGesture(
       direction: .Right,
-      view: UIImageView(image: UIImage(named: "Checkmark")),
+      view: UIImageView(image: UIImage.fontAwesomeIconWithName(.Check, textColor: UIColor.whiteColor(), size: CGSizeMake(24, 24))),
       color: HabitApp.green,
       options: [.Rotate, .Alpha],
       completion: { (cell: SwipeTableViewCell) in
@@ -316,7 +322,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     })
     cell.setSwipeGesture(
       direction: .Left,
-      view: UIImageView(image: UIImage(named: "Clock")),
+      view: UIImageView(image: UIImage.fontAwesomeIconWithName(.FastBackward, textColor: UIColor.whiteColor(), size: CGSizeMake(24, 24))),
       color: HabitApp.yellow,
       options: [.Rotate, .Alpha],
       completion: { (cell: SwipeTableViewCell) in
@@ -439,6 +445,15 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
       self.newButton.alpha = 0
     })
+  }
+  
+  func endSwiping(cell: SwipeTableViewCell) {
+    if presentedViewController == nil {
+      print("end")
+      UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
+        self.newButton.alpha = 1
+      })
+    }
   }
   
 }

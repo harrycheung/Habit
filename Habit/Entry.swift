@@ -29,7 +29,7 @@ class Entry: NSManagedObject {
   }
   
   var dueIn: NSTimeInterval {
-    return NSDate().timeIntervalSinceDate(due!)
+    return due!.timeIntervalSinceDate(NSDate())
   }
   
   var dueText: String {

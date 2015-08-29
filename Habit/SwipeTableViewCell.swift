@@ -212,8 +212,6 @@ class SwipeTableViewCell: UITableViewCell {
       } else {
         reset()
       }
-      
-      delegate?.endSwiping?(self)
     default: ()
     }
   }
@@ -342,10 +340,12 @@ class SwipeTableViewCell: UITableViewCell {
         self.blocks[direction.hashValue]!(self)
         self.recognizer!.enabled = true
         SwipeTableViewCell.swipeCellCount--
+        self.delegate?.endSwiping?(self)
       })
   }
   
   func reset() {
+    self.delegate?.endSwiping?(self)
     recognizer!.enabled = false
     colorView!.backgroundColor = UIColor.clearColor()
     let leftColorView = UIView(frame: CGRectMake(0, 0, frame.width / 2, frame.height))

@@ -420,7 +420,7 @@ class Habit: NSManagedObject {
         }
         // Since we do calculations based on the beginning of the week, only create if we past createdAt
         if lastDue.compare(createdAt!) == .OrderedDescending {
-          print("new entry: \(formatter.stringFromDate(lastDue))")
+          //print("new entry: \(formatter.stringFromDate(lastDue))")
           let entry = Entry(context: managedObjectContext!, habit: self, due: lastDue)
           entry.number = weekCount
           total = total!.integerValue + 1
