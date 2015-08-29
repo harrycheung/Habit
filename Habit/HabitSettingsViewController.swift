@@ -43,21 +43,21 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
     frequencySettings[0] = FrequencySettings(leftTitle: "Times a day",
       pickerCount: 12,
       rightTitle: "Parts of day",
-      multiSelectItems: Habit.partOfDayStrings.values.array,
+      multiSelectItems: [String](Habit.partOfDayStrings.values),
       useTimes: habit!.useTimes,
       delegate: self)
     buildSettings(frequencySettings[0]!, centerX: 0.33333)
     frequencySettings[1] = FrequencySettings(leftTitle: "Times a week",
       pickerCount: 6,
       rightTitle: "Days of week",
-      multiSelectItems: Habit.dayOfWeekStrings.values.array,
+      multiSelectItems: [String](Habit.dayOfWeekStrings.values),
       useTimes: habit!.useTimes,
       delegate: self)
     buildSettings(frequencySettings[1]!, centerX: 1)
     frequencySettings[2] = FrequencySettings(leftTitle: "Times a month",
       pickerCount: 5,
       rightTitle: "Parts of month",
-      multiSelectItems: Habit.partOfMonthStrings.values.array,
+      multiSelectItems: [String](Habit.partOfMonthStrings.values),
       useTimes: habit!.useTimes,
       delegate: self)
     buildSettings(frequencySettings[2]!, centerX: 1.66666)

@@ -48,7 +48,7 @@ class Entry: NSManagedObject {
     var text = due!.timeAgoSinceNow()
     if dueIn > 0 {
       let endIndex = text.characters.count - 4
-      text = "in \(text.substringToIndex(advance(text.startIndex, endIndex)))"
+      text = "in \(text.substringToIndex(text.startIndex.advancedBy(endIndex)))"
     }
     return "\(Habit.frequencyStrings[habit!.frequency]!) (\(ratio)): \(text)"
   }

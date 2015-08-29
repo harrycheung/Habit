@@ -34,10 +34,9 @@ public class FailureMessage: NSObject {
     }
 
     internal func stripNewlines(str: String) -> String {
-        var lines: [String] = (str as NSString).componentsSeparatedByString("\n") as [String]
+        let lines: [String] = (str as NSString).componentsSeparatedByString("\n") as [String]
         let whitespace = NSCharacterSet.whitespaceAndNewlineCharacterSet()
-        lines = lines.map { line in line.stringByTrimmingCharactersInSet(whitespace) }
-        return "".join(lines)
+        return lines.map({ line in line.stringByTrimmingCharactersInSet(whitespace) }).joinWithSeparator("")
     }
 
     internal func computeStringValue() -> String {

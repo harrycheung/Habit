@@ -39,7 +39,7 @@ class Habit: NSManagedObject {
     case Blank = 0, Sunday = 1, Monday = 2, Tuesday = 3, Wednesday = 4, Thursday = 5, Friday = 6, Saturday = 7
     
     var description: String { return Habit.dayOfWeekStrings[self]! }
-    var shortDescription: String { return description.substringToIndex(advance(description.startIndex, 3)) }
+    var shortDescription: String { return description.substringToIndex(description.startIndex.advancedBy(3)) }
   }
   
   static let dayOfWeekStrings = [
@@ -69,7 +69,7 @@ class Habit: NSManagedObject {
   // TODO: Check all usages of partsArray to see if we can just map - 1 here.
   var partsArray: [Int] {
     get { return parts!.characters.split(isSeparator: { $0 == "," }).map { Int(String($0))! } }
-    set { parts = ",".join(newValue.map { String($0) }) }
+    set { parts = newValue.map({ String($0) }).joinWithSeparator(",") }
   }
   
   var frequency: Frequency {
@@ -79,17 +79,17 @@ class Habit: NSManagedObject {
   
   var partsOfDay: [PartOfDay] {
     get { return parts!.characters.split(isSeparator: { $0 == "," }).map { PartOfDay(rawValue: Int(String($0))!)! } }
-    set { parts = ",".join(newValue.map { String($0.rawValue) }) }
+    set { parts = newValue.map({ String($0.rawValue) }).joinWithSeparator(",") }
   }
   
   var daysOfWeek: [DayOfWeek] {
     get { return parts!.characters.split(isSeparator: { $0 == "," }).map { DayOfWeek(rawValue: Int(String($0))!)! } }
-    set { parts = ",".join(newValue.map { String($0.rawValue) }) }
+    set { parts = newValue.map({ String($0.rawValue) }).joinWithSeparator(",") }
   }
   
   var partsOfMonth: [PartOfMonth] {
     get { return parts!.characters.split(isSeparator: { $0 == "," }).map { PartOfMonth(rawValue: Int(String($0))!)! } }
-    set { parts = ",".join(newValue.map { String($0.rawValue) }) }
+    set { parts = newValue.map({ String($0.rawValue) }).joinWithSeparator(",") }
   }
 
   var timesInt: Int { return times!.integerValue }
@@ -420,7 +420,7 @@ class Habit: NSManagedObject {
         }
         // Since we do calculations based on the beginning of the week, only create if we past createdAt
         if lastDue.compare(createdAt!) == .OrderedDescending {
-          //print("new entry: \(formatter.stringFromDate(lastDue))")
+          print("new entry: \(formatter.stringFromDate(lastDue))")
           let entry = Entry(context: managedObjectContext!, habit: self, due: lastDue)
           entry.number = weekCount
           total = total!.integerValue + 1
