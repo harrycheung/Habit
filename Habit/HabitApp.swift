@@ -42,6 +42,7 @@ class HabitApp {
   static let weekHours = 7 * dayHours
   
   static let MinimumAlpha: CGFloat = 0.4
+  static let NewButtonAnimationDuration: NSTimeInterval = 0.2
   
   static var moContext: NSManagedObjectContext {
     return (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext

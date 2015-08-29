@@ -27,14 +27,15 @@
 // 18. Pretify insert new habit
 // 19. Warn when changing habit frequency and handle
 // 20. Skip icon
-// 21. Hide add button when swiping
+// 21. done - Hide add button when swiping
 // 22. Switch to gregorian calendar
+// 23. Fix blank delegate methods
 
 import UIKit
 import CoreData
 import FontAwesome_swift
 
-class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SwipeTableViewCellDelegate {
   
   // IB identifiers
   let cellIdentifier = "HabitCell"
@@ -288,11 +289,14 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       } catch let error {
         NSLog("Error saving: \(error)")
       }
+      UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
+        self.newButton.alpha = 1
+      })
     }
     
     let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! HabitTableViewCell
     cell.load(entries[indexPath.row])
-    
+    cell.delegate = self
     cell.setSwipeGesture(
       direction: .Right,
       view: UIImageView(image: UIImage(named: "Checkmark")),
@@ -397,23 +401,39 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func scrollViewWillBeginDragging(scrollView: UIScrollView) {
-    UIView.animateWithDuration(0.2, animations: {
+    UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
       self.newButton.alpha = 0
     })
   }
   
   func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     if !decelerate {
-      UIView.animateWithDuration(0.2, animations: {
+      UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
         self.newButton.alpha = 1
       })
     }
   }
   
   func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-    UIView.animateWithDuration(0.2, animations: {
+    UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
       self.newButton.alpha = 1
     })
+  }
+  
+  // SwipeTableViewCell
+  
+  func startSwiping(cell: SwipeTableViewCell) {
+    UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
+      self.newButton.alpha = 0
+    })
+  }
+  
+  func swiping(cell: SwipeTableViewCell, percentage: CGFloat) {
+    // do nothing
+  }
+  
+  func endSwiping(cell: SwipeTableViewCell) {
+    // do nothing
   }
   
 }
