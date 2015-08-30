@@ -20,15 +20,61 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     UISegmentedControl.appearance().setTitleTextAttributes(attr, forState: .Normal)
     
     // Notifications
-    let notificationSettings = UIUserNotificationSettings(forTypes: [.Badge, .Sound, .Alert], categories: nil)
+    let completeAction = UIMutableUserNotificationAction()
+    completeAction.identifier = "COMPLETE"
+    completeAction.title = "Complete"
+    completeAction.activationMode = .Background
+    completeAction.authenticationRequired = false
+    completeAction.destructive = false
+    
+    let skipAction = UIMutableUserNotificationAction()
+    skipAction.identifier = "SKIP"
+    skipAction.title = "Skip"
+    skipAction.activationMode = .Background
+    skipAction.authenticationRequired = false
+    skipAction.destructive = false
+    
+    let habitCategory = UIMutableUserNotificationCategory()
+    habitCategory.identifier = "HABIT_CATEGORY"
+    habitCategory.setActions([completeAction, skipAction], forContext: .Minimal)
+    
+    let notificationSettings = UIUserNotificationSettings(forTypes: [.Badge, .Sound, .Alert], categories: [habitCategory])
     application.registerUserNotificationSettings(notificationSettings)
     
     return true
+  }
+  
+  func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
+    do {
+      let entryURL = NSURL(string: notification.userInfo!["entry"] as! String)!
+      print(entryURL)
+      let entryID = HabitApp.moContext.persistentStoreCoordinator!.managedObjectIDForURIRepresentation(entryURL)!
+      let entry = try HabitApp.moContext.existingObjectWithID(entryID) as! Entry
+      switch (identifier!) {
+      case "COMPLETE":
+        entry.complete()
+      case "SKIP": ()
+        entry.skip()
+      default: ()
+      }
+      try HabitApp.moContext.save()
+      UIApplication.sharedApplication().applicationIconBadgeNumber = HabitApp.overdueCount
+      let mvc = window!.rootViewController as! MainViewController
+      mvc.reloadEntries()
+      mvc.refreshNotifications()
+      mvc.tableView.reloadData()
+    } catch let error as NSError {
+      NSLog("Could not save \(error), \(error.userInfo)")
+    } catch {
+      NSLog("Could not save")
+    }
+    completionHandler()
   }
 
   func applicationWillResignActive(application: UIApplication) {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    UIApplication.sharedApplication().applicationIconBadgeNumber = HabitApp.overdueCount
   }
 
   func applicationDidEnterBackground(application: UIApplication) {
@@ -43,6 +89,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   func applicationDidBecomeActive(application: UIApplication) {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    let mvc = window!.rootViewController as! MainViewController
+    mvc.reloadEntries()
+    mvc.refreshNotifications()
+    mvc.tableView.reloadData()
   }
 
   func applicationWillTerminate(application: UIApplication) {

@@ -318,9 +318,14 @@ class Habit: NSManagedObject {
 //    }
   }
   
-  var firstTodo: Entry? {
+  var todos: [Entry] {
     let predicate = NSPredicate(format: "stateRaw == %@", Entry.State.Todo.rawValue)
-    return entries!.filteredOrderedSetUsingPredicate(predicate).firstObject as? Entry
+    return entries!.filteredOrderedSetUsingPredicate(predicate).array as! [Entry]
+  }
+  
+  var firstTodo: Entry? {
+    let todoArray = todos
+    return todoArray.count == 0 ? nil : todoArray[0]
   }
   
   var lastEntry: NSDate {
@@ -332,15 +337,24 @@ class Habit: NSManagedObject {
   }
   
   func update(currentDate: NSDate) {
-//    TODO: Remove
-    let formatter = NSDateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
-    formatter.timeZone = NSTimeZone(abbreviation: "PST")
-    //print("update: \(formatter.stringFromDate(currentDate))")
+//    let formatter = NSDateFormatter()
+//    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+//    formatter.timeZone = NSTimeZone(abbreviation: "PST")
+//    print("update: \(formatter.stringFromDate(currentDate))")
     
     let calendar = HabitApp.calendar
     switch frequency {
     case .Daily:
+//      if isNew {
+//        var now = calendar.dateByAddingUnit(.Second, value: 10, toDate: NSDate())!
+//        for index in 1..<2 {
+//          let entry = Entry(context: managedObjectContext!, habit: self, due: now)
+//          entry.number = index
+//          total = total!.integerValue + 1
+//          now = calendar.dateByAddingUnit(.Second, value: 3, toDate: now)!
+//        }
+//      }
+      
       let expected = expectedCount
       let dayAfterTomorrow = calendar.dateByAddingUnit(.Day, value: expected == 1 ? 3 : 2, toDate: currentDate)!
       var lastDue = lastEntry

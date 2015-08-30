@@ -74,7 +74,7 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
     back.setTitle(String.fontAwesomeIconWithName(.ChevronLeft), forState: .Normal)
     
     var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0
-    UIApplication.sharedApplication().keyWindow!.tintColor.getRed(&red, green: &green, blue: &blue, alpha: nil)
+    HabitApp.color.getRed(&red, green: &green, blue: &blue, alpha: nil)
     red += (1 - red) * 0.8
     green += (1 - green) * 0.8
     blue += (1 - blue) * 0.8

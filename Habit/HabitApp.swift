@@ -110,4 +110,48 @@ class HabitApp {
     return managedObjectContext
   }
   
+  static var overdueCount: Int {
+    do {
+      let request = NSFetchRequest(entityName: "Entry")
+      request.predicate = NSPredicate(format: "stateRaw == %@ AND due < %@", Entry.State.Todo.rawValue, NSDate())
+      let r = try HabitApp.moContext.executeFetchRequest(request)
+      return r.count
+    } catch let error as NSError {
+      NSLog("Fetch failed: \(error.localizedDescription)")
+      return 0
+    }
+  }
+  
+  static func addNotification(entry: Entry, number: Int) {
+    if HabitApp.notification {
+      if UIApplication.sharedApplication().currentUserNotificationSettings()!.types.contains(.Alert) {
+        let local = UILocalNotification()
+        local.fireDate = entry.due
+        local.alertBody = entry.habit!.name! + " \(number)"
+        local.userInfo = ["entry": entry.objectID.URIRepresentation().absoluteString]
+        local.applicationIconBadgeNumber = number
+        local.soundName = UILocalNotificationDefaultSoundName
+        local.category = "HABIT_CATEGORY"
+        UIApplication.sharedApplication().scheduleLocalNotification(local)
+      }
+    }
+  }
+  
+  static func removeNotification(entry: Entry) {
+    if HabitApp.notification {
+      if let notification = hasNotification(entry) {
+        UIApplication.sharedApplication().cancelLocalNotification(notification)
+      }
+    }
+  }
+  
+  static func hasNotification(entry: Entry) -> UILocalNotification? {
+    for notification in UIApplication.sharedApplication().scheduledLocalNotifications! {
+      if notification.userInfo!["entry"] as! String == entry.objectID.URIRepresentation().absoluteString {
+        return notification
+      }
+    }
+    return nil
+  }
+  
 }

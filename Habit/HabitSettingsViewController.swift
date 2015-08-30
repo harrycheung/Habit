@@ -117,7 +117,7 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
     back.setTitle(String.fontAwesomeIconWithName(.ChevronLeft), forState: .Normal)
     
     var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0
-    UIApplication.sharedApplication().keyWindow!.tintColor.getRed(&red, green: &green, blue: &blue, alpha: nil)
+    HabitApp.color.getRed(&red, green: &green, blue: &blue, alpha: nil)
     red += (1 - red) * 0.8
     green += (1 - green) * 0.8
     blue += (1 - blue) * 0.8
@@ -232,28 +232,21 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
       NSLog("Could not save \(error), \(error.userInfo)")
     }
     
-    if notification.on {
-      //      if UIApplication.sharedApplication().currentUserNotificationSettings()!.types.contains(.Alert) {
-      //        let local = UILocalNotification()
-      //        local.fireDate = NSDate(timeIntervalSinceNow: 10)//habit!.dueIn)
-      //        local.alertAction = "Time to habit!"
-      //        local.alertBody = habit!.name
-      //        //UIApplication.sharedApplication().presentLocalNotificationNow(local)
-      //        UIApplication.sharedApplication().scheduleLocalNotification(local)
-      //      }
-    }
-    
     let mvc = presentingViewController as! MainViewController
     mvc.reloadEntries()
     mvc.tableView.reloadData()
+    mvc.refreshNotifications()
     mvc.dismissViewControllerAnimated(true, completion: nil)
   }
   
   @IBAction func deleteHabit(sender: AnyObject) {
     let alert = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
     let delete = UIAlertAction(title: "Delete habit", style: .Destructive, handler: { (UIAlertAction) in
-      HabitApp.moContext.deleteObject(self.habit!)
+      for entry in self.habit!.todos {
+        HabitApp.removeNotification(entry)
+      }
       do {
+        HabitApp.moContext.deleteObject(self.habit!)
         try HabitApp.moContext.save()
       } catch let error as NSError {
         NSLog("Could not save \(error), \(error.userInfo)")

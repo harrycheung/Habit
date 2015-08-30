@@ -27,7 +27,7 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     
     colorPicker.selectedIndex = HabitApp.colorIndex
     upcoming.on = HabitApp.upcoming
-    notification.on = HabitApp.notification
+    notification.on = !HabitApp.notification
     autoskip.on = HabitApp.autoskip
     
     view.layer.shadowColor = UIColor.blackColor().CGColor
@@ -64,7 +64,12 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
   }
   
   @IBAction func notificationChanged(sender: AnyObject) {
-    HabitApp.notification = notification.on
+    HabitApp.notification = !notification.on
+    if HabitApp.notification {
+      mvc!.refreshNotifications()
+    } else {
+      UIApplication.sharedApplication().cancelAllLocalNotifications()
+    }
   }
   
   @IBAction func autoskipChanged(sender: AnyObject) {

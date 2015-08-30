@@ -13,7 +13,7 @@
 // 4. done - github style history graph
 // 5. 75% - Habit info page
 // 6. done - App settings
-// 7. Local notifications
+// 7. done - Local notifications
 // 8. done - Expire habits periodically
 // 9. done - Split HabitViewController
 // 10. done - Use Entry for tableview
@@ -137,6 +137,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     reloadEntries()
     tableView.reloadData()
+    refreshNotifications()
   }
   
   @IBAction func deleteAll(sender: AnyObject) {
@@ -160,6 +161,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     reloadEntries()
     tableView.reloadData()
+    UIApplication.sharedApplication().cancelAllLocalNotifications()
   }
 
   override func viewDidLoad() {
@@ -175,6 +177,20 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // TODO: What's up with the "window!!"?
     UIApplication.sharedApplication().delegate!.window!!.tintColor = HabitApp.color
     
+    do {
+      let now = NSDate()
+      let habitRequest = NSFetchRequest(entityName: "Habit")
+      let habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
+      for habit in habits {
+        habit.update(now)
+        if HabitApp.autoskip {
+          habit.skipBefore(now)
+        }
+      }
+      try HabitApp.moContext.save()
+    } catch let error as NSError {
+      NSLog("Fetch failed: \(error.localizedDescription)")
+    }
     reloadEntries()
     
     // Setup colors
@@ -182,8 +198,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     tableView.backgroundColor = UIColor.darkGrayColor()
     // TODO: This separatorStyle was added when I switched to Xcode 7 beta 4. Probably a IB bug.
     tableView.separatorStyle = .None
-    titleBar.backgroundColor = UIApplication.sharedApplication().windows[0].tintColor
-    newButton.backgroundColor = UIApplication.sharedApplication().windows[0].tintColor
+    titleBar.backgroundColor = HabitApp.color
+    newButton.backgroundColor = HabitApp.color
     newButton.layer.cornerRadius = 28
     newButton.layer.shadowColor = UIColor.blackColor().CGColor
     newButton.layer.shadowOpacity = 0.6
@@ -218,17 +234,27 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       }
       request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
       let fetchedEntries = try HabitApp.moContext.executeFetchRequest(request) as! [Entry]
-      let now = NSDate()
-      for entry in fetchedEntries {
-        entry.habit!.update(now)
-        if HabitApp.autoskip {
-          entry.habit!.skipBefore(now)
-        }
-      }
-      try HabitApp.moContext.save()
       entries = fetchedEntries.sort({ $0.dueIn < $1.dueIn })
     } catch let error as NSError {
       NSLog("Fetch failed: \(error.localizedDescription)")
+    }
+    UIApplication.sharedApplication().applicationIconBadgeNumber = HabitApp.overdueCount
+  }
+  
+  func refreshNotifications() {
+    UIApplication.sharedApplication().cancelAllLocalNotifications()
+    var count = 0
+    var number = 1
+    let now = NSDate()
+    for entry in entries {
+      if count > 64 {
+        break
+      }
+      if entry.habit!.notifyBool && entry.due!.compare(now) == .OrderedDescending {
+        HabitApp.addNotification(entry, number: number)
+        count += 1
+      }
+      number += 1
     }
   }
   
@@ -396,21 +422,19 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   @IBAction func changeColorLeft(sender: AnyObject) {
-    var currentColorIndex = HabitApp.colors.indexOf(titleBar.backgroundColor!)! - 1
-    if currentColorIndex == 0 {
-      currentColorIndex = HabitApp.colors.count - 1
+    HabitApp.colorIndex -= 1
+    if HabitApp.colorIndex == -1 {
+      HabitApp.colorIndex = HabitApp.colors.count - 1
     }
-    changeColor(HabitApp.colors[currentColorIndex])
-    HabitApp.colorIndex = currentColorIndex
+    changeColor(HabitApp.color)
   }
 
   @IBAction func changeColorRight(sender: AnyObject) {
-    var currentColorIndex = HabitApp.colors.indexOf(titleBar.backgroundColor!)! + 1
-    if currentColorIndex == HabitApp.colors.count {
-      currentColorIndex = 0
+    HabitApp.colorIndex += 1
+    if HabitApp.colorIndex == HabitApp.colors.count {
+      HabitApp.colorIndex = 0
     }
-    changeColor(HabitApp.colors[currentColorIndex])
-    HabitApp.colorIndex = currentColorIndex
+    changeColor(HabitApp.color)
   }
   
   // UIScrollView
@@ -449,7 +473,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   func endSwiping(cell: SwipeTableViewCell) {
     if presentedViewController == nil {
-      print("end")
       UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
         self.newButton.alpha = 1
       })
