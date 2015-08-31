@@ -15,6 +15,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
 
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    // Test for first run
+    if HabitApp.timeZone == "" {
+      HabitApp.upcoming = false
+      HabitApp.notification = true
+      HabitApp.autoskip = false
+      HabitApp.timeZone = NSTimeZone.localTimeZone().name
+    }
+    
     var attr = [NSObject: AnyObject]()
     attr[NSFontAttributeName] = UIFont(name: "Bariol-Regular", size: 15.0)!
     UISegmentedControl.appearance().setTitleTextAttributes(attr, forState: .Normal)

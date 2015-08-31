@@ -18,6 +18,12 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
   @IBOutlet weak var upcoming: UISwitch!
   @IBOutlet weak var notification: UISwitch!
   @IBOutlet weak var autoskip: UISwitch!
+  @IBOutlet weak var defaultAbbreviation: UILabel!
+  @IBOutlet weak var defaultTimeZone: UILabel!
+  @IBOutlet weak var local: UIView!
+  @IBOutlet weak var localLabel: UILabel!
+  @IBOutlet weak var localAbbreviation: UILabel!
+  @IBOutlet weak var localTimeZone: UILabel!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -29,6 +35,17 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     upcoming.on = HabitApp.upcoming
     notification.on = !HabitApp.notification
     autoskip.on = HabitApp.autoskip
+    let timeZone = NSTimeZone(name: HabitApp.timeZone)!
+    defaultTimeZone.text = timeZone.name.stringByReplacingOccurrencesOfString("_", withString: " ")
+    defaultAbbreviation.text = timeZone.abbreviation!
+    let localTZ = NSTimeZone.localTimeZone()
+    if localTZ != timeZone {
+      localAbbreviation.text = localTZ.abbreviation!
+      localTimeZone.text = localTZ.name.stringByReplacingOccurrencesOfString("_", withString: " ")
+    } else {
+      local.removeFromSuperview()
+      view.layoutSubviews()
+    }
     
     view.layer.shadowColor = UIColor.blackColor().CGColor
     view.layer.shadowOpacity = 0.5

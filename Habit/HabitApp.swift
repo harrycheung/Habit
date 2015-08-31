@@ -86,6 +86,17 @@ class HabitApp {
     set { NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: autoskipSettingKey) }
   }
   
+  static var timeZone: String {
+    get {
+      if let tz = NSUserDefaults.standardUserDefaults().stringForKey(timeZoneSettingKey) {
+        return tz
+      } else {
+        return ""
+      }
+    }
+    set { NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: timeZoneSettingKey) }
+  }
+  
   static var startOfDay: NSTimeInterval {
     return 0 * 3600
   }
