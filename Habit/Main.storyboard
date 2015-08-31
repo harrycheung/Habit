@@ -929,6 +929,40 @@
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BgW-3e-OFb" userLabel="Autoskip View">
+                                                    <rect key="frame" x="0.0" y="239" width="320" height="44"/>
+                                                    <subviews>
+                                                        <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="180" stepValue="15" translatesAutoresizingMaskIntoConstraints="NO" id="Ne4-Te-K0N">
+                                                            <rect key="frame" x="211" y="15" width="94" height="29"/>
+                                                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <connections>
+                                                                <action selector="autoSkipDelayChanged:" destination="g8Q-E4-o4d" eventType="valueChanged" id="WsY-AP-6cU"/>
+                                                            </connections>
+                                                        </stepper>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Past due: " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Hv-pj-eeI">
+                                                            <rect key="frame" x="30" y="21" width="64.5" height="17"/>
+                                                            <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="immediately" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W1m-Lm-hJQ">
+                                                            <rect key="frame" x="94" y="21" width="82.5" height="17"/>
+                                                            <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="0Hv-pj-eeI" firstAttribute="leading" secondItem="BgW-3e-OFb" secondAttribute="leading" constant="30" id="24b-hu-sW7"/>
+                                                        <constraint firstItem="W1m-Lm-hJQ" firstAttribute="leading" secondItem="0Hv-pj-eeI" secondAttribute="trailing" id="8hy-Ix-G0w"/>
+                                                        <constraint firstItem="Ne4-Te-K0N" firstAttribute="top" secondItem="BgW-3e-OFb" secondAttribute="top" constant="15" id="Qgh-Ma-Lmr"/>
+                                                        <constraint firstAttribute="height" priority="950" id="VcB-f6-wDC"/>
+                                                        <constraint firstItem="W1m-Lm-hJQ" firstAttribute="centerY" secondItem="Ne4-Te-K0N" secondAttribute="centerY" id="ZB8-0p-TKS"/>
+                                                        <constraint firstAttribute="height" priority="999" constant="44" id="gqI-tt-rVT"/>
+                                                        <constraint firstItem="0Hv-pj-eeI" firstAttribute="centerY" secondItem="Ne4-Te-K0N" secondAttribute="centerY" id="kjg-WA-pH4"/>
+                                                        <constraint firstAttribute="trailing" secondItem="Ne4-Te-K0N" secondAttribute="trailing" constant="15" id="xGf-Jl-poI"/>
+                                                    </constraints>
+                                                </view>
                                                 <view alpha="0.10000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DIm-QJ-Vzj" userLabel="Time Zone Section">
                                                     <rect key="frame" x="0.0" y="298" width="320" height="20"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -1005,40 +1039,6 @@
                                                         <constraint firstItem="fPs-s6-Uau" firstAttribute="leading" secondItem="R8a-6w-nNk" secondAttribute="leading" id="oWI-mV-N7d"/>
                                                         <constraint firstItem="zJs-gp-HU3" firstAttribute="top" secondItem="NY6-NV-k5J" secondAttribute="top" id="w5h-3o-ZsK"/>
                                                         <constraint firstItem="fPs-s6-Uau" firstAttribute="top" secondItem="R8a-6w-nNk" secondAttribute="bottom" constant="4" id="ye7-fP-B4M"/>
-                                                    </constraints>
-                                                </view>
-                                                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BgW-3e-OFb" userLabel="Autoskip View">
-                                                    <rect key="frame" x="0.0" y="239" width="320" height="44"/>
-                                                    <subviews>
-                                                        <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="180" stepValue="15" translatesAutoresizingMaskIntoConstraints="NO" id="Ne4-Te-K0N">
-                                                            <rect key="frame" x="211" y="15" width="94" height="29"/>
-                                                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                            <connections>
-                                                                <action selector="autoSkipDelayChanged:" destination="g8Q-E4-o4d" eventType="valueChanged" id="WsY-AP-6cU"/>
-                                                            </connections>
-                                                        </stepper>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Past due: " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Hv-pj-eeI">
-                                                            <rect key="frame" x="30" y="21" width="64.5" height="17"/>
-                                                            <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
-                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="immediately" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W1m-Lm-hJQ">
-                                                            <rect key="frame" x="94" y="21" width="82.5" height="17"/>
-                                                            <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
-                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                    <constraints>
-                                                        <constraint firstItem="0Hv-pj-eeI" firstAttribute="leading" secondItem="BgW-3e-OFb" secondAttribute="leading" constant="30" id="24b-hu-sW7"/>
-                                                        <constraint firstItem="W1m-Lm-hJQ" firstAttribute="leading" secondItem="0Hv-pj-eeI" secondAttribute="trailing" id="8hy-Ix-G0w"/>
-                                                        <constraint firstItem="Ne4-Te-K0N" firstAttribute="top" secondItem="BgW-3e-OFb" secondAttribute="top" constant="15" id="Qgh-Ma-Lmr"/>
-                                                        <constraint firstAttribute="height" priority="950" id="VcB-f6-wDC"/>
-                                                        <constraint firstItem="W1m-Lm-hJQ" firstAttribute="centerY" secondItem="Ne4-Te-K0N" secondAttribute="centerY" id="ZB8-0p-TKS"/>
-                                                        <constraint firstAttribute="height" priority="999" constant="44" id="gqI-tt-rVT"/>
-                                                        <constraint firstItem="0Hv-pj-eeI" firstAttribute="centerY" secondItem="Ne4-Te-K0N" secondAttribute="centerY" id="kjg-WA-pH4"/>
-                                                        <constraint firstAttribute="trailing" secondItem="Ne4-Te-K0N" secondAttribute="trailing" constant="15" id="xGf-Jl-poI"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
