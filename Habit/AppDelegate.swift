@@ -19,7 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     if HabitApp.timeZone == "" {
       HabitApp.upcoming = false
       HabitApp.notification = true
-      HabitApp.autoskip = false
+      HabitApp.autoSkip = false
+      HabitApp.autoSkipDelay = 60
       HabitApp.timeZone = NSTimeZone.localTimeZone().name
     }
     

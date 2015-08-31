@@ -17,7 +17,8 @@ class HabitApp {
   static let notificationSettingKey = "notification"
   static let colorSettingKey = "color"
   static let upcomingSettingKey = "upcoming"
-  static let autoskipSettingKey = "autoskip"
+  static let autoSkipSettingKey = "autoskip"
+  static let autoSkipDelaySettingKey = "autoskipdelay"
   
   // App colors
   static let green = UIColor(red: 85.0 / 255.0, green: 213.0 / 255.0, blue: 80.0 / 255.0, alpha: 1)
@@ -43,6 +44,8 @@ class HabitApp {
   
   static let MinimumAlpha: CGFloat = 0.4
   static let NewButtonAnimationDuration: NSTimeInterval = 0.2
+  static let LayoutPriorityLow: UILayoutPriority = 900
+  static let LayoutPriorityHigh: UILayoutPriority = 999
   
   static let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)!
   
@@ -81,10 +84,17 @@ class HabitApp {
     set { NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: upcomingSettingKey) }
   }
   
-  static var autoskip: Bool {
-    get { return NSUserDefaults.standardUserDefaults().boolForKey(autoskipSettingKey) }
-    set { NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: autoskipSettingKey) }
+  static var autoSkip: Bool {
+    get { return NSUserDefaults.standardUserDefaults().boolForKey(autoSkipSettingKey) }
+    set { NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: autoSkipSettingKey) }
   }
+  
+  static var autoSkipDelay: Int {
+    get { return NSUserDefaults.standardUserDefaults().integerForKey(autoSkipDelaySettingKey) }
+    set { NSUserDefaults.standardUserDefaults().setInteger(newValue, forKey: autoSkipDelaySettingKey) }
+  }
+  
+  static var autoSkipDelayTimeInterval: NSTimeInterval { return NSTimeInterval(HabitApp.minSec * autoSkipDelay) }
   
   static var timeZone: String {
     get {

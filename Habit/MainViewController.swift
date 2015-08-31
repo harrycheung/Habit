@@ -183,8 +183,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       let habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
       for habit in habits {
         habit.update(now)
-        if HabitApp.autoskip {
-          habit.skipBefore(now)
+        if HabitApp.autoSkip {
+          habit.skipBefore(NSDate(timeInterval: HabitApp.autoSkipDelayTimeInterval, sinceDate: now))
         }
       }
       try HabitApp.moContext.save()
@@ -300,7 +300,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
               entry.skip()
               indexPaths.append(indexPath)
             }
-            let skippedEntries = entry.habit!.skipBefore(NSDate())
+            let skippedEntries = entry.habit!.skipBefore(NSDate(timeIntervalSinceNow: HabitApp.autoSkipDelayTimeInterval))
             for e in skippedEntries {
               indexPaths.append(NSIndexPath(forRow: self.entries.indexOf(e)!, inSection: 0))
             }

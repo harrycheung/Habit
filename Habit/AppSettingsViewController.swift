@@ -17,7 +17,10 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
   @IBOutlet weak var colorPicker: ColorPicker!
   @IBOutlet weak var upcoming: UISwitch!
   @IBOutlet weak var notification: UISwitch!
-  @IBOutlet weak var autoskip: UISwitch!
+  @IBOutlet weak var autoSkip: UISwitch!
+  @IBOutlet weak var autoSkipStepper: UIStepper!
+  @IBOutlet weak var autoSkipDelay: UILabel!
+  @IBOutlet weak var autoSkipHeight: NSLayoutConstraint!
   @IBOutlet weak var defaultAbbreviation: UILabel!
   @IBOutlet weak var defaultTimeZone: UILabel!
   @IBOutlet weak var local: UIView!
@@ -34,7 +37,13 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     colorPicker.selectedIndex = HabitApp.colorIndex
     upcoming.on = HabitApp.upcoming
     notification.on = !HabitApp.notification
-    autoskip.on = HabitApp.autoskip
+    autoSkip.on = HabitApp.autoSkip
+    autoSkipStepper.value = Double(HabitApp.autoSkipDelay)
+    autoSkipDelay.text = autoSkipDelayString(HabitApp.autoSkipDelay)
+    if !autoSkip.on {
+      autoSkipHeight.priority = HabitApp.LayoutPriorityLow
+      view.layoutIfNeeded()
+    }
     let timeZone = NSTimeZone(name: HabitApp.timeZone)!
     defaultTimeZone.text = timeZone.name.stringByReplacingOccurrencesOfString("_", withString: " ")
     defaultAbbreviation.text = timeZone.abbreviation!
@@ -89,8 +98,46 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     }
   }
   
-  @IBAction func autoskipChanged(sender: AnyObject) {
-    HabitApp.autoskip = autoskip.on
+  @IBAction func autoSkipChanged(sender: AnyObject) {
+    HabitApp.autoSkip = autoSkip.on
+    if autoSkip.on {
+      autoSkipHeight.priority = HabitApp.LayoutPriorityHigh
+      UIView.animateWithDuration(0.3, delay: 0, options: .CurveEaseOut,
+        animations: {
+          self.view.layoutIfNeeded()
+        }, completion: nil)
+    } else {
+      autoSkipHeight.priority = HabitApp.LayoutPriorityLow
+      UIView.animateWithDuration(0.3, delay: 0, options: .CurveEaseOut,
+        animations: {
+          self.view.layoutIfNeeded()
+        }, completion: nil)
+    }
+  }
+  
+  func autoSkipDelayString(delay: Int) -> String {
+    if delay == 0 {
+      return "immediately"
+    } else {
+      let hour = delay / 60
+      var hourText = ""
+      if hour == 1 {
+        hourText = "1 hour "
+      } else if hour > 1 {
+        hourText = "\(hour) hours "
+      }
+      let minute = delay % 60
+      var minuteText = ""
+      if minute > 0 {
+        minuteText = "\(minute) min"
+      }
+      return "\(hourText)\(minuteText)"
+    }
+  }
+  
+  @IBAction func autoSkipDelayChanged(sender: AnyObject) {
+    HabitApp.autoSkipDelay = Int(autoSkipStepper.value)
+    autoSkipDelay.text = autoSkipDelayString(Int(autoSkipStepper.value))
   }
   
 }

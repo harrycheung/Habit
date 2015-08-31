@@ -93,7 +93,7 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
     if habit!.isNew {
       save.setTitle("Create", forState: .Normal)
       switchMode.hidden = true
-      deleteWidth.priority = 999 //UILayoutPriorityDefaultHigh
+      deleteWidth.priority = HabitApp.LayoutPriorityHigh
       
       let blur = UIVisualEffectView(effect: UIBlurEffect(style: .Light))
       let content = view.subviews[0]
