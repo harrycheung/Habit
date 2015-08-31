@@ -73,9 +73,9 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     if translation.y > 0 {
       view.frame = CGRectMake(0, translation.y, view.frame.width, view.frame.height)
       darkenView!.frame = CGRectMake(0, 0, view.frame.width, paddingView.bounds.height + translation.y)
-      let panPercentage = max(1 - translation.y / AppSettingsViewController.PanMinimum, 0)
+      let panPercentage = 1 - translation.y / (view.frame.height - paddingView.bounds.height)
       darkenView!.alpha = panPercentage * AppSettingsTransition.DarkenAlpha
-      close.alpha = panPercentage
+      close.alpha = max(1 - translation.y / AppSettingsViewController.PanMinimum, 0)
       
       if recognizer.state == .Ended {
         if translation.y < AppSettingsViewController.PanMinimum {

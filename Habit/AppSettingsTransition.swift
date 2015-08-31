@@ -16,7 +16,7 @@ class AppSettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UI
   static let SpringVelocity: CGFloat = 1
   static let AnimationOptions: UIViewAnimationOptions = [.CurveEaseOut]
   static let PaddingViewTag: Int =  77
-  static let DarkenAlpha: CGFloat = 0.15
+  static let DarkenAlpha: CGFloat = 0.2
   
   var presenting: Bool = false
   
