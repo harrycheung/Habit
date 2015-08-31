@@ -831,8 +831,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view tag="77" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JCU-ZP-Prf" userLabel="Padding View">
+                            <view alpha="0.0" tag="77" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JCU-ZP-Prf" userLabel="Padding View">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="139"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="Le3-w1-tAL" appends="YES" id="edV-Tu-iKW"/>
@@ -863,9 +864,6 @@
                                                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
-                                                    <connections>
-                                                        <outletCollection property="gestureRecognizers" destination="ALh-o6-TbR" appends="YES" id="YPA-q0-Gj8"/>
-                                                    </connections>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sob-Ta-QNB">
                                                     <rect key="frame" x="275" y="6" width="30" height="30"/>
@@ -1102,6 +1100,9 @@
                                         <constraint firstItem="HCb-SO-po6" firstAttribute="leading" secondItem="52b-jT-Us0" secondAttribute="leading" id="qEL-of-rG2"/>
                                         <constraint firstItem="HCb-SO-po6" firstAttribute="top" secondItem="R0n-e1-r1L" secondAttribute="bottom" id="y1u-m5-U20"/>
                                     </constraints>
+                                    <connections>
+                                        <outletCollection property="gestureRecognizers" destination="ALh-o6-TbR" appends="YES" id="q3Q-CQ-Xyc"/>
+                                    </connections>
                                 </view>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="500" id="pOY-GB-iPf"/>
@@ -1134,6 +1135,7 @@
                         <outlet property="localLabel" destination="zJs-gp-HU3" id="XqE-EO-FJI"/>
                         <outlet property="localTimeZone" destination="fPs-s6-Uau" id="oJS-bb-J3X"/>
                         <outlet property="notification" destination="sdO-gi-Auw" id="xTN-YL-p5b"/>
+                        <outlet property="paddingView" destination="JCU-ZP-Prf" id="vAY-jZ-sTC"/>
                         <outlet property="upcoming" destination="M4L-kQ-ZkE" id="6dS-Lh-vDs"/>
                     </connections>
                 </viewController>

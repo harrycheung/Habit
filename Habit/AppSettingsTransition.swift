@@ -10,6 +10,13 @@ import Foundation
 import UIKit
 
 class AppSettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
+
+  static let TransitionDuration: NSTimeInterval = 0.4
+  static let SpringDamping: CGFloat = 0.6
+  static let SpringVelocity: CGFloat = 1
+  static let AnimationOptions: UIViewAnimationOptions = [.CurveEaseOut]
+  static let PaddingViewTag: Int =  77
+  static let DarkenAlpha: CGFloat = 0.15
   
   var presenting: Bool = false
   
@@ -26,7 +33,7 @@ class AppSettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UI
   }
   
   func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
-    return 0.4
+    return AppSettingsTransition.TransitionDuration
   }
   
   func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
@@ -37,26 +44,35 @@ class AppSettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UI
     let containerView = transitionContext.containerView()!
 
     if presenting {
-      let settingsHeight = toVC.view.frame.height
-      toVC.view.frame = CGRectMake(0, settingsHeight, screenWidth, screenHeight)
+      let asvc = toVC as! AppSettingsViewController
+      asvc.darkenView = UIView(frame: CGRectMake(0, 0, screenWidth, screenHeight))
+      asvc.darkenView!.backgroundColor = UIColor.blackColor()
+      asvc.darkenView!.alpha = 0
+      containerView.addSubview(asvc.darkenView!)
+      
+      toVC.view.frame = CGRectMake(0, screenHeight, screenWidth, screenHeight)
       containerView.addSubview(toVC.view)
       
-      UIView.animateWithDuration(transitionDuration(transitionContext),
+      UIView.animateWithDuration(AppSettingsTransition.TransitionDuration,
         delay: 0,
-        usingSpringWithDamping: 0.6,
-        initialSpringVelocity: 1,
-        options: [.CurveEaseOut],
+        usingSpringWithDamping: AppSettingsTransition.SpringDamping,
+        initialSpringVelocity: AppSettingsTransition.SpringVelocity,
+        options: AppSettingsTransition.AnimationOptions,
         animations: {
           toVC.view.frame = CGRectMake(0, 0, screenWidth, screenHeight)
+          asvc.darkenView!.frame = CGRectMake(0, 0, screenWidth, asvc.paddingView.bounds.height)
+          asvc.darkenView!.alpha = AppSettingsTransition.DarkenAlpha
         }, completion: { finished in
           transitionContext.completeTransition(true)
         })
     } else {
-      let settingsHeight = toVC.view.frame.height
+      let asvc = fromVC as! AppSettingsViewController
       
-      UIView.animateWithDuration(transitionDuration(transitionContext),
+      UIView.animateWithDuration(AppSettingsTransition.TransitionDuration,
         animations: {
-          fromVC.view.frame = CGRectMake(0, settingsHeight, screenWidth, screenHeight)
+          fromVC.view.frame = CGRectMake(0, screenHeight, screenWidth, screenHeight)
+          asvc.darkenView!.frame = CGRectMake(0, 0, screenWidth, screenHeight)
+          asvc.darkenView!.alpha = 0
         }, completion: { finished in
           transitionContext.completeTransition(true)
         })

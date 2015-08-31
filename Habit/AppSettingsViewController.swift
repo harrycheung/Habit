@@ -11,8 +11,12 @@ import UIKit
 
 class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorPickerDelegate {
   
-  var mvc: MainViewController?
+  static let PanMinimum: CGFloat = 70
   
+  var mvc: MainViewController?
+  var darkenView: UIView?
+  
+  @IBOutlet weak var paddingView: UIView!
   @IBOutlet weak var close: UIButton!
   @IBOutlet weak var colorPicker: ColorPicker!
   @IBOutlet weak var upcoming: UISwitch!
@@ -53,7 +57,7 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
       localTimeZone.text = localTZ.name.stringByReplacingOccurrencesOfString("_", withString: " ")
     } else {
       local.removeFromSuperview()
-      view.layoutSubviews()
+      view.layoutIfNeeded()
     }
     
     view.layer.shadowColor = UIColor.blackColor().CGColor
@@ -66,11 +70,30 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
   
   @IBAction func panning(recognizer: UIPanGestureRecognizer) {
     let translation = recognizer.translationInView(view)
-    if (translation.y > 0) {
+    if translation.y > 0 {
       view.frame = CGRectMake(0, translation.y, view.frame.width, view.frame.height)
-    }
-    if(recognizer.state == .Ended) {
-      performSegueWithIdentifier("SettingsUnwind", sender: self)
+      darkenView!.frame = CGRectMake(0, 0, view.frame.width, paddingView.bounds.height + translation.y)
+      let panPercentage = max(1 - translation.y / AppSettingsViewController.PanMinimum, 0)
+      darkenView!.alpha = panPercentage * AppSettingsTransition.DarkenAlpha
+      close.alpha = panPercentage
+      
+      if recognizer.state == .Ended {
+        if translation.y < AppSettingsViewController.PanMinimum {
+          UIView.animateWithDuration(AppSettingsTransition.TransitionDuration,
+            delay: 0,
+            usingSpringWithDamping: AppSettingsTransition.SpringDamping,
+            initialSpringVelocity: AppSettingsTransition.SpringVelocity,
+            options: AppSettingsTransition.AnimationOptions,
+            animations: {
+              self.view.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
+              self.darkenView!.frame = CGRectMake(0, 0, self.view.frame.width, self.paddingView.bounds.height)
+              self.darkenView!.alpha = AppSettingsTransition.DarkenAlpha
+              self.close.alpha = 1
+            }, completion: nil)
+        } else {
+          performSegueWithIdentifier("SettingsUnwind", sender: self)
+        }
+      }
     }
   }
   
@@ -104,12 +127,16 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
       autoSkipHeight.priority = HabitApp.LayoutPriorityHigh
       UIView.animateWithDuration(0.3, delay: 0, options: .CurveEaseOut,
         animations: {
+          self.darkenView!.frame = CGRectMake(
+            0, 0, self.view.frame.width, self.paddingView.bounds.height - self.autoSkipHeight.constant)
           self.view.layoutIfNeeded()
         }, completion: nil)
     } else {
       autoSkipHeight.priority = HabitApp.LayoutPriorityLow
       UIView.animateWithDuration(0.3, delay: 0, options: .CurveEaseOut,
         animations: {
+          self.darkenView!.frame = CGRectMake(
+            0, 0, self.view.frame.width, self.paddingView.bounds.height + self.autoSkipHeight.constant)
           self.view.layoutIfNeeded()
         }, completion: nil)
     }
