@@ -35,7 +35,7 @@
 // 26. newButton provides frequency options
 // 27. Option on habit to ignore autoskip
 // 28. Fix github box moving to left on settings click
-// 29. Tap outside settings view to close
+// 29. done - Tap outside settings view to close
 
 import UIKit
 import CoreData
