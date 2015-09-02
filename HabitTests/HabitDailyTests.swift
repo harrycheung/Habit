@@ -35,12 +35,17 @@ class HabitDailyTests: XCTestCase {
     let habitTimes = Habit(context: context!, name: "A habit", details: "", frequency: .Daily, times: 12, createdAt: createdAt)
     
     expect(habitTimes.countBeforeCreatedAt(createdAt)) == 6
+    components.hour = 24
+    expect(habitTimes.countBeforeCreatedAt(calendar.dateFromComponents(components)!)) == 6
     
     let habitParts = Habit(context: context!, name: "A habit", details: "", frequency: .Daily, times: 0, createdAt: createdAt)
     habitParts.partsOfDay = [.Morning, .MidMorning, .MidDay, .Evening]
     
     expect(habitParts.countBeforeCreatedAt(createdAt)) == 3
+    components.hour = 24
+    expect(habitParts.countBeforeCreatedAt(calendar.dateFromComponents(components)!)) == 3
     
+    components.hour = 13
     components.day -= 1
     let yesterday = calendar.dateFromComponents(components)!
     let habitYesterday = Habit(context: context!, name: "A habit", details: "", frequency: .Daily, times: 12, createdAt: yesterday)

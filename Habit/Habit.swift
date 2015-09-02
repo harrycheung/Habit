@@ -218,7 +218,7 @@ class Habit: NSManagedObject {
     let calendar = HabitApp.calendar
     switch frequency {
     case .Daily:
-      if calendar.isDate(date, inSameDayAsDate: createdAt!) {
+      if calendar.isDate(calendar.dateByAddingUnit(.Second, value: -1, toDate: date)!, inSameDayAsDate: createdAt!) {
         let createdComponents = calendar.components([.Hour, .Minute], fromDate: createdAt!)
         let createdTime = NSTimeInterval(createdComponents.hour * HabitApp.hourSec + createdComponents.minute * HabitApp.minSec)
         if useTimes {
@@ -233,7 +233,7 @@ class Habit: NSManagedObject {
         }
       }
     case .Weekly:
-      if calendar.isDate(date, equalToDate: createdAt!, toUnitGranularity: .WeekOfYear) {
+      if calendar.isDate(calendar.dateByAddingUnit(.Second, value: -1, toDate: date)!, equalToDate: createdAt!, toUnitGranularity: .WeekOfYear) {
         let createdComponents = calendar.components([.Year, .Month, .Day, .Hour, .Minute, .Weekday], fromDate: createdAt!)
         let createdTime = NSTimeInterval((createdComponents.weekday - 1) * HabitApp.daySec + createdComponents.hour * HabitApp.hourSec + createdComponents.minute * HabitApp.minSec)
         if useTimes {
@@ -248,9 +248,9 @@ class Habit: NSManagedObject {
         }
       }
     case .Monthly:
-      if calendar.isDate(date, equalToDate: createdAt!, toUnitGranularity: .Month) {
+      if calendar.isDate(calendar.dateByAddingUnit(.Second, value: -1, toDate: date)!, equalToDate: createdAt!, toUnitGranularity: .Month) {
         let createdDay = calendar.components([.Day], fromDate: createdAt!).day
-        let daysInMonth = calendar.rangeOfUnit(.Day, inUnit: .Month, forDate: date).length
+        let daysInMonth = calendar.rangeOfUnit(.Day, inUnit: .Month, forDate: createdAt!).length
         if useTimes {
           let interval = daysInMonth / Int(times!.doubleValue)
           count = createdDay / interval

@@ -35,11 +35,13 @@ class HabitWeeklyTests: XCTestCase {
     let habitTimes = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
     
     expect(habitTimes.countBeforeCreatedAt(createdAt)) == 3
+    expect(habitTimes.countBeforeCreatedAt(calendar.dateByAddingUnit(.Day, value: 3, toDate: createdAt)!)) == 3
     
     let habitParts = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
     habitParts.daysOfWeek = [.Sunday, .Tuesday, .Wednesday, .Saturday]
     
     expect(habitParts.countBeforeCreatedAt(createdAt)) == 3
+    expect(habitTimes.countBeforeCreatedAt(calendar.dateByAddingUnit(.Day, value: 3, toDate: createdAt)!)) == 3
     expect(habitParts.firstTodo).to(beNil())
     expect(habitParts.lastEntry) == createdAt
   }
