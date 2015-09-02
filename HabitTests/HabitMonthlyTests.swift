@@ -19,6 +19,7 @@ class HabitMonthlyTests: XCTestCase {
   override func setUp() {
     super.setUp()
     context = HabitApp.setUpInMemoryManagedObjectContext()
+    HabitApp.upcoming = true
   }
   
   override func tearDown() {

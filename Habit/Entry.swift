@@ -15,12 +15,14 @@ class Entry: NSManagedObject {
     case Todo = 0, Skipped = 1, Completed = 2
   }
   
-  convenience init(context: NSManagedObjectContext, habit: Habit, due: NSDate) {
+  convenience init(context: NSManagedObjectContext, habit: Habit, due: NSDate, period: Int) {
     let entityDescription = NSEntityDescription.entityForName("Entry", inManagedObjectContext: context)!
     self.init(entity: entityDescription, insertIntoManagedObjectContext: context)
     self.habit = habit
     self.due = due
+    self.period = "\(habit.frequency.description)\(period)"
     habit.updateHistory(onDate: due, completed: 0, skipped: 0)
+    //print("new entry: \(self.period)")
   }
   
   var state: State {
@@ -51,6 +53,7 @@ class Entry: NSManagedObject {
       text = "in \(text.substringToIndex(text.startIndex.advancedBy(endIndex)))"
     }
     return "\(Habit.frequencyStrings[habit!.frequency]!) (\(ratio)): \(text)"
+    //return "\(due!)"
   }
   
   func complete() {

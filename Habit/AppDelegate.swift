@@ -56,7 +56,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
     do {
       let entryURL = NSURL(string: notification.userInfo!["entry"] as! String)!
-      print(entryURL)
       let entryID = HabitApp.moContext.persistentStoreCoordinator!.managedObjectIDForURIRepresentation(entryURL)!
       let entry = try HabitApp.moContext.existingObjectWithID(entryID) as! Entry
       switch (identifier!) {
@@ -68,10 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       }
       try HabitApp.moContext.save()
       UIApplication.sharedApplication().applicationIconBadgeNumber = HabitApp.overdueCount
-      let mvc = window!.rootViewController as! MainViewController
-      mvc.reloadEntries()
-      mvc.refreshNotifications()
-      mvc.tableView.reloadData()
+      reloadEntries()
     } catch let error as NSError {
       NSLog("Could not save \(error), \(error.userInfo)")
     } catch {
@@ -98,10 +94,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   func applicationDidBecomeActive(application: UIApplication) {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    let mvc = window!.rootViewController as! MainViewController
-    mvc.reloadEntries()
-    mvc.refreshNotifications()
-    mvc.tableView.reloadData()
+    reloadEntries()
   }
 
   func applicationWillTerminate(application: UIApplication) {
@@ -109,6 +102,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Saves changes in the application's managed object context before the application terminates.
     NSUserDefaults.standardUserDefaults().synchronize()
     self.saveContext()
+  }
+  
+  func reloadEntries() {
+    let mvc = window!.rootViewController as! MainViewController
+    mvc.reloadEntries()
+    mvc.refreshNotifications()
+    mvc.tableView.reloadData()
   }
 
   // MARK: - Core Data stack

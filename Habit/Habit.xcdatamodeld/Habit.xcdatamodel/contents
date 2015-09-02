@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="8175.2" systemVersion="14F27" minimumToolsVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="8193.2" systemVersion="14F27" minimumToolsVersion="Automatic">
     <entity name="Entry" representedClassName=".Entry" syncable="YES">
         <attribute name="due" attributeType="Date" syncable="YES"/>
         <attribute name="number" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="period" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="stateRaw" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <relationship name="habit" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Habit" inverseName="entries" inverseEntity="Habit" syncable="YES"/>
     </entity>
@@ -28,7 +29,7 @@
         <relationship name="habit" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Habit" inverseName="histories" inverseEntity="Habit" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Entry" positionX="-63" positionY="27" width="128" height="105"/>
+        <element name="Entry" positionX="-63" positionY="27" width="128" height="120"/>
         <element name="Habit" positionX="-479" positionY="-12" width="128" height="240"/>
         <element name="History" positionX="-54" positionY="90" width="128" height="105"/>
     </elements>

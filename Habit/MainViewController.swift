@@ -49,6 +49,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   var statusBar: UIView?
   var activeCell: HabitTableViewCell?
   var entries = [Entry]()
+  var upcoming = [Entry]()
   var refreshTimer: NSTimer?
   var appSettingsTransition: AppSettingsTransition?
   
@@ -61,7 +62,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       let calendar = HabitApp.calendar
       var date = calendar.dateByAddingUnit(.WeekOfYear, value: -40, toDate: NSDate())!
       var h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: date)
-//      h.update(NSDate())
+      h.update(NSDate())
 //      while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
 //        //print(formatter.stringFromDate(date))
 //        let entries = h.entriesOnDate(date)
@@ -77,8 +78,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 //        date = NSDate(timeInterval: 24 * 3600 * 7, sinceDate: date)
 //      }
       date = calendar.dateByAddingUnit(.WeekOfYear, value: -2, toDate: NSDate())!
-//      h = Habit(context: HabitApp.moContext, name: "Will not show skip dialog", details: "", frequency: .Weekly, times: 6, createdAt: date)
-//      h.update(NSDate())
+      h = Habit(context: HabitApp.moContext, name: "Will not show skip dialog", details: "", frequency: .Weekly, times: 6, createdAt: date)
+      h.update(NSDate())
       date = calendar.dateByAddingUnit(.WeekOfYear, value: -5, toDate: NSDate())!
       h = Habit(context: HabitApp.moContext, name: "Will show skip dialog", details: "", frequency: .Weekly, times: 0, createdAt: date)
       h.daysOfWeek = [.Monday, .Tuesday, .Wednesday, .Friday, .Saturday]
@@ -224,17 +225,41 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // Dispose of any resources that can be recreated.
   }
   
+  func insertEntries(habit: Habit) {
+    reloadEntries()
+    let periods = HabitApp.currentPeriods
+    var inserts: [NSIndexPath] = []
+    for (index, entry) in entries.enumerate() {
+      if entry.habit! == habit && (HabitApp.upcoming || periods.contains(entry.period!)) {
+        inserts.append(NSIndexPath(forItem: index, inSection: 0))
+      }
+    }
+    tableView.insertRowsAtIndexPaths(inserts, withRowAnimation: .Top)
+  }
+  
+  func removeEntries(habit: Habit) {
+    reloadEntries()
+    var removes: [NSIndexPath] = []
+    for (index, entry) in entries.enumerate() {
+      if entry.habit! == habit {
+        removes.append(NSIndexPath(forItem: index, inSection: 0))
+      }
+    }
+    tableView.insertRowsAtIndexPaths(removes, withRowAnimation: .Top)
+  }
+  
   func reloadEntries() {
     do {
       let request = NSFetchRequest(entityName: "Entry")
-      var predicates = [NSPredicate(format: "stateRaw == %@", Entry.State.Todo.rawValue)]
-      if !HabitApp.upcoming {
-        let tonight = HabitApp.calendar.zeroTime(HabitApp.calendar.dateByAddingUnit(.Day, value: 1, toDate: NSDate())!)
-        predicates.append(NSPredicate(format: "due <= %@", tonight))
+      request.predicate = NSPredicate(format: "stateRaw == %@ AND (due <= %@ || (due > %@ AND period IN %@))",
+        Entry.State.Todo.rawValue, NSDate(), NSDate(), HabitApp.currentPeriods)
+      entries = (try HabitApp.moContext.executeFetchRequest(request) as! [Entry]).sort({ $0.dueIn < $1.dueIn })
+      if HabitApp.upcoming {
+        let request = NSFetchRequest(entityName: "Entry")
+        request.predicate = NSPredicate(format: "stateRaw == %@ AND due > %@ AND NOT (period IN %@)",
+          Entry.State.Todo.rawValue, NSDate(), HabitApp.currentPeriods)
+        upcoming = (try HabitApp.moContext.executeFetchRequest(request) as! [Entry]).sort({ $0.dueIn < $1.dueIn })
       }
-      request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-      let fetchedEntries = try HabitApp.moContext.executeFetchRequest(request) as! [Entry]
-      entries = fetchedEntries.sort({ $0.dueIn < $1.dueIn })
     } catch let error as NSError {
       NSLog("Fetch failed: \(error.localizedDescription)")
     }
@@ -262,7 +287,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let removeEntry = { (indexPath: NSIndexPath, skip: Bool) in
-      let entry = self.entries.removeAtIndex(indexPath.row)
+      let entry = indexPath.section == 0 ? self.entries.removeAtIndex(indexPath.row) : self.upcoming.removeAtIndex(indexPath.row)
       if (skip) {
         entry.skip()
       } else {
@@ -275,7 +300,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       let indexPath = tableView.indexPathForCell(cell)!
       if skipped {
         var skipOne = true
-        let entry = self.entries[indexPath.row]
+        let entry = indexPath.section == 0 ? self.entries[indexPath.row] : self.upcoming[indexPath.row]
         switch entry.habit!.frequency {
         case .Daily:
           skipOne = HabitApp.calendar.components([.Day], fromDate: entry.habit!.firstTodo!.due!, toDate: NSDate()).day <= 2
@@ -336,7 +361,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! HabitTableViewCell
-    cell.load(entries[indexPath.row])
+    let entry = indexPath.section == 0 ? entries[indexPath.row] : upcoming[indexPath.row]
+    cell.load(entry)
     cell.delegate = self
     cell.setSwipeGesture(
       direction: .Right,
@@ -358,7 +384,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return entries.count
+    return section == 0 ? entries.count : upcoming.count
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -374,6 +400,29 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
     return 70
+  }
+  
+  func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    return HabitApp.upcoming ? 2 : 1
+  }
+  
+  func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    return (section == 1 && upcoming.count > 0) ? 18 : 0
+  }
+  
+  func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    let header = UIView(frame: CGRectMake(0, 0, tableView.frame.width, 20))
+    header.backgroundColor = HabitApp.color
+    let title = UILabel()
+    title.font = UIFont(name: "Bariol-Regular", size: 14.0)!
+    title.textColor = UIColor.lightGrayColor()
+    title.text = section == 0 ? "CURRENT" : "UPCOMING"
+    header.addSubview(title)
+    title.snp_makeConstraints { (make) in
+      make.centerY.equalTo(header).offset(1)
+      make.left.equalTo(header).offset(8)
+    }
+    return header
   }
   
   // Segue

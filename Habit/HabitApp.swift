@@ -175,4 +175,13 @@ class HabitApp {
     return nil
   }
   
+  static var currentPeriods: [String] {
+    let now = NSDate()
+    return [
+      "Daily\(HabitApp.calendar.components([.Day], fromDate: now).day)",
+      "Weekly\(HabitApp.calendar.components([.WeekOfYear], fromDate: now).weekOfYear)",
+      "Monthly\(HabitApp.calendar.components([.Month], fromDate: now).month)"
+    ]
+  }
+  
 }

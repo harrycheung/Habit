@@ -26,4 +26,17 @@ extension NSCalendar {
     return dateFromComponents(components([.Year, .Month, .Day], fromDate: date))!
   }
   
+  func dateBySettingHour(h: Int,
+    minute m: Int,
+    second s: Int,
+    ofDate date: NSDate) -> NSDate? {
+    return dateBySettingHour(h, minute: m, second: s, ofDate: date, options: NSCalendarOptions(rawValue: 0))
+  }
+  
+  func dateBySettingUnit(unit: NSCalendarUnit,
+    value: Int,
+    ofDate date: NSDate) -> NSDate? {
+    return dateBySettingUnit(unit, value: value, ofDate: date, options: NSCalendarOptions(rawValue: 0))
+  }
+  
 }

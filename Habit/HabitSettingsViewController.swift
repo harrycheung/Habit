@@ -98,15 +98,15 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
       let blur = UIVisualEffectView(effect: UIBlurEffect(style: .Light))
       let content = view.subviews[0]
       blur.contentView.addSubview(content)
-      content.snp_makeConstraints({ (make) in
+      content.snp_makeConstraints { (make) in
         make.centerY.equalTo(blur.contentView)
         make.left.equalTo(blur.contentView).offset(8)
         make.right.equalTo(blur.contentView).offset(-8)
-      })
+      }
       view.addSubview(blur)
-      blur.snp_makeConstraints({ (make) in
+      blur.snp_makeConstraints { (make) in
         make.edges.equalTo(view)
-      })
+      }
     } else {
       switchMode.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
       switchMode.setTitle(String.fontAwesomeIconWithName(.Close), forState: .Normal)
@@ -133,7 +133,7 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
   func buildSettings(settings: FrequencySettings, centerX: CGFloat) {
     settings.translatesAutoresizingMaskIntoConstraints = false
     frequencyScrollerContent.addSubview(settings)
-    settings.snp_makeConstraints {(make) in
+    settings.snp_makeConstraints { (make) in
       make.centerX.equalTo(frequencyScrollerContent).multipliedBy(centerX)
       make.centerY.equalTo(frequencyScrollerContent)
       make.width.equalTo(frequencyScrollerContent).multipliedBy(0.33333)
@@ -212,7 +212,6 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
   
   @IBAction func saveHabit(sender: AnyObject) {
     let now = NSDate()
-    // TODO: set habit!.next
     habit!.name = name.text!
     habit!.frequencyRaw = frequency.selectedSegmentIndex + 1
     if activeSettings.useTimes {
@@ -233,8 +232,7 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
     }
     
     let mvc = presentingViewController as! MainViewController
-    mvc.reloadEntries()
-    mvc.tableView.reloadData()
+    mvc.insertEntries(habit!)
     mvc.refreshNotifications()
     mvc.dismissViewControllerAnimated(true, completion: nil)
   }
@@ -256,8 +254,8 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
       self.habit = nil
       self.presentingViewController!.view.hidden = true
       let mvc = self.presentingViewController!.presentingViewController as! MainViewController
-      mvc.reloadEntries()
-      mvc.tableView.reloadData()
+      mvc.removeEntries(self.habit!)
+      mvc.refreshNotifications()
       self.presentingViewController!.dismissViewControllerAnimated(true, completion: {
         mvc.dismissViewControllerAnimated(false, completion: nil)
       })

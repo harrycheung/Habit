@@ -19,6 +19,7 @@ class HabitDailyTests: XCTestCase {
   override func setUp() {
     super.setUp()
     context = HabitApp.setUpInMemoryManagedObjectContext()
+    HabitApp.upcoming = true
   }
     
   override func tearDown() {
@@ -573,6 +574,29 @@ class HabitDailyTests: XCTestCase {
     }
     components.hour = 9
     expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
+  }
+  
+  func testUpcoming() {
+    let calendar = HabitApp.calendar
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 8
+    components.day = 27
+    components.hour = 23
+    components.minute = 55
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Daily, times: 1, createdAt: createdAt)
+    
+    HabitApp.upcoming = false
+    habit.update(createdAt)
+    expect(habit.totalCount()) == 1
+    components.hour = 24
+    components.minute = 0
+    expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
+    
+    HabitApp.upcoming = true
+    habit.update(createdAt)
+    expect(habit.totalCount()) == 2
   }
   
 }
