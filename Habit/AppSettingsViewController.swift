@@ -127,8 +127,13 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     } catch let error as NSError {
       NSLog("Fetch failed: \(error.localizedDescription)")
     }
-    mvc!.reloadEntries()
-    mvc!.tableView.reloadData()
+    if !upcoming.on {
+      mvc!.hideUpcoming()
+    }
+    mvc!.reloadEntries()    
+    if upcoming.on {
+      self.mvc!.showUpcoming()
+    }
   }
   
   @IBAction func notificationChanged(sender: AnyObject) {

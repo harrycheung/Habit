@@ -23,13 +23,19 @@
 // 14. Clean up AppDelegate
 // 15. done - Auto-skip
 // 16. done - If a lot to be done, ask to skip all
-// 17. Pretify show upcoming animation
-// 18. Pretify insert new habit
+// 17. done - Pretify show upcoming animation
+// 18. done - Pretify insert new habit
 // 19. Warn when changing habit frequency and handle
 // 20. done - Skip icon
 // 21. done - Hide add button when swiping
 // 22. done - Switch to gregorian calendar
 // 23. done - Fix blank delegate methods
+// 24. Check to see if a habit of the same name exists
+// 25. Strip habit name of whitespace
+// 26. newButton provides frequency options
+// 27. Option on habit to ignore autoskip
+// 28. Fix github box moving to left on settings click
+// 29. Tap outside settings view to close
 
 import UIKit
 import CoreData
@@ -40,6 +46,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   // IB identifiers
   let cellIdentifier = "HabitCell"
   let showHabitSegue = "ShowHabit"
+  
+  let UpcomingAnimationDelay: NSTimeInterval = 0.02
 
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var titleBar: UIView!
@@ -178,6 +186,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // TODO: What's up with the "window!!"?
     UIApplication.sharedApplication().delegate!.window!!.tintColor = HabitApp.color
     
+#if !TESTING
     do {
       let now = NSDate()
       let habitRequest = NSFetchRequest(entityName: "Habit")
@@ -193,6 +202,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       NSLog("Fetch failed: \(error.localizedDescription)")
     }
     reloadEntries()
+      
+    // Setup timers
+    refreshTimer = NSTimer.scheduledTimerWithTimeInterval(5 * 60, target: tableView, selector: "reloadData", userInfo: nil, repeats: true)
+#endif
     
     // Setup colors
     tableView.backgroundView = nil
@@ -206,9 +219,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     newButton.layer.shadowOpacity = 0.6
     newButton.layer.shadowRadius = 5
     newButton.layer.shadowOffset = CGSizeMake(0, 1)
-    
-    // Setup timers
-    refreshTimer = NSTimer.scheduledTimerWithTimeInterval(5 * 60, target: tableView, selector: "reloadData", userInfo: nil, repeats: true)
     
 //    for family in UIFont.familyNames() {
 //      NSLog("\(family)")
@@ -226,26 +236,47 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func insertEntries(habit: Habit) {
+    let upcomingCount = upcoming.count
     reloadEntries()
-    let periods = HabitApp.currentPeriods
     var inserts: [NSIndexPath] = []
     for (index, entry) in entries.enumerate() {
-      if entry.habit! == habit && (HabitApp.upcoming || periods.contains(entry.period!)) {
+      if entry.habit! == habit {
         inserts.append(NSIndexPath(forItem: index, inSection: 0))
       }
     }
+    for (index, entry) in upcoming.enumerate() {
+      if entry.habit! == habit {
+        inserts.append(NSIndexPath(forItem: index, inSection: 1))
+      }
+    }
+    tableView.beginUpdates()
+    if HabitApp.upcoming && upcomingCount == 0 && upcoming.count > 0 {
+      tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .Top)
+    }
     tableView.insertRowsAtIndexPaths(inserts, withRowAnimation: .Top)
+    tableView.endUpdates()
   }
   
   func removeEntries(habit: Habit) {
-    reloadEntries()
     var removes: [NSIndexPath] = []
     for (index, entry) in entries.enumerate() {
       if entry.habit! == habit {
         removes.append(NSIndexPath(forItem: index, inSection: 0))
       }
     }
-    tableView.insertRowsAtIndexPaths(removes, withRowAnimation: .Top)
+    entries = entries.filter { $0.habit! != habit }
+    for (index, entry) in upcoming.enumerate() {
+      if entry.habit! == habit {
+        removes.append(NSIndexPath(forItem: index, inSection: 1))
+      }
+    }
+    upcoming = upcoming.filter { $0.habit! != habit }
+    tableView.beginUpdates()
+    if HabitApp.upcoming && upcoming.count == 0 {
+      tableView.deleteSections(NSIndexSet(index: 1), withRowAnimation: .Top)
+    }
+    tableView.deleteRowsAtIndexPaths(removes, withRowAnimation: .Top)
+    tableView.endUpdates()
   }
   
   func reloadEntries() {
@@ -259,6 +290,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         request.predicate = NSPredicate(format: "stateRaw == %@ AND due > %@ AND NOT (period IN %@)",
           Entry.State.Todo.rawValue, NSDate(), HabitApp.currentPeriods)
         upcoming = (try HabitApp.moContext.executeFetchRequest(request) as! [Entry]).sort({ $0.dueIn < $1.dueIn })
+      } else {
+        upcoming = []
       }
     } catch let error as NSError {
       NSLog("Fetch failed: \(error.localizedDescription)")
@@ -280,6 +313,67 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         count += 1
       }
       number += 1
+    }
+  }
+  
+  func hideUpcoming() {
+    if upcoming.count > 0 {
+      let animate = { (view: UIView, delay: NSTimeInterval, reload: Bool) in
+        var endFrame = view.frame
+        endFrame.origin.y = view.frame.origin.y + self.tableView.superview!.bounds.height
+        UIView.animateWithDuration(0.3,
+          delay: delay,
+          options: [.CurveEaseIn],
+          animations: {
+            view.frame = endFrame
+          }, completion: { finished in
+            if reload {
+              // Remove any traces of the old cells
+              self.tableView.reloadData()
+            }
+        })
+      }
+      
+      var delayStart = UpcomingAnimationDelay * Double(upcoming.count)
+      animate(tableView.headerViewForSection(1)!, delayStart, true)
+      for (index, _) in upcoming.enumerate() {
+        let indexPath = NSIndexPath(forRow: index, inSection: 1)
+        animate(tableView.cellForRowAtIndexPath(indexPath)!, delayStart, false)
+        delayStart -= UpcomingAnimationDelay
+      }
+    }
+  }
+  
+  func showUpcoming() {
+    if upcoming.count > 0 {
+      let animate = { (view: UIView, endFrame: CGRect, delay: NSTimeInterval) in
+        var startFrame = view.frame
+        startFrame.origin.y = endFrame.origin.y + self.tableView.superview!.bounds.height
+        view.frame = startFrame
+        UIView.animateWithDuration(0.3,
+          delay: delay,
+          options: [.CurveEaseOut],
+          animations: {
+            view.frame = endFrame
+          }, completion: nil)
+      }
+      
+      // Load up the cells to animate
+      tableView.beginUpdates()
+      tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .None)
+      let indexPaths = upcoming.enumerate().map { (index, entry) in
+        return NSIndexPath(forRow: index, inSection: 1)
+      }
+      tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
+      tableView.endUpdates()
+
+      var delayStart = 0.0
+      animate(tableView.headerViewForSection(1)!, tableView.rectForHeaderInSection(1), delayStart)
+      for (index, _) in upcoming.enumerate() {
+        let indexPath = NSIndexPath(forRow: index, inSection: 1)
+        animate(tableView.cellForRowAtIndexPath(indexPath)!, tableView.rectForRowAtIndexPath(indexPath), delayStart)
+        delayStart += UpcomingAnimationDelay
+      }
     }
   }
   
@@ -403,7 +497,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-    return HabitApp.upcoming ? 2 : 1
+    return upcoming.isEmpty ? 1 : 2
   }
   
   func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -411,16 +505,22 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    let header = UIView(frame: CGRectMake(0, 0, tableView.frame.width, 20))
-    header.backgroundColor = HabitApp.color
+    let upcomingHeader = "UPCOMING_HEADER"
+    
+    var header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(upcomingHeader)
+    if header == nil {
+      header = UITableViewHeaderFooterView(reuseIdentifier: upcomingHeader)
+    }
+    header!.frame = CGRectMake(0, 0, tableView.frame.width, 20)
+    header!.contentView.backgroundColor = HabitApp.color
     let title = UILabel()
     title.font = UIFont(name: "Bariol-Regular", size: 14.0)!
     title.textColor = UIColor.lightGrayColor()
     title.text = section == 0 ? "CURRENT" : "UPCOMING"
-    header.addSubview(title)
+    header!.contentView.addSubview(title)
     title.snp_makeConstraints { (make) in
-      make.centerY.equalTo(header).offset(1)
-      make.left.equalTo(header).offset(8)
+      make.centerY.equalTo(header!.contentView).offset(1)
+      make.left.equalTo(header!.contentView).offset(8)
     }
     return header
   }

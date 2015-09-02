@@ -749,8 +749,10 @@
 			baseConfigurationReference = E50993D416366D75EB738AF7 /* Pods-HabitTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = HabitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "$(inherited) -DTESTING";
 				PRODUCT_BUNDLE_IDENTIFIER = harrycheung.habit.HabitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Habit.app/Habit";
@@ -762,8 +764,10 @@
 			baseConfigurationReference = 4368692B34E65F6BF8A58F49 /* Pods-HabitTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = HabitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "$(inherited) -DTESTING";
 				PRODUCT_BUNDLE_IDENTIFIER = harrycheung.habit.HabitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Habit.app/Habit";

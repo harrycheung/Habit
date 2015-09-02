@@ -230,7 +230,6 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
     } catch let error as NSError {
       NSLog("Could not save \(error), \(error.userInfo)")
     }
-    
     let mvc = presentingViewController as! MainViewController
     mvc.insertEntries(habit!)
     mvc.refreshNotifications()
@@ -243,6 +242,13 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
       for entry in self.habit!.todos {
         HabitApp.removeNotification(entry)
       }
+      self.presentingViewController!.view.hidden = true
+      let mvc = self.presentingViewController!.presentingViewController as! MainViewController
+      mvc.removeEntries(self.habit!)
+      mvc.refreshNotifications()
+      self.presentingViewController!.dismissViewControllerAnimated(true, completion: {
+        mvc.dismissViewControllerAnimated(false, completion: nil)
+      })
       do {
         HabitApp.moContext.deleteObject(self.habit!)
         try HabitApp.moContext.save()
@@ -252,13 +258,6 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
         // something
       }
       self.habit = nil
-      self.presentingViewController!.view.hidden = true
-      let mvc = self.presentingViewController!.presentingViewController as! MainViewController
-      mvc.removeEntries(self.habit!)
-      mvc.refreshNotifications()
-      self.presentingViewController!.dismissViewControllerAnimated(true, completion: {
-        mvc.dismissViewControllerAnimated(false, completion: nil)
-      })
     })
     alert.addAction(delete)
     let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: { (UIAlertAction) in
