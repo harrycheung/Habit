@@ -212,7 +212,7 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
   
   @IBAction func saveHabit(sender: AnyObject) {
     let now = NSDate()
-    habit!.name = name.text!
+    habit!.name = name.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
     habit!.frequencyRaw = frequency.selectedSegmentIndex + 1
     if activeSettings.useTimes {
       habit!.times = activeSettings.picker!.selectedRowInComponent(0) + 1

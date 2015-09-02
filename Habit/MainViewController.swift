@@ -31,7 +31,7 @@
 // 22. done - Switch to gregorian calendar
 // 23. done - Fix blank delegate methods
 // 24. Check to see if a habit of the same name exists
-// 25. Strip habit name of whitespace
+// 25. done - Strip habit name of whitespace
 // 26. newButton provides frequency options
 // 27. Option on habit to ignore autoskip
 // 28. Fix github box moving to left on settings click
