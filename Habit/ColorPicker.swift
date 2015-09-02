@@ -57,11 +57,11 @@ class ColorPicker: UIView {
       let button = ColorPickerButton(diameter: diameter, index: index)
       buttons.append(button)
       addSubview(button)
-      button.snp_makeConstraints({ (make) in
+      button.snp_makeConstraints { (make) in
         make.centerX.equalTo(self).multipliedBy(CGFloat(1 + 2 * index) / CGFloat(count))
         make.centerY.equalTo(self)
         make.width.height.equalTo(diameter)
-      })
+      }
       button.addTarget(self, action: "itemTapped:", forControlEvents: .TouchUpInside)
     }
   }

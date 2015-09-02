@@ -43,14 +43,14 @@ class HabitHistory: UIView, UIScrollViewDelegate {
     scrollView!.showsHorizontalScrollIndicator = false
     scrollViewContent = UIView()
     scrollView!.addSubview(scrollViewContent!)
-    scrollViewContent!.snp_makeConstraints({ (make) in
+    scrollViewContent!.snp_makeConstraints { (make) in
       make.edges.height.equalTo(scrollView!)
       scrollViewContentWidth = make.width.equalTo(scrollView!).constraint
-    })
+    }
     addSubview(scrollView!)
-    scrollView!.snp_makeConstraints({ (make) in
+    scrollView!.snp_makeConstraints { (make) in
       make.edges.equalTo(self)
-    })
+    }
   }
   
   override init(frame: CGRect) {
@@ -79,10 +79,10 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       label.font = UIFont(name: "Bariol-Regular", size: 13.0)!
       label.textColor = UIColor.blackColor()
       self.scrollViewContent!.addSubview(label)
-      label.snp_makeConstraints({ (make) in
+      label.snp_makeConstraints { (make) in
         make.centerX.equalTo(self.squares[self.squares.endIndex - 1])
         make.centerY.equalTo(self.scrollViewContent!.snp_top).offset(self.titleBarHeight / 2)
-      })
+      }
     }
     
     scrollViewContent!.layoutIfNeeded()
@@ -140,9 +140,9 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       
       // Reset width constraint
       scrollViewContentWidth!.uninstall()
-      scrollViewContent!.snp_makeConstraints({ (make) in
+      scrollViewContent!.snp_makeConstraints { (make) in
         scrollViewContentWidth = make.width.equalTo(offset).constraint
-      })
+      }
       scrollView!.layoutIfNeeded()
       let rightOffset = CGPointMake(scrollViewContent!.frame.width - scrollView!.frame.width, 0)
       scrollView!.setContentOffset(rightOffset, animated: false)
