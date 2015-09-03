@@ -153,8 +153,29 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       }
       scrollView!.layoutIfNeeded()
       if scroll {
-        let rightOffset = CGPointMake(width - scrollView!.frame.width, 0)
-        scrollView!.setContentOffset(rightOffset, animated: false)
+        scrollView!.setContentOffset(CGPointMake(width - scrollView!.frame.width, 0), animated: false)
+      }
+      
+      var delay = 0.1
+      for square in squares.reverse() {
+        if square.frame.origin.x < width - scrollView!.bounds.width - side {
+          break
+        }
+        let endFrame = square.frame
+        var startFrame = square.frame
+        startFrame.origin.x = endFrame.origin.x - scrollView!.bounds.width
+        square.frame = startFrame
+        UIView.animateWithDuration(0.3,
+          delay: delay,
+          options: [.CurveEaseOut],
+          animations: {
+            square.frame = endFrame
+          }, completion: nil)
+        if habit!.frequency == .Daily {
+          delay += 0.005
+        } else {
+          delay += 0.01
+        }
       }
     }
   }

@@ -36,7 +36,8 @@
 // 27. done - Option on habit to ignore autoskip
 // 28. done - Fix github box moving to left on settings click
 // 29. done - Tap outside settings view to close
-// 30. Animate filling of history box
+// 30. done - Animate filling of history box
+// 31. Custom start and finish day
 
 import UIKit
 import CoreData
@@ -111,14 +112,21 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       //        oneDay.day = 1
       //        components.month -= 8
       //        date = calendar.dateFromComponents(components)!
-      //        h = Habit(context: HabitApp.moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12, createdAt: date)
-      //        while !calendar.isDateInToday(date) {
-      //          for _ in 0..<Int(arc4random_uniform(13)) {
-      //            h.addEntry(onDate: date)
-      //          }
-      //          date = calendar.dateByAddingComponents(oneDay, toDate: date)!
-      //          hupdate(date)
-      //        }
+      date = calendar.dateByAddingUnit(.Day, value: -180, toDate: NSDate())!
+      h = Habit(context: HabitApp.moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12, createdAt: date)
+      h.update(NSDate())
+      while !calendar.isDateInToday(date) {
+        let entries = h.entriesOnDate(date)
+        for i in 0..<Int(arc4random_uniform(UInt32(entries.count))) {
+          entries[i].complete()
+        }
+        for entry in entries {
+          if entry.state == .Todo {
+            entry.skip()
+          }
+        }
+        date = NSDate(timeInterval: Double(HabitApp.daySec), sinceDate: date)
+      }
       //        let createdAt = NSDate()
       //        let _ = Habit(context: HabitApp.moContext, name: "2. Daily 8x", details: "", frequency: .Daily, times: 8, createdAt: createdAt)
       //        let _ = Habit(context: HabitApp.moContext, name: "3. Daily 4x", details: "", frequency: .Daily, times: 4, createdAt: createdAt)
