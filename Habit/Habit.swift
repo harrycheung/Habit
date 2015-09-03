@@ -101,8 +101,6 @@ class Habit: NSManagedObject {
     set { notify = NSNumber(bool: newValue) }
   }
   
-  var isNew: Bool { return committedValuesForKeys(nil).count == 0 }
-  
   var expectedCount: Int { return useTimes ? times!.integerValue : partsArray.count }
   
   convenience init(context: NSManagedObjectContext, name: String, details: String, frequency: Frequency, times: Int, createdAt: NSDate) {

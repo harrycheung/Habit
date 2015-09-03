@@ -30,7 +30,7 @@
 // 21. done - Hide add button when swiping
 // 22. done - Switch to gregorian calendar
 // 23. done - Fix blank delegate methods
-// 24. Check to see if a habit of the same name exists
+// 24. done - Check to see if a habit of the same name exists
 // 25. done - Strip habit name of whitespace
 // 26. newButton provides frequency options
 // 27. Option on habit to ignore autoskip
@@ -530,11 +530,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     super.prepareForSegue(segue, sender: sender)
+    
     if segue.destinationViewController is AppSettingsViewController {
       segue.destinationViewController.transitioningDelegate = appSettingsTransition
       segue.destinationViewController.modalPresentationStyle = .Custom
-    } else if let vc = segue.destinationViewController as? HabitSettingsViewController {
-      vc.habit = Habit(context: HabitApp.moContext, name: "", details: "", frequency: .Daily, times: 1, createdAt: NSDate())
     }
   }
   
