@@ -45,6 +45,7 @@
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
+            <string>Bariol-Regular</string>
         </mutableArray>
         <mutableArray key="FontAwesome.otf">
             <string>FontAwesome</string>
@@ -535,7 +536,7 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="oCH-q5-rrO"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
+                                        <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                         <connections>
                                             <action selector="nameChanged:" destination="Y0I-la-TF4" eventType="editingDidEnd" id="H1X-hA-7hp"/>
@@ -567,10 +568,10 @@
                                                 </connections>
                                             </segmentedControl>
                                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iXY-ds-PLJ">
-                                                <rect key="frame" x="15" y="42" width="274" height="244"/>
+                                                <rect key="frame" x="15" y="42" width="274" height="196"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U1n-nC-kZQ">
-                                                        <rect key="frame" x="0.0" y="0.0" width="822" height="244"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="822" height="196"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </view>
                                                 </subviews>
@@ -583,29 +584,42 @@
                                                 </constraints>
                                             </scrollView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KhP-Lc-a6j" userLabel="Splitter">
-                                                <rect key="frame" x="8" y="292" width="288" height="1"/>
+                                                <rect key="frame" x="8" y="244" width="288" height="1"/>
                                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="1" id="edO-R8-FR8"/>
                                                 </constraints>
                                             </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Receive notification" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dEW-FH-HvN">
-                                                <rect key="frame" x="15" y="299" width="129" height="31"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="129" id="aI7-IX-s0V"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Send notification" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dEW-FH-HvN">
+                                                <rect key="frame" x="15" y="251" width="125" height="31"/>
+                                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3JM-6P-5zg">
-                                                <rect key="frame" x="240" y="299" width="51" height="31"/>
+                                                <rect key="frame" x="240" y="251" width="51" height="31"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="31" id="8Rm-Jf-KgR"/>
                                                     <constraint firstAttribute="width" constant="49" id="iSx-5j-kvn"/>
                                                 </constraints>
                                                 <connections>
                                                     <action selector="notifyChanged:" destination="Y0I-la-TF4" eventType="valueChanged" id="4ES-jl-QAh"/>
+                                                </connections>
+                                            </switch>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Never automatically skip" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oXD-iv-8Ie">
+                                                <rect key="frame" x="15" y="303" width="182.5" height="19"/>
+                                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rg2-TA-vhf">
+                                                <rect key="frame" x="240" y="297" width="51" height="31"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="31" id="IQG-ZT-Msq"/>
+                                                    <constraint firstAttribute="width" constant="49" id="eFH-1f-4Y7"/>
+                                                </constraints>
+                                                <connections>
+                                                    <action selector="notifyChanged:" destination="Y0I-la-TF4" eventType="valueChanged" id="txM-Zs-fpW"/>
                                                 </connections>
                                             </switch>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bwZ-0K-KTS" userLabel="Splitter">
@@ -617,7 +631,7 @@
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="luf-9z-XNg">
                                                 <rect key="frame" x="152" y="337" width="151.5" height="43"/>
-                                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
+                                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                                 <state key="normal" title="Save"/>
                                                 <state key="disabled">
                                                     <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -633,7 +647,7 @@
                                                     <constraint firstAttribute="height" constant="43" id="bD1-6X-HKV"/>
                                                     <constraint firstAttribute="width" priority="997" id="lH1-3T-LRT"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
+                                                <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                                 <state key="normal" title="Delete">
                                                     <color key="titleColor" red="0.90588235289999997" green="0.29803921570000003" blue="0.23529411759999999" alpha="1" colorSpace="calibratedRGB"/>
                                                 </state>
@@ -648,6 +662,7 @@
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="3JM-6P-5zg" firstAttribute="top" secondItem="KhP-Lc-a6j" secondAttribute="bottom" constant="6" id="0Np-Jr-pHI"/>
+                                            <constraint firstItem="rg2-TA-vhf" firstAttribute="top" secondItem="3JM-6P-5zg" secondAttribute="bottom" constant="15" id="124-Rz-LnC"/>
                                             <constraint firstAttribute="trailing" secondItem="luf-9z-XNg" secondAttribute="trailing" id="1lB-10-0M3"/>
                                             <constraint firstAttribute="trailing" secondItem="3mp-jN-SmJ" secondAttribute="trailing" constant="8" id="2dH-MC-GbM"/>
                                             <constraint firstItem="KhP-Lc-a6j" firstAttribute="top" secondItem="iXY-ds-PLJ" secondAttribute="bottom" constant="6" id="404-71-mS8"/>
@@ -656,6 +671,8 @@
                                             <constraint firstItem="3mp-jN-SmJ" firstAttribute="top" secondItem="Dww-Oy-GGW" secondAttribute="top" id="8p5-0e-ytj"/>
                                             <constraint firstItem="U1n-nC-kZQ" firstAttribute="width" secondItem="KTo-By-xSx" secondAttribute="width" multiplier="3" id="8xj-lH-mZY"/>
                                             <constraint firstItem="dEW-FH-HvN" firstAttribute="height" secondItem="3JM-6P-5zg" secondAttribute="height" id="C3J-df-g6f"/>
+                                            <constraint firstItem="bwZ-0K-KTS" firstAttribute="top" secondItem="rg2-TA-vhf" secondAttribute="bottom" constant="8" id="EUq-CA-YyQ"/>
+                                            <constraint firstItem="oXD-iv-8Ie" firstAttribute="leading" secondItem="Dww-Oy-GGW" secondAttribute="leading" constant="15" id="Fi1-h5-CmC"/>
                                             <constraint firstAttribute="trailing" secondItem="KTo-By-xSx" secondAttribute="trailing" constant="15" id="Leo-fv-yUt"/>
                                             <constraint firstItem="dEW-FH-HvN" firstAttribute="leading" secondItem="Dww-Oy-GGW" secondAttribute="leading" constant="15" id="M36-UF-3iz"/>
                                             <constraint firstItem="luf-9z-XNg" firstAttribute="leading" secondItem="CLe-rJ-teb" secondAttribute="trailing" id="NqC-dc-PED"/>
@@ -671,13 +688,20 @@
                                             <constraint firstItem="iXY-ds-PLJ" firstAttribute="leading" secondItem="Dww-Oy-GGW" secondAttribute="leading" constant="15" id="bXh-SI-MPO"/>
                                             <constraint firstItem="dEW-FH-HvN" firstAttribute="centerY" secondItem="3JM-6P-5zg" secondAttribute="centerY" id="bkz-pU-H4a"/>
                                             <constraint firstAttribute="trailing" secondItem="KhP-Lc-a6j" secondAttribute="trailing" constant="8" id="fZ2-rE-S4L"/>
+                                            <constraint firstAttribute="trailing" secondItem="rg2-TA-vhf" secondAttribute="trailing" constant="15" id="gho-it-cPv"/>
                                             <constraint firstItem="iXY-ds-PLJ" firstAttribute="top" secondItem="KTo-By-xSx" secondAttribute="bottom" constant="6" id="iIn-WF-q5y"/>
                                             <constraint firstItem="bwZ-0K-KTS" firstAttribute="bottom" secondItem="CLe-rJ-teb" secondAttribute="top" id="kVU-mz-Inl"/>
                                             <constraint firstAttribute="trailing" secondItem="3JM-6P-5zg" secondAttribute="trailing" constant="15" id="mnw-v6-uL4"/>
                                             <constraint firstItem="KhP-Lc-a6j" firstAttribute="leading" secondItem="Dww-Oy-GGW" secondAttribute="leading" constant="8" id="nqk-L4-WS2"/>
                                             <constraint firstItem="bwZ-0K-KTS" firstAttribute="leading" secondItem="Dww-Oy-GGW" secondAttribute="leading" constant="8" id="s0y-Ju-JTt"/>
                                             <constraint firstItem="bwZ-0K-KTS" firstAttribute="top" secondItem="3JM-6P-5zg" secondAttribute="bottom" constant="6" id="vAR-ao-v10"/>
+                                            <constraint firstItem="oXD-iv-8Ie" firstAttribute="centerY" secondItem="rg2-TA-vhf" secondAttribute="centerY" id="vuJ-4U-vjy"/>
                                         </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="vAR-ao-v10"/>
+                                            </mask>
+                                        </variation>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -717,6 +741,7 @@
                         <outlet property="frequencyScrollerContent" destination="U1n-nC-kZQ" id="tgW-aF-obO"/>
                         <outlet property="height" destination="VGv-Z1-ix9" id="z2g-3x-WU5"/>
                         <outlet property="name" destination="krz-Bl-NLo" id="JhX-AS-V6v"/>
+                        <outlet property="neverAutoSkip" destination="rg2-TA-vhf" id="WS2-9y-TCd"/>
                         <outlet property="notification" destination="3JM-6P-5zg" id="fer-TJ-Gb3"/>
                         <outlet property="save" destination="luf-9z-XNg" id="pV4-8U-sO3"/>
                         <outlet property="switchMode" destination="OJE-rZ-KfC" id="2fE-NQ-woi"/>
@@ -757,7 +782,7 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="43" id="nrw-rq-goX"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
+                                        <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                         <state key="normal" title="No">
                                             <color key="titleColor" red="0.90588235289999997" green="0.29803921570000003" blue="0.23529411759999999" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
@@ -775,7 +800,7 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="43" id="oz6-HY-7VA"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
+                                        <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                         <state key="normal" title="Yes"/>
                                         <state key="disabled">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

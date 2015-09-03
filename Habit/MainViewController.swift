@@ -33,7 +33,7 @@
 // 24. done - Check to see if a habit of the same name exists
 // 25. done - Strip habit name of whitespace
 // 26. newButton provides frequency options
-// 27. Option on habit to ignore autoskip
+// 27. done - Option on habit to ignore autoskip
 // 28. done - Fix github box moving to left on settings click
 // 29. done - Tap outside settings view to close
 // 30. Animate filling of history box
@@ -194,7 +194,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       let habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
       for habit in habits {
         habit.update(now)
-        if HabitApp.autoSkip {
+        if HabitApp.autoSkip && !habit.neverAutoSkipBool {
           habit.skipBefore(NSDate(timeInterval: HabitApp.autoSkipDelayTimeInterval, sinceDate: now))
         }
       }

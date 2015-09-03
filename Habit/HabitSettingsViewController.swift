@@ -28,6 +28,7 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
   @IBOutlet weak var frequencyScroller: UIScrollView!
   @IBOutlet weak var frequencyScrollerContent: UIView!
   @IBOutlet weak var notification: UISwitch!
+  @IBOutlet weak var neverAutoSkip: UISwitch!
   @IBOutlet weak var save: UIButton!
   @IBOutlet weak var deleteWidth: NSLayoutConstraint!
   @IBOutlet weak var toolbar: UIView!
@@ -75,6 +76,7 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
         activeSettings.multiSelect.selectedIndexes = habit!.partsArray.map { $0 - 1 }
       }
       notification.on = habit!.notifyBool
+      neverAutoSkip.on = habit!.neverAutoSkipBool
     } else {
       frequency.selectedSegmentIndex = 0
       activeSettings.overlayTouched(activeSettings.leftOverlay!, touched: false)
@@ -228,6 +230,7 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
         self.habit!.partsArray = self.activeSettings.multiSelect.selectedIndexes.map({ $0 + 1 })
       }
       self.habit!.notifyBool = self.notification.on
+      self.habit!.neverAutoSkip = self.neverAutoSkip.on
       self.habit!.update(NSDate())
     }
     

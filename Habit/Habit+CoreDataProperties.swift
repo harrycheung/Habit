@@ -22,6 +22,7 @@ extension Habit {
     @NSManaged var longestStreak: NSNumber?
     @NSManaged var name: String?
     @NSManaged var notify: NSNumber?
+    @NSManaged var neverAutoSkip: NSNumber?
     @NSManaged var parts: String?
     @NSManaged var times: NSNumber?
     @NSManaged var total: NSNumber?

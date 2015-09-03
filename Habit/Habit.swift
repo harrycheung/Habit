@@ -101,6 +101,11 @@ class Habit: NSManagedObject {
     set { notify = NSNumber(bool: newValue) }
   }
   
+  var neverAutoSkipBool: Bool {
+    get { return neverAutoSkip!.boolValue }
+    set { neverAutoSkip = NSNumber(bool: newValue) }
+  }
+  
   var expectedCount: Int { return useTimes ? times!.integerValue : partsArray.count }
   
   convenience init(context: NSManagedObjectContext, name: String, details: String, frequency: Frequency, times: Int, createdAt: NSDate) {

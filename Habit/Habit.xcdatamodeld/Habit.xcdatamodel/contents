@@ -15,6 +15,7 @@
         <attribute name="frequencyRaw" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="longestStreak" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="neverAutoSkip" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="notify" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
         <attribute name="parts" attributeType="String" syncable="YES"/>
         <attribute name="times" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -30,7 +31,7 @@
     </entity>
     <elements>
         <element name="Entry" positionX="-63" positionY="27" width="128" height="120"/>
-        <element name="Habit" positionX="-479" positionY="-12" width="128" height="240"/>
+        <element name="Habit" positionX="-479" positionY="-12" width="128" height="255"/>
         <element name="History" positionX="-54" positionY="90" width="128" height="105"/>
     </elements>
 </model>
