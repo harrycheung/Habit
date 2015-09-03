@@ -29,8 +29,6 @@ class HabitHistory: UIView, UIScrollViewDelegate {
   
   var habit: Habit?
   var scrollView: UIScrollView?
-  var scrollViewContent: UIView?
-  var scrollViewContentWidth: Constraint?
   var squares: [SquareView] = []
   var selectedSquare: SquareView?
   
@@ -41,12 +39,6 @@ class HabitHistory: UIView, UIScrollViewDelegate {
     scrollView!.delegate = self
     scrollView!.showsVerticalScrollIndicator = false
     scrollView!.showsHorizontalScrollIndicator = false
-    scrollViewContent = UIView()
-    scrollView!.addSubview(scrollViewContent!)
-    scrollViewContent!.snp_makeConstraints { (make) in
-      make.edges.height.equalTo(scrollView!)
-      scrollViewContentWidth = make.width.equalTo(scrollView!).constraint
-    }
     addSubview(scrollView!)
     scrollView!.snp_makeConstraints { (make) in
       make.edges.equalTo(self)
@@ -58,39 +50,37 @@ class HabitHistory: UIView, UIScrollViewDelegate {
   }
   
   override func layoutSubviews() {
-//    scrollView!.layer.borderColor = UIColor.redColor().CGColor
-//    scrollView!.layer.borderWidth = 1.0
-    let addSquare = { (frame: CGRect, history: History) in
+    let addSquare = { (content: UIView, frame: CGRect, history: History) in
       let square = SquareView(frame: frame, history: history)
       square.translatesAutoresizingMaskIntoConstraints = true
       let alpha = self.minimumAlpha + (1 - self.minimumAlpha) * history.percentage
       square.backgroundColor = UIColor(color: HabitApp.color, fadeToAlpha: alpha)
-      self.scrollViewContent!.addSubview(square)
+      content.addSubview(square)
       self.squares.append(square)
       
       square.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "squareTap:"))
     }
     
-    let addLabel = { (date: NSDate) in
+    let addLabel = { (content: UIView, date: NSDate) in
       let dateFormatter = NSDateFormatter()
       dateFormatter.dateFormat = "MMM"
       let label = UILabel()
       label.text = dateFormatter.stringFromDate(date)
       label.font = UIFont(name: "Bariol-Regular", size: 13.0)!
       label.textColor = UIColor.blackColor()
-      self.scrollViewContent!.addSubview(label)
+      content.addSubview(label)
       label.snp_makeConstraints { (make) in
         make.centerX.equalTo(self.squares[self.squares.endIndex - 1])
-        make.centerY.equalTo(self.scrollViewContent!.snp_top).offset(self.titleBarHeight / 2)
+        make.centerY.equalTo(content.snp_top).offset(self.titleBarHeight / 2)
       }
     }
     
-    scrollViewContent!.layoutIfNeeded()
-    let contentHeight = scrollViewContent!.frame.height - titleBarHeight
+    let contentHeight = frame.height - titleBarHeight
     if habit != nil && squares.isEmpty {
       let calendar = HabitApp.calendar
       var side: CGFloat = 0
       var offset: CGFloat = 0
+      var content = UIView()
       
       switch habit!.frequency {
       case .Daily:
@@ -102,10 +92,11 @@ class HabitHistory: UIView, UIScrollViewDelegate {
           if weekday == Habit.DayOfWeek.Sunday.rawValue {
             offset += side
           }
-          let frame = CGRectMake(offset, titleBarHeight + CGFloat(weekday - 1) * side, side - spacing / 2, side - spacing / 2)
-          addSquare(frame, history)
+          let frame = CGRectMake(
+            offset, titleBarHeight + CGFloat(weekday - 1) * side, side - spacing / 2, side - spacing / 2)
+          addSquare(content, frame, history)
           if components.day == 1 {
-            addLabel(history.date!)
+            addLabel(content, history.date!)
           }
           if calendar.isDate(history.date!, equalToDate: NSDate(), toUnitGranularity: .Day) {
             break
@@ -121,31 +112,50 @@ class HabitHistory: UIView, UIScrollViewDelegate {
         for element in habit!.histories! {
           let history = element as! History
           let frame = CGRectMake(offset, titleBarHeight, side - spacing / 2, contentHeight)
-          addSquare(frame, history)
+          addSquare(content, frame, history)
           let month = calendar.components([.Month], fromDate: history.date!).month
           if (habit!.frequency == .Weekly && lastMonth != month) ||
             (habit!.frequency == .Monthly && count % 4 == 0) {
-            addLabel(history.date!)
+            addLabel(content, history.date!)
             lastMonth = month
           }
           offset += side
           count += 1
-          if (habit!.frequency == .Weekly && calendar.isDate(history.date!, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear)) ||
-            (habit!.frequency == .Monthly && calendar.isDate(history.date!, equalToDate: NSDate(), toUnitGranularity: .Month)) {
+          if (habit!.frequency == .Weekly &&
+              calendar.isDate(history.date!, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear)) ||
+             (habit!.frequency == .Monthly &&
+              calendar.isDate(history.date!, equalToDate: NSDate(), toUnitGranularity: .Month)) {
             break
           }
         }
       default: ()
       }
       
-      // Reset width constraint
-      scrollViewContentWidth!.uninstall()
-      scrollViewContent!.snp_makeConstraints { (make) in
-        scrollViewContentWidth = make.width.equalTo(offset).constraint
+      var scroll = true
+      var width = offset
+      if offset < frame.width {
+        let outerContent = UIView()
+        outerContent.addSubview(content)
+        content.snp_makeConstraints { (make) in
+          make.top.right.equalTo(outerContent)
+          make.width.equalTo(offset)
+          make.height.equalTo(frame.height)
+        }
+        content = outerContent
+        width = frame.width
+        scroll = false
+      }
+      scrollView!.addSubview(content)
+      content.snp_makeConstraints { (make) in
+        make.edges.equalTo(scrollView!)
+        make.width.equalTo(width)
+        make.height.equalTo(self)
       }
       scrollView!.layoutIfNeeded()
-      let rightOffset = CGPointMake(scrollViewContent!.frame.width - scrollView!.frame.width, 0)
-      scrollView!.setContentOffset(rightOffset, animated: false)
+      if scroll {
+        let rightOffset = CGPointMake(width - scrollView!.frame.width, 0)
+        scrollView!.setContentOffset(rightOffset, animated: false)
+      }
     }
   }
   
@@ -174,7 +184,8 @@ class HabitHistory: UIView, UIScrollViewDelegate {
     } else if calendar.isDate(square.history!.date!, equalToDate: habit!.createdAt!, toUnitGranularity: granularity) {
       xOffset += enlargement - selectedBorder
     }
-    square.frame = CGRectMake(frame.origin.x + xOffset, frame.origin.y + yOffset, frame.width + widthOffset, frame.height + heightOffset)
+    square.frame = CGRectMake(
+      frame.origin.x + xOffset, frame.origin.y + yOffset, frame.width + widthOffset, frame.height + heightOffset)
     square.layer.borderColor = UIColor.whiteColor().CGColor
     square.layer.borderWidth = selectedBorder
     square.superview!.bringSubviewToFront(square)
@@ -207,8 +218,8 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       } else if calendar.isDate(square.history!.date!, equalToDate: habit!.createdAt!, toUnitGranularity: granularity) {
         xOffset += -enlargement + selectedBorder
       }
-      square.frame = CGRectMake(frame.origin.x + xOffset, frame.origin.y + yOffset,
-        frame.width + widthOffset, frame.height + heightOffset)
+      square.frame = CGRectMake(
+        frame.origin.x + xOffset, frame.origin.y + yOffset, frame.width + widthOffset, frame.height + heightOffset)
       selectedSquare = nil
     }
   }

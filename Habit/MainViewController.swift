@@ -34,8 +34,9 @@
 // 25. done - Strip habit name of whitespace
 // 26. newButton provides frequency options
 // 27. Option on habit to ignore autoskip
-// 28. Fix github box moving to left on settings click
+// 28. done - Fix github box moving to left on settings click
 // 29. done - Tap outside settings view to close
+// 30. Animate filling of history box
 
 import UIKit
 import CoreData
@@ -71,20 +72,20 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       var date = calendar.dateByAddingUnit(.WeekOfYear, value: -40, toDate: NSDate())!
       var h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: date)
       h.update(NSDate())
-//      while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
-//        //print(formatter.stringFromDate(date))
-//        let entries = h.entriesOnDate(date)
-//        //print("c: \(entries.count)")
-//        for i in 0..<Int(arc4random_uniform(UInt32(entries.count))) {
-//          entries[i].complete()
-//        }
-//        for entry in entries {
-//          if entry.state == .Todo {
-//            entry.skip()
-//          }
-//        }
-//        date = NSDate(timeInterval: 24 * 3600 * 7, sinceDate: date)
-//      }
+      while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
+        //print(formatter.stringFromDate(date))
+        let entries = h.entriesOnDate(date)
+        //print("c: \(entries.count)")
+        for i in 0..<Int(arc4random_uniform(UInt32(entries.count))) {
+          entries[i].complete()
+        }
+        for entry in entries {
+          if entry.state == .Todo {
+            entry.skip()
+          }
+        }
+        date = NSDate(timeInterval: 24 * 3600 * 7, sinceDate: date)
+      }
       date = calendar.dateByAddingUnit(.WeekOfYear, value: -2, toDate: NSDate())!
       h = Habit(context: HabitApp.moContext, name: "Will not show skip dialog", details: "", frequency: .Weekly, times: 6, createdAt: date)
       h.update(NSDate())
