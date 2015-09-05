@@ -52,8 +52,8 @@ class Entry: NSManagedObject {
       let endIndex = text.characters.count - 4
       text = "in \(text.substringToIndex(text.startIndex.advancedBy(endIndex)))"
     }
-    return "\(Habit.frequencyStrings[habit!.frequency]!) (\(ratio)): \(text)"
-    //return "\(due!)"
+    //return "\(Habit.frequencyStrings[habit!.frequency]!) (\(ratio)): \(text)"
+    return "\(due!)"
   }
   
   func complete() {

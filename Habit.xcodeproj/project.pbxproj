@@ -752,7 +752,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = HabitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "$(inherited) -DTESTING";
+				OTHER_SWIFT_FLAGS = "-DTESTING $(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = harrycheung.habit.HabitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Habit.app/Habit";
@@ -767,7 +767,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = HabitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "$(inherited) -DTESTING";
+				OTHER_SWIFT_FLAGS = "-DTESTING $(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = harrycheung.habit.HabitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Habit.app/Habit";

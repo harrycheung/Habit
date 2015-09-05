@@ -20,6 +20,8 @@ class HabitWeeklyTests: XCTestCase {
     super.setUp()
     context = HabitApp.setUpInMemoryManagedObjectContext()
     HabitApp.upcoming = true
+    HabitApp.startOfDay = 0
+    HabitApp.endOfDay = 24 * 60
   }
   
   override func tearDown() {
@@ -496,6 +498,105 @@ class HabitWeeklyTests: XCTestCase {
     components.day = 15
     components.hour = 0
     expect(habit.lastEntry) == calendar.dateFromComponents(components)!
+  }
+  
+  func testTimesCustomStartEnd() {
+    HabitApp.startOfDay = 7 * 60 + 30
+    HabitApp.endOfDay = 15 * 60 + 30
+    
+    let calendar = HabitApp.calendar
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 8
+    components.day = 23 // Sunday
+    components.hour = 12
+    var createdAt = calendar.dateFromComponents(components)!
+    var habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 4, createdAt: createdAt)
+    habit.update(createdAt)
+    expect(habit.totalCount()) == 8
+    components.month = 8
+    components.day = 24 // Monday
+    components.hour = 7 + 6
+    components.minute = 30
+    expect(habit.firstTodo!.due) == calendar.dateFromComponents(components)
+    components.month = 9
+    components.day = 5
+    components.hour = 15
+    expect(habit.lastEntry) == calendar.dateFromComponents(components)
+    
+    components.month = 8
+    components.day = 26 // Wednesday
+    createdAt = calendar.dateFromComponents(components)!
+    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 4, createdAt: createdAt)
+    habit.update(createdAt)
+    expect(habit.totalCount()) == 6
+    components.day = 28
+    components.hour = 7 + 2
+    components.minute = 30
+    expect(habit.firstTodo!.due) == calendar.dateFromComponents(components)
+    
+    components.month = 8
+    components.day = 29 // Saturday
+    components.hour = 23
+    createdAt = calendar.dateFromComponents(components)!
+    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 4, createdAt: createdAt)
+    habit.update(createdAt)
+    expect(habit.totalCount()) == 4
+    components.day = 31
+    components.hour = 7 + 6
+    components.minute = 30
+    expect(habit.firstTodo!.due) == calendar.dateFromComponents(components)
+  }
+  
+  func testPartsCustomStartEnd() {
+    HabitApp.startOfDay = 7 * 60 + 30
+    HabitApp.endOfDay = 15 * 60 + 30
+    
+    let calendar = HabitApp.calendar
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 8
+    components.day = 23 // Sunday
+    components.hour = 12
+    var createdAt = calendar.dateFromComponents(components)!
+    var habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    habit.daysOfWeek = [.Monday, .Tuesday, .Thursday, .Friday, .Saturday]
+    habit.update(createdAt)
+    expect(habit.totalCount()) == 10
+    components.month = 8
+    components.day = 24 // Monday
+    components.hour = 15
+    components.minute = 30
+    expect(habit.firstTodo!.due) == calendar.dateFromComponents(components)
+    components.month = 9
+    components.day = 5 // Saturday
+    expect(habit.lastEntry) == calendar.dateFromComponents(components)
+    
+    components.month = 8
+    components.day = 26
+    createdAt = calendar.dateFromComponents(components)!
+    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    habit.daysOfWeek = [.Monday, .Tuesday, .Thursday, .Friday, .Saturday]
+    habit.update(createdAt)
+    expect(habit.totalCount()) == 8
+    components.month = 8
+    components.day = 27
+    components.hour = 15
+    components.minute = 30
+    expect(habit.firstTodo!.due) == calendar.dateFromComponents(components)
+    
+    components.month = 8
+    components.day = 29
+    components.hour = 19
+    createdAt = calendar.dateFromComponents(components)!
+    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    habit.daysOfWeek = [.Monday, .Tuesday, .Thursday, .Friday, .Saturday]
+    habit.update(createdAt)
+    expect(habit.totalCount()) == 5
+    components.month = 8
+    components.day = 31
+    components.hour = 15
+    expect(habit.firstTodo!.due) == calendar.dateFromComponents(components)
   }
 
 }

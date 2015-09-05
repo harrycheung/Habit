@@ -19,6 +19,8 @@ class HabitApp {
   static let upcomingSettingKey = "upcoming"
   static let autoSkipSettingKey = "autoskip"
   static let autoSkipDelaySettingKey = "autoskipdelay"
+  static let startOfDayKey = "startofday"
+  static let endOfDayKey = "endofday"
   
   // App colors
   static let green = UIColor(red: 85.0 / 255.0, green: 213.0 / 255.0, blue: 80.0 / 255.0, alpha: 1)
@@ -38,8 +40,10 @@ class HabitApp {
   static let hourSec = 60 * minSec
   static let daySec = dayHours * hourSec
   static let weekSec = 7 * daySec
-  static let dayMinutes = 60 * dayHours
+  static let dayMinutes = hourMinutes * dayHours
   static let dayHours = 24
+  static let hourMinutes = 60
+  static let weekMinutes = 7 * dayMinutes
   static let weekHours = 7 * dayHours
   
   static let MinimumAlpha: CGFloat = 0.4
@@ -107,12 +111,14 @@ class HabitApp {
     set { NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: timeZoneSettingKey) }
   }
   
-  static var startOfDay: NSTimeInterval {
-    return 0 * 3600
+  static var startOfDay: Int {
+    get { return NSUserDefaults.standardUserDefaults().integerForKey(startOfDayKey) }
+    set { NSUserDefaults.standardUserDefaults().setInteger(newValue, forKey: startOfDayKey) }
   }
   
-  static var endOfDay: NSTimeInterval {
-    return 24 * 3600
+  static var endOfDay: Int {
+    get { return NSUserDefaults.standardUserDefaults().integerForKey(endOfDayKey) }
+    set { NSUserDefaults.standardUserDefaults().setInteger(newValue, forKey: endOfDayKey) }
   }
   
   static func setUpInMemoryManagedObjectContext() -> NSManagedObjectContext {

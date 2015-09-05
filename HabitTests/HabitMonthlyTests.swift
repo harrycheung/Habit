@@ -20,6 +20,8 @@ class HabitMonthlyTests: XCTestCase {
     super.setUp()
     context = HabitApp.setUpInMemoryManagedObjectContext()
     HabitApp.upcoming = true
+    HabitApp.startOfDay = 0
+    HabitApp.endOfDay = 24 * 60
   }
   
   override func tearDown() {
@@ -420,6 +422,87 @@ class HabitMonthlyTests: XCTestCase {
     expect(histories[3].skipped) == 1
     expect(histories[4].completed) == 0
     expect(histories[4].skipped) == 0
+  }
+  
+  func testTimesCustomStartEnd() {
+    HabitApp.startOfDay = 7 * 60 + 30
+    HabitApp.endOfDay = 15 * 60 + 30
+    
+    let calendar = HabitApp.calendar
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 8
+    components.day = 27
+    components.hour = 12
+    var createdAt = calendar.dateFromComponents(components)!
+    var habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 4, createdAt: createdAt)
+    habit.update(createdAt)
+    expect(habit.totalCount()) == 5
+    components.month = 8
+    components.day = 31
+    components.hour = 15
+    components.minute = 30
+    expect(habit.firstTodo!.due) == calendar.dateFromComponents(components)
+    components.month = 9
+    components.day = 30
+    components.hour = 15
+    expect(habit.lastEntry) == calendar.dateFromComponents(components)
+    
+    components.month = 8
+    components.day = 31
+    components.hour = 22
+    createdAt = calendar.dateFromComponents(components)!
+    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 4, createdAt: createdAt)
+    habit.update(createdAt)
+    expect(habit.totalCount()) == 4
+    components.month = 9
+    components.day = 30 / 4
+    components.hour = 15
+    components.minute = 30
+    expect(habit.firstTodo!.due) == calendar.dateFromComponents(components)
+    components.day = 30
+    components.hour = 15
+    expect(habit.lastEntry) == calendar.dateFromComponents(components)
+  }
+  
+  func testPartsCustomStartEnd() {
+    HabitApp.startOfDay = 7 * 60 + 30
+    HabitApp.endOfDay = 19 * 60 + 30
+    
+    let calendar = HabitApp.calendar
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 8
+    components.day = 27
+    components.hour = 12
+    var createdAt = calendar.dateFromComponents(components)!
+    var habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
+    habit.partsOfMonth = [.Beginning, .End]
+    habit.update(createdAt)
+    expect(habit.totalCount()) == 3
+    components.month = 8
+    components.day = 31
+    components.hour = 19
+    components.minute = 30
+    expect(habit.firstTodo!.due) == calendar.dateFromComponents(components)
+    components.month = 9
+    components.day = 30
+    components.hour = 19
+    expect(habit.lastEntry) == calendar.dateFromComponents(components)
+    
+    components.month = 8
+    components.day = 31
+    components.hour = 22
+    createdAt = calendar.dateFromComponents(components)!
+    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
+    habit.partsOfMonth = [.Beginning, .End]
+    habit.update(createdAt)
+    components.month = 9
+    components.day = 30 / 3
+    components.hour = 19
+    components.minute = 30
+    expect(habit.firstTodo!.due) == calendar.dateFromComponents(components)
+    expect(habit.totalCount()) == 2
   }
   
 }

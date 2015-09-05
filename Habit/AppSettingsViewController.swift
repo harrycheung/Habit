@@ -26,6 +26,10 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
   @IBOutlet weak var autoSkipStepper: UIStepper!
   @IBOutlet weak var autoSkipDelay: UILabel!
   @IBOutlet weak var autoSkipHeight: NSLayoutConstraint!
+  @IBOutlet weak var startOfDayStepper: UIStepper!
+  @IBOutlet weak var startOfDayLabel: UILabel!
+  @IBOutlet weak var endOfDayStepper: UIStepper!
+  @IBOutlet weak var endOfDayLabel: UILabel!
   @IBOutlet weak var defaultAbbreviation: UILabel!
   @IBOutlet weak var defaultTimeZone: UILabel!
   @IBOutlet weak var local: UIView!
@@ -60,6 +64,11 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
       local.removeFromSuperview()
       view.layoutIfNeeded()
     }
+    startOfDayStepper.value = Double(HabitApp.startOfDay)
+    startOfDayLabel.text = timeOfDayString(HabitApp.startOfDay)
+    endOfDayStepper.value = Double(HabitApp.endOfDay)
+    endOfDayLabel.text = timeOfDayString(HabitApp.endOfDay)
+    setTimeOfDayMinMax()
     
     view.layer.shadowColor = UIColor.blackColor().CGColor
     view.layer.shadowOpacity = 0.5
@@ -192,6 +201,106 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
   @IBAction func autoSkipDelayChanged(sender: AnyObject) {
     autoSkipDelay.text = autoSkipDelayString(Int(autoSkipStepper.value))
     HabitApp.autoSkipDelay = Int(autoSkipStepper.value)
+  }
+  
+  func timeOfDayString(time: Int) -> String {
+    if time == 0 || time == HabitApp.dayMinutes {
+      return "midnight"
+    } else {
+      let ampm = time < HabitApp.dayMinutes / 2 ? "a.m." : "p.m."
+      var hour = (time / 60) % 12
+      if hour == 0 {
+        hour = 12
+      }
+      let minute = time % 60
+      let minuteText = minute < 10 ? 0 : ""
+      return "\(hour):\(minuteText)\(minute) \(ampm)"
+    }
+  }
+  
+  func setTimeOfDayMinMax() {
+    startOfDayStepper.maximumValue = endOfDayStepper.value - 2 * 60.0
+    endOfDayStepper.minimumValue = startOfDayStepper.value + 2 * 60.0
+  }
+  
+  @IBAction func startOfDayChanged(sender: AnyObject) {
+    startOfDayLabel.text = timeOfDayString(Int(startOfDayStepper.value))
+    setTimeOfDayMinMax()
+  }
+  
+  @IBAction func endOfDayChanged(sender: AnyObject) {
+    endOfDayLabel.text = timeOfDayString(Int(endOfDayStepper.value))
+    setTimeOfDayMinMax()
+  }
+  
+  override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+    let newStart = HabitApp.startOfDay != Int(startOfDayStepper.value)
+    let newEnd =  HabitApp.endOfDay != Int(endOfDayStepper.value)
+    if newStart || newEnd {
+      var problemHabits: [String] = []
+      do {
+        let request = NSFetchRequest(entityName: "Habit")
+        let habits = try HabitApp.moContext.executeFetchRequest(request) as! [Habit]
+        for habit in habits {
+          switch habit.frequency {
+          case .Daily:
+            if habit.useTimes {
+              problemHabits.append("\(habit.name!): interval between due times will change")
+            } else {
+              problemHabits.append("\(habit.name!): someting will fail")
+            }
+          case .Weekly:
+            if habit.useTimes {
+              problemHabits.append("\(habit.name!): ")
+            } else {
+              problemHabits.append("\(habit.name!): due time changed to new end of day")
+            }
+          case .Monthly:
+            if newEnd {
+              problemHabits.append("\(habit.name!): due time changed to new end of day")
+            }
+          default: ()
+          }
+          if habit.frequency == .Daily {
+            
+          }
+          habit.update(NSDate())
+        }
+      } catch let error as NSError {
+        NSLog("Fetch failed: \(error.localizedDescription)")
+      }
+      if problemHabits.count > 0 {
+        let alert = UIAlertController(title: "Warning", message: problemHabits.joinWithSeparator("\n"), preferredStyle: .ActionSheet)
+        alert.addAction(UIAlertAction(title: "Confirm", style: .Destructive, handler: { (action) in
+          HabitApp.startOfDay = Int(self.startOfDayStepper.value)
+          HabitApp.endOfDay = Int(self.endOfDayStepper.value)
+          do {
+            // Do batch delete from ios9
+            let entryRequest = NSFetchRequest(entityName: "Entry")
+            entryRequest.predicate = NSPredicate(format: "due > %@", NSDate())
+            let entries = try HabitApp.moContext.executeFetchRequest(entryRequest) as! [Entry]
+            for entry in entries {
+              HabitApp.moContext.deleteObject(entry)
+            }
+            let habitRequest = NSFetchRequest(entityName: "Habit")
+            let habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
+            for habit in habits {
+              habit.update(NSDate())
+            }
+            try HabitApp.moContext.save()
+          } catch let error as NSError {
+            NSLog("Fetch failed: \(error.localizedDescription)")
+          }
+          self.performSegueWithIdentifier("SettingsUnwind", sender: self)
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: { (action) in
+          self.performSegueWithIdentifier("SettingsUnwind", sender: self)
+        }))
+        presentViewController(alert, animated: true, completion: nil)
+        return false
+      }
+    }
+    return true
   }
   
 }
