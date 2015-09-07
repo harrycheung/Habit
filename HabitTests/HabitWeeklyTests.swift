@@ -213,10 +213,12 @@ class HabitWeeklyTests: XCTestCase {
     expect(habit.skippedCount()) == 10
     components.weekOfYear += 2
     components.hour = Int(0.8 * 24)
+    components.minute = Int((0.8 * 24 * 60) % 60)
     expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
     components.weekOfYear += 2
     components.weekday = 1
     components.hour = 0
+    components.minute = 0
     expect(habit.lastEntry) == calendar.dateFromComponents(components)!
   }
 
@@ -272,11 +274,12 @@ class HabitWeeklyTests: XCTestCase {
       expect(habit.progress(now)) == 1
       components.weekday = 6 // Friday
       components.hour = Int(0.6 * 24)
-      components.minute = 0
+      components.minute = Int((0.6 * Double(HabitApp.dayMinutes)) % 60)
       expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
       components.weekOfYear += 2
       components.weekday = 1
       components.hour = 0
+      components.minute = 0
       expect(habit.lastEntry) == calendar.dateFromComponents(components)!
       entries[2].skip()
       entries[3].complete()
@@ -291,10 +294,12 @@ class HabitWeeklyTests: XCTestCase {
       expect(habit.progress(now)) == 3 / 4.0
       components.weekday = 2
       components.hour = Int(0.4 * 24)
+      components.minute = Int((0.4 * Double(HabitApp.dayMinutes)) % 60)
       expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
       components.weekOfYear += 1
       components.weekday = 1
       components.hour = 0
+      components.minute = 0
       expect(habit.lastEntry) == calendar.dateFromComponents(components)!
     } catch let error as NSError {
       NSLog("error: \(error)")
@@ -384,11 +389,12 @@ class HabitWeeklyTests: XCTestCase {
     expect(habit.progress(now)) == 3 / 12.0
     components.weekday = 6 // Friday
     components.hour = Int(0.6 * 24)
-    components.minute = 0
+    components.minute = Int((0.6 * Double(HabitApp.dayMinutes)) % 60)
     expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
     components.weekOfYear += 2
     components.weekday = 1
     components.hour = 0
+    components.minute = 0
     expect(habit.lastEntry) == calendar.dateFromComponents(components)!
     let histories = habit.histories!.array as! [History]
     expect(histories.count) == 4
