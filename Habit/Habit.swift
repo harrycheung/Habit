@@ -253,7 +253,7 @@ class Habit: NSManagedObject {
           let dayMinutes = HabitApp.endOfDay - HabitApp.startOfDay
           let createdTime = (components.weekday - 1) * dayMinutes + components.hour * 60 + components.minute
           let interval = dayMinutes * 7 / times!.integerValue
-          count = createdTime / interval
+          count = min(createdTime / interval, times!.integerValue)
         } else {
           for dayOfWeek in daysOfWeek {
             if components.weekday >= dayOfWeek.rawValue {
@@ -375,27 +375,24 @@ class Habit: NSManagedObject {
 //      }
       let upcomingDay = calendar.dateByAddingUnit(.Day, value: upcoming, toDate: currentDate)!
       var lastDue = lastEntry
-      var dayCount = entriesOnDate(lastDue).count
-      var startOffset = countBeforeCreatedAt(lastDue)
+      var dayCount = entriesOnDate(lastDue).count + countBeforeCreatedAt(lastDue)
       let dayMinutes = HabitApp.endOfDay - HabitApp.startOfDay
       while true {
         //print("daycount: \(dayCount)")
         let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: lastDue)
-        if dayCount == expected - startOffset {
+        if dayCount == expected {
           dayCount = 0
           if components.hour != 0 {
             components.day += 1
           }
-          // Offset goes to 0 on subsequent days
-          startOffset = 0
         }
         dayCount += 1
         if useTimes {
-          let dueTime = (dayMinutes / times!.integerValue) * (dayCount + startOffset) + HabitApp.startOfDay
+          let dueTime = (dayMinutes / times!.integerValue) * (dayCount) + HabitApp.startOfDay
           components.hour = dueTime / 60
           components.minute = dueTime % 60
         } else {
-          let partOfDay = partsOfDay[dayCount + startOffset - 1]
+          let partOfDay = partsOfDay[dayCount - 1]
           if partOfDay == .Evening {
             components.hour = HabitApp.endOfDay / 60
             components.minute = HabitApp.endOfDay % 60
@@ -428,7 +425,7 @@ class Habit: NSManagedObject {
       let upcomingWeek = calendar.dateByAddingUnit(.WeekOfYear, value: upcoming, toDate: currentDate)!
 //      print("weekafternext: \(formatter.stringFromDate(upcomingWeek)) from \(formatter.stringFromDate(currentDate))")
       var lastDue = lastEntry
-      var weekCount = entriesOnDate(lastDue).count
+      var weekCount = entriesOnDate(lastDue).count + countBeforeCreatedAt(lastDue)
 //      if !useTimes && lastDue.compare(createdAt!) == .OrderedSame {
 //        lastDue = beginningOfWeek(lastDue)
 //        if HabitApp.endOfDay != HabitApp.dayMinutes {
@@ -493,13 +490,11 @@ class Habit: NSManagedObject {
     case .Monthly:
       let upcomingMonth = calendar.dateByAddingUnit(.Month, value: upcoming, toDate: currentDate)!
       var lastDue = lastEntry
-      var monthCount = entriesOnDate(lastDue).count
-      var startOffset = countBeforeCreatedAt(lastDue)
+      var monthCount = entriesOnDate(lastDue).count + countBeforeCreatedAt(lastDue)
       while true {
         let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: lastDue)
-        if monthCount == expected - startOffset {
+        if monthCount == expected {
           monthCount = 0
-          startOffset = 0
           if components.day != 1 {
             components.month += 1
           }
@@ -507,15 +502,15 @@ class Habit: NSManagedObject {
         monthCount += 1
         let daysInMonth = calendar.rangeOfUnit(.Day, inUnit: .Month, forDate: lastDue).length
         if useTimes {
-          let dueDay = (monthCount + startOffset) * daysInMonth / times!.integerValue
+          let dueDay = monthCount * daysInMonth / times!.integerValue
           components.day = dueDay
           components.hour = HabitApp.endOfDay / 60
           components.minute = HabitApp.endOfDay % 60
         } else {
-          if (partsOfMonth[monthCount + startOffset - 1] == .End) {
+          if (partsOfMonth[monthCount - 1] == .End) {
             components.day = daysInMonth
           } else {
-            components.day = (daysInMonth / 3) * (partsOfMonth[monthCount + startOffset - 1].rawValue)
+            components.day = (daysInMonth / 3) * (partsOfMonth[monthCount - 1].rawValue)
           }
           components.hour = HabitApp.endOfDay / 60
           components.minute = HabitApp.endOfDay % 60
