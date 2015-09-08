@@ -237,68 +237,28 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     let newStart = HabitApp.startOfDay != Int(startOfDayStepper.value)
     let newEnd =  HabitApp.endOfDay != Int(endOfDayStepper.value)
     if newStart || newEnd {
-      var problemHabits: [String] = []
-      do {
-        let request = NSFetchRequest(entityName: "Habit")
-        let habits = try HabitApp.moContext.executeFetchRequest(request) as! [Habit]
-        for habit in habits {
-          switch habit.frequency {
-          case .Daily:
-            if habit.useTimes {
-              problemHabits.append("\(habit.name!): interval between due times will change")
-            } else {
-              problemHabits.append("\(habit.name!): someting will fail")
-            }
-          case .Weekly:
-            if habit.useTimes {
-              problemHabits.append("\(habit.name!): ")
-            } else {
-              problemHabits.append("\(habit.name!): due time changed to new end of day")
-            }
-          case .Monthly:
-            if newEnd {
-              problemHabits.append("\(habit.name!): due time changed to new end of day")
-            }
-          default: ()
-          }
-          if habit.frequency == .Daily {
-            
-          }
-          habit.update(NSDate())
-        }
-      } catch let error as NSError {
-        NSLog("Fetch failed: \(error.localizedDescription)")
+      var timing = ""
+      if newStart && newEnd {
+        timing = "start and end times"
+      } else if newStart {
+        timing = "start time"
+      } else {
+        timing = "end time"
       }
-      if problemHabits.count > 0 {
-        let alert = UIAlertController(title: "Warning", message: problemHabits.joinWithSeparator("\n"), preferredStyle: .ActionSheet)
-        alert.addAction(UIAlertAction(title: "Confirm", style: .Destructive, handler: { (action) in
-          HabitApp.startOfDay = Int(self.startOfDayStepper.value)
-          HabitApp.endOfDay = Int(self.endOfDayStepper.value)
-          do {
-            // Do batch delete from ios9
-            let entryRequest = NSFetchRequest(entityName: "Entry")
-            entryRequest.predicate = NSPredicate(format: "due > %@", NSDate())
-            let entries = try HabitApp.moContext.executeFetchRequest(entryRequest) as! [Entry]
-            for entry in entries {
-              HabitApp.moContext.deleteObject(entry)
-            }
-            let habitRequest = NSFetchRequest(entityName: "Habit")
-            let habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
-            for habit in habits {
-              habit.update(NSDate())
-            }
-            try HabitApp.moContext.save()
-          } catch let error as NSError {
-            NSLog("Fetch failed: \(error.localizedDescription)")
-          }
-          self.performSegueWithIdentifier("SettingsUnwind", sender: self)
-        }))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: { (action) in
-          self.performSegueWithIdentifier("SettingsUnwind", sender: self)
-        }))
-        presentViewController(alert, animated: true, completion: nil)
-        return false
-      }
+      let alert = UIAlertController(title: "Warning",
+        message: "Entries after today will be adjusted\nwith new \(timing).",
+        preferredStyle: .Alert)
+      alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: { (action) in
+        self.performSegueWithIdentifier("SettingsUnwind", sender: self)
+      }))
+      alert.addAction(UIAlertAction(title: "Confirm", style: .Destructive, handler: { (action) in
+        HabitApp.startOfDay = Int(self.startOfDayStepper.value)
+        HabitApp.endOfDay = Int(self.endOfDayStepper.value)
+        self.mvc!.resetFuture()
+        self.performSegueWithIdentifier("SettingsUnwind", sender: self)
+      }))
+      presentViewController(alert, animated: true, completion: nil)
+      return false
     }
     return true
   }

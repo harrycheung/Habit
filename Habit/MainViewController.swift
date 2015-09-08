@@ -37,7 +37,9 @@
 // 28. done - Fix github box moving to left on settings click
 // 29. done - Tap outside settings view to close
 // 30. done - Animate filling of history box
-// 31. Custom start and finish day
+// 31. done - Custom start and finish day
+// 32. Icon
+// 33. Fix test due dates
 
 import UIKit
 import CoreData
@@ -49,7 +51,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   let cellIdentifier = "HabitCell"
   let showHabitSegue = "ShowHabit"
   
-  let UpcomingAnimationDelay: NSTimeInterval = 0.02
+  let SlideAnimationDelay: NSTimeInterval = 0.05
+  let SlideAnimationDuration: NSTimeInterval = 0.4
 
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var titleBar: UIView!
@@ -325,64 +328,221 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
   }
   
-  func hideUpcoming() {
+  
+  func hideCellAnimate(view: UIView, delay: NSTimeInterval, complete: (() -> Void)?) {
+    var endFrame = view.frame
+    endFrame.origin.y = view.frame.origin.y + self.tableView.superview!.bounds.height
+    UIView.animateWithDuration(SlideAnimationDuration,
+      delay: delay,
+      options: [.CurveEaseIn],
+      animations: {
+        view.frame = endFrame
+      }, completion: { finished in
+        if complete != nil {
+          complete!()
+        }
+      })
+  }
+  
+  func hideUpcoming() -> Double {
+    return hideUpcoming(true)
+  }
+  
+  func hideUpcoming(reload: Bool) -> Double {
+    var delayStart = 0.0
     if upcoming.count > 0 {
-      let animate = { (view: UIView, delay: NSTimeInterval, reload: Bool) in
-        var endFrame = view.frame
-        endFrame.origin.y = view.frame.origin.y + self.tableView.superview!.bounds.height
-        UIView.animateWithDuration(0.3,
-          delay: delay,
-          options: [.CurveEaseIn],
-          animations: {
-            view.frame = endFrame
-          }, completion: { finished in
-            if reload {
-              // Remove any traces of the old cells
-              self.tableView.reloadData()
-            }
-        })
+      if let header = tableView.headerViewForSection(1) {
+        for index in (0..<upcoming.count).reverse() {
+          let indexPath = NSIndexPath(forRow: index, inSection: 1)
+          if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+            hideCellAnimate(cell, delay: delayStart, complete: nil)
+            delayStart += SlideAnimationDelay
+          }
+        }
+        delayStart -= SlideAnimationDelay
+        hideCellAnimate(header, delay: delayStart) {
+          if reload {
+            // Remove any traces of the old cells
+            // Is this better than calling deleteRowsAtIndexPaths?
+            self.tableView.reloadData()
+          }
+        }
       }
-      
-      var delayStart = UpcomingAnimationDelay * Double(upcoming.count)
-      animate(tableView.headerViewForSection(1)!, delayStart, true)
-      for (index, _) in upcoming.enumerate() {
-        let indexPath = NSIndexPath(forRow: index, inSection: 1)
-        animate(tableView.cellForRowAtIndexPath(indexPath)!, delayStart, false)
-        delayStart -= UpcomingAnimationDelay
-      }
+      delayStart += SlideAnimationDelay
     }
+    return delayStart
+  }
+  
+  
+  func showCellAnimate(view: UIView, endFrame: CGRect, delay: NSTimeInterval) {
+    var startFrame = view.frame
+    startFrame.origin.y = endFrame.origin.y + self.tableView.superview!.bounds.height
+    view.frame = startFrame
+    UIView.animateWithDuration(SlideAnimationDuration,
+      delay: delay,
+      options: [.CurveEaseOut],
+      animations: {
+        view.frame = endFrame
+      }, completion: nil)
   }
   
   func showUpcoming() {
     if upcoming.count > 0 {
-      let animate = { (view: UIView, endFrame: CGRect, delay: NSTimeInterval) in
-        var startFrame = view.frame
-        startFrame.origin.y = endFrame.origin.y + self.tableView.superview!.bounds.height
-        view.frame = startFrame
-        UIView.animateWithDuration(0.3,
-          delay: delay,
-          options: [.CurveEaseOut],
-          animations: {
-            view.frame = endFrame
-          }, completion: nil)
-      }
-      
+      var delayStart: Double = 0
       // Load up the cells to animate
       tableView.beginUpdates()
-      tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .None)
+      if tableView.headerViewForSection(1) == nil {
+        tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .None)
+      }
       let indexPaths = upcoming.enumerate().map { (index, entry) in
         return NSIndexPath(forRow: index, inSection: 1)
       }
       tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
       tableView.endUpdates()
-
-      var delayStart = 0.0
-      animate(tableView.headerViewForSection(1)!, tableView.rectForHeaderInSection(1), delayStart)
-      for (index, _) in upcoming.enumerate() {
-        let indexPath = NSIndexPath(forRow: index, inSection: 1)
-        animate(tableView.cellForRowAtIndexPath(indexPath)!, tableView.rectForRowAtIndexPath(indexPath), delayStart)
-        delayStart += UpcomingAnimationDelay
+      
+      if let header = tableView.headerViewForSection(1) {
+        showCellAnimate(header, endFrame: tableView.rectForHeaderInSection(1), delay: delayStart)
+        for (index, _) in upcoming.enumerate() {
+          let indexPath = NSIndexPath(forRow: index, inSection: 1)
+          if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+            showCellAnimate(cell, endFrame: tableView.rectForRowAtIndexPath(indexPath), delay: delayStart)
+            delayStart += SlideAnimationDelay
+          }
+        }
       }
+    }
+  }
+  
+  func resetFuture() {
+    var cellsToHide: [UIView] = []
+    if HabitApp.upcoming {
+      if let header = tableView.headerViewForSection(1) {
+        for index in (0..<upcoming.count).reverse() {
+          let indexPath = NSIndexPath(forRow: index, inSection: 1)
+          if tableView.indexPathsForVisibleRows!.contains(indexPath) {
+            cellsToHide.append(tableView.cellForRowAtIndexPath(indexPath)!)
+          }
+        }
+        cellsToHide.append(header)
+      }
+    }
+    var entriesToDelete: [Entry] = []
+    let future = HabitApp.calendar.zeroTime(HabitApp.calendar.dateByAddingUnit(.Day, value: 1, toDate: NSDate())!)
+    for (index, entry) in entries.enumerate() {
+      if future.compare(entry.due!) == .OrderedAscending {
+        for i in (index..<entries.count).reverse() {
+          entriesToDelete.append(entries[i])
+          let indexPath = NSIndexPath(forRow: i, inSection: 0)
+          if tableView.indexPathsForVisibleRows!.contains(indexPath) {
+            cellsToHide.append(tableView.cellForRowAtIndexPath(indexPath)!)
+          }
+        }
+        break
+      }
+    }
+    var delayStart = 0.0
+    for index in 0..<cellsToHide.count {
+      if let _ = cellsToHide[index] as? UITableViewHeaderFooterView {
+        delayStart -= SlideAnimationDelay
+      }
+      if index != cellsToHide.count - 1 {
+        hideCellAnimate(cellsToHide[index], delay: delayStart, complete: nil)
+      } else {
+        hideCellAnimate(cellsToHide[index], delay: delayStart) {
+//          self.entries = Array(self.entries[0..<(self.entries.count - entriesToDelete.count)])
+//          self.upcoming = []
+//          self.tableView.reloadData()
+          // Load up the cells to animate
+          self.reloadEntries()
+          self.tableView.reloadData()
+//          var visibleIndexPaths: [NSIndexPath] = []
+//          var visibleUpcomingHeader = false
+          var cellsToShow: [(UIView, CGRect)] = []
+          for (index, entry) in self.entries.enumerate() {
+            if future.compare(entry.due!) == .OrderedAscending {
+              for i in index..<self.entries.count {
+                let indexPath = NSIndexPath(forRow: i, inSection: 0)
+                if self.tableView.indexPathsForVisibleRows!.contains(indexPath) {
+                  cellsToShow.append((self.tableView.cellForRowAtIndexPath(indexPath)!,
+                                      self.tableView.rectForRowAtIndexPath(indexPath)))
+//                  visibleIndexPaths.append(indexPath)
+                }
+              }
+              break
+            }
+          }
+          if HabitApp.upcoming {
+            if let header = self.tableView.headerViewForSection(1) {
+              cellsToShow.append((header, self.tableView.rectForHeaderInSection(1)))
+//              visibleUpcomingHeader = true
+              for index in 0..<self.upcoming.count {
+                let indexPath = NSIndexPath(forRow: index, inSection: 1)
+                if self.tableView.indexPathsForVisibleRows!.contains(indexPath) {
+                  cellsToShow.append((self.tableView.cellForRowAtIndexPath(indexPath)!,
+                                      self.tableView.rectForRowAtIndexPath(indexPath)))
+//                  visibleIndexPaths.append(indexPath)
+                }
+              }
+            }
+          }
+//          print(visibleIndexPaths)
+//          self.tableView.beginUpdates()
+//          self.tableView.insertRowsAtIndexPaths(visibleIndexPaths, withRowAnimation: .None)
+//          if visibleUpcomingHeader {
+//            if self.tableView.headerViewForSection(1) == nil {
+//              self.tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .None)
+//            }
+//          }
+//          self.tableView.endUpdates()
+          var delayStart = 0.0
+          for cellTuple in cellsToShow {
+            if let _ = cellTuple.0 as? UITableViewHeaderFooterView {
+              delayStart -= self.SlideAnimationDelay
+            }
+//            print(cellTuple.0)
+            self.showCellAnimate(cellTuple.0, endFrame: cellTuple.1, delay: delayStart)
+            delayStart += self.SlideAnimationDelay
+          }
+          
+//          var delayStart: Double = 0
+//          for futureIndexPath in futureIndexPaths {
+//            if let cell = self.tableView.cellForRowAtIndexPath(futureIndexPath) {
+//              self.showCellAnimate(cell, endFrame: self.tableView.rectForRowAtIndexPath(futureIndexPath), delay: delayStart)
+//              delayStart += self.SlideAnimationDelay
+//            }
+//          }
+//          if HabitApp.upcoming {
+//            if let header = self.tableView.headerViewForSection(1) {
+//              self.showCellAnimate(header, endFrame: self.tableView.rectForHeaderInSection(1), delay: delayStart)
+//              for (index, _) in self.upcoming.enumerate() {
+//                let indexPath = NSIndexPath(forRow: index, inSection: 1)
+//                if let cell = self.tableView.cellForRowAtIndexPath(indexPath) {
+//                  self.showCellAnimate(cell, endFrame: self.tableView.rectForRowAtIndexPath(indexPath), delay: delayStart)
+//                  delayStart += self.SlideAnimationDelay
+//                }
+//              }
+//            }
+//          }
+        }
+      }
+      delayStart += SlideAnimationDelay
+    }
+    do {
+      // Do batch delete from ios9
+      for entry in entriesToDelete {
+        HabitApp.moContext.deleteObject(entry)
+      }
+      for entry in upcoming {
+        HabitApp.moContext.deleteObject(entry)
+      }
+      let habitRequest = NSFetchRequest(entityName: "Habit")
+      let habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
+      for habit in habits {
+        habit.update(NSDate())
+      }
+      try HabitApp.moContext.save()
+    } catch let error as NSError {
+      NSLog("Fetch failed: \(error.localizedDescription)")
     }
   }
   
