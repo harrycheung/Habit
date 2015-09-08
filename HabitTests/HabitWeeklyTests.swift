@@ -103,7 +103,7 @@ class HabitWeeklyTests: XCTestCase {
     components.day = 18
     components.hour = 8
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
+    var habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
     components.hour = 12
     let now = calendar.dateFromComponents(components)!
     habit.update(now)
@@ -115,6 +115,22 @@ class HabitWeeklyTests: XCTestCase {
     expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
     components.day = 30
     expect(habit.lastEntry) == calendar.dateFromComponents(components)!
+    
+    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    habit.daysOfWeek = [.Sunday]
+    habit.update(now)
+    expect(habit.totalCount()) == 1
+    expect(habit.totalCount(nextWeek)) == 1
+    components.day = 24
+    components.hour = 0
+    expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
+    expect(habit.lastEntry) == calendar.dateFromComponents(components)!
+    
+    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    habit.daysOfWeek = [.Saturday]
+    habit.update(now)
+    expect(habit.totalCount()) == 1
+    expect(habit.totalCount(nextWeek)) == 1
   }
   
   func testTimesSkipBefore() {
@@ -603,6 +619,21 @@ class HabitWeeklyTests: XCTestCase {
     components.day = 31
     components.hour = 15
     expect(habit.firstTodo!.due) == calendar.dateFromComponents(components)
+  }
+  
+  func testPartsAllWeekCustomEnd() {
+    HabitApp.endOfDay = 22 * 60
+    let calendar = HabitApp.calendar
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 9
+    components.day = 7 // Sunday
+    components.hour = 16
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    habit.daysOfWeek = [.Sunday, .Monday, .Tuesday, .Wednesday, .Thursday, .Friday, .Saturday]
+    components.minute = 10
+    habit.update(calendar.dateFromComponents(components)!)
   }
 
 }

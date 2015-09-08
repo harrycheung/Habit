@@ -265,7 +265,7 @@ class Habit: NSManagedObject {
     case .Monthly:
       if calendar.isDate(calendar.dateByAddingUnit(.Second, value: -1, toDate: date)!, equalToDate: createdAt!, toUnitGranularity: .Month) {
         let components = calendar.components([.Day, .Hour, .Minute], fromDate: createdAt!)
-        let createdDay = components.day// + (components.hour * 60 + components.minute) > HabitApp.endOfDay ? 1 : 0
+        let createdDay = components.day
         let daysInMonth = calendar.rangeOfUnit(.Day, inUnit: .Month, forDate: createdAt!).length
         if useTimes {
           let interval = daysInMonth / times!.integerValue
@@ -360,7 +360,7 @@ class Habit: NSManagedObject {
     
     let calendar = HabitApp.calendar
     let expected = expectedCount
-    let upcoming = (expected == 1 ? 3 : 2) - (HabitApp.upcoming ? 0 : 1)
+    let upcoming = ((expected == 1 && useTimes && HabitApp.endOfDay == HabitApp.dayMinutes) ? 3 : 2) - (HabitApp.upcoming ? 0 : 1)
     //print("upcoming: \(HabitApp.upcoming) \(upcoming)")
     switch frequency {
     case .Daily:
@@ -410,76 +410,81 @@ class Habit: NSManagedObject {
         if (expected == 1 || components.hour != 24) && calendar.isDate(lastDue, inSameDayAsDate: upcomingDay) {// lastDue.compare(upcomingDay) != .OrderedAscending {
           break
         }
-        print(formatter.stringFromDate(lastDue))
+        //print(formatter.stringFromDate(lastDue))
         let entry = Entry(context: managedObjectContext!, habit: self, due: lastDue, period: components.day)
         entry.number = dayCount
         total = total!.integerValue + 1
       }
     case .Weekly:
-      let beginningOfWeek = { (var date: NSDate, useTimes: Bool) -> NSDate in
+      let beginningOfWeek = { (var date: NSDate) -> NSDate in
         // Get beginning of week
         let components = HabitApp.calendar.components([.Weekday], fromDate: date)
-        let offset = useTimes ? 1 : 0
-        date = HabitApp.calendar.dateByAddingUnit(.Day, value: offset - components.weekday, toDate: date)!
+        date = HabitApp.calendar.dateByAddingUnit(.Day, value: 1 - components.weekday, toDate: date)!
         // Reset to midnight
         return HabitApp.calendar.dateFromComponents(calendar.components([.Year, .Month, .Day], fromDate: date))!
       }
       
       //print("expected: \(expected)")
       let upcomingWeek = calendar.dateByAddingUnit(.WeekOfYear, value: upcoming, toDate: currentDate)!
-      //print("weekafternext: \(formatter.stringFromDate(weekAfterNext)) from \(formatter.stringFromDate(currentDate))")
+//      print("weekafternext: \(formatter.stringFromDate(upcomingWeek)) from \(formatter.stringFromDate(currentDate))")
       var lastDue = lastEntry
       var weekCount = entriesOnDate(lastDue).count
-      if !useTimes && lastDue.compare(createdAt!) == .OrderedSame {
-        lastDue = beginningOfWeek(lastDue, false)
-        if HabitApp.endOfDay != HabitApp.dayMinutes {
-          lastDue = calendar.dateBySettingHour(HabitApp.endOfDay / 60, minute: HabitApp.endOfDay % 60, second: 0, ofDate: lastDue)!
-        }
-      }
+//      if !useTimes && lastDue.compare(createdAt!) == .OrderedSame {
+//        lastDue = beginningOfWeek(lastDue)
+//        if HabitApp.endOfDay != HabitApp.dayMinutes {
+//          lastDue = calendar.dateBySettingHour(HabitApp.endOfDay / 60, minute: HabitApp.endOfDay % 60, second: 0, ofDate: lastDue)!
+//        }
+      //      }
+      let dayMinutes = HabitApp.endOfDay - HabitApp.startOfDay
       while true {
         if weekCount == expected {
           weekCount = 1
           //print("new week")
-          if useTimes {
-            let components = calendar.components([.Weekday, .Hour], fromDate: lastDue)
-            if components.weekday != 1 && components.hour != 0 {
-              lastDue = calendar.dateByAddingUnit(.Day, value: 7, toDate: lastDue)!
-            }
+          let components = calendar.components([.Weekday, .Hour], fromDate: lastDue)
+          if components.weekday != 1 || (components.weekday == 1 && components.hour != 0) {
+            lastDue = calendar.dateByAddingUnit(.Day, value: 7, toDate: lastDue)!
           }
+          //print(formatter.stringFromDate(lastDue))
         } else {
           weekCount += 1
         }
         let weekOfYear = calendar.components([.WeekOfYear], fromDate: lastDue).weekOfYear
+        var dayIncrement = 0
+        var dayTime = 0
         if useTimes {
-          // Calculate from beginning of week
-          lastDue = beginningOfWeek(lastDue, true)
-          let dayMinutes = HabitApp.endOfDay - HabitApp.startOfDay
-          let increment = weekCount * dayMinutes * 7 / times!.integerValue
-          var day = increment / dayMinutes
-          var dayTime = increment % dayMinutes + HabitApp.startOfDay
-          if day == 7 {
-            // If this is the last entry, step back and set to end of day
-            day = 6
-            dayTime = HabitApp.endOfDay
+          if weekCount == times!.integerValue {
+            if HabitApp.endOfDay != HabitApp.dayMinutes {
+              dayIncrement = 6
+              dayTime = HabitApp.endOfDay
+            } else {
+              dayIncrement = 7
+            }
+          } else {
+            let increment = weekCount * dayMinutes * 7 / times!.integerValue
+            dayIncrement = increment / dayMinutes
+            dayTime = increment % dayMinutes + HabitApp.startOfDay
           }
-          lastDue = calendar.dateByAddingUnit(.Minute, value: day * HabitApp.dayMinutes + dayTime, toDate: lastDue)!
         } else {
-          let lastWeekday = calendar.components([.Weekday], fromDate: lastDue).weekday
-          let nextWeekday = daysOfWeek[weekCount - 1].rawValue
-          let newWeekIncrement = weekCount == 1 ? 7 : 0
-          let dayDecrement = lastWeekday == 1 ? 8 : lastWeekday
-          let midnightEnd = HabitApp.endOfDay != HabitApp.dayMinutes ? 0 : 1
-          let increment = nextWeekday + newWeekIncrement - dayDecrement + midnightEnd
-          lastDue = calendar.dateByAddingUnit(.Day, value: increment, toDate: lastDue)!
+          if HabitApp.endOfDay != HabitApp.dayMinutes {
+            dayIncrement = daysOfWeek[weekCount - 1].rawValue - 1
+            dayTime = HabitApp.endOfDay
+          } else {
+            dayIncrement = daysOfWeek[weekCount - 1].rawValue
+          }
         }
+        lastDue = calendar.dateByAddingUnit(.Day, value: dayIncrement, toDate: beginningOfWeek(lastDue))!
+        lastDue = calendar.dateBySettingHour(dayTime / 60, minute: dayTime % 60, second: 0, ofDate: lastDue)!
+        //print("new lastDue: \(formatter.stringFromDate(lastDue))")
         // If we are about the past our lookahead, stop
         let weekday = calendar.components([.Weekday], fromDate: lastDue).weekday
         if (expected == 1 || weekday != 1) && calendar.isDate(lastDue, equalToDate: upcomingWeek, toUnitGranularity: .WeekOfYear) {
+          //print("\(formatter.stringFromDate(lastDue)) \(formatter.stringFromDate(upcomingWeek))")
           break
         }
+        //print("new lastDue: \(formatter.stringFromDate(lastDue))")
         // Since we do calculations based on the beginning of the week, only create if we past createdAt
         if lastDue.compare(createdAt!) == .OrderedDescending {
-          print("new entry: \(formatter.stringFromDate(lastDue))")
+          //print("new entry: \(formatter.stringFromDate(lastDue))")
           let entry = Entry(context: managedObjectContext!, habit: self, due: lastDue, period: weekOfYear)
           entry.number = weekCount
           total = total!.integerValue + 1
