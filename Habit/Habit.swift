@@ -15,53 +15,53 @@ class Habit: NSManagedObject {
   enum Frequency: Int {
     case Hourly = 0, Daily = 1, Weekly = 2, Monthly = 3, Annually = 4
     
-    var description: String { return Habit.frequencyStrings[self]! }
+    var description: String { return Habit.frequencyStrings[rawValue] }
   }
   
-  static let frequencyStrings = [Frequency.Daily: "Daily", Frequency.Weekly: "Weekly", Frequency.Monthly: "Monthly"]
+  static let frequencyStrings = ["Hourly", "Daily", "Weekly", "Monthly"]
   
   enum PartOfDay: Int {
-    case Blank = 0, Morning = 1, MidMorning = 2, MidDay = 3, Afternoon = 4, LateAfternoon = 5, Evening = 6
+    case Morning = 1, MidMorning = 2, MidDay = 3, Afternoon = 4, LateAfternoon = 5, Evening = 6
     
-    var description: String { return Habit.partOfDayStrings[self]! }
+    var description: String { return Habit.partOfDayStrings[rawValue - 1] }
   }
   
   static let partOfDayStrings = [
-    PartOfDay.Morning: "Morning",
-    PartOfDay.MidMorning: "MidMorning",
-    PartOfDay.MidDay: "MidDay",
-    PartOfDay.Afternoon: "Afternoon",
-    PartOfDay.LateAfternoon: "LateAfternoon",
-    PartOfDay.Evening: "Evening"
+    "Morning",
+    "MidMorning",
+    "MidDay",
+    "Afternoon",
+    "LateAfternoon",
+    "Evening"
   ]
   
   enum DayOfWeek: Int {
-    case Blank = 0, Sunday = 1, Monday = 2, Tuesday = 3, Wednesday = 4, Thursday = 5, Friday = 6, Saturday = 7
+    case Sunday = 1, Monday = 2, Tuesday = 3, Wednesday = 4, Thursday = 5, Friday = 6, Saturday = 7
     
-    var description: String { return Habit.dayOfWeekStrings[self]! }
+    var description: String { return Habit.dayOfWeekStrings[rawValue - 1] }
     var shortDescription: String { return description.substringToIndex(description.startIndex.advancedBy(3)) }
   }
   
   static let dayOfWeekStrings = [
-    DayOfWeek.Sunday: "Sunday",
-    DayOfWeek.Monday: "Monday",
-    DayOfWeek.Tuesday: "Tuesday",
-    DayOfWeek.Wednesday: "Wednesday",
-    DayOfWeek.Thursday: "Thursday",
-    DayOfWeek.Friday: "Friday",
-    DayOfWeek.Saturday: "Saturday"
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
   ]
   
   enum PartOfMonth: Int {
-    case Blank = 0, Beginning = 1, Middle = 2, End = 3
+    case Beginning = 1, Middle = 2, End = 3
     
-    var description: String { return Habit.partOfMonthStrings[self]! }
+    var description: String { return Habit.partOfMonthStrings[rawValue - 1] }
   }
   
   static let partOfMonthStrings = [
-    PartOfMonth.Beginning: "Beginning",
-    PartOfMonth.Middle: "Middle",
-    PartOfMonth.End: "End"
+    "Beginning",
+    "Middle",
+    "End"
   ]
   
   let endDayTimes = [
