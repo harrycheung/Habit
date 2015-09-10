@@ -10,6 +10,8 @@
 		401129C628C7DAC83C65C9A3 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C30FEA7A7703C78B572D2FEA /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		4A040C4F1B7C4D610081CF85 /* History+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A040C4D1B7C4D610081CF85 /* History+CoreDataProperties.swift */; };
 		4A040C501B7C4D610081CF85 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A040C4E1B7C4D610081CF85 /* History.swift */; };
+		4A0FD15B1B9F665E0063FB93 /* NewHabitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A0FD15A1B9F665E0063FB93 /* NewHabitViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		4A0FD15D1B9F67C00063FB93 /* NewHabitTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A0FD15C1B9F67C00063FB93 /* NewHabitTransition.swift */; settings = {ASSET_TAGS = (); }; };
 		4A144D791B61C31B001A6094 /* HabitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A144D781B61C31B001A6094 /* HabitApp.swift */; };
 		4A16FDC11B7ED48A00DF9DFC /* HabitSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A16FDC01B7ED48A00DF9DFC /* HabitSettingsViewController.swift */; };
 		4A16FDC31B7F7CA000DF9DFC /* HabitSettingsTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A16FDC21B7F7CA000DF9DFC /* HabitSettingsTransition.swift */; };
@@ -68,6 +70,8 @@
 		4368692B34E65F6BF8A58F49 /* Pods-HabitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HabitTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HabitTests/Pods-HabitTests.release.xcconfig"; sourceTree = "<group>"; };
 		4A040C4D1B7C4D610081CF85 /* History+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4A040C4E1B7C4D610081CF85 /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
+		4A0FD15A1B9F665E0063FB93 /* NewHabitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewHabitViewController.swift; sourceTree = "<group>"; };
+		4A0FD15C1B9F67C00063FB93 /* NewHabitTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewHabitTransition.swift; sourceTree = "<group>"; };
 		4A144D781B61C31B001A6094 /* HabitApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitApp.swift; sourceTree = "<group>"; };
 		4A16FDC01B7ED48A00DF9DFC /* HabitSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitSettingsViewController.swift; sourceTree = "<group>"; };
 		4A16FDC21B7F7CA000DF9DFC /* HabitSettingsTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitSettingsTransition.swift; sourceTree = "<group>"; };
@@ -225,12 +229,14 @@
 			isa = PBXGroup;
 			children = (
 				4A1D08CC1B3E1A7A006A9CA4 /* MainViewController.swift */,
+				4A0FD15A1B9F665E0063FB93 /* NewHabitViewController.swift */,
 				4A1D08CB1B3E1A7A006A9CA4 /* HabitViewController.swift */,
 				4A16FDC01B7ED48A00DF9DFC /* HabitSettingsViewController.swift */,
 				4A44D7861B5A29EC0017B34B /* AppSettingsViewController.swift */,
 				4A67ABAA1B8FCEBD00DA641B /* SwipeDialogViewController.swift */,
 				4A44D7881B5A9A930017B34B /* AppSettingsTransition.swift */,
 				4A16FDC21B7F7CA000DF9DFC /* HabitSettingsTransition.swift */,
+				4A0FD15C1B9F67C00063FB93 /* NewHabitTransition.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -579,6 +585,8 @@
 				4AAA3C1C1B7AF9B7006572F8 /* UIColor+Custom.swift in Sources */,
 				4AE038681B8E042C00BF4CEC /* NSCalendar+Custom.swift in Sources */,
 				4A44D7891B5A9A930017B34B /* AppSettingsTransition.swift in Sources */,
+				4A0FD15B1B9F665E0063FB93 /* NewHabitViewController.swift in Sources */,
+				4A0FD15D1B9F67C00063FB93 /* NewHabitTransition.swift in Sources */,
 				4A1D08D31B3E1A7A006A9CA4 /* SwipeTableViewCell.swift in Sources */,
 				4A1D08981B3E17E9006A9CA4 /* AppDelegate.swift in Sources */,
 				4AA4AED81B7A73B100A1562F /* HabitHistory.swift in Sources */,

@@ -194,7 +194,7 @@
                                     <color key="titleShadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="Y0I-la-TF4" kind="presentation" identifier="" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="gNH-CL-0sT"/>
+                                    <segue destination="tqg-qj-7hm" kind="presentation" modalPresentationStyle="overCurrentContext" id="GP4-Ru-1DZ"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -488,6 +488,63 @@
             </objects>
             <point key="canvasLocation" x="847" y="454"/>
         </scene>
+        <!--New Habit View Controller-->
+        <scene sceneID="Eip-ec-Kat">
+            <objects>
+                <viewController id="tqg-qj-7hm" customClass="NewHabitViewController" customModule="Habit" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="2QT-eW-pat"/>
+                        <viewControllerLayoutGuide type="bottom" id="D1w-Mg-yzB"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="zTA-GA-0kv">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7jF-We-Qmt">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="K5X-kl-n0c">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                                <blurEffect style="dark"/>
+                            </visualEffectView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rY1-QZ-SkP">
+                                <rect key="frame" x="244" y="492" width="56" height="56"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="rY1-QZ-SkP" secondAttribute="height" multiplier="1:1" id="fYx-JE-ayS"/>
+                                    <constraint firstAttribute="width" constant="56" id="mc3-g7-E9k"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
+                                <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="4"/>
+                                <state key="normal" title="+">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="0gf-IA-ZT8" kind="unwind" unwindAction="unwind:" id="fJE-lp-Xwz"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="7jF-We-Qmt" secondAttribute="trailing" id="Qbv-Ke-QGZ"/>
+                            <constraint firstAttribute="trailing" secondItem="rY1-QZ-SkP" secondAttribute="trailing" constant="20" id="R3m-hr-cO1"/>
+                            <constraint firstItem="7jF-We-Qmt" firstAttribute="top" secondItem="2QT-eW-pat" secondAttribute="bottom" constant="-20" id="a8r-vM-m5I"/>
+                            <constraint firstItem="D1w-Mg-yzB" firstAttribute="top" secondItem="7jF-We-Qmt" secondAttribute="bottom" id="jS7-YQ-pxO"/>
+                            <constraint firstItem="7jF-We-Qmt" firstAttribute="leading" secondItem="zTA-GA-0kv" secondAttribute="leading" id="mVO-6G-sCY"/>
+                            <constraint firstItem="D1w-Mg-yzB" firstAttribute="top" secondItem="rY1-QZ-SkP" secondAttribute="bottom" constant="20" id="xhb-ct-G0q"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="blurView" destination="7jF-We-Qmt" id="fJl-oq-HEm"/>
+                        <outlet property="closeButton" destination="rY1-QZ-SkP" id="CVy-MR-IqT"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EUL-Oj-cIF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="0gf-IA-ZT8" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="454" y="1132"/>
+        </scene>
         <!--Habit Settings View Controller-->
         <scene sceneID="0yX-QE-JbH">
             <objects>
@@ -755,7 +812,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sui-Pz-YwZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1227" y="454"/>
+            <point key="canvasLocation" x="847" y="1132"/>
         </scene>
         <!--Swipe Dialog View Controller-->
         <scene sceneID="jUb-OT-2no">
@@ -847,7 +904,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hvc-tX-YnP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1617" y="454"/>
+            <point key="canvasLocation" x="1281" y="454"/>
         </scene>
         <!--Data Source-->
         <scene sceneID="G1Z-5I-rjw">
@@ -1266,7 +1323,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2021" y="454"/>
+            <point key="canvasLocation" x="454" y="-238"/>
         </scene>
     </scenes>
 </document>

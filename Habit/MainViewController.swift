@@ -25,7 +25,7 @@
 // 16. done - If a lot to be done, ask to skip all
 // 17. done - Pretify show upcoming animation
 // 18. done - Pretify insert new habit
-// 19. Warn when changing habit frequency and handle
+// 19. done - not happening - Warn when changing habit frequency and handle
 // 20. done - Skip icon
 // 21. done - Hide add button when swiping
 // 22. done - Switch to gregorian calendar
@@ -40,6 +40,7 @@
 // 31. done - Custom start and finish day
 // 32. Icon
 // 33. Fix test due dates
+// 34: Delete history when deleting entries for new end day
 
 import UIKit
 import CoreData
@@ -65,6 +66,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   var upcoming = [Entry]()
   var refreshTimer: NSTimer?
   var appSettingsTransition: AppSettingsTransition?
+  var newHabitTransition: NewHabitTransition?
   
   @IBAction func fill(sender: AnyObject) {
     do {
@@ -189,6 +191,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     super.viewDidLoad()
     
     appSettingsTransition = AppSettingsTransition()
+    newHabitTransition = NewHabitTransition()
     
     statusBar = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 20))
     view.addSubview(statusBar!)
@@ -226,7 +229,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     tableView.separatorStyle = .None
     titleBar.backgroundColor = HabitApp.color
     newButton.backgroundColor = HabitApp.color
-    newButton.layer.cornerRadius = 28
+    newButton.layer.cornerRadius = newButton.bounds.width / 2
     newButton.layer.shadowColor = UIColor.blackColor().CGColor
     newButton.layer.shadowOpacity = 0.6
     newButton.layer.shadowRadius = 5
@@ -701,6 +704,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     if segue.destinationViewController is AppSettingsViewController {
       segue.destinationViewController.transitioningDelegate = appSettingsTransition
+      segue.destinationViewController.modalPresentationStyle = .Custom
+    } else if segue.destinationViewController is NewHabitViewController {
+      segue.destinationViewController.transitioningDelegate = newHabitTransition
       segue.destinationViewController.modalPresentationStyle = .Custom
     }
   }
