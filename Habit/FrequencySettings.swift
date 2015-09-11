@@ -33,8 +33,11 @@ class FrequencySettings: UIView, UIPickerViewDelegate, UIPickerViewDataSource, M
   var useTimes: Bool = false
   var delegate: FrequencySettingsDelegate?
   
-  init(leftTitle: String, pickerCount: Int, rightTitle: String, multiSelectItems: [String], useTimes: Bool, delegate: FrequencySettingsDelegate?) {
-    super.init(frame: CGRectMake(0, 0, 1, 1))
+  required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+  }
+  
+  func configure(leftTitle leftTitle: String, pickerCount: Int, rightTitle: String, multiSelectItems: [String], useTimes: Bool, delegate: FrequencySettingsDelegate?) {
     NSBundle.mainBundle().loadNibNamed("FrequencySettings", owner: self, options: nil)
     bounds = view.bounds
     addSubview(view)
@@ -67,10 +70,6 @@ class FrequencySettings: UIView, UIPickerViewDelegate, UIPickerViewDataSource, M
       make.height.equalTo(self)
     }
     overlayTouched(useTimes ? leftOverlay! : rightOverlay!, touched: false)
-  }
-
-  required init(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
   }
   
   func overlayTouched(overlayView: OverlayView, touched: Bool = true) {

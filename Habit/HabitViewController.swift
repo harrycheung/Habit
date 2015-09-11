@@ -206,12 +206,12 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
   }
   
   @IBAction func goToSettings() {
-    let hvsc = storyboard!.instantiateViewControllerWithIdentifier("HabitSettingsViewController") as! HabitSettingsViewController
-    hvsc.transitioningDelegate = habitSettingsTransition
-    hvsc.modalPresentationStyle = .Custom
-    hvsc.providesPresentationContextTransitionStyle = true
-    hvsc.habit = habit!
-    presentViewController(hvsc, animated: true, completion: nil)
+    let hsvc = storyboard!.instantiateViewControllerWithIdentifier("HabitSettingsViewController") as! HabitSettingsViewController
+    hsvc.transitioningDelegate = habitSettingsTransition
+    hsvc.modalPresentationStyle = .Custom
+    hsvc.providesPresentationContextTransitionStyle = true
+    hsvc.habit = habit!
+    presentViewController(hsvc, animated: true, completion: nil)
   }
   
 }

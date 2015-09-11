@@ -12,13 +12,23 @@ import FontAwesome_swift
 
 class NewHabitViewController: UIViewController {
   
-  @IBOutlet weak var blurView: UIVisualEffectView!
+  @IBOutlet weak var blurView: UIView!
   @IBOutlet weak var closeButton: UIButton!
   var dailyButton: UIButton?
   var weeklyButton: UIButton?
   var monthlyButton: UIButton?
   
-  override func viewDidLoad() {
+  func showNewHabit(frequency: Habit.Frequency) {
+    let mvc = presentingViewController!
+    dismissViewControllerAnimated(true) {
+      let hsvc = self.storyboard!.instantiateViewControllerWithIdentifier("HabitSettingsViewController") as! HabitSettingsViewController
+      hsvc.frequency = frequency
+      mvc.presentViewController(hsvc, animated: true, completion: nil)
+    }
   }
+  
+  func buttonDTapped() { showNewHabit(.Daily) }
+  func buttonWTapped() { showNewHabit(.Weekly) }
+  func buttonMTapped() { showNewHabit(.Monthly) }
   
 }

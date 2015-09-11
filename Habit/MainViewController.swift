@@ -50,7 +50,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   // IB identifiers
   let cellIdentifier = "HabitCell"
-  let showHabitSegue = "ShowHabit"
   
   let SlideAnimationDelay: NSTimeInterval = 0.05
   let SlideAnimationDuration: NSTimeInterval = 0.4

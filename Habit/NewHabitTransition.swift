@@ -11,7 +11,8 @@ import UIKit
 
 class NewHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
   
-  let TransitionDuration: NSTimeInterval = 0.4
+  let TransitionDuration: NSTimeInterval = 0.25
+  let BackgroundAlpha: CGFloat = 0.4
   
   var presenting: Bool = false
   var dailyContainer: UIView?
@@ -34,7 +35,7 @@ class NewHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIVie
   
   func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
     let radius: CGFloat = 100
-    let shortDistance: CGFloat = radius * CGFloat(cos(M_PI_4))
+    let shortSide: CGFloat = radius * CGFloat(cos(M_PI_4))
     
     let curvedAnimation = { (button: UIButton, start: CGPoint, end: CGPoint, control: CGPoint) in
       let animation = CAKeyframeAnimation(keyPath: "position")
@@ -44,6 +45,7 @@ class NewHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIVie
       path.addQuadCurveToPoint(end, controlPoint: control)
       animation.path = path.CGPath
       button.layer.addAnimation(animation, forKey: nil)
+      button.center = end
     }
     
     let fromVC = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey)!
@@ -60,13 +62,16 @@ class NewHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIVie
         button.layer.shadowOffset = CGSizeMake(0, 1)
       }
       
-      let createButton = { (text: String, frame: CGRect) -> UIButton in
-        let button = UIButton(frame: frame)
-        roundifyButton(button)
+      let createButton = { (text: String, frame: CGRect, nhvc: NewHabitViewController) -> UIButton in
+        let button = UIButton(type: .System)
+        button.frame = frame
         button.setTitle(text, forState: .Normal)
         button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         button.titleLabel!.font = UIFont(name: "Bariol-Bold", size: 20)!
         button.contentEdgeInsets = UIEdgeInsets(top: 3, left: 0, bottom: 0, right: 0)
+        button.addGestureRecognizer(UITapGestureRecognizer(target: nhvc, action: Selector("button\(text)Tapped")))
+        roundifyButton(button)
+        nhvc.view.addSubview(button)
         return button
       }
       
@@ -76,12 +81,9 @@ class NewHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIVie
       roundifyButton(nhvc.closeButton)
       nhvc.blurView.alpha = 0
       let startFrame = CGRectMake(mvc.newButton.center.x - 23, mvc.newButton.center.y - 23, 46, 46)
-      nhvc.dailyButton = createButton("D", startFrame)
-      nhvc.view.addSubview(nhvc.dailyButton!)
-      nhvc.weeklyButton = createButton("W", startFrame)
-      nhvc.view.addSubview(nhvc.weeklyButton!)
-      nhvc.monthlyButton = createButton("M", startFrame)
-      nhvc.view.addSubview(nhvc.monthlyButton!)
+      nhvc.dailyButton = createButton("D", startFrame, nhvc)
+      nhvc.weeklyButton = createButton("W", startFrame, nhvc)
+      nhvc.monthlyButton = createButton("M", startFrame, nhvc)
       nhvc.view.bringSubviewToFront(nhvc.closeButton)
       containerView.addSubview(nhvc.view)
 
@@ -89,21 +91,18 @@ class NewHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIVie
         CGPointMake(mvc.newButton.center.x, mvc.newButton.center.y - radius),
         CGPointMake(mvc.newButton.center.x - radius / 2, mvc.newButton.center.y - radius / 2))
       curvedAnimation(nhvc.weeklyButton!, mvc.newButton.center,
-        CGPointMake(mvc.newButton.center.x - shortDistance, mvc.newButton.center.y - shortDistance),
-        CGPointMake(mvc.newButton.center.x - shortDistance, mvc.newButton.center.y))
+        CGPointMake(mvc.newButton.center.x - shortSide, mvc.newButton.center.y - shortSide),
+        CGPointMake(mvc.newButton.center.x - shortSide, mvc.newButton.center.y))
       curvedAnimation(nhvc.monthlyButton!, mvc.newButton.center,
         CGPointMake(mvc.newButton.center.x - radius, mvc.newButton.center.y),
         CGPointMake(mvc.newButton.center.x - radius / 2, mvc.newButton.center.y + radius / 2))
       
       UIView.animateWithDuration(TransitionDuration,
         animations: {
-          nhvc.blurView.alpha = 1
+          nhvc.blurView.alpha = self.BackgroundAlpha
           nhvc.closeButton.transform = CGAffineTransformMakeRotation(CGFloat(M_PI / 4))
         }, completion: { finished in
           transitionContext.completeTransition(true)
-          nhvc.dailyButton!.center = CGPointMake(mvc.newButton.center.x, mvc.newButton.center.y - radius)
-          nhvc.weeklyButton!.center = CGPointMake(mvc.newButton.center.x - shortDistance, mvc.newButton.center.y - shortDistance)
-          nhvc.monthlyButton!.center = CGPointMake(mvc.newButton.center.x - radius, mvc.newButton.center.y)
         })
     } else {
       let mvc = toVC as! MainViewController
@@ -112,7 +111,7 @@ class NewHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIVie
       curvedAnimation(nhvc.dailyButton!, nhvc.dailyButton!.center, mvc.newButton.center,
         CGPointMake(mvc.newButton.center.x - radius / 2, mvc.newButton.center.y - radius / 2))
       curvedAnimation(nhvc.weeklyButton!, nhvc.weeklyButton!.center, mvc.newButton.center,
-        CGPointMake(mvc.newButton.center.x - shortDistance / 2, mvc.newButton.center.y))
+        CGPointMake(mvc.newButton.center.x - shortSide, mvc.newButton.center.y))
       curvedAnimation(nhvc.monthlyButton!, nhvc.monthlyButton!.center, mvc.newButton.center,
         CGPointMake(mvc.newButton.center.x - radius / 2, mvc.newButton.center.y + radius / 2))
       
@@ -122,9 +121,6 @@ class NewHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIVie
           nhvc.closeButton.transform = CGAffineTransformMakeRotation(0)
         }, completion: { finished in
           mvc.newButton.hidden = false
-          nhvc.dailyButton!.center = mvc.newButton.center
-          nhvc.weeklyButton!.center = mvc.newButton.center
-          nhvc.monthlyButton!.center = mvc.newButton.center
           transitionContext.completeTransition(true)
         })
     }
