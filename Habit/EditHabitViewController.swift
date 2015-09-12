@@ -105,14 +105,10 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
 //      blur.snp_makeConstraints { (make) in
 //        make.edges.equalTo(view)
 //      }
-      
-      mvc = presentingViewController as? MainViewController
     } else {
       switchMode.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
       switchMode.setTitle(String.fontAwesomeIconWithName(.Close), forState: .Normal)
       back.hidden = true
-      
-      mvc = presentingViewController!.presentedViewController as? MainViewController
     }
     
     back.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
@@ -124,6 +120,8 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     green += (1 - green) * 0.8
     blue += (1 - blue) * 0.8
     toolbar.backgroundColor = UIColor(red: red, green: green, blue: blue, alpha: 1)
+    
+    mvc = presentingViewController!.presentingViewController as? MainViewController
   }
   
   func frequencySettingsChanged() {

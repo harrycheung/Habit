@@ -52,7 +52,6 @@ class NewHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIVie
           transitionContext.completeTransition(true)
         })
     } else {
-      print("new transition")
       let mvc = toVC as! MainViewController
       let chvc = fromVC as! CreateHabitViewController
       
