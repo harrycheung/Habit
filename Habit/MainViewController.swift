@@ -64,8 +64,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   var entries = [Entry]()
   var upcoming = [Entry]()
   var refreshTimer: NSTimer?
-  var appSettingsTransition: AppSettingsTransition?
-  var newHabitTransition: NewHabitTransition?
+  var appSettingsTransition: UIViewControllerTransitioningDelegate?
+  var newHabitTransition: UIViewControllerTransitioningDelegate?
   
   @IBAction func fill(sender: AnyObject) {
     do {
@@ -577,7 +577,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         if skipOne {
           removeEntry(indexPath, true)
-          UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
+          UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
             self.newButton.alpha = 1
           })
         } else {
@@ -597,7 +597,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.reloadEntries()
             self.tableView.deleteRowsAtIndexPaths(indexPaths, withRowAnimation: .Top)
             self.dismissViewControllerAnimated(true, completion: {
-              UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
+              UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
                 self.newButton.alpha = 1
               })
             })
@@ -605,7 +605,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
           sdvc.noCompletion = { () in
             removeEntry(indexPath, true)
             self.dismissViewControllerAnimated(true, completion: {
-              UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
+              UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
                 self.newButton.alpha = 1
               })
             })
@@ -614,7 +614,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
       } else {
         removeEntry(indexPath, false)
-        UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
+        UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
           self.newButton.alpha = 1
         })
       }
@@ -704,7 +704,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     if segue.destinationViewController is AppSettingsViewController {
       segue.destinationViewController.transitioningDelegate = appSettingsTransition
       segue.destinationViewController.modalPresentationStyle = .Custom
-    } else if segue.destinationViewController is NewHabitViewController {
+    } else if segue.destinationViewController is CreateHabitViewController {
       segue.destinationViewController.transitioningDelegate = newHabitTransition
       segue.destinationViewController.modalPresentationStyle = .Custom
     }
@@ -766,21 +766,21 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func scrollViewWillBeginDragging(scrollView: UIScrollView) {
-    UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
+    UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
       self.newButton.alpha = 0
     })
   }
   
   func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     if !decelerate {
-      UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
+      UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
         self.newButton.alpha = 1
       })
     }
   }
   
   func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-    UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
+    UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
       self.newButton.alpha = 1
     })
   }
@@ -788,14 +788,14 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   // SwipeTableViewCell
   
   func startSwiping(cell: SwipeTableViewCell) {
-    UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
+    UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
       self.newButton.alpha = 0
     })
   }
   
   func endSwiping(cell: SwipeTableViewCell) {
     if presentedViewController == nil {
-      UIView.animateWithDuration(HabitApp.NewButtonAnimationDuration, animations: {
+      UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
         self.newButton.alpha = 1
       })
     }

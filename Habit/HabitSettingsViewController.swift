@@ -98,18 +98,13 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
       switchMode.hidden = true
       deleteWidth.priority = HabitApp.LayoutPriorityHigh
       
-      let blur = UIVisualEffectView(effect: UIBlurEffect(style: .Light))
-      let content = view.subviews[0]
-      blur.contentView.addSubview(content)
-      content.snp_makeConstraints { (make) in
-        make.centerY.equalTo(blur.contentView)
-        make.left.equalTo(blur.contentView).offset(8)
-        make.right.equalTo(blur.contentView).offset(-8)
-      }
-      view.addSubview(blur)
-      blur.snp_makeConstraints { (make) in
-        make.edges.equalTo(view)
-      }
+//      let blur = UIView()
+//      blur.backgroundColor = UIColor.whiteColor()
+//      blur.alpha = 0.2
+//      view.addSubview(blur)
+//      blur.snp_makeConstraints { (make) in
+//        make.edges.equalTo(view)
+//      }
       
       mvc = presentingViewController as? MainViewController
     } else {
@@ -175,6 +170,11 @@ class HabitSettingsViewController: UIViewController, UITextFieldDelegate, Freque
   }
   
   @IBAction func closeView(sender: AnyObject) {
+    // TODO: Documentation says that this should be called on MVC to cause the top most VC to animate. However,
+    // when we do that, it causes the 2nd to top VC to animate. For example, it should be:
+    //
+    // presentingViewController.presentingViewController.dismissViewControllerAnimated...
+    //
     dismissViewControllerAnimated(true, completion: nil)
   }
   

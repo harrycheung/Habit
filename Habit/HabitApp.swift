@@ -47,7 +47,7 @@ class HabitApp {
   static let weekHours = 7 * dayHours
   
   static let MinimumAlpha: CGFloat = 0.4
-  static let NewButtonAnimationDuration: NSTimeInterval = 0.2
+  static let NewButtonFadeAnimationDuration: NSTimeInterval = 0.2
   static let LayoutPriorityLow: UILayoutPriority = 900
   static let LayoutPriorityHigh: UILayoutPriority = 999
   

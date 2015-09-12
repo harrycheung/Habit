@@ -1,15 +1,15 @@
 //
-//  NewHabitTransition.swift
+//  CreateHabitTransition.swift
 //  Habit
 //
-//  Created by harry on 9/8/15.
+//  Created by harry on 9/12/15.
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 
 import Foundation
 import UIKit
 
-class NewHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
+class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
   
   let TransitionDuration: NSTimeInterval = 0.25
   let BackgroundAlpha: CGFloat = 0.4
@@ -38,31 +38,37 @@ class NewHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIVie
     let containerView = transitionContext.containerView()!
     
     if presenting {
-      let mvc = fromVC as! MainViewController
-      mvc.newButton.hidden = true
-      let chvc = toVC as! CreateHabitViewController
-      containerView.addSubview(chvc.view)
-      
-      chvc.showButtons()
-      UIView.animateWithDuration(TransitionDuration,
-        animations: {
-          chvc.blurView.alpha = self.BackgroundAlpha
-          chvc.closeButton.transform = CGAffineTransformMakeRotation(CGFloat(M_PI / 4))
-        }, completion: { finished in
-          transitionContext.completeTransition(true)
-        })
-    } else {
-      print("new transition")
-      let mvc = toVC as! MainViewController
       let chvc = fromVC as! CreateHabitViewController
+      let hsvc = toVC as! HabitSettingsViewController
+      containerView.addSubview(hsvc.view)
       
       chvc.hideButtons()
+      hsvc.view.alpha = 0
       UIView.animateWithDuration(TransitionDuration,
         animations: {
-          chvc.blurView.alpha = 0
+          hsvc.view.alpha = 1
           chvc.closeButton.transform = CGAffineTransformMakeRotation(0)
+          chvc.closeButton.alpha = 0
+          chvc.dailyButton!.alpha = 0
+          chvc.weeklyButton!.alpha = 0
+          chvc.monthlyButton!.alpha = 0
         }, completion: { finished in
-          mvc.newButton.hidden = false
+          transitionContext.completeTransition(true)
+      })
+    } else {
+      let hsvc = fromVC as! HabitSettingsViewController
+      let chvc = toVC as! CreateHabitViewController
+      let mvc = toVC.presentingViewController! as! MainViewController
+      
+      mvc.newButton.hidden = false
+      mvc.newButton.alpha = 0
+      hsvc.presentingViewController!.dismissViewControllerAnimated(false, completion: nil)
+      UIView.animateWithDuration(TransitionDuration,
+        animations: {
+          hsvc.view.alpha = 0
+          chvc.view.alpha = 0
+          mvc.newButton.alpha = 1
+        }, completion: { finished in
           transitionContext.completeTransition(true)
         })
     }
