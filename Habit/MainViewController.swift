@@ -200,7 +200,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // TODO: What's up with the "window!!"?
     UIApplication.sharedApplication().delegate!.window!!.tintColor = HabitApp.color
     
-#if !TESTING
     do {
       let now = NSDate()
       let habitRequest = NSFetchRequest(entityName: "Habit")
@@ -219,7 +218,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       
     // Setup timers
     refreshTimer = NSTimer.scheduledTimerWithTimeInterval(5 * 60, target: tableView, selector: "reloadData", userInfo: nil, repeats: true)
-#endif
     
     // Setup colors
     tableView.backgroundView = nil
