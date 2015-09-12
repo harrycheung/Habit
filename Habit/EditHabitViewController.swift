@@ -22,7 +22,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
   var mvc: MainViewController?
   
   @IBOutlet weak var name: UITextField!
-  @IBOutlet weak var switchMode: UIButton!
+  @IBOutlet weak var close: UIButton!
   @IBOutlet weak var frequencyLabel: UILabel!
   @IBOutlet weak var frequencySettings: FrequencySettings!
   @IBOutlet weak var notification: UISwitch!
@@ -30,7 +30,6 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
   @IBOutlet weak var save: UIButton!
   @IBOutlet weak var deleteWidth: NSLayoutConstraint!
   @IBOutlet weak var toolbar: UIView!
-  @IBOutlet weak var back: UIButton!
   @IBOutlet weak var height: NSLayoutConstraint!
   
   override func viewDidLoad() {
@@ -95,24 +94,10 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     // Setup form if this is new
     if habit == nil {
       save.setTitle("Create", forState: .Normal)
-      switchMode.hidden = true
       deleteWidth.priority = HabitApp.LayoutPriorityHigh
-      
-//      let blur = UIView()
-//      blur.backgroundColor = UIColor.whiteColor()
-//      blur.alpha = 0.2
-//      view.addSubview(blur)
-//      blur.snp_makeConstraints { (make) in
-//        make.edges.equalTo(view)
-//      }
-    } else {
-      switchMode.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
-      switchMode.setTitle(String.fontAwesomeIconWithName(.Close), forState: .Normal)
-      back.hidden = true
     }
-    
-    back.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
-    back.setTitle(String.fontAwesomeIconWithName(.ChevronLeft), forState: .Normal)
+    close.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
+    close.setTitle(String.fontAwesomeIconWithName(.Close), forState: .Normal)
     
     var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0
     HabitApp.color.getRed(&red, green: &green, blue: &blue, alpha: nil)
