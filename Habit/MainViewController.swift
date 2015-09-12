@@ -15,7 +15,7 @@
 // 6. done - App settings
 // 7. done - Local notifications
 // 8. done - Expire habits periodically
-// 9. done - Split HabitViewController
+// 9. done - Split ShowHabitViewController
 // 10. done - Use Entry for tableview
 // 11. done - Debug flash when changing color
 // 12. done - Debug flash when dismising habit settings
@@ -65,7 +65,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   var upcoming = [Entry]()
   var refreshTimer: NSTimer?
   var appSettingsTransition: UIViewControllerTransitioningDelegate?
-  var newHabitTransition: UIViewControllerTransitioningDelegate?
+  var selectFrequencyTransition: UIViewControllerTransitioningDelegate?
   
   @IBAction func fill(sender: AnyObject) {
     do {
@@ -190,7 +190,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     super.viewDidLoad()
     
     appSettingsTransition = AppSettingsTransition()
-    newHabitTransition = NewHabitTransition()
+    selectFrequencyTransition = SelectFrequencyTransition()
     
     statusBar = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 20))
     view.addSubview(statusBar!)
@@ -653,11 +653,11 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     dispatch_async(dispatch_get_main_queue()) {
       self.activeCell = tableView.cellForRowAtIndexPath(indexPath) as? HabitTableViewCell
-      let hvc = self.storyboard!.instantiateViewControllerWithIdentifier("HabitViewController") as! HabitViewController
-      hvc.modalTransitionStyle = .CrossDissolve
-      hvc.modalPresentationStyle = .OverCurrentContext
-      hvc.habit = self.activeCell!.entry!.habit!
-      self.presentViewController(hvc, animated: true, completion: nil)
+      let shvc = self.storyboard!.instantiateViewControllerWithIdentifier("ShowHabitViewController") as! ShowHabitViewController
+      shvc.modalTransitionStyle = .CrossDissolve
+      shvc.modalPresentationStyle = .OverCurrentContext
+      shvc.habit = self.activeCell!.entry!.habit!
+      self.presentViewController(shvc, animated: true, completion: nil)
     }
   }
   
@@ -702,8 +702,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     if segue.destinationViewController is AppSettingsViewController {
       segue.destinationViewController.transitioningDelegate = appSettingsTransition
       segue.destinationViewController.modalPresentationStyle = .Custom
-    } else if segue.destinationViewController is CreateHabitViewController {
-      segue.destinationViewController.transitioningDelegate = newHabitTransition
+    } else if segue.destinationViewController is SelectFrequencyViewController {
+      segue.destinationViewController.transitioningDelegate = selectFrequencyTransition
       segue.destinationViewController.modalPresentationStyle = .Custom
     }
   }

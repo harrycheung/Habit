@@ -1,5 +1,5 @@
 //
-//  HabitSettingsTransition.swift
+//  EditHabitTransition.swift
 //  Habit
 //
 //  Created by harry on 8/15/15.
@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class HabitSettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
+class EditHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
   
   var presenting: Bool = false
   
@@ -31,7 +31,7 @@ class HabitSettingsTransition: NSObject, UIViewControllerTransitioningDelegate, 
   
   func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
     if presenting {
-      let fromVC = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey) as! HabitViewController
+      let fromVC = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey) as! ShowHabitViewController
       let toVC = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) as! EditHabitViewController
       transitionContext.containerView()!.addSubview(toVC.view)
       toVC.view.alpha = 0
@@ -52,7 +52,7 @@ class HabitSettingsTransition: NSObject, UIViewControllerTransitioningDelegate, 
       })
     } else if !presenting {
       let fromVC = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey) as! EditHabitViewController
-      let toVC = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) as! HabitViewController
+      let toVC = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) as! ShowHabitViewController
       let startHeight = fromVC.height.constant
       let endHeight = toVC.height.constant
       toVC.height.constant = startHeight

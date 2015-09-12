@@ -38,26 +38,26 @@ class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UI
     let containerView = transitionContext.containerView()!
     
     if presenting {
-      let chvc = fromVC as! CreateHabitViewController
+      let sfvc = fromVC as! SelectFrequencyViewController
       let ehvc = toVC as! EditHabitViewController
       containerView.addSubview(ehvc.view)
       
-      chvc.hideButtons()
+      sfvc.hideButtons()
       ehvc.view.alpha = 0
       UIView.animateWithDuration(TransitionDuration,
         animations: {
           ehvc.view.alpha = 1
-          chvc.closeButton.transform = CGAffineTransformMakeRotation(0)
-          chvc.closeButton.alpha = 0
-          chvc.dailyButton!.alpha = 0
-          chvc.weeklyButton!.alpha = 0
-          chvc.monthlyButton!.alpha = 0
+          sfvc.closeButton.transform = CGAffineTransformMakeRotation(0)
+          sfvc.closeButton.alpha = 0
+          sfvc.dailyButton!.alpha = 0
+          sfvc.weeklyButton!.alpha = 0
+          sfvc.monthlyButton!.alpha = 0
         }, completion: { finished in
           transitionContext.completeTransition(true)
       })
     } else {
       let ehvc = fromVC as! EditHabitViewController
-      let chvc = toVC as! CreateHabitViewController
+      let sfvc = toVC as! SelectFrequencyViewController
       let mvc = toVC.presentingViewController! as! MainViewController
       
       mvc.newButton.hidden = false
@@ -66,7 +66,7 @@ class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UI
       UIView.animateWithDuration(TransitionDuration,
         animations: {
           ehvc.view.alpha = 0
-          chvc.view.alpha = 0
+          sfvc.view.alpha = 0
           mvc.newButton.alpha = 1
         }, completion: { finished in
           transitionContext.completeTransition(true)

@@ -1,5 +1,5 @@
 //
-//  CreateHabitViewController.swift
+//  SelectFrequencyViewController.swift
 //  Habit
 //
 //  Created by harry on 9/8/15.
@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 import FontAwesome_swift
 
-class CreateHabitViewController: UIViewController {
+class SelectFrequencyViewController: UIViewController {
   
   @IBOutlet weak var blurView: UIView!
   @IBOutlet weak var closeButton: UIButton!

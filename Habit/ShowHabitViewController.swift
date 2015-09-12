@@ -1,5 +1,5 @@
 //
-//  HabitViewController.swift
+//  ShowHabitViewController.swift
 //  Habit
 //
 //  Created by harry on 6/25/15.
@@ -13,10 +13,10 @@ import SnapKit
 import KAProgressLabel
 import FontAwesome_swift
 
-class HabitViewController: UIViewController, HabitHistoryDelegate {
+class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
   
   var habit: Habit?  
-  var habitSettingsTransition: HabitSettingsTransition?
+  var editHabitTransition: EditHabitTransition?
   
   @IBOutlet weak var name: UILabel!
   @IBOutlet weak var switchMode: UIButton!
@@ -57,7 +57,7 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    habitSettingsTransition = HabitSettingsTransition()
+    editHabitTransition = EditHabitTransition()
     
     switchMode.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
     switchMode.setTitle(String.fontAwesomeIconWithName(.Cog), forState: .Normal)
@@ -145,10 +145,10 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
           if calendar.isDateInToday(NSDate()) {
             progressPeriod.text = "Today"
           } else {
-            progressPeriod.text = HabitViewController.dailyFormatter.stringFromDate(date)
+            progressPeriod.text = ShowHabitViewController.dailyFormatter.stringFromDate(date)
           }
         } else {
-          progressPeriod.text = HabitViewController.dailyYearFormatter.stringFromDate(date)
+          progressPeriod.text = ShowHabitViewController.dailyYearFormatter.stringFromDate(date)
         }
       case .Weekly:
         progressPeriod.numberOfLines = 2
@@ -157,12 +157,12 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
           if calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
             progressPeriod.text = "This week"
           } else {
-            progressPeriod.text = HabitViewController.weeklyStartFormatter.stringFromDate(startDate) +
-              HabitViewController.dailyFormatter.stringFromDate(endDate)
+            progressPeriod.text = ShowHabitViewController.weeklyStartFormatter.stringFromDate(startDate) +
+              ShowHabitViewController.dailyFormatter.stringFromDate(endDate)
           }
         } else {
-          progressPeriod.text = HabitViewController.weeklyStartFormatter.stringFromDate(startDate) +
-            HabitViewController.dailyYearFormatter.stringFromDate(endDate)
+          progressPeriod.text = ShowHabitViewController.weeklyStartFormatter.stringFromDate(startDate) +
+            ShowHabitViewController.dailyYearFormatter.stringFromDate(endDate)
         }
       case .Monthly:
         progressPeriod.numberOfLines = 1
@@ -170,10 +170,10 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
           if calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Month) {
             progressPeriod.text = "This month"
           } else {
-            progressPeriod.text = HabitViewController.monthlyFormatter.stringFromDate(date)
+            progressPeriod.text = ShowHabitViewController.monthlyFormatter.stringFromDate(date)
           }
         } else {
-          progressPeriod.text = HabitViewController.monthlyYearFormatter.stringFromDate(date)
+          progressPeriod.text = ShowHabitViewController.monthlyYearFormatter.stringFromDate(date)
         }
       default: ()
       }
@@ -200,14 +200,14 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
       
       vc.habit = self.habit!
       
-      segue.destinationViewController.transitioningDelegate = habitSettingsTransition
+      segue.destinationViewController.transitioningDelegate = editHabitTransition
       segue.destinationViewController.modalPresentationStyle = .Custom
     }
   }
   
   @IBAction func goToSettings() {
     let ehvc = storyboard!.instantiateViewControllerWithIdentifier("EditHabitViewController") as! EditHabitViewController
-    ehvc.transitioningDelegate = habitSettingsTransition
+    ehvc.transitioningDelegate = editHabitTransition
     ehvc.modalPresentationStyle = .Custom
     ehvc.providesPresentationContextTransitionStyle = true
     ehvc.habit = habit!
