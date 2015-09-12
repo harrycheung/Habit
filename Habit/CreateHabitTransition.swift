@@ -39,14 +39,14 @@ class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UI
     
     if presenting {
       let chvc = fromVC as! CreateHabitViewController
-      let hsvc = toVC as! HabitSettingsViewController
-      containerView.addSubview(hsvc.view)
+      let ehvc = toVC as! EditHabitViewController
+      containerView.addSubview(ehvc.view)
       
       chvc.hideButtons()
-      hsvc.view.alpha = 0
+      ehvc.view.alpha = 0
       UIView.animateWithDuration(TransitionDuration,
         animations: {
-          hsvc.view.alpha = 1
+          ehvc.view.alpha = 1
           chvc.closeButton.transform = CGAffineTransformMakeRotation(0)
           chvc.closeButton.alpha = 0
           chvc.dailyButton!.alpha = 0
@@ -56,16 +56,16 @@ class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UI
           transitionContext.completeTransition(true)
       })
     } else {
-      let hsvc = fromVC as! HabitSettingsViewController
+      let ehvc = fromVC as! EditHabitViewController
       let chvc = toVC as! CreateHabitViewController
       let mvc = toVC.presentingViewController! as! MainViewController
       
       mvc.newButton.hidden = false
       mvc.newButton.alpha = 0
-      hsvc.presentingViewController!.dismissViewControllerAnimated(false, completion: nil)
+      ehvc.presentingViewController!.dismissViewControllerAnimated(false, completion: nil)
       UIView.animateWithDuration(TransitionDuration,
         animations: {
-          hsvc.view.alpha = 0
+          ehvc.view.alpha = 0
           chvc.view.alpha = 0
           mvc.newButton.alpha = 1
         }, completion: { finished in

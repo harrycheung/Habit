@@ -552,10 +552,10 @@
             </objects>
             <point key="canvasLocation" x="454" y="1132"/>
         </scene>
-        <!--Habit Settings View Controller-->
+        <!--Edit Habit View Controller-->
         <scene sceneID="0yX-QE-JbH">
             <objects>
-                <viewController storyboardIdentifier="HabitSettingsViewController" modalTransitionStyle="crossDissolve" id="Y0I-la-TF4" customClass="HabitSettingsViewController" customModule="Habit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EditHabitViewController" modalTransitionStyle="crossDissolve" id="Y0I-la-TF4" customClass="EditHabitViewController" customModule="Habit" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Hs3-Ue-1JE"/>
                         <viewControllerLayoutGuide type="bottom" id="65D-MU-p4U"/>

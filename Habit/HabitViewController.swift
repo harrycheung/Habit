@@ -195,7 +195,7 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
   }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    if let vc = segue.destinationViewController as? HabitSettingsViewController {
+    if let vc = segue.destinationViewController as? EditHabitViewController {
       super.prepareForSegue(segue, sender: sender)
       
       vc.habit = self.habit!
@@ -206,12 +206,12 @@ class HabitViewController: UIViewController, HabitHistoryDelegate {
   }
   
   @IBAction func goToSettings() {
-    let hsvc = storyboard!.instantiateViewControllerWithIdentifier("HabitSettingsViewController") as! HabitSettingsViewController
-    hsvc.transitioningDelegate = habitSettingsTransition
-    hsvc.modalPresentationStyle = .Custom
-    hsvc.providesPresentationContextTransitionStyle = true
-    hsvc.habit = habit!
-    presentViewController(hsvc, animated: true, completion: nil)
+    let ehvc = storyboard!.instantiateViewControllerWithIdentifier("EditHabitViewController") as! EditHabitViewController
+    ehvc.transitioningDelegate = habitSettingsTransition
+    ehvc.modalPresentationStyle = .Custom
+    ehvc.providesPresentationContextTransitionStyle = true
+    ehvc.habit = habit!
+    presentViewController(ehvc, animated: true, completion: nil)
   }
   
 }

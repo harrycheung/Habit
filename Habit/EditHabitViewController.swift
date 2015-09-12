@@ -1,5 +1,5 @@
 //
-//  HabitSettingsViewController.swift
+//  EditHabitViewController.swift
 //  Habit
 //
 //  Created by harry on 8/14/15.
@@ -14,7 +14,7 @@ import SnapKit
 import KAProgressLabel
 import FontAwesome_swift
 
-class HabitSettingsViewController: UIViewController, UITextFieldDelegate, FrequencySettingsDelegate, UIGestureRecognizerDelegate {
+class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencySettingsDelegate, UIGestureRecognizerDelegate {
   
   var habit: Habit?
   var frequency: Habit.Frequency = .Daily

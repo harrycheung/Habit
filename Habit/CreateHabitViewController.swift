@@ -96,11 +96,11 @@ class CreateHabitViewController: UIViewController {
   }
   
   func createHabit(frequency: Habit.Frequency) {
-    let hsvc = self.storyboard!.instantiateViewControllerWithIdentifier("HabitSettingsViewController") as! HabitSettingsViewController
-    hsvc.frequency = frequency
-    hsvc.modalPresentationStyle = .Custom
-    hsvc.transitioningDelegate = createHabitTransition
-    presentViewController(hsvc, animated: true, completion: nil)
+    let ehvc = self.storyboard!.instantiateViewControllerWithIdentifier("EditHabitViewController") as! EditHabitViewController
+    ehvc.frequency = frequency
+    ehvc.modalPresentationStyle = .Custom
+    ehvc.transitioningDelegate = createHabitTransition
+    presentViewController(ehvc, animated: true, completion: nil)
   }
   
   func buttonDTapped() { createHabit(.Daily) }
