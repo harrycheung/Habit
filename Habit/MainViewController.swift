@@ -40,7 +40,7 @@
 // 31. done - Custom start and finish day
 // 32. Icon
 // 33: Delete history when deleting entries for new end day
-// 34: Long press on frequency selection shows long word
+// 34: done - Long press on frequency selection shows long word
 // 35: Start app first time with example habit
 
 import UIKit
@@ -232,15 +232,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     newButton.layer.shadowOpacity = 0.6
     newButton.layer.shadowRadius = 5
     newButton.layer.shadowOffset = CGSizeMake(0, 1)
-    
-//    for family in UIFont.familyNames() {
-//      NSLog("\(family)")
-//      
-//      for name in UIFont.fontNamesForFamilyName(family as! String) {
-//        NSLog("  \(name)")
-//      }
-//    }
-    
   }
 
   override func didReceiveMemoryWarning() {
