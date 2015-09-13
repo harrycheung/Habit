@@ -532,28 +532,28 @@ class HabitWeeklyTests: XCTestCase {
     components.hour = 12
     var createdAt = calendar.dateFromComponents(components)!
     var habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 4, createdAt: createdAt)
-//    habit.update(createdAt)
-//    expect(habit.totalCount()) == 8
-//    components.month = 8
-//    components.day = 24 // Monday
-//    components.hour = 7 + 6
-//    components.minute = 30
-//    expect(habit.firstTodo!.due) == calendar.dateFromComponents(components)!
-//    components.month = 9
-//    components.day = 5
-//    components.hour = 15
-//    expect(habit.lastEntry) == calendar.dateFromComponents(components)!
-//    
-//    components.month = 8
-//    components.day = 26 // Wednesday
-//    createdAt = calendar.dateFromComponents(components)!
-//    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 4, createdAt: createdAt)
-//    habit.update(createdAt)
-//    expect(habit.totalCount()) == 6
-//    components.day = 28
-//    components.hour = 7 + 2
-//    components.minute = 30
-//    expect(habit.firstTodo!.due) == calendar.dateFromComponents(components)!
+    habit.update(createdAt)
+    expect(habit.totalCount()) == 8
+    components.month = 8
+    components.day = 24 // Monday
+    components.hour = 7 + 6
+    components.minute = 30
+    expect(habit.firstTodo!.due) == calendar.dateFromComponents(components)!
+    components.month = 9
+    components.day = 5
+    components.hour = 15
+    expect(habit.lastEntry) == calendar.dateFromComponents(components)!
+    
+    components.month = 8
+    components.day = 26 // Wednesday
+    createdAt = calendar.dateFromComponents(components)!
+    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 4, createdAt: createdAt)
+    habit.update(createdAt)
+    expect(habit.totalCount()) == 6
+    components.day = 28
+    components.hour = 7 + 2
+    components.minute = 30
+    expect(habit.firstTodo!.due) == calendar.dateFromComponents(components)!
     
     components.month = 8
     components.day = 29 // Saturday
