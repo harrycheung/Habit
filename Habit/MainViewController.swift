@@ -32,15 +32,16 @@
 // 23. done - Fix blank delegate methods
 // 24. done - Check to see if a habit of the same name exists
 // 25. done - Strip habit name of whitespace
-// 26. newButton provides frequency options
+// 26. done - newButton provides frequency options
 // 27. done - Option on habit to ignore autoskip
 // 28. done - Fix github box moving to left on settings click
 // 29. done - Tap outside settings view to close
 // 30. done - Animate filling of history box
 // 31. done - Custom start and finish day
 // 32. Icon
-// 33. Fix test due dates
-// 34: Delete history when deleting entries for new end day
+// 33: Delete history when deleting entries for new end day
+// 34: Long press on frequency selection shows long word
+// 35: Start app first time with example habit
 
 import UIKit
 import CoreData
