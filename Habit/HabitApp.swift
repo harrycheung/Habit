@@ -131,7 +131,7 @@ class HabitApp {
       NSLog("error: \(error)")
     }
     
-    let managedObjectContext = NSManagedObjectContext()
+    let managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
     managedObjectContext.persistentStoreCoordinator = persistentStoreCoordinator
     
     return managedObjectContext

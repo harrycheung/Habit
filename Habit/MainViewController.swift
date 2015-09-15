@@ -39,7 +39,7 @@
 // 30. done - Animate filling of history box
 // 31. done - Custom start and finish day
 // 32. Icon
-// 33: Delete history when deleting entries for new end day
+// 33: Delete history when deleting entries new frequency
 // 34: done - Long press on frequency selection shows long word
 // 35: Start app first time with example habit
 
@@ -166,17 +166,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   @IBAction func deleteAll(sender: AnyObject) {
     do {
       let habitRequest = NSFetchRequest(entityName: "Habit")
-      if #available(iOS 9.0, *) {
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: habitRequest)
-        try HabitApp.moContext.executeRequest(deleteRequest)
-      } else {
-        var habitsToDelete = try HabitApp.moContext.executeFetchRequest(habitRequest)
-        for habit in habitsToDelete {
-          HabitApp.moContext.deleteObject(habit as! NSManagedObject)
-        }
-        habitsToDelete.removeAll(keepCapacity: false)
-        try HabitApp.moContext.save()
-      }
+      let deleteRequest = NSBatchDeleteRequest(fetchRequest: habitRequest)
+      try HabitApp.moContext.executeRequest(deleteRequest)
     } catch let error as NSError {
       NSLog("Could not save \(error), \(error.userInfo)")
     } catch {
@@ -186,6 +177,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     tableView.reloadData()
     UIApplication.sharedApplication().cancelAllLocalNotifications()
   }
+  
+  override func preferredStatusBarStyle() -> UIStatusBarStyle {
+    return .LightContent
+  }
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -194,10 +189,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     selectFrequencyTransition = SelectFrequencyTransition()
     
     statusBar = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 20))
-    view.addSubview(statusBar!)
-    UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.LightContent, animated: false)
-    
     statusBar!.backgroundColor = HabitApp.color
+    view.addSubview(statusBar!)
+    
     // TODO: What's up with the "window!!"?
     UIApplication.sharedApplication().delegate!.window!!.tintColor = HabitApp.color
     
@@ -218,7 +212,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     reloadEntries()
       
     // Setup timers
-    refreshTimer = NSTimer.scheduledTimerWithTimeInterval(5 * 60, target: tableView, selector: "reloadData", userInfo: nil, repeats: true)
+    //refreshTimer = NSTimer.scheduledTimerWithTimeInterval(5 * 60, target: tableView, selector: "reloadData", userInfo: nil, repeats: true)
     
     // Setup colors
     tableView.backgroundView = nil
@@ -337,10 +331,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func hideUpcoming() -> Double {
-    return hideUpcoming(true)
-  }
-  
-  func hideUpcoming(reload: Bool) -> Double {
     var delayStart = 0.0
     if upcoming.count > 0 {
       if let header = tableView.headerViewForSection(1) {
@@ -353,11 +343,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         delayStart -= SlideAnimationDelay
         hideCellAnimate(header, delay: delayStart) {
-          if reload {
-            // Remove any traces of the old cells
-            // Is this better than calling deleteRowsAtIndexPaths?
-            self.tableView.reloadData()
-          }
+          // Remove any traces of the old cells
+          // Is this better than calling deleteRowsAtIndexPaths?
+          self.tableView.reloadData()
         }
       }
       delayStart += SlideAnimationDelay
@@ -441,14 +429,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         hideCellAnimate(cellsToHide[index], delay: delayStart, complete: nil)
       } else {
         hideCellAnimate(cellsToHide[index], delay: delayStart) {
-//          self.entries = Array(self.entries[0..<(self.entries.count - entriesToDelete.count)])
-//          self.upcoming = []
-//          self.tableView.reloadData()
-          // Load up the cells to animate
           self.reloadEntries()
-          self.tableView.reloadData()
-//          var visibleIndexPaths: [NSIndexPath] = []
-//          var visibleUpcomingHeader = false
+          
           var cellsToShow: [(UIView, CGRect)] = []
           for (index, entry) in self.entries.enumerate() {
             if future.compare(entry.due!) == .OrderedAscending {
@@ -457,64 +439,31 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 if self.tableView.indexPathsForVisibleRows!.contains(indexPath) {
                   cellsToShow.append((self.tableView.cellForRowAtIndexPath(indexPath)!,
                                       self.tableView.rectForRowAtIndexPath(indexPath)))
-//                  visibleIndexPaths.append(indexPath)
                 }
               }
               break
             }
           }
           if HabitApp.upcoming {
-            if let header = self.tableView.headerViewForSection(1) {
-              cellsToShow.append((header, self.tableView.rectForHeaderInSection(1)))
-//              visibleUpcomingHeader = true
-              for index in 0..<self.upcoming.count {
-                let indexPath = NSIndexPath(forRow: index, inSection: 1)
-                if self.tableView.indexPathsForVisibleRows!.contains(indexPath) {
-                  cellsToShow.append((self.tableView.cellForRowAtIndexPath(indexPath)!,
-                                      self.tableView.rectForRowAtIndexPath(indexPath)))
-//                  visibleIndexPaths.append(indexPath)
-                }
+            // Header will be returned if visible
+            cellsToShow.append((self.tableView.headerViewForSection(1)!,
+                                self.tableView.rectForHeaderInSection(1)))
+            for index in 0..<self.upcoming.count {
+              let indexPath = NSIndexPath(forRow: index, inSection: 1)
+              if self.tableView.indexPathsForVisibleRows!.contains(indexPath) {
+                cellsToShow.append((self.tableView.cellForRowAtIndexPath(indexPath)!,
+                                    self.tableView.rectForRowAtIndexPath(indexPath)))
               }
             }
           }
-//          print(visibleIndexPaths)
-//          self.tableView.beginUpdates()
-//          self.tableView.insertRowsAtIndexPaths(visibleIndexPaths, withRowAnimation: .None)
-//          if visibleUpcomingHeader {
-//            if self.tableView.headerViewForSection(1) == nil {
-//              self.tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .None)
-//            }
-//          }
-//          self.tableView.endUpdates()
           var delayStart = 0.0
           for cellTuple in cellsToShow {
             if let _ = cellTuple.0 as? UITableViewHeaderFooterView {
               delayStart -= self.SlideAnimationDelay
             }
-//            print(cellTuple.0)
             self.showCellAnimate(cellTuple.0, endFrame: cellTuple.1, delay: delayStart)
             delayStart += self.SlideAnimationDelay
           }
-          
-//          var delayStart: Double = 0
-//          for futureIndexPath in futureIndexPaths {
-//            if let cell = self.tableView.cellForRowAtIndexPath(futureIndexPath) {
-//              self.showCellAnimate(cell, endFrame: self.tableView.rectForRowAtIndexPath(futureIndexPath), delay: delayStart)
-//              delayStart += self.SlideAnimationDelay
-//            }
-//          }
-//          if HabitApp.upcoming {
-//            if let header = self.tableView.headerViewForSection(1) {
-//              self.showCellAnimate(header, endFrame: self.tableView.rectForHeaderInSection(1), delay: delayStart)
-//              for (index, _) in self.upcoming.enumerate() {
-//                let indexPath = NSIndexPath(forRow: index, inSection: 1)
-//                if let cell = self.tableView.cellForRowAtIndexPath(indexPath) {
-//                  self.showCellAnimate(cell, endFrame: self.tableView.rectForRowAtIndexPath(indexPath), delay: delayStart)
-//                  delayStart += self.SlideAnimationDelay
-//                }
-//              }
-//            }
-//          }
         }
       }
       delayStart += SlideAnimationDelay
@@ -670,6 +619,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(upcomingHeader)
     if header == nil {
+      print("registered header")
       header = UITableViewHeaderFooterView(reuseIdentifier: upcomingHeader)
     }
     header!.frame = CGRectMake(0, 0, tableView.frame.width, 20)

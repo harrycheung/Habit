@@ -12,16 +12,21 @@ import FontAwesome_swift
 
 class SelectFrequencyViewController: UIViewController {
   
-  let ButtonRadius: CGFloat = 100
+  let ButtonRadius: CGFloat = 80
   let LabelDistance: CGFloat = 75
   
   @IBOutlet weak var blurView: UIView!
   @IBOutlet weak var closeButton: UIButton!
+  
   var dailyButton: UIButton?
   var weeklyButton: UIButton?
   var monthlyButton: UIButton?
   var createHabitTransition: UIViewControllerTransitioningDelegate?
   var frequencyLabel: UIButton?
+  
+  override func preferredStatusBarStyle() -> UIStatusBarStyle {
+    return .LightContent
+  }
   
   override func viewDidLoad() {
     let createButton = { (text: String, frame: CGRect) -> UIButton in

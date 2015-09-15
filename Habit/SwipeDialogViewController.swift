@@ -14,6 +14,10 @@ class SwipeDialogViewController: UIViewController {
   var yesCompletion: (() -> Void)?
   var noCompletion: (() -> Void)?
   
+  override func preferredStatusBarStyle() -> UIStatusBarStyle {
+    return .LightContent
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     

@@ -54,6 +54,10 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
     }
   }
   
+  override func preferredStatusBarStyle() -> UIStatusBarStyle {
+    return .LightContent
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     

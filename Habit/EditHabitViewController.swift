@@ -32,6 +32,10 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
   @IBOutlet weak var toolbar: UIView!
   @IBOutlet weak var height: NSLayoutConstraint!
   
+  override func preferredStatusBarStyle() -> UIStatusBarStyle {
+    return .LightContent
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     

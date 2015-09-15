@@ -37,6 +37,10 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
   @IBOutlet weak var localAbbreviation: UILabel!
   @IBOutlet weak var localTimeZone: UILabel!
   
+  override func preferredStatusBarStyle() -> UIStatusBarStyle {
+    return .LightContent
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -121,6 +125,7 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
         let request = NSFetchRequest(entityName: "Habit")
         let habits = try HabitApp.moContext.executeFetchRequest(request) as! [Habit]
         for habit in habits {
+          HabitApp.moContext.refreshObject(habit, mergeChanges: false)
           habit.update(NSDate())
         }
       } else {
@@ -141,7 +146,7 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     }
     mvc!.reloadEntries()    
     if upcoming.on {
-      self.mvc!.showUpcoming()
+      mvc!.showUpcoming()
     }
   }
   

@@ -941,14 +941,6 @@
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="52" id="esJ-g0-oJd"/>
                                                     </constraints>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="count">
-                                                            <integer key="value" value="8"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="diameter">
-                                                            <real key="value" value="40"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
                                                     <connections>
                                                         <outlet property="dataSource" destination="g8Q-E4-o4d" id="kkQ-hA-Oup"/>
                                                         <outlet property="delegate" destination="g8Q-E4-o4d" id="sSs-Da-MRs"/>
