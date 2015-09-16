@@ -364,15 +364,16 @@ class Habit: NSManagedObject {
     //print("upcoming: \(HabitApp.upcoming) \(upcoming)")
     switch frequency {
     case .Daily:
-      if entries!.count == 0 {
-        var now = calendar.dateByAddingUnit(.Second, value: 10, toDate: NSDate())!
-        for index in 1..<2 {
-          let entry = Entry(context: managedObjectContext!, habit: self, due: now, period: 5)
-          entry.number = index
-          total = total!.integerValue + 1
-          now = calendar.dateByAddingUnit(.Second, value: 3, toDate: now)!
-        }
-      }
+//      if entries!.count == 0 {
+//        var now = calendar.dateByAddingUnit(.Second, value: 10, toDate: NSDate())!
+//        let components = calendar.components([.Day], fromDate: NSDate())
+//        for index in 1..<5 {
+//          let entry = Entry(context: managedObjectContext!, habit: self, due: now, period: components.day)
+//          entry.number = index
+//          total = total!.integerValue + 1
+//          now = calendar.dateByAddingUnit(.Second, value: 3, toDate: now)!
+//        }
+//      }
       let upcomingDay = calendar.dateByAddingUnit(.Day, value: upcoming, toDate: currentDate)!
       var lastDue = lastEntry
       var dayCount = entriesOnDate(lastDue).count + countBeforeCreatedAt(lastDue)
