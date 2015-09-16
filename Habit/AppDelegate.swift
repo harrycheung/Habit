@@ -22,8 +22,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       HabitApp.autoSkip = false
       HabitApp.autoSkipDelay = 60
       HabitApp.timeZone = NSTimeZone.localTimeZone().name
-      HabitApp.startOfDay = 0
-      HabitApp.endOfDay = 24 * 60
+      HabitApp.startOfDay = 8 * 60
+      HabitApp.endOfDay = 20 * 60
     }
     
     var attr = [NSObject: AnyObject]()
