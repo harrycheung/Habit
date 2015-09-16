@@ -38,7 +38,7 @@
 // 29. done - Tap outside settings view to close
 // 30. done - Animate filling of history box
 // 31. done - Custom start and finish day
-// 32. Icon
+// 32. done - Icon
 // 33: Delete history when deleting entries new frequency
 // 34: done - Long press on frequency selection shows long word
 // 35: Start app first time with example habit
@@ -619,7 +619,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(upcomingHeader)
     if header == nil {
-      print("registered header")
       header = UITableViewHeaderFooterView(reuseIdentifier: upcomingHeader)
     }
     header!.frame = CGRectMake(0, 0, tableView.frame.width, 20)
