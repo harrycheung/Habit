@@ -120,6 +120,7 @@ class Habit: NSManagedObject {
     self.createdAt = createdAt
     parts = ""
     notifyBool = true
+    neverAutoSkipBool = false
     createdAtTimeZone = NSTimeZone.localTimeZone().name
     currentStreak = 0
     longestStreak = 0
