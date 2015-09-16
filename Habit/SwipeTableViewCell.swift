@@ -54,6 +54,8 @@ class SwipeTableViewCell: UITableViewCell {
   
   var isExited: Bool = false
   var dragging: Bool = false
+  var swipable: Bool = true
+  var cantSwipeLabel: UIView?
   var trigger: CGFloat = Defaults.Trigger
   var animationDuration: CGFloat = Defaults.AnimationDuration
   var recognizer: UIPanGestureRecognizer?
@@ -109,6 +111,14 @@ class SwipeTableViewCell: UITableViewCell {
     let screenshotImage = image(view: self)
     screenshotView = UIImageView(image: screenshotImage)
     addSubview(screenshotView!)
+    
+    if cantSwipeLabel != nil {
+      addSubview(cantSwipeLabel!)
+      cantSwipeLabel!.snp_makeConstraints { make in
+        make.center.equalTo(self)
+      }
+      bringSubviewToFront(cantSwipeLabel!)
+    }
   }
   
   func uninstallSwipingView() {
@@ -124,6 +134,8 @@ class SwipeTableViewCell: UITableViewCell {
     
     screenshotView!.removeFromSuperview()
     screenshotView = nil
+    
+    cantSwipeLabel?.removeFromSuperview()
   }
   
   func image(view view: UIView) -> UIImage {
@@ -175,12 +187,8 @@ class SwipeTableViewCell: UITableViewCell {
     if isExited {
       return
     }
-    var currentX: CGFloat = 0
-    if screenshotView != nil {
-      currentX = screenshotView!.frame.origin.x
-    }
     let translationX = recognizer.translationInView(self).x
-    let percent = percentage(offset: currentX + translationX, width: bounds.width)
+    var percent = percentage(offset: translationX, width: bounds.width)
     let direction = percent > 0 ? Direction.Right : Direction.Left
     
     switch (recognizer.state) {
@@ -188,18 +196,25 @@ class SwipeTableViewCell: UITableViewCell {
       delegate?.startSwiping?(self)
       setupSwipingView()
       SwipeTableViewCell.swipeCellCount++
+      cantSwipeLabel?.alpha = 0
       fallthrough
     case .Changed:
       dragging = true
       var frame = screenshotView!.frame
       if views[direction.hashValue] == nil {
         frame.origin.x = 0
+        percent = 0
+      } else if swipable {
+        frame.origin.x = translationX
       } else {
-        frame.origin.x = frame.origin.x + translationX
+        if abs(percent) > trigger / 2 {
+          cantSwipeLabel?.alpha = (abs(percent) - trigger / 2) / 0.5
+        }
+        frame.origin.x = trigger * bounds.width * tanh(translationX / 200)
+        percent = percentage(offset: frame.origin.x, width: bounds.width)
       }
       screenshotView!.frame = frame
       animateSwipe(direction, percentage: percent)
-      recognizer.setTranslation(CGPointMake(0, 0), inView: self)
     
       delegate?.swiping?(self, percentage: percent)
     case .Cancelled, .Ended:
@@ -207,7 +222,7 @@ class SwipeTableViewCell: UITableViewCell {
       dragging = false
       activeView = views[direction.hashValue]
       
-      if abs(percent) > trigger {
+      if swipable && abs(percent) > trigger {
         finish(duration: animationDuration(velocity: velocity), direction: direction)
       } else {
         reset()
@@ -312,7 +327,6 @@ class SwipeTableViewCell: UITableViewCell {
                                      position.y - activeViewSize.height / 2.0,
                                      activeViewSize.width,
                                      activeViewSize.height)
-    
     slidingView!.frame = CGRectIntegral(activeViewFrame)
   }
   
@@ -376,5 +390,11 @@ class SwipeTableViewCell: UITableViewCell {
         self.recognizer!.enabled = true        
         SwipeTableViewCell.swipeCellCount--
       })
+    
+    if !swipable {
+      UIView.animateWithDuration(NSTimeInterval(animationDuration)) {
+        cantSwipeLabel?.alpha = 0
+      }
+    }
   }
 }

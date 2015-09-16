@@ -42,6 +42,9 @@
 // 33: Delete history when deleting entries new frequency
 // 34: done - Long press on frequency selection shows long word
 // 35: Start app first time with example habit
+// 36: Pause habit
+// 37: Launch screen
+// 38: done - Resist swiping upcoming
 
 import UIKit
 import CoreData
@@ -584,6 +587,18 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       completion: { (cell: SwipeTableViewCell) in
         completion(cell, skipped: true)
     })
+    if indexPath.section == 1 {
+      cell.swipable = false
+      let button = UIButton(type: .System)
+      button.setTitle("Can't swipe upcoming", forState: .Normal)
+      button.setTitleColor(UIColor.lightGrayColor(), forState: .Normal)
+      button.titleLabel!.font = UIFont(name: "Bariol-Bold", size: 16)!
+      button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8)
+      button.backgroundColor = UIColor.darkGrayColor()
+      button.sizeToFit()
+      button.roundify(4)
+      cell.cantSwipeLabel = button
+    }
     return cell
   }
   

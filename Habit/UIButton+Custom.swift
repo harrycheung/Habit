@@ -20,6 +20,14 @@ extension UIButton {
     let image = UIGraphicsGetImageFromCurrentImageContext()
     UIGraphicsEndImageContext()
     setBackgroundImage(image, forState: state)
+  }  
+  
+  func roundify(radius: CGFloat) {
+    layer.cornerRadius = radius
+    layer.shadowColor = UIColor.blackColor().CGColor
+    layer.shadowOpacity = 0.6
+    layer.shadowRadius = 5
+    layer.shadowOffset = CGSizeMake(0, 1)
   }
   
 }

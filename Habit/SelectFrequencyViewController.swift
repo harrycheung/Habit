@@ -38,13 +38,15 @@ class SelectFrequencyViewController: UIViewController {
       button.contentEdgeInsets = UIEdgeInsets(top: 3, left: 0, bottom: 0, right: 0)
       button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector("button\(text)Tapped")))
       button.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: Selector("button\(text)Pressed:")))
-      self.roundify(button, radius: button.frame.width / 2)
+      button.roundify(button.frame.width / 2)
+      button.backgroundColor = HabitApp.color
       self.view.addSubview(button)
       return button
     }
     
     let mvc = presentingViewController as! MainViewController
-    roundify(closeButton, radius: closeButton.frame.width / 2)
+    closeButton.roundify(closeButton.frame.width / 2)
+    closeButton.backgroundColor = HabitApp.color
     blurView.alpha = 0
     let startFrame = CGRectMake(mvc.newButton.center.x - 23, mvc.newButton.center.y - 23, 46, 46)
     dailyButton = createButton("D", startFrame)
@@ -53,15 +55,6 @@ class SelectFrequencyViewController: UIViewController {
     view.bringSubviewToFront(closeButton)
     
     createHabitTransition = CreateHabitTransition()
-  }
-  
-  func roundify(view: UIView, radius: CGFloat) {
-    view.backgroundColor = HabitApp.color
-    view.layer.cornerRadius = radius
-    view.layer.shadowColor = UIColor.blackColor().CGColor
-    view.layer.shadowOpacity = 0.6
-    view.layer.shadowRadius = 5
-    view.layer.shadowOffset = CGSizeMake(0, 1)
   }
   
   func curvedAnimation(button: UIButton, start: CGPoint, end: CGPoint, control: CGPoint) {
@@ -120,8 +113,11 @@ class SelectFrequencyViewController: UIViewController {
     frequencyLabel!.setTitle(text, forState: .Normal)
     frequencyLabel!.setTitleColor(UIColor.whiteColor(), forState: .Normal)
     frequencyLabel!.titleLabel!.font = UIFont(name: "Bariol-Regular", size: 17)!
+    frequencyLabel!.contentEdgeInsets = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8)
     frequencyLabel!.center = start
-    roundify(frequencyLabel!, radius: 10)
+    frequencyLabel!.roundify(10)
+    frequencyLabel!.backgroundColor = HabitApp.color
+    frequencyLabel!.sizeToFit()
     view.addSubview(frequencyLabel!)
     frequencyLabel!.transform = CGAffineTransformMakeScale(0.01, 0.01)
     UIView.animateWithDuration(0.3, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: [],
