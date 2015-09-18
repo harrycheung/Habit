@@ -11,7 +11,7 @@
 // 2. done - Snooze behavior
 // 3. done - Sort habits based on time periods
 // 4. done - github style history graph
-// 5. 75% - Habit info page
+// 5. done - Habit info page
 // 6. done - App settings
 // 7. done - Local notifications
 // 8. done - Expire habits periodically
@@ -46,6 +46,7 @@
 // 37: Launch screen
 // 38: done - Resist swiping upcoming
 // 39: done - Show frequency words after 1 second timeout
+// 40: Fix overlay on frequency selection
 
 import UIKit
 import CoreData

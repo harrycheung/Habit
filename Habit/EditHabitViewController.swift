@@ -107,6 +107,14 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     contentView.layer.shadowOpacity = 0.6
     contentView.layer.shadowRadius = 5
     contentView.layer.shadowOffset = CGSizeMake(0, 1)
+    
+    name.attributedPlaceholder = NSAttributedString(string: "start a habit",
+      attributes: [NSForegroundColorAttributeName: UIColor.whiteColor().colorWithAlphaComponent(0.5)])
+    name.tintColor = UIColor.whiteColor()
+  }
+  
+  override func viewDidLayoutSubviews() {    
+    name.tintClearButton()
   }
   
   func frequencySettingsChanged() {
