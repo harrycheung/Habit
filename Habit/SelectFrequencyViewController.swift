@@ -24,6 +24,7 @@ class SelectFrequencyViewController: UIViewController {
   var weeklyLabel = UIButton()
   var monthlyLabel = UIButton()
   var createHabitTransition: UIViewControllerTransitioningDelegate?
+  var timer: NSTimer?
   
   override func preferredStatusBarStyle() -> UIStatusBarStyle {
     return .LightContent
@@ -71,7 +72,7 @@ class SelectFrequencyViewController: UIViewController {
   }
   
   override func viewDidAppear(animated: Bool) {
-    NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: "showLabels", userInfo: nil, repeats: false)
+    timer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: "showLabels", userInfo: nil, repeats: false)
   }
   
   func curvedAnimation(button: UIButton, start: CGPoint, end: CGPoint, control: CGPoint) {
@@ -115,6 +116,7 @@ class SelectFrequencyViewController: UIViewController {
   }
   
   func createHabit(frequency: Habit.Frequency) {
+    timer?.invalidate()
     let ehvc = self.storyboard!.instantiateViewControllerWithIdentifier("EditHabitViewController") as! EditHabitViewController
     ehvc.frequency = frequency
     ehvc.modalPresentationStyle = .Custom
