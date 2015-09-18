@@ -46,9 +46,9 @@ class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UI
           ehvc.view.alpha = 1
           sfvc.closeButton.transform = CGAffineTransformMakeRotation(0)
           sfvc.closeButton.alpha = 0
-          sfvc.dailyButton!.alpha = 0
-          sfvc.weeklyButton!.alpha = 0
-          sfvc.monthlyButton!.alpha = 0
+          sfvc.dailyButton.alpha = 0
+          sfvc.weeklyButton.alpha = 0
+          sfvc.monthlyButton.alpha = 0
         }, completion: { finished in
           transitionContext.completeTransition(true)
       })

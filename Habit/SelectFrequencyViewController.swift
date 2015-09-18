@@ -13,51 +13,70 @@ import FontAwesome_swift
 class SelectFrequencyViewController: UIViewController {
   
   let ButtonRadius: CGFloat = 80
-  let LabelDistance: CGFloat = 75
+  let LabelDistance: CGFloat = 80
   
   @IBOutlet weak var closeButton: UIButton!
   
-  var dailyButton: UIButton?
-  var weeklyButton: UIButton?
-  var monthlyButton: UIButton?
+  var dailyButton = UIButton(type: .System)
+  var weeklyButton = UIButton(type: .System)
+  var monthlyButton = UIButton(type: .System)
+  var dailyLabel = UIButton()
+  var weeklyLabel = UIButton()
+  var monthlyLabel = UIButton()
   var createHabitTransition: UIViewControllerTransitioningDelegate?
-  var frequencyLabel: UIButton?
   
   override func preferredStatusBarStyle() -> UIStatusBarStyle {
     return .LightContent
   }
   
   override func viewDidLoad() {
-    let createButton = { (text: String, frame: CGRect) -> UIButton in
-      let button = UIButton(type: .System)
+    let buildButton = { (button: UIButton, text: String, frame: CGRect) -> UIButton in
       button.frame = frame
       button.setTitle(text, forState: .Normal)
       button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
       button.titleLabel!.font = UIFont(name: "Bariol-Bold", size: 20)!
       button.contentEdgeInsets = UIEdgeInsets(top: 3, left: 0, bottom: 0, right: 0)
       button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector("button\(text)Tapped")))
-      button.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: Selector("button\(text)Pressed:")))
       button.roundify(button.frame.width / 2)
       button.backgroundColor = HabitApp.color
       self.view.addSubview(button)
       return button
     }
     
+    let buildLabel = { (label: UIButton, text: String) in
+      label.setTitle(text, forState: .Normal)
+      label.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+      label.titleLabel!.font = UIFont(name: "Bariol-Regular", size: 17)!
+      label.contentEdgeInsets = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8)
+      label.roundify(10)
+      label.backgroundColor = HabitApp.color
+      label.sizeToFit()
+      label.hidden = true
+      self.view.addSubview(label)
+    }
+    
     let mvc = presentingViewController as! MainViewController
     closeButton.roundify(closeButton.frame.width / 2)
     closeButton.backgroundColor = HabitApp.color
     let startFrame = CGRectMake(mvc.newButton.center.x - 23, mvc.newButton.center.y - 23, 46, 46)
-    dailyButton = createButton("D", startFrame)
-    weeklyButton = createButton("W", startFrame)
-    monthlyButton = createButton("M", startFrame)
+    buildButton(dailyButton, "D", startFrame)
+    buildButton(weeklyButton, "W", startFrame)
+    buildButton(monthlyButton, "M", startFrame)
+    buildLabel(dailyLabel, "Daily")
+    buildLabel(weeklyLabel, "Weekly")
+    buildLabel(monthlyLabel, "Monthly")
     view.bringSubviewToFront(closeButton)
     
     createHabitTransition = CreateHabitTransition()
   }
   
+  override func viewDidAppear(animated: Bool) {
+    NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: "showLabels", userInfo: nil, repeats: false)
+  }
+  
   func curvedAnimation(button: UIButton, start: CGPoint, end: CGPoint, control: CGPoint) {
     let animation = CAKeyframeAnimation(keyPath: "position")
-    animation.duration = 0.3
+    animation.duration = HabitApp.TransitionDuration
     let path = UIBezierPath()
     path.moveToPoint(start)
     path.addQuadCurveToPoint(end, controlPoint: control)
@@ -69,28 +88,29 @@ class SelectFrequencyViewController: UIViewController {
   func showButtons() {
     let shortSide: CGFloat = ButtonRadius * CGFloat(cos(M_PI_4))
     let mvc = presentingViewController as! MainViewController
-    curvedAnimation(dailyButton!,
+    curvedAnimation(dailyButton,
       start: mvc.newButton.center,
       end: CGPointMake(mvc.newButton.center.x, mvc.newButton.center.y - ButtonRadius),
       control: CGPointMake(mvc.newButton.center.x - ButtonRadius / 2, mvc.newButton.center.y - ButtonRadius / 2))
-    curvedAnimation(weeklyButton!,
+    curvedAnimation(weeklyButton,
       start: mvc.newButton.center,
       end: CGPointMake(mvc.newButton.center.x - shortSide, mvc.newButton.center.y - shortSide),
       control: CGPointMake(mvc.newButton.center.x - shortSide, mvc.newButton.center.y))
-    curvedAnimation(monthlyButton!,
+    curvedAnimation(monthlyButton,
       start: mvc.newButton.center,
       end: CGPointMake(mvc.newButton.center.x - ButtonRadius, mvc.newButton.center.y),
       control: CGPointMake(mvc.newButton.center.x - ButtonRadius / 2, mvc.newButton.center.y + ButtonRadius / 2))
   }
   
   func hideButtons() {
+    hideLabels()
     let shortSide: CGFloat = ButtonRadius * CGFloat(cos(M_PI_4))
     let mvc = presentingViewController as! MainViewController
-    curvedAnimation(dailyButton!, start: dailyButton!.center, end: mvc.newButton.center,
+    curvedAnimation(dailyButton, start: dailyButton.center, end: mvc.newButton.center,
       control: CGPointMake(mvc.newButton.center.x - ButtonRadius / 2, mvc.newButton.center.y - ButtonRadius / 2))
-    curvedAnimation(weeklyButton!, start: weeklyButton!.center, end: mvc.newButton.center,
+    curvedAnimation(weeklyButton, start: weeklyButton.center, end: mvc.newButton.center,
       control: CGPointMake(mvc.newButton.center.x - shortSide, mvc.newButton.center.y))
-    curvedAnimation(monthlyButton!, start: monthlyButton!.center, end: mvc.newButton.center,
+    curvedAnimation(monthlyButton, start: monthlyButton.center, end: mvc.newButton.center,
       control: CGPointMake(mvc.newButton.center.x - ButtonRadius / 2, mvc.newButton.center.y + ButtonRadius / 2))
   }
   
@@ -106,65 +126,43 @@ class SelectFrequencyViewController: UIViewController {
   func buttonWTapped() { createHabit(.Weekly) }
   func buttonMTapped() { createHabit(.Monthly) }
   
-  func longPressBegan(text: String, start: CGPoint, end: CGPoint) {
-    frequencyLabel = UIButton(frame: CGRectMake(0, 0, 70, 25))
-    frequencyLabel!.setTitle(text, forState: .Normal)
-    frequencyLabel!.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-    frequencyLabel!.titleLabel!.font = UIFont(name: "Bariol-Regular", size: 17)!
-    frequencyLabel!.contentEdgeInsets = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8)
-    frequencyLabel!.center = start
-    frequencyLabel!.roundify(10)
-    frequencyLabel!.backgroundColor = HabitApp.color
-    frequencyLabel!.sizeToFit()
-    view.addSubview(frequencyLabel!)
-    frequencyLabel!.transform = CGAffineTransformMakeScale(0.01, 0.01)
-    UIView.animateWithDuration(0.3, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: [],
-      animations: {
-        self.frequencyLabel!.center = end
-        self.frequencyLabel!.transform = CGAffineTransformMakeScale(1, 1)
-    }, completion: nil)
-  }
-  
-  func longPressEnded(location: CGPoint) {
-    UIView.animateWithDuration(0.2,
-      animations: {
-        self.frequencyLabel!.center = location
-        self.frequencyLabel!.transform = CGAffineTransformMakeScale(0.01, 0.01)
-      },
-      completion: { finished in
-        self.frequencyLabel!.removeFromSuperview()
-    })
-  }
+  func showLabels() {
+    let showLabel = { (label: UIButton, start: CGPoint, end: CGPoint) in
+      label.hidden = false
+      label.center = start
+      label.transform = CGAffineTransformMakeScale(0.01, 0.01)
+      UIView.animateWithDuration(HabitApp.TransitionDuration,
+        delay: 0,
+        usingSpringWithDamping: 0.5,
+        initialSpringVelocity: 1,
+        options: [],
+        animations: {
+          label.center = end
+          label.transform = CGAffineTransformMakeScale(1, 1)
+        }, completion: nil)
+    }
+    
+    let shortSide: CGFloat = LabelDistance * CGFloat(cos(M_PI_4))
 
-  func buttonDPressed(recognizer: UILongPressGestureRecognizer) {
-    switch recognizer.state {
-    case .Began:
-      longPressBegan("Daily", start: dailyButton!.center, end: CGPointMake(dailyButton!.center.x, dailyButton!.center.y - LabelDistance * 0.7))
-    case .Ended:
-      longPressEnded(dailyButton!.center)
-    default: ()
-    }
+    showLabel(dailyLabel, dailyButton.center, CGPointMake(dailyButton.center.x, dailyButton.center.y - LabelDistance * 0.7))
+    showLabel(weeklyLabel, weeklyButton.center, CGPointMake(weeklyButton.center.x - shortSide, weeklyButton.center.y - shortSide * 0.7))
+    showLabel(monthlyLabel, monthlyButton.center, CGPointMake(monthlyButton.center.x - LabelDistance, monthlyButton.center.y))
   }
   
-  func buttonWPressed(recognizer: UILongPressGestureRecognizer) {
-    switch recognizer.state {
-    case .Began:
-      let shortSide: CGFloat = LabelDistance * CGFloat(cos(M_PI_4))
-      longPressBegan("Weekly", start: weeklyButton!.center, end: CGPointMake(weeklyButton!.center.x - shortSide * 0.9, weeklyButton!.center.y - shortSide * 0.9))
-    case .Ended:
-      longPressEnded(weeklyButton!.center)
-    default: ()
+  func hideLabels() {
+    let hideLabel = { (label: UIButton, location: CGPoint)  in
+      UIView.animateWithDuration(HabitApp.TransitionDuration,
+        animations: {
+          label.center = location
+          label.transform = CGAffineTransformMakeScale(0.01, 0.01)
+        }, completion: { finished in
+          label.hidden = true
+      })
     }
-  }
-  
-  func buttonMPressed(recognizer: UILongPressGestureRecognizer) {
-    switch recognizer.state {
-    case .Began:
-      longPressBegan("Monthly", start: monthlyButton!.center, end: CGPointMake(monthlyButton!.center.x - LabelDistance, monthlyButton!.center.y))
-    case .Ended:
-      longPressEnded(monthlyButton!.center)
-    default: ()
-    }
+    
+    hideLabel(dailyLabel, dailyButton.center)
+    hideLabel(weeklyLabel, weeklyButton.center)
+    hideLabel(monthlyLabel, monthlyButton.center)
   }
   
 }

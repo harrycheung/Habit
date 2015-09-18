@@ -45,7 +45,7 @@
 // 36: Pause habit
 // 37: Launch screen
 // 38: done - Resist swiping upcoming
-// 39: Show frequency words after 1 second timeout
+// 39: done - Show frequency words after 1 second timeout
 
 import UIKit
 import CoreData
