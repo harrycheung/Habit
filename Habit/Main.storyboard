@@ -448,12 +448,6 @@
                                                 <constraint firstAttribute="trailing" secondItem="xwd-yK-LX5" secondAttribute="trailing" id="pXz-iz-ZRb"/>
                                                 <constraint firstItem="frh-Nc-I6b" firstAttribute="centerY" secondItem="xwd-yK-LX5" secondAttribute="centerY" id="xfY-Qt-660"/>
                                             </constraints>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                    <integer key="value" value="3"/>
-                                                </userDefinedRuntimeAttribute>
-                                            </userDefinedRuntimeAttributes>
                                         </view>
                                     </subviews>
                                     <constraints>
@@ -789,6 +783,7 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="close" destination="OJE-rZ-KfC" id="tjM-zA-ooX"/>
+                        <outlet property="contentView" destination="aDr-sj-Whg" id="tYH-nu-pZ5"/>
                         <outlet property="deleteWidth" destination="lH1-3T-LRT" id="2iF-w0-E4m"/>
                         <outlet property="frequencyLabel" destination="qGu-s1-VT2" id="HQ7-gg-f49"/>
                         <outlet property="frequencySettings" destination="dNj-gF-csY" id="Dw2-RW-Xid"/>

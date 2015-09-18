@@ -31,6 +31,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
   @IBOutlet weak var deleteWidth: NSLayoutConstraint!
   @IBOutlet weak var toolbar: UIView!
   @IBOutlet weak var height: NSLayoutConstraint!
+  @IBOutlet weak var contentView: UIVisualEffectView!
   
   override func preferredStatusBarStyle() -> UIStatusBarStyle {
     return .LightContent
@@ -100,14 +101,12 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     close.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
     close.setTitle(String.fontAwesomeIconWithName(.Close), forState: .Normal)
     
-//    var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0
-//    HabitApp.color.getRed(&red, green: &green, blue: &blue, alpha: nil)
-//    red += (1 - red) * 0.8
-//    green += (1 - green) * 0.8
-//    blue += (1 - blue) * 0.8
-//    toolbar.backgroundColor = UIColor(red: red, green: green, blue: blue, alpha: 1)
-    
     mvc = presentingViewController!.presentingViewController as? MainViewController
+    
+    contentView.layer.shadowColor = UIColor.blackColor().CGColor
+    contentView.layer.shadowOpacity = 0.6
+    contentView.layer.shadowRadius = 5
+    contentView.layer.shadowOffset = CGSizeMake(0, 1)
   }
   
   func frequencySettingsChanged() {

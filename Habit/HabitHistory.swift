@@ -21,11 +21,11 @@ class HabitHistory: UIView, UIScrollViewDelegate {
   
   @IBOutlet var delegate: HabitHistoryDelegate?
 
-  let minimumAlpha: CGFloat = 0.1
-  let titleBarHeight: CGFloat = 20
-  let spacing: CGFloat = 3
-  let enlargement: CGFloat = 5
-  let selectedBorder: CGFloat = 2
+  let MinimumAlpha: CGFloat = 0.1
+  let TitleBarHeight: CGFloat = 20
+  let Spacing: CGFloat = 3
+  let Enlargement: CGFloat = 5
+  let SelectedBorder: CGFloat = 2
   
   var habit: Habit?
   var scrollView: UIScrollView?
@@ -53,7 +53,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
     let addSquare = { (content: UIView, frame: CGRect, history: History) in
       let square = SquareView(frame: frame, history: history)
       square.translatesAutoresizingMaskIntoConstraints = true
-      let alpha = self.minimumAlpha + (1 - self.minimumAlpha) * history.percentage
+      let alpha = self.MinimumAlpha + (1 - self.MinimumAlpha) * history.percentage
       square.backgroundColor = UIColor(color: HabitApp.color, fadeToAlpha: alpha)
       content.addSubview(square)
       self.squares.append(square)
@@ -71,11 +71,11 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       content.addSubview(label)
       label.snp_makeConstraints { (make) in
         make.centerX.equalTo(self.squares[self.squares.endIndex - 1])
-        make.centerY.equalTo(content.snp_top).offset(self.titleBarHeight / 2)
+        make.centerY.equalTo(content.snp_top).offset(self.TitleBarHeight / 2)
       }
     }
     
-    let contentHeight = frame.height - titleBarHeight
+    let contentHeight = frame.height - TitleBarHeight
     if habit != nil && squares.isEmpty {
       let calendar = HabitApp.calendar
       var side: CGFloat = 0
@@ -84,16 +84,17 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       
       switch habit!.frequency {
       case .Daily:
-        side = (contentHeight + spacing / 2) / 7.0
+        var first = true
+        side = (contentHeight + Spacing / 2) / 7.0
         for element in habit!.histories! {
           let history = element as! History
           let components = calendar.components([.Weekday, .Day], fromDate: history.date!)
           let weekday = components.weekday
-          if weekday == Habit.DayOfWeek.Sunday.rawValue {
+          if !first && weekday == Habit.DayOfWeek.Sunday.rawValue {
             offset += side
           }
           let frame = CGRectMake(
-            offset, titleBarHeight + CGFloat(weekday - 1) * side, side - spacing / 2, side - spacing / 2)
+            offset, TitleBarHeight + CGFloat(weekday - 1) * side, side - Spacing / 2, side - Spacing / 2)
           addSquare(content, frame, history)
           if components.day == 1 {
             addLabel(content, history.date!)
@@ -101,17 +102,18 @@ class HabitHistory: UIView, UIScrollViewDelegate {
           if calendar.isDate(history.date!, equalToDate: NSDate(), toUnitGranularity: .Day) {
             break
           }
+          first = false
         }
-        offset += side - spacing / 2
+        offset += side - Spacing / 2
       case .Weekly:
         fallthrough
       case .Monthly:
         var lastMonth = calendar.components([.Month], fromDate: habit!.createdAt!).month
-        side = (contentHeight + spacing / 2) / 6.0
+        side = (contentHeight + Spacing / 2) / 6.0
         var count = 3
         for element in habit!.histories! {
           let history = element as! History
-          let frame = CGRectMake(offset, titleBarHeight, side - spacing / 2, contentHeight)
+          let frame = CGRectMake(offset, TitleBarHeight, side - Spacing / 2, contentHeight)
           addSquare(content, frame, history)
           let month = calendar.components([.Month], fromDate: history.date!).month
           if (habit!.frequency == .Weekly && lastMonth != month) ||
@@ -185,30 +187,30 @@ class HabitHistory: UIView, UIScrollViewDelegate {
     let calendar = HabitApp.calendar
     let square = recognizer.view as! SquareView
     let frame = square.frame
-    var (xOffset, yOffset, widthOffset, heightOffset) = (-enlargement, CGFloat(0), 2 * enlargement, 2 * enlargement)
+    var (xOffset, yOffset, widthOffset, heightOffset) = (-Enlargement, CGFloat(0), 2 * Enlargement, 2 * Enlargement)
     if habit!.frequency == .Daily {
       let components = calendar.components([.Weekday], fromDate: square.history!.date!)
       if components.weekday == 1 {
-        yOffset -= selectedBorder
+        yOffset = 0
       } else if components.weekday == 7 {
-        yOffset += -2 * enlargement + selectedBorder
+        yOffset += -2 * Enlargement
       } else {
-        yOffset -= enlargement
+        yOffset -= Enlargement
       }
     } else {
-      yOffset -= 2 * selectedBorder
-      heightOffset = 3 * selectedBorder
+      yOffset -= 2 * SelectedBorder
+      heightOffset = 3 * SelectedBorder
     }
     let granularity: NSCalendarUnit = habit!.frequency == .Monthly ? .Month : .WeekOfYear
     if calendar.isDate(square.history!.date!, equalToDate: NSDate(), toUnitGranularity: granularity) {
-      xOffset += -enlargement + selectedBorder
+      xOffset -= Enlargement
     } else if calendar.isDate(square.history!.date!, equalToDate: habit!.createdAt!, toUnitGranularity: granularity) {
-      xOffset += enlargement - selectedBorder
+      xOffset += Enlargement
     }
     square.frame = CGRectMake(
       frame.origin.x + xOffset, frame.origin.y + yOffset, frame.width + widthOffset, frame.height + heightOffset)
-    square.layer.borderColor = UIColor.whiteColor().CGColor
-    square.layer.borderWidth = selectedBorder
+    square.layer.borderColor = UIColor.blackColor().CGColor
+    square.layer.borderWidth = SelectedBorder
     square.superview!.bringSubviewToFront(square)
     selectedSquare = square
     delegate?.habitHistory(self, selectedHistory: square.history!)
@@ -219,25 +221,25 @@ class HabitHistory: UIView, UIScrollViewDelegate {
     if let square = selectedSquare {
       square.layer.borderColor = UIColor.clearColor().CGColor
       let frame = square.frame
-      var (xOffset, yOffset, widthOffset, heightOffset) = (enlargement, CGFloat(0), -2 * enlargement, -2 * enlargement)
+      var (xOffset, yOffset, widthOffset, heightOffset) = (Enlargement, CGFloat(0), -2 * Enlargement, -2 * Enlargement)
       if habit!.frequency == .Daily {
         let components = calendar.components([.Weekday], fromDate: square.history!.date!)
         if components.weekday == 1 {
-          yOffset += selectedBorder
+          yOffset = 0
         } else if components.weekday == 7 {
-          yOffset += 2 * enlargement - selectedBorder
+          yOffset += 2 * Enlargement
         } else {
-          yOffset += enlargement
+          yOffset += Enlargement
         }
       } else {
-        yOffset += 2 * selectedBorder
-        heightOffset = -3 * selectedBorder
+        yOffset += 2 * SelectedBorder
+        heightOffset = -3 * SelectedBorder
       }
       let granularity: NSCalendarUnit = habit!.frequency == .Monthly ? .Month : .WeekOfYear
       if calendar.isDate(square.history!.date!, equalToDate: NSDate(), toUnitGranularity: granularity) {
-        xOffset += enlargement - selectedBorder
+        xOffset += Enlargement
       } else if calendar.isDate(square.history!.date!, equalToDate: habit!.createdAt!, toUnitGranularity: granularity) {
-        xOffset += -enlargement + selectedBorder
+        xOffset -= Enlargement
       }
       square.frame = CGRectMake(
         frame.origin.x + xOffset, frame.origin.y + yOffset, frame.width + widthOffset, frame.height + heightOffset)

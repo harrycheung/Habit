@@ -78,14 +78,12 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
     back.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
     back.setTitle(String.fontAwesomeIconWithName(.ChevronLeft), forState: .Normal)
     
-//    var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0
-//    HabitApp.color.getRed(&red, green: &green, blue: &blue, alpha: nil)
-//    red += (1 - red) * 0.8
-//    green += (1 - green) * 0.8
-//    blue += (1 - blue) * 0.8
-//    toolbar.backgroundColor = UIColor(red: red, green: green, blue: blue, alpha: 1)
-    
     habitHistory.habit = habit!
+    
+    contentView.layer.shadowColor = UIColor.blackColor().CGColor
+    contentView.layer.shadowOpacity = 0.6
+    contentView.layer.shadowRadius = 5
+    contentView.layer.shadowOffset = CGSizeMake(0, 1)
   }
   
   override func viewWillAppear(animated: Bool) {
@@ -157,7 +155,7 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
       case .Daily:
         progressPeriod.numberOfLines = 1
         if calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Year) {
-          if calendar.isDateInToday(NSDate()) {
+          if calendar.isDateInToday(date) {
             progressPeriod.text = "Today"
           } else {
             progressPeriod.text = ShowHabitViewController.dailyFormatter.stringFromDate(date)
