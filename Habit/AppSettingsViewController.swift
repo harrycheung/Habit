@@ -12,7 +12,7 @@ import CoreData
 
 class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorPickerDelegate {
   
-  static let PanMinimum: CGFloat = 70
+  let PanMinimum: CGFloat = 0.5
   
   var mvc: MainViewController?
   var darkenView: UIView?
@@ -86,12 +86,12 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     let movement = max(recognizer.translationInView(view).y, 0)
     view.frame = CGRectMake(0, movement, view.frame.width, view.frame.height)
     darkenView!.frame = CGRectMake(0, 0, view.frame.width, paddingView.bounds.height + movement)
-    let panPercentage = 1 - movement / (view.frame.height - paddingView.bounds.height)
-    darkenView!.alpha = panPercentage * AppSettingsTransition.DarkenAlpha
-    close.alpha = max(1 - movement / AppSettingsViewController.PanMinimum, 0)
-    
+    let panPercentage = movement / (view.frame.height - paddingView.bounds.height)
+    darkenView!.alpha = (1 - panPercentage) * AppSettingsTransition.DarkenAlpha
+    close.alpha = max(1 - panPercentage / PanMinimum, 0)
+
     if recognizer.state == .Ended || recognizer.state == .Cancelled {
-      if movement < AppSettingsViewController.PanMinimum {
+      if panPercentage < PanMinimum {
         UIView.animateWithDuration(AppSettingsTransition.TransitionDuration,
           delay: 0,
           usingSpringWithDamping: AppSettingsTransition.SpringDamping,
@@ -144,7 +144,7 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     if !upcoming.on {
       mvc!.hideUpcoming()
     }
-    mvc!.reloadEntries()    
+    mvc!.reloadEntries()
     if upcoming.on {
       mvc!.showUpcoming()
     }
