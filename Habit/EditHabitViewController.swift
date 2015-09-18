@@ -82,6 +82,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
       save.setTitle("Create", forState: .Normal)
       deleteWidth.priority = HabitApp.LayoutPriorityHigh
     }
+    save.tintColor = UIColor.whiteColor()
     frequencyLabel.text = "\(frequency.description) habit"
     
     // Tap handlers for closing the keyboard. Note: I need a specific recognizer for
