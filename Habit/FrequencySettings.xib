@@ -38,7 +38,7 @@
                         <constraint firstAttribute="height" constant="21" id="TBT-eX-PWt"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="14"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How many times a week?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QyN-w6-dga">
@@ -47,12 +47,12 @@
                         <constraint firstAttribute="height" constant="21" id="iF1-oG-9FM"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="14"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vIP-Ib-9Mc" customClass="MultiSelectControl" customModule="Habit" customModuleProvider="target">
                     <rect key="frame" x="168.5" y="21" width="151.5" height="547"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <connections>
                         <outlet property="dataSource" destination="-1" id="hg6-Pc-Eah"/>
                         <outlet property="delegate" destination="-1" id="ruK-bj-aYi"/>
@@ -63,6 +63,7 @@
                     <subviews>
                         <pickerView contentMode="scaleToFill" showsSelectionIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wLI-h7-Hzg">
                             <rect key="frame" x="0.0" y="165" width="152" height="216"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="216" id="BJu-5Z-uUB"/>
                             </constraints>
@@ -72,7 +73,7 @@
                             </connections>
                         </pickerView>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="wLI-h7-Hzg" secondAttribute="trailing" constant="8" id="Itx-Gd-RSH"/>
                         <constraint firstItem="wLI-h7-Hzg" firstAttribute="centerY" secondItem="cTi-dB-CTV" secondAttribute="centerY" id="sOI-Eo-0BP"/>

@@ -51,7 +51,7 @@ class FrequencySettings: UIView, UIPickerViewDelegate, UIPickerViewDataSource, M
     
     leftOverlay = OverlayView(frequencySettings: self)
     leftOverlay!.translatesAutoresizingMaskIntoConstraints = false
-    leftOverlay!.backgroundColor = UIColor.whiteColor()
+    leftOverlay!.backgroundColor = UIColor.clearColor()
     addSubview(leftOverlay!)
     leftOverlay!.snp_makeConstraints { (make) in
       make.centerX.equalTo(self).multipliedBy(0.5)
@@ -61,7 +61,7 @@ class FrequencySettings: UIView, UIPickerViewDelegate, UIPickerViewDataSource, M
     }
     rightOverlay = OverlayView(frequencySettings: self)
     rightOverlay!.translatesAutoresizingMaskIntoConstraints = false
-    rightOverlay!.backgroundColor = UIColor.whiteColor()
+    rightOverlay!.backgroundColor = UIColor.clearColor()
     addSubview(rightOverlay!)
     rightOverlay!.snp_makeConstraints { (make) in
       make.centerX.equalTo(self).multipliedBy(1.5)
@@ -97,8 +97,8 @@ class FrequencySettings: UIView, UIPickerViewDelegate, UIPickerViewDataSource, M
     return pickerCount
   }
   
-  func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-    return String(row + 1)
+  func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+    return NSAttributedString(string: String(row + 1), attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
   }
   
   func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

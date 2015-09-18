@@ -78,8 +78,10 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
       neverAutoSkip.on = habit!.neverAutoSkipBool
     } else {
       frequencySettings!.overlayTouched(frequencySettings!.leftOverlay!, touched: false)
+      save.setTitle("Create", forState: .Normal)
+      deleteWidth.priority = HabitApp.LayoutPriorityHigh
     }
-    frequencyLabel.text = frequency.description
+    frequencyLabel.text = "\(frequency.description) habit"
     
     // Tap handlers for closing the keyboard. Note: I need a specific recognizer for
     // the UIPickerViews since they handle the gesture a little differently. I think
@@ -95,20 +97,15 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     pickerRecognizer!.delegate = self
     frequencySettings!.picker.addGestureRecognizer(pickerRecognizer!)
     
-    // Setup form if this is new
-    if habit == nil {
-      save.setTitle("Create", forState: .Normal)
-      deleteWidth.priority = HabitApp.LayoutPriorityHigh
-    }
     close.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
     close.setTitle(String.fontAwesomeIconWithName(.Close), forState: .Normal)
     
-    var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0
-    HabitApp.color.getRed(&red, green: &green, blue: &blue, alpha: nil)
-    red += (1 - red) * 0.8
-    green += (1 - green) * 0.8
-    blue += (1 - blue) * 0.8
-    toolbar.backgroundColor = UIColor(red: red, green: green, blue: blue, alpha: 1)
+//    var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0
+//    HabitApp.color.getRed(&red, green: &green, blue: &blue, alpha: nil)
+//    red += (1 - red) * 0.8
+//    green += (1 - green) * 0.8
+//    blue += (1 - blue) * 0.8
+//    toolbar.backgroundColor = UIColor(red: red, green: green, blue: blue, alpha: 1)
     
     mvc = presentingViewController!.presentingViewController as? MainViewController
   }
@@ -166,23 +163,37 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
   }
   
   @IBAction func saveHabit(sender: AnyObject) {
-    let commitHabit = { (name: String) in
-      self.habit!.name = name
+    let save = {
       self.habit!.frequency = self.frequency
       if self.frequencySettings!.useTimes {
         self.habit!.times = self.frequencySettings!.picker!.selectedRowInComponent(0) + 1
         self.habit!.partsArray = []
       } else {
-        self.habit!.partsArray = self.frequencySettings!.multiSelect.selectedIndexes.map({ $0 + 1 })
+        self.habit!.partsArray = self.frequencySettings!.multiSelect.selectedIndexes.sort().map { $0 + 1 }
       }
       self.habit!.notifyBool = self.notification.on
       self.habit!.neverAutoSkip = self.neverAutoSkip.on
       self.habit!.update(NSDate())
+      do {
+        try HabitApp.moContext.save()
+      } catch let error as NSError {
+        NSLog("\(error), \(error.userInfo)")
+      }
     }
     
-    let createHabit = { () in
-      self.habit =
-        Habit(context: HabitApp.moContext, name: "", details: "", frequency: .Daily, times: 0, createdAt: NSDate())
+    let transition = {
+      self.mvc!.refreshNotifications()
+      self.habit = nil
+      self.presentingViewController!.view.hidden = true
+      self.presentingViewController!.dismissViewControllerAnimated(true) {
+        self.mvc!.dismissViewControllerAnimated(false, completion: nil)
+      }
+    }
+    
+    let normalSave = { (name: String) in
+      self.habit!.name = name
+      save()
+      transition()
     }
     
     let trimmedName = self.name.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
@@ -194,45 +205,38 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
         if habits.count > 0 {
           showAlert(nil,
             message: "Another habit with the same name exists.\nContinue with save?",
-            yes: ("Yes", .Default, { (action) in
-              createHabit()
-              commitHabit(trimmedName)
-              do {
-                try HabitApp.moContext.save()
-              } catch let error as NSError {
-                NSLog("\(error), \(error.userInfo)")
-              }
-              self.mvc!.insertEntries(self.habit!)
-              self.mvc!.refreshNotifications()
-              self.mvc!.dismissViewControllerAnimated(true, completion: nil) }),
-            no: ("No", .Cancel, { (action, alert) in
+            yes: ("Yes", .Default, { normalSave(trimmedName) }),
+            no: ("No", .Cancel, { (alert) in
               alert.dismissViewControllerAnimated(true, completion: nil)
             }))
         } else {
-          createHabit()
-          commitHabit(trimmedName)
-          try HabitApp.moContext.save()
-          mvc!.insertEntries(habit!)
-          mvc!.refreshNotifications()
-          mvc!.dismissViewControllerAnimated(true, completion: nil)
+          self.habit =
+            Habit(context: HabitApp.moContext, name: trimmedName, details: "", frequency: .Daily, times: 0, createdAt: NSDate())
+          save()
+          self.mvc!.insertEntries(self.habit!)
+          transition()
         }
       } catch let error as NSError {
         NSLog("\(error), \(error.userInfo)")
       }
     } else {
-      commitHabit(trimmedName)
+      normalSave(trimmedName)
     }
   }
   
   @IBAction func deleteHabit(sender: AnyObject) {
-    showAlert(nil, message: nil, yes: ("Delete habit", .Destructive, { (action) in
+    showAlert(nil, message: nil, yes: ("Delete habit", .Destructive, {
       for entry in self.habit!.todos {
         HabitApp.removeNotification(entry)
       }
-      self.presentingViewController!.view.hidden = true
+      
       self.mvc!.removeEntries(self.habit!)
       self.mvc!.refreshNotifications()
-      self.mvc!.dismissViewControllerAnimated(true, completion: nil)
+      // Hide ShowHabitViewController
+      self.presentingViewController!.view.hidden = true
+      self.presentingViewController!.dismissViewControllerAnimated(true) {
+        self.mvc!.dismissViewControllerAnimated(false, completion: nil)
+      }
       do {
         HabitApp.moContext.deleteObject(self.habit!)
         try HabitApp.moContext.save()
@@ -242,18 +246,20 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
         // something
       }
       self.habit = nil
-    }), no: ("Cancel", .Cancel, { (action, alert) in
+    }), no: ("Cancel", .Cancel, { (alert) in
       alert.dismissViewControllerAnimated(true, completion: nil)
     }))
   }
   
   func showAlert(title: String?, message: String?,
-    yes: (title: String, style: UIAlertActionStyle, handler: ((UIAlertAction) -> Void)),
-    no: (title: String, style: UIAlertActionStyle, handler: ((UIAlertAction, UIAlertController) -> Void))) {
+    yes: (title: String, style: UIAlertActionStyle, handler: (() -> Void)),
+    no: (title: String, style: UIAlertActionStyle, handler: ((UIAlertController) -> Void))) {
       let alert = UIAlertController(title: title, message: message, preferredStyle: .ActionSheet)
-      alert.addAction(UIAlertAction(title: yes.title, style: yes.style, handler: yes.handler))
-      alert.addAction(UIAlertAction(title: no.title, style: no.style) { (action) in
-        no.handler(action, alert)
+      alert.addAction(UIAlertAction(title: yes.title, style: yes.style) { action in
+        yes.handler()
+      })
+      alert.addAction(UIAlertAction(title: no.title, style: no.style) { action in
+        no.handler(alert)
       })
       presentViewController(alert, animated: true, completion: nil)
   }

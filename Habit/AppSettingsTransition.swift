@@ -22,8 +22,8 @@ class AppSettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UI
   func animationControllerForPresentedController(presented: UIViewController,
     presentingController presenting: UIViewController,
     sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-    self.presenting = true
-    return self
+      self.presenting = true
+      return self
   }
   
   func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -63,7 +63,7 @@ class AppSettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UI
           asvc.darkenView!.alpha = AppSettingsTransition.DarkenAlpha
         }, completion: { finished in
           transitionContext.completeTransition(true)
-        })
+      })
     } else {
       let asvc = fromVC as! AppSettingsViewController
       
@@ -74,7 +74,7 @@ class AppSettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UI
           asvc.darkenView!.alpha = 0
         }, completion: { finished in
           transitionContext.completeTransition(true)
-        })
+      })
     }
   }
 }

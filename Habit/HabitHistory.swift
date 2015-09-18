@@ -67,7 +67,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       let label = UILabel()
       label.text = dateFormatter.stringFromDate(date)
       label.font = UIFont(name: "Bariol-Regular", size: 13.0)!
-      label.textColor = UIColor.blackColor()
+      label.textColor = UIColor.whiteColor()
       content.addSubview(label)
       label.snp_makeConstraints { (make) in
         make.centerX.equalTo(self.squares[self.squares.endIndex - 1])

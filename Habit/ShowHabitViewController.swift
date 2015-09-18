@@ -15,9 +15,6 @@ import FontAwesome_swift
 
 class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
   
-  var habit: Habit?  
-  var editHabitTransition: EditHabitTransition?
-  
   @IBOutlet weak var name: UILabel!
   @IBOutlet weak var switchMode: UIButton!
   @IBOutlet weak var progressLabel: KAProgressLabel!
@@ -31,6 +28,10 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
   @IBOutlet weak var completed: UILabel!
   @IBOutlet weak var habitHistory: HabitHistory!
   @IBOutlet weak var height: NSLayoutConstraint!
+  @IBOutlet weak var contentView: UIVisualEffectView!
+  
+  var habit: Habit?
+  var editHabitTransition: EditHabitTransition?
   
   struct AnimationNumbers {
     var completedStart: Int = 0
@@ -77,18 +78,28 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
     back.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
     back.setTitle(String.fontAwesomeIconWithName(.ChevronLeft), forState: .Normal)
     
-    var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0
-    HabitApp.color.getRed(&red, green: &green, blue: &blue, alpha: nil)
-    red += (1 - red) * 0.8
-    green += (1 - green) * 0.8
-    blue += (1 - blue) * 0.8
-    toolbar.backgroundColor = UIColor(red: red, green: green, blue: blue, alpha: 1)
+//    var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0
+//    HabitApp.color.getRed(&red, green: &green, blue: &blue, alpha: nil)
+//    red += (1 - red) * 0.8
+//    green += (1 - green) * 0.8
+//    blue += (1 - blue) * 0.8
+//    toolbar.backgroundColor = UIColor(red: red, green: green, blue: blue, alpha: 1)
     
     habitHistory.habit = habit!
   }
   
   override func viewWillAppear(animated: Bool) {
     setupStats()
+  }
+  
+  override func viewDidLayoutSubviews() {
+    let mask = CAShapeLayer()
+    let path = CGPathCreateMutable()
+    CGPathAddRect(path, nil, contentView.frame)
+    CGPathAddRect(path, nil, view.frame)
+    mask.path = path
+    mask.fillRule = kCAFillRuleEvenOdd
+    //darkenView.layer.mask = mask
   }
   
   func setupStats() {
@@ -198,23 +209,12 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
       completedCount: history.completed!.integerValue, skippedCount: history.skipped!.integerValue)
   }
   
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    if let vc = segue.destinationViewController as? EditHabitViewController {
-      super.prepareForSegue(segue, sender: sender)
-      
-      vc.habit = self.habit!
-      
-      segue.destinationViewController.transitioningDelegate = editHabitTransition
-      segue.destinationViewController.modalPresentationStyle = .Custom
-    }
-  }
-  
   @IBAction func goToSettings() {
     let ehvc = storyboard!.instantiateViewControllerWithIdentifier("EditHabitViewController") as! EditHabitViewController
     ehvc.transitioningDelegate = editHabitTransition
     ehvc.modalPresentationStyle = .Custom
-    ehvc.providesPresentationContextTransitionStyle = true
-    ehvc.habit = habit!
+    ehvc.habit = habit
+    ehvc.frequency = habit!.frequency
     presentViewController(ehvc, animated: true, completion: nil)
   }
   

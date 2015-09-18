@@ -11,9 +11,6 @@ import UIKit
 
 class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
   
-  let TransitionDuration: NSTimeInterval = 0.25
-  let BackgroundAlpha: CGFloat = 0.4
-  
   var presenting: Bool = false
   
   func animationControllerForPresentedController(presented: UIViewController,
@@ -29,7 +26,7 @@ class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UI
   }
   
   func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
-    return TransitionDuration
+    return HabitApp.TransitionDuration
   }
   
   func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
@@ -44,7 +41,7 @@ class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UI
       
       sfvc.hideButtons()
       ehvc.view.alpha = 0
-      UIView.animateWithDuration(TransitionDuration,
+      UIView.animateWithDuration(HabitApp.TransitionDuration,
         animations: {
           ehvc.view.alpha = 1
           sfvc.closeButton.transform = CGAffineTransformMakeRotation(0)
@@ -63,14 +60,16 @@ class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UI
       mvc.newButton.hidden = false
       mvc.newButton.alpha = 0
       ehvc.presentingViewController!.dismissViewControllerAnimated(false, completion: nil)
-      UIView.animateWithDuration(TransitionDuration,
+      UIView.animateWithDuration(HabitApp.TransitionDuration,
         animations: {
           ehvc.view.alpha = 0
           sfvc.view.alpha = 0
           mvc.newButton.alpha = 1
+          mvc.transitionOverlay.alpha = 0
         }, completion: { finished in
+          mvc.transitionOverlay.hidden = true
           transitionContext.completeTransition(true)
-        })
+      })
     }
   }
 }

@@ -11,9 +11,6 @@ import UIKit
 
 class SelectFrequencyTransition: NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
   
-  let TransitionDuration: NSTimeInterval = 0.25
-  let BackgroundAlpha: CGFloat = 0.4
-  
   var presenting: Bool = false
   
   func animationControllerForPresentedController(presented: UIViewController,
@@ -29,7 +26,7 @@ class SelectFrequencyTransition: NSObject, UIViewControllerTransitioningDelegate
   }
   
   func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
-    return TransitionDuration
+    return HabitApp.TransitionDuration
   }
   
   func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
@@ -44,26 +41,29 @@ class SelectFrequencyTransition: NSObject, UIViewControllerTransitioningDelegate
       containerView.addSubview(sfvc.view)
       
       sfvc.showButtons()
-      UIView.animateWithDuration(TransitionDuration,
+      mvc.transitionOverlay.hidden = false
+      mvc.transitionOverlay.alpha = 0
+      UIView.animateWithDuration(HabitApp.TransitionDuration,
         animations: {
-          sfvc.blurView.alpha = self.BackgroundAlpha
+          mvc.transitionOverlay.alpha = HabitApp.TransitionOverlayAlpha
           sfvc.closeButton.transform = CGAffineTransformMakeRotation(CGFloat(M_PI / 4))
         }, completion: { finished in
           transitionContext.completeTransition(true)
-        })
+      })
     } else {
       let mvc = toVC as! MainViewController
       let sfvc = fromVC as! SelectFrequencyViewController
       
       sfvc.hideButtons()
-      UIView.animateWithDuration(TransitionDuration,
+      UIView.animateWithDuration(HabitApp.TransitionDuration,
         animations: {
-          sfvc.blurView.alpha = 0
+          mvc.transitionOverlay.alpha = 0
           sfvc.closeButton.transform = CGAffineTransformMakeRotation(0)
         }, completion: { finished in
           mvc.newButton.hidden = false
+          mvc.transitionOverlay.hidden = true
           transitionContext.completeTransition(true)
-        })
+      })
     }
   }
 }

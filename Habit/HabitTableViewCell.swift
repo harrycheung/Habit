@@ -47,7 +47,7 @@ class HabitTableViewCell: SwipeTableViewCell {
       alpha = HabitApp.MinimumAlpha + (1 - HabitApp.MinimumAlpha) * pow(1000, -CGFloat(dueIn) / (24 * 3600))
     }
     if contentView.backgroundColor != nil {
-      contentView.backgroundColor = UIColor(color: tintColor, fadeToAlpha: alpha)
+      contentView.backgroundColor = UIColor(color: HabitApp.color, fadeToAlpha: alpha)
     } else {
       contentView.alpha = alpha
     }

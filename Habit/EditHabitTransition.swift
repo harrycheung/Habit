@@ -30,44 +30,69 @@ class EditHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIVi
   }
   
   func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
+    let fromVC = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey)!
+    let toVC = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)!
+    
     if presenting {
-      let fromVC = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey) as! ShowHabitViewController
-      let toVC = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) as! EditHabitViewController
-      transitionContext.containerView()!.addSubview(toVC.view)
-      toVC.view.alpha = 0
-      let startHeight = fromVC.height.constant
-      let endHeight = toVC.height.constant
-      toVC.height.constant = startHeight
-      toVC.view.layoutIfNeeded()
-      fromVC.height.constant = endHeight
-      toVC.height.constant = endHeight
-      UIView.animateWithDuration(transitionDuration(transitionContext), animations: {
-        toVC.view.alpha = 1
-        fromVC.view.layoutIfNeeded()
-        toVC.view.layoutIfNeeded()
-      }, completion: { (finished) in
-        transitionContext.completeTransition(true)
-        fromVC.height.constant = startHeight
-        fromVC.view.layoutIfNeeded()
-      })
-    } else if !presenting {
-      let fromVC = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey) as! EditHabitViewController
-      let toVC = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) as! ShowHabitViewController
-      let startHeight = fromVC.height.constant
-      let endHeight = toVC.height.constant
-      toVC.height.constant = startHeight
-      toVC.view.layoutIfNeeded()
-      fromVC.height.constant = endHeight
-      toVC.height.constant = endHeight
-      UIView.animateWithDuration(transitionDuration(transitionContext), animations: {
-        fromVC.view.alpha = 0
-        fromVC.view.layoutIfNeeded()
-        toVC.view.layoutIfNeeded()
-      }, completion: { (finished) in
-        transitionContext.completeTransition(true)
-        fromVC.height.constant = startHeight
-        fromVC.view.layoutIfNeeded()
-      })
+      let shvc = fromVC as! ShowHabitViewController
+      let ehvc = toVC as! EditHabitViewController
+      let mvc = shvc.presentingViewController as! MainViewController
+      let startHeight = shvc.height.constant
+      let endHeight = ehvc.height.constant
+      let containerView = transitionContext.containerView()!
+      
+      containerView.addSubview(ehvc.view)
+      ehvc.view.alpha = 0
+      ehvc.height.constant = startHeight
+      ehvc.view.layoutIfNeeded()
+      UIView.animateWithDuration(HabitApp.TransitionDuration,
+        animations: {
+          ehvc.view.alpha = 1
+          ehvc.height.constant = endHeight
+          ehvc.view.layoutIfNeeded()
+          shvc.view.alpha = 0
+          shvc.height.constant = endHeight
+          shvc.view.layoutIfNeeded()
+          mvc.transitionOverlay.transform = CGAffineTransformMakeScale(1, 1 + (endHeight - startHeight) / startHeight)
+        }, completion: { finished in
+          transitionContext.completeTransition(true)
+          shvc.height.constant = startHeight
+          shvc.view.layoutIfNeeded()
+        })
+    } else {
+      let ehvc = fromVC as! EditHabitViewController
+      let shvc = toVC as! ShowHabitViewController
+      let mvc = shvc.presentingViewController as! MainViewController
+      let startHeight = ehvc.height.constant
+      let endHeight = shvc.height.constant
+      
+      if ehvc.habit == nil {
+        UIView.animateWithDuration(HabitApp.TransitionDuration,
+          animations: {
+            ehvc.view.alpha = 0
+            mvc.transitionOverlay.alpha = 0
+            mvc.newButton.alpha = 1
+          }, completion: { finished in
+            mvc.transitionOverlay.layer.mask = nil
+            mvc.transitionOverlay.transform = CGAffineTransformMakeScale(1, 1)
+            transitionContext.completeTransition(true)
+        })
+      } else {
+        shvc.height.constant = startHeight
+        shvc.view.layoutIfNeeded()
+        UIView.animateWithDuration(HabitApp.TransitionDuration,
+          animations: {
+            ehvc.view.alpha = 0
+            ehvc.height.constant = endHeight
+            ehvc.view.layoutIfNeeded()
+            shvc.view.alpha = 1
+            shvc.height.constant = endHeight
+            shvc.view.layoutIfNeeded()
+            mvc.transitionOverlay.transform = CGAffineTransformMakeScale(1, 1)
+          }, completion: { finished in
+            transitionContext.completeTransition(true)
+        })
+      }
     }
   }
   

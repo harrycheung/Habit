@@ -49,10 +49,10 @@ class MultiSelectControl: UIView {
         let button = UIButton()
         button.setTitle(dataSource!.multiSelectControl(self, itemAtIndex: index), forState: .Normal)
         button.titleLabel!.font = dataSource!.fontOfMultiSelectControl(self)
-        button.setTitleColor(tintColor, forState: .Normal)
-        button.setBackgroundColor(UIColor.whiteColor(), forState: .Normal)
-        button.setTitleColor(UIColor.whiteColor(), forState: .Selected)
-        button.setBackgroundColor(tintColor, forState: .Selected)
+        button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        button.setBackgroundColor(UIColor.clearColor(), forState: .Normal)
+        button.setTitleColor(tintColor, forState: .Selected)
+        button.setBackgroundColor(UIColor.whiteColor(), forState: .Selected)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 3
         button.layer.masksToBounds = true

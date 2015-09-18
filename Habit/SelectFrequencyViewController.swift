@@ -15,7 +15,6 @@ class SelectFrequencyViewController: UIViewController {
   let ButtonRadius: CGFloat = 80
   let LabelDistance: CGFloat = 75
   
-  @IBOutlet weak var blurView: UIView!
   @IBOutlet weak var closeButton: UIButton!
   
   var dailyButton: UIButton?
@@ -47,7 +46,6 @@ class SelectFrequencyViewController: UIViewController {
     let mvc = presentingViewController as! MainViewController
     closeButton.roundify(closeButton.frame.width / 2)
     closeButton.backgroundColor = HabitApp.color
-    blurView.alpha = 0
     let startFrame = CGRectMake(mvc.newButton.center.x - 23, mvc.newButton.center.y - 23, 46, 46)
     dailyButton = createButton("D", startFrame)
     weeklyButton = createButton("W", startFrame)

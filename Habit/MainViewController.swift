@@ -45,6 +45,7 @@
 // 36: Pause habit
 // 37: Launch screen
 // 38: done - Resist swiping upcoming
+// 39: Show frequency words after 1 second timeout
 
 import UIKit
 import CoreData
@@ -62,6 +63,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   @IBOutlet weak var titleBar: UIView!
   @IBOutlet weak var overlayView: UIView!
   @IBOutlet weak var newButton: UIButton!
+  @IBOutlet weak var transitionOverlay: UIView!
   
   var statusBar: UIView?
   var activeCell: HabitTableViewCell?
@@ -70,6 +72,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   var refreshTimer: NSTimer?
   var appSettingsTransition: UIViewControllerTransitioningDelegate?
   var selectFrequencyTransition: UIViewControllerTransitioningDelegate?
+  var showHabitTransition: UIViewControllerTransitioningDelegate?
   
   @IBAction func fill(sender: AnyObject) {
     do {
@@ -96,10 +99,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         date = NSDate(timeInterval: 24 * 3600 * 7, sinceDate: date)
       }
       date = calendar.dateByAddingUnit(.WeekOfYear, value: -2, toDate: NSDate())!
-      h = Habit(context: HabitApp.moContext, name: "Will not show skip dialog", details: "", frequency: .Weekly, times: 6, createdAt: date)
+      h = Habit(context: HabitApp.moContext, name: "W: Will not show skip dialog", details: "", frequency: .Weekly, times: 6, createdAt: date)
       h.update(NSDate())
       date = calendar.dateByAddingUnit(.WeekOfYear, value: -5, toDate: NSDate())!
-      h = Habit(context: HabitApp.moContext, name: "Will show skip dialog", details: "", frequency: .Weekly, times: 0, createdAt: date)
+      h = Habit(context: HabitApp.moContext, name: "W: Will show skip dialog", details: "", frequency: .Weekly, times: 0, createdAt: date)
       h.daysOfWeek = [.Monday, .Tuesday, .Wednesday, .Friday, .Saturday]
       h.update(NSDate())
       //        components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
@@ -190,6 +193,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     appSettingsTransition = AppSettingsTransition()
     selectFrequencyTransition = SelectFrequencyTransition()
+    showHabitTransition = ShowHabitTransition()
     
     statusBar = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 20))
     statusBar!.backgroundColor = HabitApp.color
@@ -229,6 +233,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     newButton.layer.shadowOpacity = 0.6
     newButton.layer.shadowRadius = 5
     newButton.layer.shadowOffset = CGSizeMake(0, 1)
+    
+    view.bringSubviewToFront(transitionOverlay)
   }
 
   override func didReceiveMemoryWarning() {
@@ -348,8 +354,13 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         hideCellAnimate(header, delay: delayStart) {
           // Remove any traces of the old cells
           // Is this better than calling deleteRowsAtIndexPaths?
+          self.upcoming = []
           self.tableView.reloadData()
         }
+      } else {
+        // If not visible, no animation
+        upcoming = []
+        tableView.reloadData()
       }
       delayStart += SlideAnimationDelay
     }
@@ -370,27 +381,23 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func showUpcoming() {
-    if upcoming.count > 0 {
-      var delayStart: Double = 0
-      // Load up the cells to animate
-      tableView.beginUpdates()
-      if tableView.headerViewForSection(1) == nil {
-        tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .None)
-      }
-      let indexPaths = upcoming.enumerate().map { (index, entry) in
-        return NSIndexPath(forRow: index, inSection: 1)
-      }
-      tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
-      tableView.endUpdates()
-      
-      if let header = tableView.headerViewForSection(1) {
-        showCellAnimate(header, endFrame: tableView.rectForHeaderInSection(1), delay: delayStart)
-        for (index, _) in upcoming.enumerate() {
-          let indexPath = NSIndexPath(forRow: index, inSection: 1)
-          if let cell = tableView.cellForRowAtIndexPath(indexPath) {
-            showCellAnimate(cell, endFrame: tableView.rectForRowAtIndexPath(indexPath), delay: delayStart)
-            delayStart += SlideAnimationDelay
-          }
+    var delayStart: Double = 0
+    // Load up the cells to animate
+    tableView.beginUpdates()
+    tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .None)
+    let indexPaths = upcoming.enumerate().map { (index, entry) in
+      return NSIndexPath(forRow: index, inSection: 1)
+    }
+    tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
+    tableView.endUpdates()
+    
+    if let header = tableView.headerViewForSection(1) {
+      showCellAnimate(header, endFrame: tableView.rectForHeaderInSection(1), delay: delayStart)
+      for (index, _) in upcoming.enumerate() {
+        let indexPath = NSIndexPath(forRow: index, inSection: 1)
+        if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+          showCellAnimate(cell, endFrame: tableView.rectForRowAtIndexPath(indexPath), delay: delayStart)
+          delayStart += SlideAnimationDelay
         }
       }
     }
@@ -610,8 +617,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     dispatch_async(dispatch_get_main_queue()) {
       self.activeCell = tableView.cellForRowAtIndexPath(indexPath) as? HabitTableViewCell
       let shvc = self.storyboard!.instantiateViewControllerWithIdentifier("ShowHabitViewController") as! ShowHabitViewController
-      shvc.modalTransitionStyle = .CrossDissolve
       shvc.modalPresentationStyle = .OverCurrentContext
+      shvc.transitioningDelegate = self.showHabitTransition
       shvc.habit = self.activeCell!.entry!.habit!
       self.presentViewController(shvc, animated: true, completion: nil)
     }

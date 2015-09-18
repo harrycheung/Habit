@@ -50,6 +50,8 @@ class HabitApp {
   static let NewButtonFadeAnimationDuration: NSTimeInterval = 0.2
   static let LayoutPriorityLow: UILayoutPriority = 900
   static let LayoutPriorityHigh: UILayoutPriority = 999
+  static let TransitionOverlayAlpha: CGFloat = 0.2
+  static let TransitionDuration: NSTimeInterval = 0.25
   
   static let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)!
   
