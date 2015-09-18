@@ -18,7 +18,8 @@ import SnapKit
 
 class FrequencySettings: UIView, UIPickerViewDelegate, UIPickerViewDataSource, MultiSelectControlDelegate, MultiSelectControlDataSource {
   
-  let deactivatedAlpha: CGFloat = 0.8
+  let DeactivatedAlpha: CGFloat = 0.2
+  let OverlayTransitionDuration: NSTimeInterval = 0.15
   
   @IBOutlet weak var view: UIView!
   @IBOutlet weak var leftTitle: UILabel!
@@ -76,11 +77,23 @@ class FrequencySettings: UIView, UIPickerViewDelegate, UIPickerViewDataSource, M
     if overlayView.isEqual(leftOverlay) {
       useTimes = true
       leftOverlay!.alpha = 0
-      rightOverlay!.alpha = deactivatedAlpha
+      rightOverlay!.alpha = 1
+      UIView.animateWithDuration(OverlayTransitionDuration) {
+        self.leftTitle.alpha = 1
+        self.picker.alpha = 1
+        self.rightTitle.alpha = self.DeactivatedAlpha
+        self.multiSelect.alpha = self.DeactivatedAlpha
+      }
     } else {
       useTimes = false
-      leftOverlay!.alpha = deactivatedAlpha
+      leftOverlay!.alpha = 1
       rightOverlay!.alpha = 0
+      UIView.animateWithDuration(OverlayTransitionDuration) {
+        self.leftTitle.alpha = self.DeactivatedAlpha
+        self.picker.alpha = self.DeactivatedAlpha
+        self.rightTitle.alpha = 1
+        self.multiSelect.alpha = 1
+      }
     }
     if touched {
       delegate?.frequencySettingsChanged()

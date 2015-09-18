@@ -46,7 +46,8 @@
 // 37: Launch screen
 // 38: done - Resist swiping upcoming
 // 39: done - Show frequency words after 1 second timeout
-// 40: Fix overlay on frequency selection
+// 40: done - Fix overlay on frequency selection
+// 41: Add touch listener to overlay view on MVC
 
 import UIKit
 import CoreData
