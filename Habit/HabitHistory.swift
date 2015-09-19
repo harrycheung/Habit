@@ -190,16 +190,15 @@ class HabitHistory: UIView, UIScrollViewDelegate {
     var (xOffset, yOffset, widthOffset, heightOffset) = (-Enlargement, CGFloat(0), 2 * Enlargement, 2 * Enlargement)
     if habit!.frequency == .Daily {
       let components = calendar.components([.Weekday], fromDate: square.history!.date!)
-      if components.weekday == 1 {
-        yOffset = 0
-      } else if components.weekday == 7 {
-        yOffset += -2 * Enlargement
-      } else {
-        yOffset -= Enlargement
+      if components.weekday != 1 {
+        if components.weekday == 7 {
+          yOffset += -2 * Enlargement
+        } else {
+          yOffset -= Enlargement
+        }
       }
     } else {
-      yOffset -= 2 * SelectedBorder
-      heightOffset = 3 * SelectedBorder
+      heightOffset = 0
     }
     let granularity: NSCalendarUnit = habit!.frequency == .Monthly ? .Month : .WeekOfYear
     if calendar.isDate(square.history!.date!, equalToDate: NSDate(), toUnitGranularity: granularity) {
@@ -224,16 +223,15 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       var (xOffset, yOffset, widthOffset, heightOffset) = (Enlargement, CGFloat(0), -2 * Enlargement, -2 * Enlargement)
       if habit!.frequency == .Daily {
         let components = calendar.components([.Weekday], fromDate: square.history!.date!)
-        if components.weekday == 1 {
-          yOffset = 0
-        } else if components.weekday == 7 {
-          yOffset += 2 * Enlargement
-        } else {
-          yOffset += Enlargement
+        if components.weekday != 1 {
+          if components.weekday == 7 {
+            yOffset += 2 * Enlargement
+          } else {
+            yOffset += Enlargement
+          }
         }
       } else {
-        yOffset += 2 * SelectedBorder
-        heightOffset = -3 * SelectedBorder
+        heightOffset = 0
       }
       let granularity: NSCalendarUnit = habit!.frequency == .Monthly ? .Month : .WeekOfYear
       if calendar.isDate(square.history!.date!, equalToDate: NSDate(), toUnitGranularity: granularity) {
