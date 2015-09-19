@@ -269,6 +269,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s5C-B6-hxW" userLabel="Tap View">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="cMQ-WQ-H2i" appends="YES" id="0vk-vz-NNG"/>
+                                </connections>
+                            </view>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pSf-ZJ-puH">
                                 <rect key="frame" x="8" y="106" width="304" height="355"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="w0k-LX-FFh">
@@ -464,7 +472,11 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="pSf-ZJ-puH" secondAttribute="trailing" constant="8" id="0q5-jm-Dav"/>
                             <constraint firstItem="pSf-ZJ-puH" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leading" constant="8" id="C6P-Dn-4yX"/>
+                            <constraint firstItem="cSw-LG-uKR" firstAttribute="top" secondItem="s5C-B6-hxW" secondAttribute="bottom" id="GOd-mx-0lZ"/>
+                            <constraint firstItem="s5C-B6-hxW" firstAttribute="top" secondItem="7l0-3q-qB9" secondAttribute="bottom" constant="-20" id="Lgr-Fq-0lR"/>
+                            <constraint firstAttribute="trailing" secondItem="s5C-B6-hxW" secondAttribute="trailing" id="U6S-BH-KoV"/>
                             <constraint firstItem="pSf-ZJ-puH" firstAttribute="centerY" secondItem="VOQ-mx-QHa" secondAttribute="centerY" id="aM8-7x-x20"/>
+                            <constraint firstItem="s5C-B6-hxW" firstAttribute="leading" secondItem="VOQ-mx-QHa" secondAttribute="leading" id="lhj-ad-Otm"/>
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
@@ -488,14 +500,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uf1-eU-pA4" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Xjg-bp-os8" userLabel="Exit" sceneMemberID="exit"/>
-                <tapGestureRecognizer cancelsTouchesInView="NO" id="N00-DT-dwT">
-                    <connections>
-                        <action selector="closeView:" destination="fuZ-7k-oQj" id="mee-TC-kwj"/>
-                    </connections>
-                </tapGestureRecognizer>
                 <tapGestureRecognizer id="RDt-Og-eI0">
                     <connections>
                         <action selector="allTimeProgress:" destination="fuZ-7k-oQj" id="oNZ-n9-nQW"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="cMQ-WQ-H2i">
+                    <connections>
+                        <action selector="closeView:" destination="fuZ-7k-oQj" id="uAb-VV-2KZ"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>

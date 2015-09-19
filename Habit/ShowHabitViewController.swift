@@ -90,16 +90,6 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
     setupStats()
   }
   
-  override func viewDidLayoutSubviews() {
-    let mask = CAShapeLayer()
-    let path = CGPathCreateMutable()
-    CGPathAddRect(path, nil, contentView.frame)
-    CGPathAddRect(path, nil, view.frame)
-    mask.path = path
-    mask.fillRule = kCAFillRuleEvenOdd
-    //darkenView.layer.mask = mask
-  }
-  
   func setupStats() {
     currentStreak.text = "\(habit!.currentStreak!)"
     longestStreak.text = "\(habit!.longestStreak!)"
@@ -109,7 +99,7 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
   }
   
   @IBAction func closeView(sender: AnyObject) {
-    presentingViewController!.dismissViewControllerAnimated(true, completion: nil)
+    dismissViewControllerAnimated(true, completion: nil)
   }
   
   // HabitHistory

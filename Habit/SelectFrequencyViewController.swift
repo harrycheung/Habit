@@ -46,11 +46,11 @@ class SelectFrequencyViewController: UIViewController {
     
     let buildLabel = { (label: UIButton, text: String) in
       label.setTitle(text, forState: .Normal)
-      label.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+      label.setTitleColor(HabitApp.color, forState: .Normal)
       label.titleLabel!.font = UIFont(name: "Bariol-Regular", size: 17)!
       label.contentEdgeInsets = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8)
       label.roundify(10)
-      label.backgroundColor = HabitApp.color
+      label.backgroundColor = UIColor.whiteColor()
       label.sizeToFit()
       label.hidden = true
       self.view.addSubview(label)
@@ -73,6 +73,12 @@ class SelectFrequencyViewController: UIViewController {
   
   override func viewDidAppear(animated: Bool) {
     timer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: "showLabels", userInfo: nil, repeats: false)
+    
+   view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "exit"))
+  }
+  
+  func exit() {
+    dismissViewControllerAnimated(true, completion: nil)
   }
   
   func curvedAnimation(button: UIButton, start: CGPoint, end: CGPoint, control: CGPoint) {
@@ -117,6 +123,11 @@ class SelectFrequencyViewController: UIViewController {
   
   func createHabit(frequency: Habit.Frequency) {
     timer?.invalidate()
+    
+    for recognizer in view.gestureRecognizers! {
+      view.removeGestureRecognizer(recognizer)
+    }
+    
     let ehvc = self.storyboard!.instantiateViewControllerWithIdentifier("EditHabitViewController") as! EditHabitViewController
     ehvc.frequency = frequency
     ehvc.modalPresentationStyle = .Custom
