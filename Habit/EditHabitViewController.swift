@@ -214,7 +214,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
           showAlert(nil,
             message: "Another habit with the same name exists.\nContinue with save?",
             yes: ("Yes", .Default, { normalSave(trimmedName) }),
-            no: ("No", .Cancel, { (alert) in
+            no: ("No", .Cancel, { alert in
               alert.dismissViewControllerAnimated(true, completion: nil)
             }))
         } else {
@@ -254,7 +254,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
         // something
       }
       self.habit = nil
-    }), no: ("Cancel", .Cancel, { (alert) in
+    }), no: ("Cancel", .Cancel, { alert in
       alert.dismissViewControllerAnimated(true, completion: nil)
     }))
   }

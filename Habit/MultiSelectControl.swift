@@ -58,7 +58,7 @@ class MultiSelectControl: UIView {
         button.layer.masksToBounds = true
         buttons.append(button)
         addSubview(button)
-        button.snp_makeConstraints { (make) in
+        button.snp_makeConstraints { make in
           make.centerX.equalTo(self)
           make.centerY.equalTo(self).multipliedBy(CGFloat(1 + 2 * index) / CGFloat(count))
           make.width.equalTo(self)

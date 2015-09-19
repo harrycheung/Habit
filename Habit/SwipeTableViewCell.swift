@@ -349,13 +349,12 @@ class SwipeTableViewCell: UITableViewCell {
         self.screenshotView!.frame = frame
         self.slidingView!.alpha = 0
         self.slideView(direction: direction, percentage: percentage, view: self.activeView)
-      },
-      completion: { (finished: Bool) in
+      }, completion: { finished in
         self.blocks[direction.hashValue]!(self)
         self.recognizer!.enabled = true
         SwipeTableViewCell.swipeCellCount--
         self.delegate?.endSwiping?(self)
-      })
+    })
   }
   
   func reset() {
@@ -383,13 +382,12 @@ class SwipeTableViewCell: UITableViewCell {
           self.slidingView!.alpha = 0
           self.slideView(direction: Direction.Center, percentage: 0, view: self.activeView)
         }
-      },
-      completion: { (finished: Bool) in
+      }, completion: { finished in
         self.isExited = false
         self.uninstallSwipingView()
         self.recognizer!.enabled = true        
         SwipeTableViewCell.swipeCellCount--
-      })
+    })
     
     if !swipable {
       UIView.animateWithDuration(NSTimeInterval(animationDuration)) {

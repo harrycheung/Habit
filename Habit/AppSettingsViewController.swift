@@ -253,10 +253,10 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
       let alert = UIAlertController(title: "Warning",
         message: "Entries after today will be adjusted\nwith new \(timing).",
         preferredStyle: .Alert)
-      alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: { (action) in
+      alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: { action in
         self.performSegueWithIdentifier("SettingsUnwind", sender: self)
       }))
-      alert.addAction(UIAlertAction(title: "Confirm", style: .Destructive, handler: { (action) in
+      alert.addAction(UIAlertAction(title: "Confirm", style: .Destructive, handler: { action in
         HabitApp.startOfDay = Int(self.startOfDayStepper.value)
         HabitApp.endOfDay = Int(self.endOfDayStepper.value)
         self.mvc!.resetFuture()

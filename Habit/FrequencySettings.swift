@@ -54,7 +54,7 @@ class FrequencySettings: UIView, UIPickerViewDelegate, UIPickerViewDataSource, M
     leftOverlay!.translatesAutoresizingMaskIntoConstraints = false
     leftOverlay!.backgroundColor = UIColor.clearColor()
     addSubview(leftOverlay!)
-    leftOverlay!.snp_makeConstraints { (make) in
+    leftOverlay!.snp_makeConstraints { make in
       make.centerX.equalTo(self).multipliedBy(0.5)
       make.centerY.equalTo(self)
       make.width.equalTo(self).multipliedBy(0.5)
@@ -64,7 +64,7 @@ class FrequencySettings: UIView, UIPickerViewDelegate, UIPickerViewDataSource, M
     rightOverlay!.translatesAutoresizingMaskIntoConstraints = false
     rightOverlay!.backgroundColor = UIColor.clearColor()
     addSubview(rightOverlay!)
-    rightOverlay!.snp_makeConstraints { (make) in
+    rightOverlay!.snp_makeConstraints { make in
       make.centerX.equalTo(self).multipliedBy(1.5)
       make.centerY.equalTo(self)
       make.width.equalTo(self).multipliedBy(0.5)

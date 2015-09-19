@@ -40,7 +40,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
     scrollView!.showsVerticalScrollIndicator = false
     scrollView!.showsHorizontalScrollIndicator = false
     addSubview(scrollView!)
-    scrollView!.snp_makeConstraints { (make) in
+    scrollView!.snp_makeConstraints { make in
       make.edges.equalTo(self)
     }
   }
@@ -69,7 +69,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       label.font = UIFont(name: "Bariol-Regular", size: 13.0)!
       label.textColor = UIColor.whiteColor()
       content.addSubview(label)
-      label.snp_makeConstraints { (make) in
+      label.snp_makeConstraints { make in
         make.centerX.equalTo(self.squares[self.squares.endIndex - 1])
         make.centerY.equalTo(content.snp_top).offset(self.TitleBarHeight / 2)
       }
@@ -138,7 +138,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       if offset < frame.width {
         let outerContent = UIView()
         outerContent.addSubview(content)
-        content.snp_makeConstraints { (make) in
+        content.snp_makeConstraints { make in
           make.top.right.equalTo(outerContent)
           make.width.equalTo(offset)
           make.height.equalTo(frame.height)
@@ -148,7 +148,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
         scroll = false
       }
       scrollView!.addSubview(content)
-      content.snp_makeConstraints { (make) in
+      content.snp_makeConstraints { make in
         make.edges.equalTo(scrollView!)
         make.width.equalTo(width)
         make.height.equalTo(self)

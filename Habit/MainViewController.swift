@@ -535,7 +535,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
           let sdvc = self.storyboard!.instantiateViewControllerWithIdentifier("SwipeDialogViewController") as! SwipeDialogViewController
           sdvc.modalTransitionStyle = .CrossDissolve
           sdvc.modalPresentationStyle = .OverCurrentContext
-          sdvc.yesCompletion = { () in
+          sdvc.yesCompletion = {
             var indexPaths: [NSIndexPath] = []
             if entry.due!.compare(NSDate()) == .OrderedDescending {
               entry.skip()
@@ -553,7 +553,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
               })
             })
           }
-          sdvc.noCompletion = { () in
+          sdvc.noCompletion = {
             removeEntry(indexPath, true)
             self.dismissViewControllerAnimated(true, completion: {
               UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
@@ -652,7 +652,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     title.textColor = UIColor.lightGrayColor()
     title.text = section == 0 ? "CURRENT" : "UPCOMING"
     header!.contentView.addSubview(title)
-    title.snp_makeConstraints { (make) in
+    title.snp_makeConstraints { make in
       make.centerY.equalTo(header!.contentView).offset(1)
       make.left.equalTo(header!.contentView).offset(8)
     }
@@ -701,7 +701,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       options: .CurveEaseInOut,
       animations: {
         self.overlayView.alpha = 0
-      }, completion: { (value: Bool) in
+      }, completion: { finished in
         imageView.removeFromSuperview()
     })
   }

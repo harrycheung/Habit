@@ -67,7 +67,7 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
     switchMode.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
     switchMode.setTitle(String.fontAwesomeIconWithName(.Cog), forState: .Normal)
     
-    progressLabel.labelVCBlock = { (label) in
+    progressLabel.labelVCBlock = { label in
       self.progressPercentage.text = "\(Int(label.progress * 100))%"
       self.animateNumbers(label.progress)
     }
