@@ -59,7 +59,6 @@ class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UI
       
       mvc.newButton.hidden = false
       mvc.newButton.alpha = 0
-      ehvc.presentingViewController!.dismissViewControllerAnimated(false, completion: nil)
       UIView.animateWithDuration(HabitApp.TransitionDuration,
         animations: {
           ehvc.view.alpha = 0

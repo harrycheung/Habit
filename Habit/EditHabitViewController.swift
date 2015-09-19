@@ -187,12 +187,14 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
   }
   
   @IBAction func closeView(sender: AnyObject) {
-    // TODO: Documentation says that this should be called on MVC to cause the top most VC to animate. However,
-    // when we do that, it causes the 2nd to top VC to animate. For example, it should be:
-    //
-    // presentingViewController.presentingViewController.dismissViewControllerAnimated...
-    //
-    dismissViewControllerAnimated(true, completion: nil)
+    if habit != nil {
+      presentingViewController!.dismissViewControllerAnimated(true, completion: nil)
+    } else {
+      let mvc = presentingViewController!.presentingViewController!
+      presentingViewController!.dismissViewControllerAnimated(true) {
+        mvc.dismissViewControllerAnimated(false, completion: nil)
+      }
+    }
   }
   
   @IBAction func saveHabit(sender: AnyObject) {
