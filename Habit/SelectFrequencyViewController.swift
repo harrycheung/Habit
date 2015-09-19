@@ -31,7 +31,7 @@ class SelectFrequencyViewController: UIViewController {
   }
   
   override func viewDidLoad() {
-    let buildButton = { (button: UIButton, text: String, frame: CGRect) -> UIButton in
+    let buildButton = { (button: UIButton, text: String, frame: CGRect) in
       button.frame = frame
       button.setTitle(text, forState: .Normal)
       button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
@@ -41,7 +41,7 @@ class SelectFrequencyViewController: UIViewController {
       button.roundify(button.frame.width / 2)
       button.backgroundColor = HabitApp.color
       self.view.addSubview(button)
-      return button
+      self.view.bringSubviewToFront(button)
     }
     
     let buildLabel = { (label: UIButton, text: String) in
@@ -54,6 +54,7 @@ class SelectFrequencyViewController: UIViewController {
       label.sizeToFit()
       label.hidden = true
       self.view.addSubview(label)
+      self.view.bringSubviewToFront(label)
     }
     
     let mvc = presentingViewController as! MainViewController
