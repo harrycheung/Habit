@@ -36,24 +36,37 @@ class HabitDailyTests: XCTestCase {
     let createdAt = calendar.dateFromComponents(components)!
     let habitTimes = Habit(context: context!, name: "A habit", details: "", frequency: .Daily, times: 12, createdAt: createdAt)
     
-    expect(habitTimes.countBeforeCreatedAt(createdAt)) == 6
-    components.hour = 24
-    expect(habitTimes.countBeforeCreatedAt(calendar.dateFromComponents(components)!)) == 6
+    expect(habitTimes.countBefore(createdAt)) == 6
+    components.hour = 1
+    expect(habitTimes.countBefore(calendar.dateFromComponents(components)!)) == 0
     
     let habitParts = Habit(context: context!, name: "A habit", details: "", frequency: .Daily, times: 0, createdAt: createdAt)
     habitParts.partsOfDay = [.Morning, .MidMorning, .MidDay, .Evening]
     
-    expect(habitParts.countBeforeCreatedAt(createdAt)) == 3
-    components.hour = 24
-    expect(habitParts.countBeforeCreatedAt(calendar.dateFromComponents(components)!)) == 3
+    expect(habitParts.countBefore(createdAt)) == 3
+    components.hour = 1
+    expect(habitParts.countBefore(calendar.dateFromComponents(components)!)) == 0
+    components.hour = 16
+    expect(habitParts.countBefore(calendar.dateFromComponents(components)!)) == 3
     
     components.hour = 13
     components.day -= 1
     let yesterday = calendar.dateFromComponents(components)!
     let habitYesterday = Habit(context: context!, name: "A habit", details: "", frequency: .Daily, times: 12, createdAt: yesterday)
     
-    expect(habitYesterday.countBeforeCreatedAt(createdAt)) == 0
+    expect(habitYesterday.countBefore(createdAt)) == 6
     expect(habitYesterday.firstTodo).to(beNil())
+    
+    HabitApp.startOfDay = 8 * 60
+    HabitApp.endOfDay = 9 * 60
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Daily, times: 6, createdAt: NSDate())
+    components.hour = 7
+    expect(habit.countBefore(calendar.dateFromComponents(components)!)) == 0
+    components.hour = 8
+    components.minute = 31
+    expect(habit.countBefore(calendar.dateFromComponents(components)!)) == 3
+    components.hour = 9
+    expect(habit.countBefore(calendar.dateFromComponents(components)!)) == 6
   }
   
   func testDateRange() {

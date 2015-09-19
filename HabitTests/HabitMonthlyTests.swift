@@ -38,18 +38,18 @@ class HabitMonthlyTests: XCTestCase {
     let createdAt = calendar.dateFromComponents(components)!
     let habitTimes = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 5, createdAt: createdAt)
     
-    expect(habitTimes.countBeforeCreatedAt(createdAt)) == 2
+    expect(habitTimes.countBefore(createdAt)) == 2
     components.month = 4
     components.day = 1
-    expect(habitTimes.countBeforeCreatedAt(calendar.dateFromComponents(components)!)) == 2
+    expect(habitTimes.countBefore(calendar.dateFromComponents(components)!)) == 2
     
     let habitParts = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
     habitParts.partsOfMonth = [.Beginning, .End]
     
-    expect(habitParts.countBeforeCreatedAt(createdAt)) == 1
+    expect(habitParts.countBefore(createdAt)) == 1
     components.month = 4
     components.day = 1
-    expect(habitParts.countBeforeCreatedAt(calendar.dateFromComponents(components)!)) == 1
+    expect(habitParts.countBefore(calendar.dateFromComponents(components)!)) == 1
     expect(habitParts.firstTodo).to(beNil())
   }
   

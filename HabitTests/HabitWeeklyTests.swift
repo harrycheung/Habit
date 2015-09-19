@@ -31,21 +31,34 @@ class HabitWeeklyTests: XCTestCase {
   
   func testCountBeforeCreatedWeekly() {
     let calendar = HabitApp.calendar
-    let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: NSDate())
-    components.weekday = 5
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 9
+    components.day = 17 // Thursday
+    components.hour = 12
     let createdAt = calendar.dateFromComponents(components)!
-    let habitTimes = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
+    var habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
     
-    expect(habitTimes.countBeforeCreatedAt(createdAt)) == 3
-    expect(habitTimes.countBeforeCreatedAt(calendar.dateByAddingUnit(.Day, value: 3, toDate: createdAt)!)) == 3
+    expect(habit.countBefore(createdAt)) == 3
+    // Sunday
+    expect(habit.countBefore(calendar.dateByAddingUnit(.Day, value: 3, toDate: createdAt)!)) == 0
     
-    let habitParts = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
-    habitParts.daysOfWeek = [.Sunday, .Tuesday, .Wednesday, .Saturday]
+    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    habit.daysOfWeek = [.Sunday, .Tuesday, .Wednesday, .Saturday]
     
-    expect(habitParts.countBeforeCreatedAt(createdAt)) == 3
-    expect(habitTimes.countBeforeCreatedAt(calendar.dateByAddingUnit(.Day, value: 3, toDate: createdAt)!)) == 3
-    expect(habitParts.firstTodo).to(beNil())
-    expect(habitParts.lastEntry) == createdAt
+    expect(habit.countBefore(createdAt)) == 3
+    // Sunday
+    expect(habit.countBefore(calendar.dateByAddingUnit(.Day, value: 3, toDate: createdAt)!)) == 1
+    expect(habit.firstTodo).to(beNil())
+    expect(habit.lastEntry) == createdAt
+    
+    HabitApp.startOfDay = 8 * 60
+    HabitApp.endOfDay = 9 * 60
+    // 1 hr/10 min
+    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
+    expect(habit.countBefore(createdAt)) == 4
+    components.hour = 3
+    expect(habit.countBefore(calendar.dateFromComponents(components)!)) == 3
   }
   
   func testDateRange() {
@@ -656,6 +669,54 @@ class HabitWeeklyTests: XCTestCase {
     components.minute = 15
     habit.update(calendar.dateFromComponents(components)!)
     expect(habit.totalCount()) == 6
+  }
+  
+  func testFrequencyChange() {
+    let calendar = HabitApp.calendar
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 9
+    components.day = 15 // Tuesday
+    components.hour = 12
+    var createdAt = calendar.dateFromComponents(components)!
+    var habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    habit.daysOfWeek = [.Sunday, .Tuesday, .Wednesday, .Friday]
+    components.minute = 10
+    habit.update(calendar.dateFromComponents(components)!)
+    expect(habit.totalCount()) == 6
+    
+    (habit.entries!.objectAtIndex(0) as! Entry).complete()
+    habit.daysOfWeek = [.Sunday, .Tuesday, .Wednesday, .Thursday, .Friday]
+    var predicate = NSPredicate(format: "due > %@", NSDate())
+    var entriesToDelete = habit.entries!.filteredOrderedSetUsingPredicate(predicate).array as! [Entry]
+    for entry in entriesToDelete {
+      context!.deleteObject(entry)
+    }
+    habit.total = habit.total!.integerValue - entriesToDelete.count
+    context!.refreshAllObjects()
+    components.minute = 20
+    habit.update(calendar.dateFromComponents(components)!)
+    expect(habit.totalCount()) == 7
+    
+    components.day = 5 // Saturday
+    createdAt = calendar.dateFromComponents(components)!
+    habit = Habit(context: context!, name: "Habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    habit.daysOfWeek = [.Monday, .Tuesday, .Wednesday, .Friday, .Saturday]
+    components.day = 19
+    let today = calendar.dateFromComponents(components)!
+    habit.update(today)
+    expect(habit.totalCount()) == 15
+    
+    habit.daysOfWeek = [.Monday, .Tuesday, .Wednesday, .Thursday, .Friday, .Saturday]
+    predicate = NSPredicate(format: "due > %@", today)
+    entriesToDelete = habit.entries!.filteredOrderedSetUsingPredicate(predicate).array as! [Entry]
+    for entry in entriesToDelete {
+      context!.deleteObject(entry)
+    }
+    habit.total = habit.total!.integerValue - entriesToDelete.count
+    context!.refreshAllObjects()
+    habit.update(today)
+    expect(habit.totalCount()) == 16
   }
 
 }

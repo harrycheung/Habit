@@ -20,6 +20,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
   var frequency: Habit.Frequency = .Daily
   var pickerRecognizer: UITapGestureRecognizer?
   var mvc: MainViewController?
+  var warnedFrequency: Bool = false
   
   @IBOutlet weak var name: UITextField!
   @IBOutlet weak var close: UIButton!
@@ -145,15 +146,39 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     view.endEditing(true)
   }
   
-  func enableSave() {
-    if habit != nil && name.text! == habit!.name! && notification.on == habit!.notifyBool {
-      // If name and frequency is the same, test frequency settings
-      save.enabled = (frequencySettings.useTimes &&
-        (!habit!.useTimes || frequencySettings.picker.selectedRowInComponent(0) != habit!.timesInt - 1)) ||
-        (!frequencySettings.useTimes && !frequencySettings.multiSelect.selectedIndexes.isEmpty &&
-          (habit!.useTimes || frequencySettings.multiSelect.selectedIndexes != habit!.partsArray.map { $0 - 1 } ))
+  func frequencyChanged() -> Bool {
+    if habit!.committedValuesForKeys(nil).count == 0 {
+      return false
+    }
+    var valid = true
+    var changed = false
+    if frequencySettings.useTimes {
+      changed = changed || frequencySettings.picker.selectedRowInComponent(0) != habit!.timesInt - 1
     } else {
-      // If either name or frequency is different, check frequency settings too
+      valid = valid && !frequencySettings.multiSelect.selectedIndexes.isEmpty
+      changed = changed || frequencySettings.multiSelect.selectedIndexes != habit!.partsArray.map { $0 - 1 }
+    }
+    if valid && changed && !warnedFrequency {
+      let alert = UIAlertController(title: "Warning",
+        message: "Changes to frequency will\naffect ALL future entries.",
+        preferredStyle: .Alert)
+      alert.addAction(UIAlertAction(title: "Continue", style: .Default, handler: nil))
+      presentViewController(alert, animated: true, completion: nil)
+      warnedFrequency = true
+    }
+    return valid && changed
+  }
+  
+  func enableSave() {
+    if habit != nil {
+      // Old habit
+      var changed = name.text! != habit!.name!
+      changed = changed || notification.on != habit!.notifyBool
+      changed = changed || neverAutoSkip.on != habit!.neverAutoSkipBool
+      changed = changed || frequencyChanged()
+      save.enabled = !name.text!.isEmpty && changed
+    } else {
+      // New habit
       save.enabled = !name.text!.isEmpty
       if !frequencySettings.useTimes {
         save.enabled = save.enabled && !frequencySettings.multiSelect.selectedIndexes.isEmpty
@@ -172,6 +197,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
   
   @IBAction func saveHabit(sender: AnyObject) {
     let save = {
+      let frequencyChanged = self.frequencyChanged()
       self.habit!.frequency = self.frequency
       if self.frequencySettings!.useTimes {
         self.habit!.times = self.frequencySettings!.picker!.selectedRowInComponent(0) + 1
@@ -181,7 +207,22 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
       }
       self.habit!.notifyBool = self.notification.on
       self.habit!.neverAutoSkip = self.neverAutoSkip.on
+      if frequencyChanged {
+        let predicate = NSPredicate(format: "due > %@", NSDate())
+        let entriesToDelete = self.habit!.entries!.filteredOrderedSetUsingPredicate(predicate).array as! [Entry]
+        for entry in entriesToDelete {
+          //print("delete: \(entry.due!)")
+          HabitApp.moContext.deleteObject(entry)
+        }
+        self.habit!.total = self.habit!.total!.integerValue - entriesToDelete.count
+        self.mvc!.removeEntries(entriesToDelete)
+        self.habit!.recalculateHistory(onDate: NSDate())
+      }
       self.habit!.update(NSDate())
+      if frequencyChanged {
+        let predicate = NSPredicate(format: "due > %@", NSDate())
+        self.mvc!.insertEntries(self.habit!.entries!.filteredOrderedSetUsingPredicate(predicate).array as! [Entry])
+      }
       do {
         try HabitApp.moContext.save()
       } catch let error as NSError {
@@ -221,7 +262,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
           self.habit =
             Habit(context: HabitApp.moContext, name: trimmedName, details: "", frequency: .Daily, times: 0, createdAt: NSDate())
           save()
-          self.mvc!.insertEntries(self.habit!)
+          self.mvc!.insertHabit(self.habit!)
           transition()
         }
       } catch let error as NSError {
@@ -238,7 +279,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
         HabitApp.removeNotification(entry)
       }
       
-      self.mvc!.removeEntries(self.habit!)
+      self.mvc!.removeHabit(self.habit!)
       self.mvc!.refreshNotifications()
       // Hide ShowHabitViewController
       self.presentingViewController!.view.hidden = true

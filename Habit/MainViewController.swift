@@ -39,7 +39,7 @@
 // 30. done - Animate filling of history box
 // 31. done - Custom start and finish day
 // 32. done - Icon
-// 33: Delete history when deleting entries new frequency
+// 33: done - Delete history when deleting entries new frequency
 // 34: done - Long press on frequency selection shows long word
 // 35: Start app first time with example habit
 // 36: Pause habit
@@ -244,8 +244,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // Dispose of any resources that can be recreated.
   }
   
-  func insertEntries(habit: Habit) {
+  func insertHabit(habit: Habit) {
     let upcomingCount = upcoming.count
+    tableView.beginUpdates()
     reloadEntries()
     var inserts: [NSIndexPath] = []
     for (index, entry) in entries.enumerate() {
@@ -258,7 +259,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         inserts.append(NSIndexPath(forItem: index, inSection: 1))
       }
     }
-    tableView.beginUpdates()
     if HabitApp.upcoming && upcomingCount == 0 && upcoming.count > 0 {
       tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .Top)
     }
@@ -266,7 +266,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     tableView.endUpdates()
   }
   
-  func removeEntries(habit: Habit) {
+  func removeHabit(habit: Habit) {
+    tableView.beginUpdates()
     var removes: [NSIndexPath] = []
     for (index, entry) in entries.enumerate() {
       if entry.habit! == habit {
@@ -280,7 +281,49 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       }
     }
     upcoming = upcoming.filter { $0.habit! != habit }
+    if HabitApp.upcoming && upcoming.count == 0 {
+      tableView.deleteSections(NSIndexSet(index: 1), withRowAnimation: .Top)
+    }
+    tableView.deleteRowsAtIndexPaths(removes, withRowAnimation: .Top)
+    tableView.endUpdates()
+  }
+  
+  func insertEntries(newEntries: [Entry]) {
+    let upcomingCount = upcoming.count
     tableView.beginUpdates()
+    reloadEntries()
+    var inserts: [NSIndexPath] = []
+    for (index, entry) in entries.enumerate() {
+      if newEntries.contains(entry) {
+        inserts.append(NSIndexPath(forItem: index, inSection: 0))
+      }
+    }
+    for (index, entry) in upcoming.enumerate() {
+      if newEntries.contains(entry) {
+        inserts.append(NSIndexPath(forItem: index, inSection: 1))
+      }
+    }
+    if HabitApp.upcoming && upcomingCount == 0 && upcoming.count > 0 {
+      tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .Top)
+    }
+    tableView.insertRowsAtIndexPaths(inserts, withRowAnimation: .Top)
+    tableView.endUpdates()
+  }
+  
+  func removeEntries(oldEntries: [Entry]) {
+    var removes: [NSIndexPath] = []
+    for (index, entry) in entries.enumerate() {
+      if oldEntries.contains(entry) {
+        removes.append(NSIndexPath(forItem: index, inSection: 0))
+      }
+    }
+    for (index, entry) in upcoming.enumerate() {
+      if oldEntries.contains(entry) {
+        removes.append(NSIndexPath(forItem: index, inSection: 1))
+      }
+    }
+    tableView.beginUpdates()
+    reloadEntries()
     if HabitApp.upcoming && upcoming.count == 0 {
       tableView.deleteSections(NSIndexSet(index: 1), withRowAnimation: .Top)
     }
@@ -607,6 +650,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       button.sizeToFit()
       button.roundify(4)
       cell.cantSwipeLabel = button
+    } else {
+      cell.swipable = true
     }
     return cell
   }
@@ -616,6 +661,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    // TODO: need dispatch?
     dispatch_async(dispatch_get_main_queue()) {
       self.activeCell = tableView.cellForRowAtIndexPath(indexPath) as? HabitTableViewCell
       let shvc = self.storyboard!.instantiateViewControllerWithIdentifier("ShowHabitViewController") as! ShowHabitViewController
