@@ -395,7 +395,7 @@
                                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </label>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e0Y-XF-jWk" customClass="HabitHistory" customModule="Habit" customModuleProvider="target">
-                                                            <rect key="frame" x="15" y="107" width="274" height="178"/>
+                                                            <rect key="frame" x="15" y="107" width="274" height="183"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                             <connections>
                                                                 <outlet property="delegate" destination="fuZ-7k-oQj" id="kLG-1U-wTP"/>
@@ -428,7 +428,7 @@
                                                         <constraint firstItem="W4j-ld-gLm" firstAttribute="top" secondItem="LRA-0y-pjI" secondAttribute="bottom" constant="8" id="aIs-kR-NY8"/>
                                                         <constraint firstItem="WIj-DL-2OL" firstAttribute="centerY" secondItem="Nbs-xv-gfN" secondAttribute="centerY" constant="2" id="g5W-NA-xGI"/>
                                                         <constraint firstItem="4pu-p3-7re" firstAttribute="leading" secondItem="LRA-0y-pjI" secondAttribute="leading" id="gCe-J9-Hya"/>
-                                                        <constraint firstAttribute="bottom" secondItem="e0Y-XF-jWk" secondAttribute="bottom" constant="15" id="lfw-V7-aUu"/>
+                                                        <constraint firstAttribute="bottom" secondItem="e0Y-XF-jWk" secondAttribute="bottom" constant="10" id="lfw-V7-aUu"/>
                                                         <constraint firstItem="LRA-0y-pjI" firstAttribute="leading" secondItem="Nbs-xv-gfN" secondAttribute="trailing" constant="15" id="mYa-e7-JLE"/>
                                                         <constraint firstAttribute="trailing" secondItem="e0Y-XF-jWk" secondAttribute="trailing" constant="15" id="nrw-76-gmh"/>
                                                         <constraint firstItem="Nbs-xv-gfN" firstAttribute="bottom" secondItem="4pu-p3-7re" secondAttribute="bottom" id="p3V-bQ-nIi"/>

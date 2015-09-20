@@ -50,7 +50,7 @@
 // 41: done - Add touch listener to overlay view on MVC
 // 42: Update pods to xcode 7
 // 43: Debug hide keyboard in new habit
-// 44: Fix border in habit history
+// 44: done - Fix border in habit history
 
 import UIKit
 import CoreData

@@ -16,7 +16,6 @@ import SnapKit
   
 }
 
-@IBDesignable
 class HabitHistory: UIView, UIScrollViewDelegate {
   
   @IBOutlet var delegate: HabitHistoryDelegate?
@@ -89,7 +88,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       }
     }
     
-    let contentHeight = frame.height - TitleBarHeight
+    let contentHeight = frame.height - TitleBarHeight - Enlargement
     if habit != nil && squares.isEmpty {
       let calendar = HabitApp.calendar
       var side: CGFloat = 0
@@ -158,7 +157,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
           make.height.equalTo(frame.height)
         }
         content = outerContent
-        width = frame.width
+        width = frame.width - 2 * Enlargement
         scroll = false
       }
       scrollView!.addSubview(content)
@@ -167,9 +166,10 @@ class HabitHistory: UIView, UIScrollViewDelegate {
         make.width.equalTo(width)
         make.height.equalTo(self)
       }
+      scrollView!.contentInset = UIEdgeInsetsMake(0, Enlargement, 0, Enlargement)
       scrollView!.layoutIfNeeded()
       if scroll {
-        scrollView!.setContentOffset(CGPointMake(width - scrollView!.frame.width, 0), animated: false)
+        scrollView!.setContentOffset(CGPointMake(width - scrollView!.frame.width + Enlargement, 0), animated: false)
       }
       
       var delay = 0.1
@@ -200,29 +200,10 @@ class HabitHistory: UIView, UIScrollViewDelegate {
     let square = recognizer.view as! SquareView
     if !square.history!.pausedBool {
       clearSelection()
-      let calendar = HabitApp.calendar
       let frame = square.frame
-      var (xOffset, yOffset, widthOffset, heightOffset) = (-Enlargement, CGFloat(0), 2 * Enlargement, 2 * Enlargement)
-      if habit!.frequency == .Daily {
-        let components = calendar.components([.Weekday], fromDate: square.history!.date!)
-        if components.weekday != 1 {
-          if components.weekday == 7 {
-            yOffset += -2 * Enlargement
-          } else {
-            yOffset -= Enlargement
-          }
-        }
-      } else {
-        heightOffset = 0
-      }
-      let granularity: NSCalendarUnit = habit!.frequency == .Monthly ? .Month : .WeekOfYear
-      if calendar.isDate(square.history!.date!, equalToDate: NSDate(), toUnitGranularity: granularity) {
-        xOffset -= Enlargement
-      } else if calendar.isDate(square.history!.date!, equalToDate: habit!.createdAt!, toUnitGranularity: granularity) {
-        xOffset += Enlargement
-      }
       square.frame = CGRectMake(
-        frame.origin.x + xOffset, frame.origin.y + yOffset, frame.width + widthOffset, frame.height + heightOffset)
+        frame.origin.x - Enlargement, frame.origin.y - Enlargement,
+        frame.width + 2 * Enlargement, frame.height + 2 * Enlargement)
       square.layer.borderColor = UIColor.blackColor().CGColor
       square.layer.borderWidth = SelectedBorder
       square.superview!.bringSubviewToFront(square)
@@ -232,31 +213,12 @@ class HabitHistory: UIView, UIScrollViewDelegate {
   }
   
   func clearSelection() {
-    let calendar = HabitApp.calendar
     if let square = selectedSquare {
       square.layer.borderColor = UIColor.clearColor().CGColor
       let frame = square.frame
-      var (xOffset, yOffset, widthOffset, heightOffset) = (Enlargement, CGFloat(0), -2 * Enlargement, -2 * Enlargement)
-      if habit!.frequency == .Daily {
-        let components = calendar.components([.Weekday], fromDate: square.history!.date!)
-        if components.weekday != 1 {
-          if components.weekday == 7 {
-            yOffset += 2 * Enlargement
-          } else {
-            yOffset += Enlargement
-          }
-        }
-      } else {
-        heightOffset = 0
-      }
-      let granularity: NSCalendarUnit = habit!.frequency == .Monthly ? .Month : .WeekOfYear
-      if calendar.isDate(square.history!.date!, equalToDate: NSDate(), toUnitGranularity: granularity) {
-        xOffset += Enlargement
-      } else if calendar.isDate(square.history!.date!, equalToDate: habit!.createdAt!, toUnitGranularity: granularity) {
-        xOffset -= Enlargement
-      }
       square.frame = CGRectMake(
-        frame.origin.x + xOffset, frame.origin.y + yOffset, frame.width + widthOffset, frame.height + heightOffset)
+        frame.origin.x + Enlargement, frame.origin.y + Enlargement,
+        frame.width - 2 * Enlargement, frame.height - 2 * Enlargement)
       selectedSquare = nil
     }
   }
