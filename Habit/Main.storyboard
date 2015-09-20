@@ -51,6 +51,7 @@
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
+            <string>Bariol-Regular</string>
         </mutableArray>
         <mutableArray key="FontAwesome.otf">
             <string>FontAwesome</string>
@@ -317,7 +318,7 @@
                                                         <action selector="goToSettings" destination="fuZ-7k-oQj" eventType="touchUpInside" id="o74-Lv-IIH"/>
                                                     </connections>
                                                 </button>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UDR-HS-m2b">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UDR-HS-m2b">
                                                     <rect key="frame" x="133" y="9" width="38.5" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="21" id="oey-fv-0W1"/>
@@ -329,7 +330,7 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1FL-kd-WCJ" userLabel="Stats">
                                                     <rect key="frame" x="0.0" y="55" width="304" height="300"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Nbs-xv-gfN" customClass="KAProgressLabel">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nbs-xv-gfN" customClass="KAProgressLabel">
                                                             <rect key="frame" x="15" y="0.0" width="92" height="92"/>
                                                             <gestureRecognizers/>
                                                             <constraints>
@@ -339,68 +340,68 @@
                                                                 <outletCollection property="gestureRecognizers" destination="RDt-Og-eI0" appends="YES" id="G5d-7m-MyF"/>
                                                             </connections>
                                                         </view>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="0%" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WIj-DL-2OL">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0%" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WIj-DL-2OL">
                                                             <rect key="frame" x="43" y="35" width="36" height="26"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Bold" family="Bariol" pointSize="26"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="All time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hdc-Rn-Qe6">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hdc-Rn-Qe6">
                                                             <rect key="frame" x="46" y="59" width="30.5" height="10"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="10"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Current streak" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XaG-Rd-09s">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current streak" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XaG-Rd-09s">
                                                             <rect key="frame" x="122" y="50" width="95" height="17"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Skipped" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W4j-ld-gLm">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Skipped" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W4j-ld-gLm">
                                                             <rect key="frame" x="122" y="25" width="54.5" height="17"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JAf-Dl-Cfa">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JAf-Dl-Cfa">
                                                             <rect key="frame" x="252" y="50" width="36.5" height="17"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qT7-ha-qFs">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qT7-ha-qFs">
                                                             <rect key="frame" x="252" y="75" width="36.5" height="17"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6qS-vQ-Vac">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6qS-vQ-Vac">
                                                             <rect key="frame" x="252" y="0.0" width="36.5" height="17"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VSf-GP-wQ1">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VSf-GP-wQ1">
                                                             <rect key="frame" x="252" y="25" width="36.5" height="17"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Longest streak" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4pu-p3-7re" userLabel="Longest streak">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Longest streak" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4pu-p3-7re" userLabel="Longest streak">
                                                             <rect key="frame" x="122" y="75" width="98" height="17"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </label>
-                                                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e0Y-XF-jWk" customClass="HabitHistory" customModule="Habit" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e0Y-XF-jWk" customClass="HabitHistory" customModule="Habit" customModuleProvider="target">
                                                             <rect key="frame" x="15" y="107" width="274" height="178"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                             <connections>
                                                                 <outlet property="delegate" destination="fuZ-7k-oQj" id="kLG-1U-wTP"/>
                                                             </connections>
                                                         </view>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Completed" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LRA-0y-pjI" userLabel="Completed">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Completed" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LRA-0y-pjI" userLabel="Completed">
                                                             <rect key="frame" x="122" y="0.0" width="74.5" height="17"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -571,13 +572,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aDr-sj-Whg">
-                                <rect key="frame" x="8" y="53" width="304" height="462"/>
+                                <rect key="frame" x="8" y="30" width="304" height="508"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="j5d-Pf-Q6a">
-                                    <rect key="frame" x="0.0" y="0.0" width="304" height="462"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="304" height="508"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J75-im-ZHi" userLabel="Habit View">
-                                            <rect key="frame" x="0.0" y="0.0" width="304" height="462"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="304" height="508"/>
                                             <subviews>
                                                 <view alpha="0.20000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="atw-2D-5S1" userLabel="Toolbar View">
                                                     <rect key="frame" x="0.0" y="0.0" width="304" height="40"/>
@@ -616,11 +617,11 @@
                                                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                                     <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                                     <connections>
-                                                        <action selector="nameChanged:" destination="Y0I-la-TF4" eventType="editingDidEnd" id="H1X-hA-7hp"/>
+                                                        <action selector="changed:" destination="Y0I-la-TF4" eventType="editingDidEnd" id="Pka-9b-Qhn"/>
                                                     </connections>
                                                 </textField>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dww-Oy-GGW" userLabel="Settings">
-                                                    <rect key="frame" x="0.0" y="82" width="304" height="380"/>
+                                                    <rect key="frame" x="0.0" y="82" width="304" height="426"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3mp-jN-SmJ" userLabel="Splitter">
                                                             <rect key="frame" x="8" y="0.0" width="288" height="1"/>
@@ -630,57 +631,69 @@
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dNj-gF-csY" customClass="FrequencySettings" customModule="Habit" customModuleProvider="target">
-                                                            <rect key="frame" x="15" y="9" width="274" height="227"/>
+                                                            <rect key="frame" x="15" y="9" width="274" height="229"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KhP-Lc-a6j" userLabel="Splitter">
-                                                            <rect key="frame" x="8" y="244" width="288" height="1"/>
+                                                            <rect key="frame" x="8" y="246" width="288" height="1"/>
                                                             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="1" id="edO-R8-FR8"/>
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Send notification" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dEW-FH-HvN">
-                                                            <rect key="frame" x="15" y="251" width="125" height="31"/>
+                                                            <rect key="frame" x="15" y="253" width="125" height="31"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3JM-6P-5zg">
-                                                            <rect key="frame" x="240" y="251" width="51" height="31"/>
+                                                            <rect key="frame" x="240" y="253" width="51" height="31"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="31" id="8Rm-Jf-KgR"/>
                                                                 <constraint firstAttribute="width" constant="49" id="iSx-5j-kvn"/>
                                                             </constraints>
                                                             <connections>
-                                                                <action selector="notifyChanged:" destination="Y0I-la-TF4" eventType="valueChanged" id="4ES-jl-QAh"/>
+                                                                <action selector="changed:" destination="Y0I-la-TF4" eventType="valueChanged" id="YAl-aY-gxj"/>
                                                             </connections>
                                                         </switch>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Never automatically skip" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oXD-iv-8Ie">
-                                                            <rect key="frame" x="15" y="303" width="182.5" height="19"/>
+                                                            <rect key="frame" x="15" y="305" width="182.5" height="19"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="rg2-TA-vhf">
-                                                            <rect key="frame" x="240" y="297" width="51" height="31"/>
+                                                            <rect key="frame" x="240" y="299" width="51" height="31"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="31" id="IQG-ZT-Msq"/>
                                                                 <constraint firstAttribute="width" constant="49" id="eFH-1f-4Y7"/>
                                                             </constraints>
                                                             <connections>
-                                                                <action selector="notifyChanged:" destination="Y0I-la-TF4" eventType="valueChanged" id="txM-Zs-fpW"/>
+                                                                <action selector="changed:" destination="Y0I-la-TF4" eventType="valueChanged" id="BU9-9P-rJn"/>
+                                                            </connections>
+                                                        </switch>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pause habit" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7EZ-fg-SzK">
+                                                            <rect key="frame" x="15" y="351" width="87" height="19"/>
+                                                            <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Oeo-e6-TcC">
+                                                            <rect key="frame" x="240" y="345" width="51" height="31"/>
+                                                            <connections>
+                                                                <action selector="changed:" destination="Y0I-la-TF4" eventType="valueChanged" id="MKu-B5-Bel"/>
                                                             </connections>
                                                         </switch>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bwZ-0K-KTS" userLabel="Splitter">
-                                                            <rect key="frame" x="8" y="336" width="288" height="1"/>
+                                                            <rect key="frame" x="8" y="382" width="288" height="1"/>
                                                             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="1" id="jid-N8-gbS"/>
                                                             </constraints>
                                                         </view>
                                                         <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="luf-9z-XNg">
-                                                            <rect key="frame" x="152" y="337" width="151.5" height="43"/>
+                                                            <rect key="frame" x="152" y="383" width="151.5" height="43"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                                             <state key="normal" title="Save"/>
                                                             <state key="disabled">
@@ -692,7 +705,7 @@
                                                             </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CLe-rJ-teb">
-                                                            <rect key="frame" x="0.0" y="337" width="152" height="43"/>
+                                                            <rect key="frame" x="0.0" y="383" width="152" height="43"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="43" id="bD1-6X-HKV"/>
                                                                 <constraint firstAttribute="width" priority="997" id="lH1-3T-LRT"/>
@@ -728,15 +741,20 @@
                                                         <constraint firstItem="CLe-rJ-teb" firstAttribute="leading" secondItem="Dww-Oy-GGW" secondAttribute="leading" id="PKF-rw-4AO"/>
                                                         <constraint firstAttribute="bottom" secondItem="CLe-rJ-teb" secondAttribute="bottom" id="PMy-4C-wIz"/>
                                                         <constraint firstItem="luf-9z-XNg" firstAttribute="height" secondItem="CLe-rJ-teb" secondAttribute="height" id="QC6-fZ-pqB"/>
+                                                        <constraint firstAttribute="trailing" secondItem="Oeo-e6-TcC" secondAttribute="trailing" constant="15" id="RIw-qc-TQa"/>
+                                                        <constraint firstItem="bwZ-0K-KTS" firstAttribute="top" secondItem="Oeo-e6-TcC" secondAttribute="bottom" constant="6" id="Ty6-wi-szC"/>
                                                         <constraint firstItem="dNj-gF-csY" firstAttribute="leading" secondItem="Dww-Oy-GGW" secondAttribute="leading" constant="15" id="Ubd-Cd-wuR"/>
+                                                        <constraint firstItem="7EZ-fg-SzK" firstAttribute="centerY" secondItem="Oeo-e6-TcC" secondAttribute="centerY" id="WNB-tO-euB"/>
                                                         <constraint firstAttribute="trailing" secondItem="bwZ-0K-KTS" secondAttribute="trailing" constant="8" id="WfK-Sg-FN1"/>
                                                         <constraint firstAttribute="bottom" secondItem="luf-9z-XNg" secondAttribute="bottom" id="agw-vp-xux"/>
                                                         <constraint firstItem="dEW-FH-HvN" firstAttribute="centerY" secondItem="3JM-6P-5zg" secondAttribute="centerY" id="bkz-pU-H4a"/>
                                                         <constraint firstAttribute="trailing" secondItem="KhP-Lc-a6j" secondAttribute="trailing" constant="8" id="fZ2-rE-S4L"/>
                                                         <constraint firstAttribute="trailing" secondItem="rg2-TA-vhf" secondAttribute="trailing" constant="15" id="gho-it-cPv"/>
                                                         <constraint firstItem="bwZ-0K-KTS" firstAttribute="bottom" secondItem="CLe-rJ-teb" secondAttribute="top" id="kVU-mz-Inl"/>
+                                                        <constraint firstItem="7EZ-fg-SzK" firstAttribute="leading" secondItem="Dww-Oy-GGW" secondAttribute="leading" constant="15" id="m0o-v6-fvk"/>
                                                         <constraint firstAttribute="trailing" secondItem="3JM-6P-5zg" secondAttribute="trailing" constant="15" id="mnw-v6-uL4"/>
                                                         <constraint firstItem="KhP-Lc-a6j" firstAttribute="leading" secondItem="Dww-Oy-GGW" secondAttribute="leading" constant="8" id="nqk-L4-WS2"/>
+                                                        <constraint firstItem="Oeo-e6-TcC" firstAttribute="top" secondItem="rg2-TA-vhf" secondAttribute="bottom" constant="15" id="qLd-5r-LQp"/>
                                                         <constraint firstItem="bwZ-0K-KTS" firstAttribute="leading" secondItem="Dww-Oy-GGW" secondAttribute="leading" constant="8" id="s0y-Ju-JTt"/>
                                                         <constraint firstItem="dNj-gF-csY" firstAttribute="top" secondItem="3mp-jN-SmJ" secondAttribute="bottom" constant="8" id="uW8-Yr-9IG"/>
                                                         <constraint firstItem="bwZ-0K-KTS" firstAttribute="top" secondItem="3JM-6P-5zg" secondAttribute="bottom" constant="6" id="vAR-ao-v10"/>
@@ -744,6 +762,7 @@
                                                     </constraints>
                                                     <variation key="default">
                                                         <mask key="constraints">
+                                                            <exclude reference="EUq-CA-YyQ"/>
                                                             <exclude reference="vAR-ao-v10"/>
                                                         </mask>
                                                     </variation>
@@ -754,7 +773,7 @@
                                             <constraints>
                                                 <constraint firstItem="qGu-s1-VT2" firstAttribute="centerX" secondItem="atw-2D-5S1" secondAttribute="centerX" id="1UT-lS-653"/>
                                                 <constraint firstItem="atw-2D-5S1" firstAttribute="leading" secondItem="J75-im-ZHi" secondAttribute="leading" id="84k-Sz-v2L"/>
-                                                <constraint firstAttribute="height" constant="462" id="O3O-nU-CU5"/>
+                                                <constraint firstAttribute="height" constant="508" id="O3O-nU-CU5"/>
                                                 <constraint firstItem="OJE-rZ-KfC" firstAttribute="centerY" secondItem="atw-2D-5S1" secondAttribute="centerY" id="Olt-23-ux3"/>
                                                 <constraint firstAttribute="trailing" secondItem="atw-2D-5S1" secondAttribute="trailing" id="QYM-Fl-YCf"/>
                                                 <constraint firstItem="Dww-Oy-GGW" firstAttribute="top" secondItem="krz-Bl-NLo" secondAttribute="bottom" constant="6" id="SoH-UX-1s3"/>
@@ -802,7 +821,8 @@
                         <outlet property="height" destination="O3O-nU-CU5" id="nY8-wS-Jhb"/>
                         <outlet property="name" destination="krz-Bl-NLo" id="JhX-AS-V6v"/>
                         <outlet property="neverAutoSkip" destination="rg2-TA-vhf" id="WS2-9y-TCd"/>
-                        <outlet property="notification" destination="3JM-6P-5zg" id="fer-TJ-Gb3"/>
+                        <outlet property="notify" destination="3JM-6P-5zg" id="fNc-eT-Z9t"/>
+                        <outlet property="paused" destination="Oeo-e6-TcC" id="EPp-iI-JdC"/>
                         <outlet property="save" destination="luf-9z-XNg" id="pV4-8U-sO3"/>
                         <outlet property="toolbar" destination="atw-2D-5S1" id="2CH-CW-RYc"/>
                     </connections>
@@ -915,23 +935,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view tag="77" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JCU-ZP-Prf" userLabel="Padding View">
+                            <view tag="77" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JCU-ZP-Prf" userLabel="Padding View">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
                                 <gestureRecognizers/>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="Le3-w1-tAL" appends="YES" id="edV-Tu-iKW"/>
                                 </connections>
                             </view>
-                            <visualEffectView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PzV-JR-XSz">
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PzV-JR-XSz">
                                 <rect key="frame" x="0.0" y="30" width="320" height="568"/>
                                 <view key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" id="52b-jT-Us0">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HCb-SO-po6" userLabel="Padding View">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HCb-SO-po6" userLabel="Padding View">
                                             <rect key="frame" x="0.0" y="538" width="320" height="30"/>
                                         </view>
-                                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R0n-e1-r1L" userLabel="Content View">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R0n-e1-r1L" userLabel="Content View">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="538"/>
                                             <subviews>
                                                 <view alpha="0.10000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OHx-7v-lRk" userLabel="Toolbar View">
@@ -941,7 +961,7 @@
                                                         <constraint firstAttribute="height" constant="43" id="Uet-9U-FMX"/>
                                                     </constraints>
                                                 </view>
-                                                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Settings" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H4x-2L-0JJ">
+                                                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Settings" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H4x-2L-0JJ">
                                                     <rect key="frame" x="0.0" y="12" width="320" height="19"/>
                                                     <gestureRecognizers/>
                                                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
@@ -973,7 +993,7 @@
                                                         <action selector="upcomingChanged:" destination="g8Q-E4-o4d" eventType="valueChanged" id="eB3-NP-eVb"/>
                                                     </connections>
                                                 </switch>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Show upcoming" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sGN-tb-OEo">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show upcoming" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sGN-tb-OEo">
                                                     <rect key="frame" x="15" y="122" width="120.5" height="19"/>
                                                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -985,7 +1005,7 @@
                                                         <action selector="notificationChanged:" destination="g8Q-E4-o4d" eventType="valueChanged" id="vy6-uS-L3I"/>
                                                     </connections>
                                                 </switch>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Silence notifications" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9si-Ri-hqh">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Silence notifications" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9si-Ri-hqh">
                                                     <rect key="frame" x="15" y="168" width="148.5" height="19"/>
                                                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -998,7 +1018,7 @@
                                                         <action selector="notificationChanged:" destination="g8Q-E4-o4d" eventType="valueChanged" id="r4A-k1-Zc3"/>
                                                     </connections>
                                                 </switch>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Automatically skip old habits" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ef9-Y2-A8O">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Automatically skip old habits" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ef9-Y2-A8O">
                                                     <rect key="frame" x="15" y="214" width="214" height="19"/>
                                                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1014,13 +1034,13 @@
                                                                 <action selector="autoSkipDelayChanged:" destination="g8Q-E4-o4d" eventType="valueChanged" id="WsY-AP-6cU"/>
                                                             </connections>
                                                         </stepper>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Past due: " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Hv-pj-eeI">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Past due: " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Hv-pj-eeI">
                                                             <rect key="frame" x="30" y="14" width="64.5" height="17"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="immediately" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W1m-Lm-hJQ">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="immediately" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W1m-Lm-hJQ">
                                                             <rect key="frame" x="94" y="14" width="82.5" height="17"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1045,7 +1065,7 @@
                                                         <constraint firstAttribute="height" constant="20" id="8WQ-S7-psF"/>
                                                     </constraints>
                                                 </view>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Begins: " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="317-AH-BYp">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Begins: " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="317-AH-BYp">
                                                     <rect key="frame" x="15" y="325" width="58" height="19"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="58" id="Bn8-Hc-11d"/>
@@ -1054,13 +1074,13 @@
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="midnight" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aLY-3X-4l2">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="midnight" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aLY-3X-4l2">
                                                     <rect key="frame" x="73" y="325" width="130" height="19"/>
                                                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="BEGINNING / END OF DAY" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Zo-B1-nfF">
+                                                <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BEGINNING / END OF DAY" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Zo-B1-nfF">
                                                     <rect key="frame" x="15" y="294" width="139" height="13"/>
                                                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="13"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1089,13 +1109,13 @@
                                                         <constraint firstAttribute="height" constant="20" id="O8S-Ib-Crl"/>
                                                     </constraints>
                                                 </view>
-                                                <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="TIME ZONE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4A1-g1-3bd">
+                                                <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TIME ZONE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4A1-g1-3bd">
                                                     <rect key="frame" x="15" y="410" width="60.5" height="13"/>
                                                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="13"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Home" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T2g-FY-qzd">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Home" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T2g-FY-qzd">
                                                     <rect key="frame" x="15" y="435" width="54" height="19"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="54" id="qmG-k4-4VC"/>
@@ -1104,19 +1124,19 @@
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="PDT" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lal-wH-Fcp">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PDT" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lal-wH-Fcp">
                                                     <rect key="frame" x="69" y="435" width="236" height="19"/>
                                                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="America/Los_Angeles" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hgD-uR-vdM">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="America/Los_Angeles" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hgD-uR-vdM">
                                                     <rect key="frame" x="69" y="458" width="236" height="19"/>
                                                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NY6-NV-k5J" userLabel="Local">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NY6-NV-k5J" userLabel="Local">
                                                     <rect key="frame" x="0.0" y="485" width="320" height="38"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Local" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zJs-gp-HU3">
@@ -1160,13 +1180,13 @@
                                                         <constraint firstItem="fPs-s6-Uau" firstAttribute="top" secondItem="R8a-6w-nNk" secondAttribute="bottom" constant="4" id="ye7-fP-B4M"/>
                                                     </constraints>
                                                 </view>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="midnight" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="que-dV-kGb">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="midnight" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="que-dV-kGb">
                                                     <rect key="frame" x="73" y="369" width="130" height="19"/>
                                                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Ends: " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u6e-aW-mrs">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ends: " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u6e-aW-mrs">
                                                     <rect key="frame" x="15" y="369" width="45" height="19"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="45" id="cC6-gb-3G5"/>

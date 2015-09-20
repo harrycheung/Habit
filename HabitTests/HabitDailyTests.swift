@@ -703,4 +703,49 @@ class HabitDailyTests: XCTestCase {
     expect(habit.totalCount()) == 4
   }
   
+  func testPause() {
+    HabitApp.startOfDay = 8 * 60
+    HabitApp.endOfDay = 20 * 60
+    
+    let calendar = HabitApp.calendar
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 8
+    components.day = 27
+    components.hour = 6
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Daily, times: 12, createdAt: createdAt)
+    components.minute = 10
+    habit.update(calendar.dateFromComponents(components)!)
+    expect(habit.totalCount()) == 24
+    components.hour = 12
+    habit.skipBefore(calendar.dateFromComponents(components)!)
+    habit.deleteEntries(after: calendar.dateFromComponents(components)!)
+    context!.refreshAllObjects()
+    expect(habit.firstTodo).to(beNil())
+    expect(habit.totalCount()) == 4
+    components.hour = 18
+    habit.generateEntries(after: calendar.dateFromComponents(components)!)
+    expect(habit.totalCount()) == 4 + 2 + 12
+    
+    habit.deleteEntries(after: calendar.dateFromComponents(components)!)
+    context!.refreshAllObjects()
+    habit.pausedBool = true
+    components.day = 31
+    habit.update(calendar.dateFromComponents(components)!)
+    habit.pausedBool = false
+    habit.generateEntries(after: calendar.dateFromComponents(components)!)
+    expect(habit.totalCount()) == 18
+    let histories = habit.histories!.array as! [History]
+    expect(calendar.components([.Day], fromDate: histories[0].date!).day) == 27
+    expect(calendar.components([.Day], fromDate: histories[1].date!).day) == 28
+    expect(histories[1].pausedBool).to(beTrue())
+    expect(calendar.components([.Day], fromDate: histories[2].date!).day) == 29
+    expect(histories[2].pausedBool).to(beTrue())
+    expect(calendar.components([.Day], fromDate: histories[3].date!).day) == 30
+    expect(histories[3].pausedBool).to(beTrue())
+    expect(calendar.components([.Day], fromDate: histories[4].date!).day) == 31
+    expect(calendar.components([.Day], fromDate: histories[5].date!).day) == 1
+  }
+  
 }

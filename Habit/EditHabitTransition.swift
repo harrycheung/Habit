@@ -26,7 +26,7 @@ class EditHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIVi
   }
   
   func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
-    return 0.3
+    return HabitApp.TransitionDuration
   }
   
   func animateTransition(transitionContext: UIViewControllerContextTransitioning) {

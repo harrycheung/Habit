@@ -58,6 +58,20 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       content.addSubview(square)
       self.squares.append(square)
       
+      if history.pausedBool {
+        let mask = CAShapeLayer()
+        let path = CGPathCreateMutable()
+        var left: CGFloat = 4
+        let top = frame.height / 2 - frame.width / 2 + 4
+        CGPathAddRect(path, nil, CGRectMake(left, top, frame.width / 2 - 5, frame.width - 8))
+        left = frame.width / 2 + 1
+        CGPathAddRect(path, nil, CGRectMake(left, top, frame.width / 2 - 5, frame.width - 8))
+        CGPathAddRect(path, nil, square.bounds)
+        mask.path = path
+        mask.fillRule = kCAFillRuleEvenOdd
+        square.layer.mask = mask
+      }
+      
       square.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "squareTap:"))
     }
     
@@ -183,36 +197,38 @@ class HabitHistory: UIView, UIScrollViewDelegate {
   }
   
   func squareTap(recognizer: UITapGestureRecognizer) {
-    clearSelection()
-    let calendar = HabitApp.calendar
     let square = recognizer.view as! SquareView
-    let frame = square.frame
-    var (xOffset, yOffset, widthOffset, heightOffset) = (-Enlargement, CGFloat(0), 2 * Enlargement, 2 * Enlargement)
-    if habit!.frequency == .Daily {
-      let components = calendar.components([.Weekday], fromDate: square.history!.date!)
-      if components.weekday != 1 {
-        if components.weekday == 7 {
-          yOffset += -2 * Enlargement
-        } else {
-          yOffset -= Enlargement
+    if !square.history!.pausedBool {
+      clearSelection()
+      let calendar = HabitApp.calendar
+      let frame = square.frame
+      var (xOffset, yOffset, widthOffset, heightOffset) = (-Enlargement, CGFloat(0), 2 * Enlargement, 2 * Enlargement)
+      if habit!.frequency == .Daily {
+        let components = calendar.components([.Weekday], fromDate: square.history!.date!)
+        if components.weekday != 1 {
+          if components.weekday == 7 {
+            yOffset += -2 * Enlargement
+          } else {
+            yOffset -= Enlargement
+          }
         }
+      } else {
+        heightOffset = 0
       }
-    } else {
-      heightOffset = 0
+      let granularity: NSCalendarUnit = habit!.frequency == .Monthly ? .Month : .WeekOfYear
+      if calendar.isDate(square.history!.date!, equalToDate: NSDate(), toUnitGranularity: granularity) {
+        xOffset -= Enlargement
+      } else if calendar.isDate(square.history!.date!, equalToDate: habit!.createdAt!, toUnitGranularity: granularity) {
+        xOffset += Enlargement
+      }
+      square.frame = CGRectMake(
+        frame.origin.x + xOffset, frame.origin.y + yOffset, frame.width + widthOffset, frame.height + heightOffset)
+      square.layer.borderColor = UIColor.blackColor().CGColor
+      square.layer.borderWidth = SelectedBorder
+      square.superview!.bringSubviewToFront(square)
+      selectedSquare = square
+      delegate?.habitHistory(self, selectedHistory: square.history!)
     }
-    let granularity: NSCalendarUnit = habit!.frequency == .Monthly ? .Month : .WeekOfYear
-    if calendar.isDate(square.history!.date!, equalToDate: NSDate(), toUnitGranularity: granularity) {
-      xOffset -= Enlargement
-    } else if calendar.isDate(square.history!.date!, equalToDate: habit!.createdAt!, toUnitGranularity: granularity) {
-      xOffset += Enlargement
-    }
-    square.frame = CGRectMake(
-      frame.origin.x + xOffset, frame.origin.y + yOffset, frame.width + widthOffset, frame.height + heightOffset)
-    square.layer.borderColor = UIColor.blackColor().CGColor
-    square.layer.borderWidth = SelectedBorder
-    square.superview!.bringSubviewToFront(square)
-    selectedSquare = square
-    delegate?.habitHistory(self, selectedHistory: square.history!)
   }
   
   func clearSelection() {

@@ -192,4 +192,11 @@ class HabitApp {
     ]
   }
   
+  static var dateFormatter: NSDateFormatter = {
+    let formatter = NSDateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+    formatter.timeZone = NSTimeZone(abbreviation: "PST")
+    return formatter
+  }()
+  
 }

@@ -10,6 +10,10 @@ import Foundation
 import CoreData
 
 class History: NSManagedObject {
+  
+  var pausedBool: Bool {
+    return paused!.boolValue
+  }
 
   var frequency: Habit.Frequency {
     return habit!.frequency
@@ -28,6 +32,7 @@ class History: NSManagedObject {
     self.init(entity: entityDescription, insertIntoManagedObjectContext: context)
     self.habit = habit
     self.date = date
+    self.paused = NSNumber(bool: false)
   }
 
 }
