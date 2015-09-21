@@ -49,7 +49,7 @@
 // 40: done - Fix overlay on frequency selection
 // 41: done - Add touch listener to overlay view on MVC
 // 42: done - Update pods to xcode 7
-// 43: Debug hide keyboard in new habit
+// 43: done - Debug hide keyboard in new habit
 // 44: done - Fix border in habit history
 
 import UIKit

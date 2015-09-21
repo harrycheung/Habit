@@ -71,7 +71,6 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     // Fill out the form
     if habit != nil {
       name.text = habit!.name;
-      name.delegate = self
       if habit!.useTimes {
         frequencySettings!.picker.selectRow(habit!.times!.integerValue - 1, inComponent: 0, animated: false)
       } else {
