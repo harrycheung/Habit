@@ -52,7 +52,6 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'FontAwesome_swift.framework'
   install_framework 'KAProgressLabel.framework'
   install_framework 'Nimble.framework'
-  install_framework 'Quick.framework'
   install_framework 'SnapKit.framework'
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
@@ -60,6 +59,5 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'FontAwesome_swift.framework'
   install_framework 'KAProgressLabel.framework'
   install_framework 'Nimble.framework'
-  install_framework 'Quick.framework'
   install_framework 'SnapKit.framework'
 fi
