@@ -9,14 +9,14 @@
 // DateTools
 #define COCOAPODS_POD_AVAILABLE_DateTools
 #define COCOAPODS_VERSION_MAJOR_DateTools 1
-#define COCOAPODS_VERSION_MINOR_DateTools 6
-#define COCOAPODS_VERSION_PATCH_DateTools 1
+#define COCOAPODS_VERSION_MINOR_DateTools 7
+#define COCOAPODS_VERSION_PATCH_DateTools 0
 
 // FontAwesome.swift
 #define COCOAPODS_POD_AVAILABLE_FontAwesome_swift
 #define COCOAPODS_VERSION_MAJOR_FontAwesome_swift 0
-#define COCOAPODS_VERSION_MINOR_FontAwesome_swift 4
-#define COCOAPODS_VERSION_PATCH_FontAwesome_swift 3
+#define COCOAPODS_VERSION_MINOR_FontAwesome_swift 5
+#define COCOAPODS_VERSION_PATCH_FontAwesome_swift 0
 
 // KAProgressLabel
 #define COCOAPODS_POD_AVAILABLE_KAProgressLabel
@@ -33,12 +33,12 @@
 // Quick
 #define COCOAPODS_POD_AVAILABLE_Quick
 #define COCOAPODS_VERSION_MAJOR_Quick 0
-#define COCOAPODS_VERSION_MINOR_Quick 5
-#define COCOAPODS_VERSION_PATCH_Quick 1
+#define COCOAPODS_VERSION_MINOR_Quick 6
+#define COCOAPODS_VERSION_PATCH_Quick 0
 
 // SnapKit
 #define COCOAPODS_POD_AVAILABLE_SnapKit
 #define COCOAPODS_VERSION_MAJOR_SnapKit 0
-#define COCOAPODS_VERSION_MINOR_SnapKit 12
+#define COCOAPODS_VERSION_MINOR_SnapKit 14
 #define COCOAPODS_VERSION_PATCH_SnapKit 0
 

@@ -13,7 +13,7 @@
 // all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,Pods-FontAwesome.swift Group
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
@@ -79,7 +79,7 @@ public extension UIImage {
         paragraph.lineBreakMode = NSLineBreakMode.ByWordWrapping
         paragraph.alignment = .Center
         let attributedString = NSAttributedString(string: String.fontAwesomeIconWithName(name) as String, attributes: [NSFontAttributeName: UIFont.fontAwesomeOfSize(max(size.width, size.height)), NSForegroundColorAttributeName: textColor, NSParagraphStyleAttributeName:paragraph])
-        let size = sizeOfAttributeString(attributedString, maxWidth: size.width)
+        let size = attributedString.sizeWithMaxWidth(size.width)
         UIGraphicsBeginImageContextWithOptions(size, false , 0.0)
         attributedString.drawInRect(CGRectMake(0, 0, size.width, size.height))
         let image = UIGraphicsGetImageFromCurrentImageContext()
@@ -88,7 +88,21 @@ public extension UIImage {
     }
 }
 
-func sizeOfAttributeString(str: NSAttributedString, maxWidth: CGFloat) -> CGSize {
-    let size = str.boundingRectWithSize(CGSizeMake(maxWidth, 1000), options:(NSStringDrawingOptions.UsesLineFragmentOrigin), context:nil).size
-    return size
+private extension NSAttributedString {
+    func sizeWithMaxWidth(maxWidth: CGFloat) -> CGSize {
+        return self.boundingRectWithSize(CGSizeMake(maxWidth, 1000), options:(NSStringDrawingOptions.UsesLineFragmentOrigin), context: nil).size
+    }
 }
+
+public extension String {
+    public static func fontAwesomeIconWithCode(code: String) -> String? {
+        
+        if let raw = FontAwesomeIcons[code], icon = FontAwesome(rawValue: raw)  {
+            return self.fontAwesomeIconWithName(icon)
+        }
+        
+        return nil
+    }
+}
+
+

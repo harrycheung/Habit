@@ -2,14 +2,13 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '8.0'
 use_frameworks!
 
-pod 'SnapKit', :git => 'https://github.com/SnapKit/SnapKit.git', :branch => 'swift-2.0'
+pod 'SnapKit'
 pod 'KAProgressLabel'
 pod 'FontAwesome.swift'
 pod 'DateTools'
 
 def testing_pods
-  pod 'Quick', '~> 0.5.0'
-  pod 'Nimble', '2.0.0-rc.2'
+  pod 'Nimble', '2.0.0-rc.3'
 end
 
 target 'HabitTests' do

@@ -19,7 +19,6 @@
 		4A1D08A01B3E17E9006A9CA4 /* Habit.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D089E1B3E17E9006A9CA4 /* Habit.xcdatamodeld */; };
 		4A1D08A21B3E17E9006A9CA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A1D08A11B3E17E9006A9CA4 /* Assets.xcassets */; };
 		4A1D08A51B3E17E9006A9CA4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A1D08A31B3E17E9006A9CA4 /* LaunchScreen.storyboard */; };
-		4A1D08B01B3E17E9006A9CA4 /* HabitDailyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D08AF1B3E17E9006A9CA4 /* HabitDailyTests.swift */; };
 		4A1D08BB1B3E17EA006A9CA4 /* HabitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D08BA1B3E17EA006A9CA4 /* HabitUITests.swift */; };
 		4A1D08CE1B3E1A7A006A9CA4 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 4A1D08C81B3E1A7A006A9CA4 /* Fonts */; };
 		4A1D08CF1B3E1A7A006A9CA4 /* Habit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D08C91B3E1A7A006A9CA4 /* Habit.swift */; };
@@ -86,7 +85,6 @@
 		4A1D08A41B3E17E9006A9CA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4A1D08A61B3E17E9006A9CA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A1D08AB1B3E17E9006A9CA4 /* HabitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HabitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4A1D08AF1B3E17E9006A9CA4 /* HabitDailyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDailyTests.swift; sourceTree = "<group>"; };
 		4A1D08B11B3E17E9006A9CA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A1D08B61B3E17EA006A9CA4 /* HabitUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HabitUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A1D08BA1B3E17EA006A9CA4 /* HabitUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitUITests.swift; sourceTree = "<group>"; };
@@ -202,7 +200,6 @@
 		4A1D08AE1B3E17E9006A9CA4 /* HabitTests */ = {
 			isa = PBXGroup;
 			children = (
-				4A1D08AF1B3E17E9006A9CA4 /* HabitDailyTests.swift */,
 				4A4D4DA11B6D9618005C86AF /* HabitWeeklyTests.swift */,
 				4A56B1501B6ED4D80092B98A /* HabitMonthlyTests.swift */,
 				4A1D08B11B3E17E9006A9CA4 /* Info.plist */,
@@ -613,7 +610,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A1D08B01B3E17E9006A9CA4 /* HabitDailyTests.swift in Sources */,
 				4A4D4DA21B6D9618005C86AF /* HabitWeeklyTests.swift in Sources */,
 				4A56B1511B6ED4D80092B98A /* HabitMonthlyTests.swift in Sources */,
 			);
