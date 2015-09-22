@@ -7,15 +7,15 @@
 //
 
 // TODO
-// 1. Check timezone changes on load
-// 2. done - Snooze behavior
-// 3. done - Sort habits based on time periods
-// 4. done - github style history graph
-// 5. done - Habit info page
-// 6. done - App settings
-// 7. done - Local notifications
-// 8. done - Expire habits periodically
-// 9. done - Split ShowHabitViewController
+//  1. Check timezone changes on load
+//  2. done - Snooze behavior
+//  3. done - Sort habits based on time periods
+//  4. done - github style history graph
+//  5. done - Habit info page
+//  6. done - App settings
+//  7. done - Local notifications
+//  8. done - Expire habits periodically
+//  9. done - Split ShowHabitViewController
 // 10. done - Use Entry for tableview
 // 11. done - Debug flash when changing color
 // 12. done - Debug flash when dismising habit settings
@@ -225,7 +225,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       for habit in habits {
         habit.update(now)
         if HabitApp.autoSkip && !habit.neverAutoSkipBool {
-          habit.skipBefore(NSDate(timeInterval: HabitApp.autoSkipDelayTimeInterval, sinceDate: now))
+          habit.skip(before: NSDate(timeInterval: HabitApp.autoSkipDelayTimeInterval, sinceDate: now))
         }
       }
       try HabitApp.moContext.save()
@@ -576,7 +576,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
               entry.skip()
               indexPaths.append(indexPath)
             }
-            let skippedEntries = entry.habit!.skipBefore(NSDate(timeIntervalSinceNow: HabitApp.autoSkipDelayTimeInterval))
+            let skippedEntries = entry.habit!.skip(before: NSDate(timeIntervalSinceNow: HabitApp.autoSkipDelayTimeInterval))
             for e in skippedEntries {
               indexPaths.append(NSIndexPath(forRow: self.entries.indexOf(e)!, inSection: 0))
             }

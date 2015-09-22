@@ -93,9 +93,9 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
   func setupStats() {
     currentStreak.text = "\(habit!.currentStreak!)"
     longestStreak.text = "\(habit!.longestStreak!)"
-    skipped.text = "\(habit!.skippedCount())"
-    completed.text = "\(habit!.completedCount())"
-    progressLabel.setProgress(habit!.progress(), timing: TPPropertyAnimationTimingEaseOut, duration: 0.5, delay: 0.3)
+    skipped.text = "\(habit!.skipped!)"
+    completed.text = "\(habit!.completed!)"
+    progressLabel.setProgress(habit!.progress(NSDate()), timing: TPPropertyAnimationTimingEaseOut, duration: 0.5, delay: 0.3)
   }
   
   @IBAction func closeView(sender: AnyObject) {
@@ -188,8 +188,10 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
   
   @IBAction func allTimeProgress(sender: AnyObject) {
     habitHistory.clearSelection()
-    updateStats("All Time", percentage: habit!.progress(),
-      completedCount: habit!.completedCount(), skippedCount: habit!.skippedCount())
+    updateStats("All Time",
+      percentage: habit!.progress(NSDate()),
+      completedCount: habit!.completed!.integerValue,
+      skippedCount: habit!.skipped!.integerValue)
   }
   
   func habitHistory(habitHistory: HabitHistory, selectedHistory history: History) {

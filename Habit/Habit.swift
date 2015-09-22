@@ -130,32 +130,11 @@ class Habit: NSManagedObject {
     createdAtTimeZone = NSTimeZone.localTimeZone().name
     currentStreak = 0
     longestStreak = 0
-    total = 0
     let _ = History(context: managedObjectContext!, habit: self, date: createdAt)
   }
   
-  func skippedCount() -> Int {
-    return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "stateRaw == %@", Entry.State.Skipped.rawValue)).count
-  }
-  
-  func completedCount() -> Int {
-    return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "stateRaw == %@", Entry.State.Completed.rawValue)).count
-  }
-  
-  func totalCount(upTo: NSDate? = nil) -> Int {
-    if upTo == nil {
-      return total!.integerValue
-    } else {
-      return entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "due <= %@", upTo!)).count
-    }
-  }
-  
-  func progress(upTo: NSDate? = nil) -> CGFloat {
-    if total!.integerValue == 0 {
-      return 0
-    } else {
-      return CGFloat(completedCount()) / CGFloat(totalCount(upTo))
-    }
+  private func addEntry(due due: NSDate, period: Int, number: Int) {
+    let _ = Entry(context: managedObjectContext!, habit: self, due: due, period: period, number: number)
   }
   
   static func dateRange(date: NSDate, frequency: Frequency, includeEnd: Bool) -> (NSDate, NSDate) {
@@ -204,42 +183,54 @@ class Habit: NSManagedObject {
     return Habit.dateRange(date, frequency: frequency, includeEnd: true)
   }
   
-  func updateHistory(onDate date: NSDate, completed: Int, skipped: Int) {
+  func progress(date: NSDate) -> CGFloat {
+    let denom = CGFloat(entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "due <= %@", date)).count)
+    if denom == 0 {
+      return 0
+    }
+    return CGFloat(completed!) / denom
+  }
+  
+  func updateHistory(onDate date: NSDate, completedBy: Int, skippedBy: Int) {
     let (startDate, endDate) = dateRange(date)
     let predicate = NSPredicate(format: "date > %@ AND date <= %@ AND isDeleted == NO", startDate, endDate)
     if let history = histories!.filteredOrderedSetUsingPredicate(predicate).firstObject as? History {
-      history.completed = history.completed!.integerValue + completed
-      history.skipped = history.skipped!.integerValue + skipped
+      history.completed = history.completed!.integerValue + completedBy
+      history.skipped = history.skipped!.integerValue + skippedBy
     } else {
       var historyDate = date
       if frequency == .Weekly {
         historyDate = HabitApp.calendar.dateByAddingUnit(.Day, value: -1, toDate: endDate)!
       }
       let history = History(context: managedObjectContext!, habit: self, date: historyDate)
-      history.completed = completed
-      history.skipped = skipped
+      history.completed = completedBy
+      history.skipped = skippedBy
       history.paused = paused
     }
+    completed = completed!.integerValue + completedBy
+    skipped = skipped!.integerValue + skippedBy
   }
   
   private func recalculateHistory(onDate date: NSDate) {
     let (startDate, _) = dateRange(date)
     let predicate = NSPredicate(format: "date > %@", startDate)
     for history in histories!.filteredOrderedSetUsingPredicate(predicate).array as! [History] {
+      completed = completed!.integerValue - history.completed!.integerValue
+      skipped = skipped!.integerValue - history.skipped!.integerValue
       managedObjectContext!.deleteObject(history)
     }
-    var completed = 0
-    var skipped = 0
+    var completedBy = 0
+    var skippedBy = 0
     for entry in entriesOnDate(date) {
       switch entry.state {
       case .Completed:
-        completed += 1
+        completedBy += 1
       case .Skipped:
-        skipped += 1
+        skippedBy += 1
       default: ()
       }
     }
-    updateHistory(onDate: date, completed: completed, skipped: skipped)
+    updateHistory(onDate: date, completedBy: completedBy, skippedBy: skippedBy)
   }
   
   func countBefore(date: NSDate) -> Int {
@@ -335,37 +326,19 @@ class Habit: NSManagedObject {
   }
   
   func entriesOnDate(date: NSDate, var predicates: [NSPredicate]) -> [Entry] {
-    let formatter = NSDateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
-    formatter.timeZone = NSTimeZone(abbreviation: "PST")
-
     let (startDate, endDate) = dateRange(date)
     //print("entries: \(formatter.stringFromDate(startDate)) \(formatter.stringFromDate(endDate))")
     predicates.append(NSPredicate(format: "due > %@ AND due <= %@", startDate, endDate))
     return entries!.filteredOrderedSetUsingPredicate(NSCompoundPredicate(andPredicateWithSubpredicates: predicates)).array as! [Entry]
   }
   
-  func skipBefore(currentDate: NSDate) -> [Entry] {
-    var count = 0
-    let todoEntries = entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "due <= %@ AND stateRaw == %@", currentDate, Entry.State.Todo.rawValue)).array as! [Entry]
+  func skip(before date: NSDate) -> [Entry] {
+    let predicate = NSPredicate(format: "due <= %@ AND stateRaw == %@", date, Entry.State.Todo.rawValue)
+    let todoEntries = entries!.filteredOrderedSetUsingPredicate(predicate).array as! [Entry]
     for entry in todoEntries {
       entry.skip()
-      count += 1
     }
     return todoEntries
-//    let request = NSBatchUpdateRequest(entityName: "Entry")
-//    request.predicate = NSPredicate(format: "habit == %@ AND due > %@ AND due <= %@ AND stateRaw == %@",
-//      self, last!, currentDate, Entry.State.Todo.rawValue)
-//    request.propertiesToUpdate = ["stateRaw": Entry.State.Skipped.rawValue]
-//    request.resultType = .UpdatedObjectsCountResultType
-//    do {
-//      let result = try managedObjectContext!.executeRequest(request) as! NSBatchUpdateResult
-//      NSLog("\(result.result) objects updated")
-//      return result.result as! Int
-//    } catch let error as NSError{
-//      NSLog("Could not perform batch request. Error = \(error)")
-//      return 0
-//    }
   }
   
   var todos: [Entry] {
@@ -442,11 +415,9 @@ class Habit: NSManagedObject {
         }
         //print(formatter.stringFromDate(lastDue))
         if pausedBool {
-          updateHistory(onDate: lastDue, completed: 0, skipped: 0)
+          updateHistory(onDate: lastDue, completedBy: 0, skippedBy: 0)
         } else {
-          let entry = Entry(context: managedObjectContext!, habit: self, due: lastDue, period: components.day)
-          entry.number = count
-          total = total!.integerValue + 1
+          addEntry(due: lastDue, period: components.day, number: count)
         }
       }
     case .Weekly:
@@ -519,11 +490,9 @@ class Habit: NSManagedObject {
         if lastDue.compare(createdAt!) == .OrderedDescending {
           //print("new entry: \(formatter.stringFromDate(lastDue))")
           if pausedBool {
-            updateHistory(onDate: lastDue, completed: 0, skipped: 0)
+            updateHistory(onDate: lastDue, completedBy: 0, skippedBy: 0)
           } else {
-            let entry = Entry(context: managedObjectContext!, habit: self, due: lastDue, period: weekOfYear)
-            entry.number = count
-            total = total!.integerValue + 1
+            addEntry(due: lastDue, period: weekOfYear, number: count)
           }
         }
       }
@@ -560,11 +529,9 @@ class Habit: NSManagedObject {
         }
         //print("lastdue: \(formatter.stringFromDate(lastDue))")
         if pausedBool {
-          updateHistory(onDate: lastDue, completed: 0, skipped: 0)
+          updateHistory(onDate: lastDue, completedBy: 0, skippedBy: 0)
         } else {
-          let entry = Entry(context: managedObjectContext!, habit: self, due: lastDue, period: components.month)
-          entry.number = count
-          total = total!.integerValue + 1
+          addEntry(due: lastDue, period: components.month, number: count)
         }
       }
     default: ()
@@ -577,7 +544,6 @@ class Habit: NSManagedObject {
     for entry in entriesToDelete {
       managedObjectContext!.deleteObject(entry)
     }
-    total = total!.integerValue - entriesToDelete.count
     recalculateHistory(onDate: date)
     return entriesToDelete
   }

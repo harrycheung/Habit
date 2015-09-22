@@ -48,6 +48,7 @@
 		4AAA3C1C1B7AF9B7006572F8 /* UIColor+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AAA3C1B1B7AF9B7006572F8 /* UIColor+Custom.swift */; };
 		4ACE25111BAFA7EC0065FD3B /* HabitDailyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACE250F1BAFA7D60065FD3B /* HabitDailyTests.swift */; settings = {ASSET_TAGS = (); }; };
 		4ADA905F1B60ABD300826C69 /* ColorPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA905E1B60ABD300826C69 /* ColorPicker.swift */; };
+		4ADD91111BB09AB1009A7D75 /* Habit+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADD91101BB09AB1009A7D75 /* Habit+Test.swift */; settings = {ASSET_TAGS = (); }; };
 		4AE038681B8E042C00BF4CEC /* NSCalendar+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE038671B8E042C00BF4CEC /* NSCalendar+Custom.swift */; };
 		861BECF906C6AC6A210325FA /* Pods_HabitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA0F26F75A2786B986189DB2 /* Pods_HabitTests.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E5516A33B694E124AFFB4FEF /* Pods_HabitUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E64B698848D2B19C57A77B12 /* Pods_HabitUITests.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -119,6 +120,7 @@
 		4AAA3C1B1B7AF9B7006572F8 /* UIColor+Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Custom.swift"; sourceTree = "<group>"; };
 		4ACE250F1BAFA7D60065FD3B /* HabitDailyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitDailyTests.swift; sourceTree = "<group>"; };
 		4ADA905E1B60ABD300826C69 /* ColorPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorPicker.swift; sourceTree = "<group>"; };
+		4ADD91101BB09AB1009A7D75 /* Habit+Test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Habit+Test.swift"; sourceTree = "<group>"; };
 		4AE038671B8E042C00BF4CEC /* NSCalendar+Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSCalendar+Custom.swift"; sourceTree = "<group>"; };
 		665F8C2916FF820599C8EF0C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		816BADC7051735CA72D1148F /* Pods-HabitUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HabitUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HabitUITests/Pods-HabitUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -202,6 +204,7 @@
 		4A1D08AE1B3E17E9006A9CA4 /* HabitTests */ = {
 			isa = PBXGroup;
 			children = (
+				4ADD91101BB09AB1009A7D75 /* Habit+Test.swift */,
 				4ACE250F1BAFA7D60065FD3B /* HabitDailyTests.swift */,
 				4A4D4DA11B6D9618005C86AF /* HabitWeeklyTests.swift */,
 				4A56B1501B6ED4D80092B98A /* HabitMonthlyTests.swift */,
@@ -615,6 +618,7 @@
 			files = (
 				4A4D4DA21B6D9618005C86AF /* HabitWeeklyTests.swift in Sources */,
 				4A56B1511B6ED4D80092B98A /* HabitMonthlyTests.swift in Sources */,
+				4ADD91111BB09AB1009A7D75 /* Habit+Test.swift in Sources */,
 				4ACE25111BAFA7EC0065FD3B /* HabitDailyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

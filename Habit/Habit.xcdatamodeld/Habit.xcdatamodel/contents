@@ -5,9 +5,10 @@
         <attribute name="number" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="period" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="stateRaw" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <relationship name="habit" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Habit" inverseName="entries" inverseEntity="Habit" syncable="YES"/>
+        <relationship name="habit" maxCount="1" deletionRule="Nullify" destinationEntity="Habit" inverseName="entries" inverseEntity="Habit" syncable="YES"/>
     </entity>
     <entity name="Habit" representedClassName=".Habit" syncable="YES">
+        <attribute name="completed" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="createdAt" attributeType="Date" syncable="YES"/>
         <attribute name="createdAtTimeZone" attributeType="String" syncable="YES"/>
         <attribute name="currentStreak" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -19,21 +20,21 @@
         <attribute name="notify" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
         <attribute name="parts" attributeType="String" syncable="YES"/>
         <attribute name="paused" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="skipped" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="times" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="total" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <relationship name="entries" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Entry" inverseName="habit" inverseEntity="Entry" syncable="YES"/>
-        <relationship name="histories" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="History" inverseName="habit" inverseEntity="History" syncable="YES"/>
+        <relationship name="entries" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Entry" inverseName="habit" inverseEntity="Entry" syncable="YES"/>
+        <relationship name="histories" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="History" inverseName="habit" inverseEntity="History" syncable="YES"/>
     </entity>
     <entity name="History" representedClassName=".History" syncable="YES">
         <attribute name="completed" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="date" attributeType="Date" syncable="YES"/>
         <attribute name="paused" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="skipped" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <relationship name="habit" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Habit" inverseName="histories" inverseEntity="Habit" syncable="YES"/>
+        <relationship name="habit" maxCount="1" deletionRule="Nullify" destinationEntity="Habit" inverseName="histories" inverseEntity="Habit" syncable="YES"/>
     </entity>
     <elements>
         <element name="Entry" positionX="-63" positionY="27" width="128" height="120"/>
-        <element name="Habit" positionX="-479" positionY="-12" width="128" height="270"/>
+        <element name="Habit" positionX="-479" positionY="-12" width="128" height="285"/>
         <element name="History" positionX="-54" positionY="90" width="128" height="120"/>
     </elements>
 </model>

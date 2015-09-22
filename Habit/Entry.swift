@@ -15,13 +15,14 @@ class Entry: NSManagedObject {
     case Todo = 0, Skipped = 1, Completed = 2
   }
   
-  convenience init(context: NSManagedObjectContext, habit: Habit, due: NSDate, period: Int) {
+  convenience init(context: NSManagedObjectContext, habit: Habit, due: NSDate, period: Int, number: Int) {
     let entityDescription = NSEntityDescription.entityForName("Entry", inManagedObjectContext: context)!
     self.init(entity: entityDescription, insertIntoManagedObjectContext: context)
     self.habit = habit
     self.due = due
     self.period = "\(habit.frequency.description)\(period)"
-    habit.updateHistory(onDate: due, completed: 0, skipped: 0)
+    self.number = number
+    habit.updateHistory(onDate: due, completedBy: 0, skippedBy: 0)
     //print("new entry: \(self.period)")
   }
   
@@ -62,13 +63,13 @@ class Entry: NSManagedObject {
     if habit!.currentStreak!.integerValue > habit!.longestStreak!.integerValue {
       habit!.longestStreak = habit!.currentStreak
     }
-    habit!.updateHistory(onDate: due!, completed: 1, skipped: 0)
+    habit!.updateHistory(onDate: due!, completedBy: 1, skippedBy: 0)
   }
   
   func skip() {
     state = .Skipped
     habit!.currentStreak = 0
-    habit!.updateHistory(onDate: due!, completed: 0, skipped: 1)
+    habit!.updateHistory(onDate: due!, completedBy: 0, skippedBy: 1)
   }
 
 }

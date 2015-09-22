@@ -2,7 +2,7 @@
 //  Habit+CoreDataProperties.swift
 //  Habit
 //
-//  Created by harry on 9/19/15.
+//  Created by harry on 9/21/15.
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -24,9 +24,10 @@ extension Habit {
     @NSManaged var neverAutoSkip: NSNumber?
     @NSManaged var notify: NSNumber?
     @NSManaged var parts: String?
-    @NSManaged var times: NSNumber?
-    @NSManaged var total: NSNumber?
     @NSManaged var paused: NSNumber?
+    @NSManaged var times: NSNumber?
+    @NSManaged var completed: NSNumber?
+    @NSManaged var skipped: NSNumber?
     @NSManaged var entries: NSOrderedSet?
     @NSManaged var histories: NSOrderedSet?
 
