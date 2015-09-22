@@ -418,23 +418,25 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func showUpcoming() {
-    var delayStart: Double = 0
-    // Load up the cells to animate
-    tableView.beginUpdates()
-    tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .None)
-    let indexPaths = upcoming.enumerate().map { (index, entry) in
-      return NSIndexPath(forRow: index, inSection: 1)
-    }
-    tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
-    tableView.endUpdates()
-    
-    if let header = tableView.headerViewForSection(1) {
-      showCellAnimate(header, endFrame: tableView.rectForHeaderInSection(1), delay: delayStart)
-      for (index, _) in upcoming.enumerate() {
-        let indexPath = NSIndexPath(forRow: index, inSection: 1)
-        if let cell = tableView.cellForRowAtIndexPath(indexPath) {
-          showCellAnimate(cell, endFrame: tableView.rectForRowAtIndexPath(indexPath), delay: delayStart)
-          delayStart += SlideAnimationDelay
+    if upcoming.count > 0 {
+      // Load up the cells to animate
+      tableView.beginUpdates()
+      tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .None)
+      let indexPaths = upcoming.enumerate().map { (index, entry) in
+        return NSIndexPath(forRow: index, inSection: 1)
+      }
+      tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
+      tableView.endUpdates()
+      
+      var delayStart: Double = 0
+      if let header = tableView.headerViewForSection(1) {
+        showCellAnimate(header, endFrame: tableView.rectForHeaderInSection(1), delay: delayStart)
+        for (index, _) in upcoming.enumerate() {
+          let indexPath = NSIndexPath(forRow: index, inSection: 1)
+          if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+            showCellAnimate(cell, endFrame: tableView.rectForRowAtIndexPath(indexPath), delay: delayStart)
+            delayStart += SlideAnimationDelay
+          }
         }
       }
     }
