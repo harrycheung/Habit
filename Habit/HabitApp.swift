@@ -53,7 +53,11 @@ class HabitApp {
   static let TransitionOverlayAlpha: CGFloat = 0.2
   static let TransitionDuration: NSTimeInterval = 0.25
   
-  static let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)!
+  static let calendar: NSCalendar = {
+    let c = NSCalendar(identifier: NSCalendarIdentifierGregorian)!
+    c.timeZone = NSTimeZone(name: HabitApp.timeZone)!
+    return c
+  }()
   
   static var moContext: NSManagedObjectContext {
     return (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
