@@ -29,12 +29,12 @@ class HabitApp {
   // User color options
   static let blueTint = UIColor(red: 42.0 / 255.0, green: 132.0 / 255.0, blue: 219.0 / 255.0, alpha: 1)
   static let purpleTint = UIColor(red: 155.0 / 255.0, green: 79.0 / 255.0, blue: 172.0 / 255.0, alpha: 1)
-  static let greenTint = UIColor(red: 46.0 / 255.0, green: 180.0 / 255.0, blue: 113.0 / 255.0, alpha: 1)
+  static let pinkTint = UIColor(red: 231.0 / 255.0, green: 84.0 / 255.0, blue: 128.0 / 255.0, alpha: 1)
   static let darkBlueTint = UIColor(red: 52.0 / 255.0, green: 73.0 / 255.0, blue: 120.0 / 255.0, alpha: 1)
-  static let greyTint = UIColor(red: 130.0 / 255.0, green: 130.0 / 255.0, blue: 130.0 / 255.0, alpha: 1)
-  static let orangeTint = UIColor(red: 230.0 / 255.0, green: 146.0 / 255.0, blue: 45.0 / 255.0, alpha: 1)
-  static let colors = [blueTint, purpleTint, greenTint, darkBlueTint, greyTint, orangeTint]
-  static let colorsNameToIndex = ["blue": 0, "purple": 1, "green": 2, "darkBlue": 3, "grey": 4, "orange": 5]
+  static let redTint = UIColor(red: 192.0 / 255.0, green: 57.0 / 255.0, blue: 42.0 / 255.0, alpha: 1)
+  static let orangeTint = UIColor(red: 255.0 / 255.0, green: 140.0 / 255.0, blue: 0.0 / 255.0, alpha: 1)
+  static let colors = [purpleTint, darkBlueTint, blueTint, orangeTint, pinkTint, redTint]
+  static let colorsNameToIndex = ["purple": 0, "darkBlue": 1, "blue": 2, "orange": 3, "pink": 4, "red": 5]
   
   static let minSec = 60
   static let hourSec = 60 * minSec
