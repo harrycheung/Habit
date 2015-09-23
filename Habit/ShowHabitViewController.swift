@@ -22,6 +22,8 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
   @IBOutlet weak var progressPeriod: UILabel!
   @IBOutlet weak var toolbar: UIView!
   @IBOutlet weak var back: UIButton!
+  @IBOutlet weak var frequency: UILabel!
+  @IBOutlet weak var frequencyValue: UILabel!
   @IBOutlet weak var currentStreak: UILabel!
   @IBOutlet weak var longestStreak: UILabel!
   @IBOutlet weak var skipped: UILabel!
@@ -77,6 +79,17 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
     
     back.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
     back.setTitle(String.fontAwesomeIconWithName(.ChevronLeft), forState: .Normal)
+    
+    frequency.text = habit!.frequency.description
+    let times = habit!.useTimes ? habit!.times! : habit!.partsArray.count
+    switch times {
+    case 1:
+      frequencyValue.text = "once"
+    case 2:
+      frequencyValue.text = "twice"
+    default:
+      frequencyValue.text = "\(times) times"
+    }
     
     habitHistory.habit = habit!
     
@@ -188,7 +201,7 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
   
   @IBAction func allTimeProgress(sender: AnyObject) {
     habitHistory.clearSelection()
-    updateStats("All Time",
+    updateStats("All time",
       percentage: habit!.progress(NSDate()),
       completedCount: habit!.completed!.integerValue,
       skippedCount: habit!.skipped!.integerValue)
