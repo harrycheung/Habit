@@ -190,7 +190,7 @@ class Habit: NSManagedObject {
     }
     return CGFloat(completed!) / denom
   }
-  
+
   func updateHistory(onDate date: NSDate, completedBy: Int, skippedBy: Int) {
     let (startDate, endDate) = dateRange(date)
     let predicate = NSPredicate(format: "date > %@ AND date <= %@ AND isDeleted == NO", startDate, endDate)
@@ -283,7 +283,7 @@ class Habit: NSManagedObject {
           if dayOfWeek.rawValue < components.weekday {
             count += 1
           } else if dayOfWeek.rawValue == components.weekday {
-            if start || (!start && minuteOfDay > HabitApp.endOfDay) {
+            if start || (!start && minuteOfDay >= HabitApp.endOfDay) {
               count += 1
             }
           }
