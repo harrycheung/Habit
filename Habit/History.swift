@@ -20,11 +20,10 @@ class History: NSManagedObject {
   }
   
   var percentage: CGFloat {
-    let denom = CGFloat(completed!.integerValue + skipped!.integerValue)
-    if denom == 0 {
+    if total!.integerValue == 0 {
       return 0
     }
-    return CGFloat(completed!) / denom
+    return CGFloat(completed!) / CGFloat(total!)
   }
   
   convenience init(context: NSManagedObjectContext, habit: Habit, date: NSDate) {

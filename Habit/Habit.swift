@@ -16,9 +16,11 @@ class Habit: NSManagedObject {
     case Hourly = 0, Daily = 1, Weekly = 2, Monthly = 3, Annually = 4
     
     var description: String { return Habit.frequencyStrings[rawValue] }
+    var unit: String { return Habit.frequencyUnitStrings[rawValue] }
   }
   
   static let frequencyStrings = ["Hourly", "Daily", "Weekly", "Monthly"]
+  static let frequencyUnitStrings = ["hour", "day", "week", "month"]
   
   enum PartOfDay: Int {
     case Morning = 1, MidMorning = 2, MidDay = 3, Afternoon = 4, LateAfternoon = 5, Evening = 6
@@ -28,10 +30,10 @@ class Habit: NSManagedObject {
   
   static let partOfDayStrings = [
     "Morning",
-    "MidMorning",
-    "MidDay",
+    "Midmorning",
+    "Midday",
     "Afternoon",
-    "LateAfternoon",
+    "Late Afternoon",
     "Evening"
   ]
   
@@ -186,17 +188,18 @@ class Habit: NSManagedObject {
   func progress(date: NSDate) -> CGFloat {
     let denom = CGFloat(entries!.filteredOrderedSetUsingPredicate(NSPredicate(format: "due <= %@", date)).count)
     if denom == 0 {
-      return 0
+      return completed!.integerValue > 0 ? 1 : 0
     }
-    return CGFloat(completed!) / denom
+    return min(CGFloat(completed!) / denom, 1)
   }
 
-  func updateHistory(onDate date: NSDate, completedBy: Int, skippedBy: Int) {
+  func updateHistory(onDate date: NSDate, completedBy: Int, skippedBy: Int, totalBy: Int) {
     let (startDate, endDate) = dateRange(date)
     let predicate = NSPredicate(format: "date > %@ AND date <= %@ AND isDeleted == NO", startDate, endDate)
     if let history = histories!.filteredOrderedSetUsingPredicate(predicate).firstObject as? History {
       history.completed = history.completed!.integerValue + completedBy
       history.skipped = history.skipped!.integerValue + skippedBy
+      history.total = history.total!.integerValue + totalBy
     } else {
       var historyDate = date
       if frequency == .Weekly {
@@ -205,6 +208,7 @@ class Habit: NSManagedObject {
       let history = History(context: managedObjectContext!, habit: self, date: historyDate)
       history.completed = completedBy
       history.skipped = skippedBy
+      history.total = totalBy
       history.paused = paused
     }
     completed = completed!.integerValue + completedBy
@@ -230,7 +234,7 @@ class Habit: NSManagedObject {
       default: ()
       }
     }
-    updateHistory(onDate: date, completedBy: completedBy, skippedBy: skippedBy)
+    updateHistory(onDate: date, completedBy: completedBy, skippedBy: skippedBy, totalBy: 0)
   }
   
   func countBefore(date: NSDate) -> Int {
@@ -415,7 +419,7 @@ class Habit: NSManagedObject {
         }
         //print(formatter.stringFromDate(lastDue))
         if pausedBool {
-          updateHistory(onDate: lastDue, completedBy: 0, skippedBy: 0)
+          updateHistory(onDate: lastDue, completedBy: 0, skippedBy: 0, totalBy: 0)
         } else {
           addEntry(due: lastDue, period: components.day, number: count)
         }
@@ -490,7 +494,7 @@ class Habit: NSManagedObject {
         if lastDue.compare(createdAt!) == .OrderedDescending {
           //print("new entry: \(formatter.stringFromDate(lastDue))")
           if pausedBool {
-            updateHistory(onDate: lastDue, completedBy: 0, skippedBy: 0)
+            updateHistory(onDate: lastDue, completedBy: 0, skippedBy: 0, totalBy: 0)
           } else {
             addEntry(due: lastDue, period: weekOfYear, number: count)
           }
@@ -529,7 +533,7 @@ class Habit: NSManagedObject {
         }
         //print("lastdue: \(formatter.stringFromDate(lastDue))")
         if pausedBool {
-          updateHistory(onDate: lastDue, completedBy: 0, skippedBy: 0)
+          updateHistory(onDate: lastDue, completedBy: 0, skippedBy: 0, totalBy: 0)
         } else {
           addEntry(due: lastDue, period: components.month, number: count)
         }

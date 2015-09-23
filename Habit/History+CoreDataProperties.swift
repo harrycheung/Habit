@@ -2,7 +2,7 @@
 //  History+CoreDataProperties.swift
 //  Habit
 //
-//  Created by harry on 9/20/15.
+//  Created by harry on 9/23/15.
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -16,8 +16,9 @@ extension History {
 
     @NSManaged var completed: NSNumber?
     @NSManaged var date: NSDate?
-    @NSManaged var skipped: NSNumber?
     @NSManaged var paused: NSNumber?
+    @NSManaged var skipped: NSNumber?
+    @NSManaged var total: NSNumber?
     @NSManaged var habit: Habit?
 
 }

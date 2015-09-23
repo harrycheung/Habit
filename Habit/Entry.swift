@@ -22,7 +22,7 @@ class Entry: NSManagedObject {
     self.due = due
     self.period = "\(habit.frequency.description)\(period)"
     self.number = number
-    habit.updateHistory(onDate: due, completedBy: 0, skippedBy: 0)
+    habit.updateHistory(onDate: due, completedBy: 0, skippedBy: 0, totalBy: 1)
     //print("\(habit.name) new entry: \(self.period)")
   }
   
@@ -96,13 +96,13 @@ class Entry: NSManagedObject {
     if habit!.currentStreak!.integerValue > habit!.longestStreak!.integerValue {
       habit!.longestStreak = habit!.currentStreak
     }
-    habit!.updateHistory(onDate: due!, completedBy: 1, skippedBy: 0)
+    habit!.updateHistory(onDate: due!, completedBy: 1, skippedBy: 0, totalBy: 0)
   }
   
   func skip() {
     state = .Skipped
     habit!.currentStreak = 0
-    habit!.updateHistory(onDate: due!, completedBy: 0, skippedBy: 1)
+    habit!.updateHistory(onDate: due!, completedBy: 0, skippedBy: 1, totalBy: 0)
   }
 
 }
