@@ -115,24 +115,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       h.pausedBool = false
       h.generateEntries(after: date)
       h.update(NSDate())
-      //        components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
-      //        components.month -= 20
-      //        components.day = 3
-      //        components.hour = 1
-      //        date = calendar.dateFromComponents(components)!
-      //        h = Habit(context: HabitApp.moContext, name: "5. Monthly 4x", details: "", frequency: .Monthly, times: 4, createdAt: date)
-      //        while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Month) {
-      //          for _ in 0..<Int(arc4random_uniform(4)) {
-      //            h.addEntry(onDate: date)
-      //          }
-      //          components.month += 1
-      //          date = calendar.dateFromComponents(components)!
-      //          hupdate(date)
-      //        }
-      //        let oneDay = NSDateComponents()
-      //        oneDay.day = 1
-      //        components.month -= 8
-      //        date = calendar.dateFromComponents(components)!
       date = calendar.dateByAddingUnit(.Day, value: -180, toDate: NSDate())!
       h = Habit(context: HabitApp.moContext, name: "1. Daily 12x", details: "", frequency: .Daily, times: 12, createdAt: date)
       h.update(NSDate())
@@ -162,18 +144,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       h.generateEntries(after: date)
       h.update(NSDate())
 
-//      while !calendar.isDateInToday(date) {
-//        let entries = h.entriesOnDate(date)
-//        for i in 0..<Int(arc4random_uniform(UInt32(entries.count))) {
-//          entries[i].complete()
-//        }
-//        for entry in entries {
-//          if entry.state == .Todo {
-//            entry.skip()
-//          }
-//        }
-//        date = NSDate(timeInterval: Double(HabitApp.daySec), sinceDate: date)
-//      }
       try HabitApp.moContext.save()
     } catch let error as NSError {
       NSLog("Could not save \(error), \(error.userInfo)")
