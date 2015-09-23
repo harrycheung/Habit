@@ -632,24 +632,24 @@
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dNj-gF-csY" customClass="FrequencySettings" customModule="Habit" customModuleProvider="target">
-                                                            <rect key="frame" x="15" y="9" width="274" height="229"/>
+                                                            <rect key="frame" x="15" y="9" width="274" height="239"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KhP-Lc-a6j" userLabel="Splitter">
-                                                            <rect key="frame" x="8" y="246" width="288" height="1"/>
+                                                            <rect key="frame" x="8" y="256" width="288" height="1"/>
                                                             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="1" id="edO-R8-FR8"/>
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Send notification" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dEW-FH-HvN">
-                                                            <rect key="frame" x="15" y="253" width="125" height="31"/>
+                                                            <rect key="frame" x="15" y="263" width="125" height="31"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3JM-6P-5zg">
-                                                            <rect key="frame" x="240" y="253" width="51" height="31"/>
+                                                            <rect key="frame" x="240" y="263" width="51" height="31"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="31" id="8Rm-Jf-KgR"/>
                                                                 <constraint firstAttribute="width" constant="49" id="iSx-5j-kvn"/>
@@ -659,13 +659,13 @@
                                                             </connections>
                                                         </switch>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Never automatically skip" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oXD-iv-8Ie">
-                                                            <rect key="frame" x="15" y="305" width="182.5" height="19"/>
+                                                            <rect key="frame" x="15" y="310" width="182.5" height="19"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="rg2-TA-vhf">
-                                                            <rect key="frame" x="240" y="299" width="51" height="31"/>
+                                                            <rect key="frame" x="240" y="304" width="51" height="31"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="31" id="IQG-ZT-Msq"/>
                                                                 <constraint firstAttribute="width" constant="49" id="eFH-1f-4Y7"/>
@@ -675,7 +675,7 @@
                                                             </connections>
                                                         </switch>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pause habit" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7EZ-fg-SzK">
-                                                            <rect key="frame" x="15" y="351" width="87" height="19"/>
+                                                            <rect key="frame" x="15" y="351" width="86.5" height="19"/>
                                                             <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
@@ -726,7 +726,7 @@
                                                     </subviews>
                                                     <constraints>
                                                         <constraint firstItem="3JM-6P-5zg" firstAttribute="top" secondItem="KhP-Lc-a6j" secondAttribute="bottom" constant="6" id="0Np-Jr-pHI"/>
-                                                        <constraint firstItem="rg2-TA-vhf" firstAttribute="top" secondItem="3JM-6P-5zg" secondAttribute="bottom" constant="15" id="124-Rz-LnC"/>
+                                                        <constraint firstItem="rg2-TA-vhf" firstAttribute="top" secondItem="3JM-6P-5zg" secondAttribute="bottom" constant="10" id="124-Rz-LnC"/>
                                                         <constraint firstAttribute="trailing" secondItem="luf-9z-XNg" secondAttribute="trailing" id="1lB-10-0M3"/>
                                                         <constraint firstAttribute="trailing" secondItem="3mp-jN-SmJ" secondAttribute="trailing" constant="8" id="2dH-MC-GbM"/>
                                                         <constraint firstItem="3mp-jN-SmJ" firstAttribute="leading" secondItem="Dww-Oy-GGW" secondAttribute="leading" constant="8" id="4Is-BT-WXX"/>
@@ -755,7 +755,7 @@
                                                         <constraint firstItem="7EZ-fg-SzK" firstAttribute="leading" secondItem="Dww-Oy-GGW" secondAttribute="leading" constant="15" id="m0o-v6-fvk"/>
                                                         <constraint firstAttribute="trailing" secondItem="3JM-6P-5zg" secondAttribute="trailing" constant="15" id="mnw-v6-uL4"/>
                                                         <constraint firstItem="KhP-Lc-a6j" firstAttribute="leading" secondItem="Dww-Oy-GGW" secondAttribute="leading" constant="8" id="nqk-L4-WS2"/>
-                                                        <constraint firstItem="Oeo-e6-TcC" firstAttribute="top" secondItem="rg2-TA-vhf" secondAttribute="bottom" constant="15" id="qLd-5r-LQp"/>
+                                                        <constraint firstItem="Oeo-e6-TcC" firstAttribute="top" secondItem="rg2-TA-vhf" secondAttribute="bottom" constant="10" id="qLd-5r-LQp"/>
                                                         <constraint firstItem="bwZ-0K-KTS" firstAttribute="leading" secondItem="Dww-Oy-GGW" secondAttribute="leading" constant="8" id="s0y-Ju-JTt"/>
                                                         <constraint firstItem="dNj-gF-csY" firstAttribute="top" secondItem="3mp-jN-SmJ" secondAttribute="bottom" constant="8" id="uW8-Yr-9IG"/>
                                                         <constraint firstItem="bwZ-0K-KTS" firstAttribute="top" secondItem="3JM-6P-5zg" secondAttribute="bottom" constant="6" id="vAR-ao-v10"/>
