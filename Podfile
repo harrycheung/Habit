@@ -5,7 +5,6 @@ use_frameworks!
 pod 'SnapKit'
 pod 'KAProgressLabel'
 pod 'FontAwesome.swift'
-pod 'DateTools'
 
 def testing_pods
   pod 'Nimble', '2.0.0-rc.3'

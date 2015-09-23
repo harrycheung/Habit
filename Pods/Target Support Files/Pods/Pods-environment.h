@@ -6,16 +6,10 @@
 // project.
 
 
-// DateTools
-#define COCOAPODS_POD_AVAILABLE_DateTools
-#define COCOAPODS_VERSION_MAJOR_DateTools 1
-#define COCOAPODS_VERSION_MINOR_DateTools 7
-#define COCOAPODS_VERSION_PATCH_DateTools 0
-
 // FontAwesome.swift
 #define COCOAPODS_POD_AVAILABLE_FontAwesome_swift
 #define COCOAPODS_VERSION_MAJOR_FontAwesome_swift 0
-#define COCOAPODS_VERSION_MINOR_FontAwesome_swift 5
+#define COCOAPODS_VERSION_MINOR_FontAwesome_swift 6
 #define COCOAPODS_VERSION_PATCH_FontAwesome_swift 0
 
 // KAProgressLabel
@@ -27,6 +21,6 @@
 // SnapKit
 #define COCOAPODS_POD_AVAILABLE_SnapKit
 #define COCOAPODS_VERSION_MAJOR_SnapKit 0
-#define COCOAPODS_VERSION_MINOR_SnapKit 14
+#define COCOAPODS_VERSION_MINOR_SnapKit 15
 #define COCOAPODS_VERSION_PATCH_SnapKit 0
 

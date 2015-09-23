@@ -1,22 +1,19 @@
 PODS:
-  - DateTools (1.7.0)
-  - FontAwesome.swift (0.5.0)
+  - FontAwesome.swift (0.6.0)
   - KAProgressLabel (3.2)
   - Nimble (2.0.0-rc.3)
-  - SnapKit (0.14.0)
+  - SnapKit (0.15.0)
 
 DEPENDENCIES:
-  - DateTools
   - FontAwesome.swift
   - KAProgressLabel
   - Nimble (= 2.0.0-rc.3)
   - SnapKit
 
 SPEC CHECKSUMS:
-  DateTools: 53288ee8b905fdc75897a1e6b5cc0144b14cba60
-  FontAwesome.swift: 0b38f996bce5478b6d3f4f41b291b7991d97c42a
+  FontAwesome.swift: 4726ef163682da8750d88b4ba27ac4dbf46d4fdc
   KAProgressLabel: 4362a1d37c5a7bc7c10cd059fd2da7cb9599cb50
   Nimble: 9dff98ee195ffe7351d3b2fb01d3a1420fd97948
-  SnapKit: f42352ef34953866da0de1e1009c2ff82588a95e
+  SnapKit: 4962eed2ee18e48cbd2b2292fffc57efe7235f87
 
 COCOAPODS: 0.37.2

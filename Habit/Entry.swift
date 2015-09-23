@@ -23,7 +23,7 @@ class Entry: NSManagedObject {
     self.period = "\(habit.frequency.description)\(period)"
     self.number = number
     habit.updateHistory(onDate: due, completedBy: 0, skippedBy: 0)
-    //print("new entry: \(self.period)")
+    //print("\(habit.name) new entry: \(self.period)")
   }
   
   var state: State {
@@ -48,13 +48,46 @@ class Entry: NSManagedObject {
       default: ()
       }
     }
-    var text = due!.timeAgoSinceNow()
-    if dueIn > 0 {
-      let endIndex = text.characters.count - 4
-      text = "in \(text.substringToIndex(text.startIndex.advancedBy(endIndex)))"
+    var text = ""
+    var di = Int(dueIn)
+    let past = di < 0 ? true : false
+    di = abs(di) / 60
+    switch di {
+    case 0..<5:
+      text = "now"
+    case 5..<60:
+      text = "\(di) minutes"
+    case 60..<HabitApp.dayMinutes:
+      let hours = di / 60
+      if hours == 1 {
+        text = "an hour"
+      } else {
+        text = "\(hours) hours"
+      }
+    case HabitApp.dayMinutes..<HabitApp.weekMinutes:
+      let days = di / HabitApp.dayMinutes
+      if days == 1 {
+        text = "a day"
+      } else {
+        text = "\(days) days"
+      }
+    case HabitApp.weekMinutes..<(HabitApp.weekMinutes * 4):
+      let weeks = di / HabitApp.weekMinutes
+      if weeks == 1 {
+        text = "a week"
+      } else {
+        text = "\(weeks) weeks"
+      }
+    default:
+      text = "a month"
     }
-    //return "\(Habit.frequencyStrings[habit!.frequency]!) (\(ratio)): \(text)"
-    return "\(due!)"
+    if past {
+      text = "\(text) ago"
+    } else {
+      text = "in \(text)"
+    }
+    //return "\(Habit.frequencyStrings[habit!.frequency.rawValue]) (\(ratio)): due \(text)"
+    return text
   }
   
   func complete() {
