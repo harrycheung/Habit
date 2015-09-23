@@ -659,7 +659,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     header!.contentView.backgroundColor = HabitApp.color
     let title = UILabel()
     title.font = UIFont(name: "Bariol-Regular", size: 14.0)!
-    title.textColor = UIColor.lightGrayColor()
+    title.textColor = UIColor.whiteColor().colorWithAlphaComponent(0.5)
     title.text = section == 0 ? "CURRENT" : "UPCOMING"
     header!.contentView.addSubview(title)
     title.snp_makeConstraints { make in

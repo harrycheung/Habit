@@ -80,7 +80,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
       neverAutoSkip.on = habit!.neverAutoSkipBool
     } else {
       frequencySettings!.overlayTouched(frequencySettings!.leftOverlay!, touched: false)
-      save.setTitle("Create", forState: .Normal)
+      save.setTitle("Start", forState: .Normal)
       deleteWidth.priority = HabitApp.LayoutPriorityHigh
     }
     save.tintColor = UIColor.whiteColor()
