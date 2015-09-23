@@ -90,41 +90,13 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="urC-5T-0X6">
-                                        <rect key="frame" x="8" y="5" width="57" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="57" id="yIQ-ez-FkP"/>
-                                        </constraints>
-                                        <state key="normal" title="DELETE">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="deleteAll:" destination="EoV-sV-T6s" eventType="touchUpInside" id="ZNL-Kx-3EM"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tZc-J2-DRl">
-                                        <rect key="frame" x="282" y="5" width="30" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="30" id="RqC-ML-XIr"/>
-                                        </constraints>
-                                        <state key="normal" title="FILL">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="fill:" destination="EoV-sV-T6s" eventType="touchUpInside" id="iLs-D2-sLC"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.20392156859999999" green="0.59607843140000005" blue="0.85882352939999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="centerY" secondItem="yD2-xD-ARB" secondAttribute="centerY" id="DoB-tv-WZj"/>
                                     <constraint firstAttribute="centerX" secondItem="yD2-xD-ARB" secondAttribute="centerX" id="H9X-2h-8QY"/>
-                                    <constraint firstItem="urC-5T-0X6" firstAttribute="leading" secondItem="vGZ-8P-gz0" secondAttribute="leading" constant="8" id="InY-sx-dTm"/>
-                                    <constraint firstItem="urC-5T-0X6" firstAttribute="top" secondItem="vGZ-8P-gz0" secondAttribute="top" constant="5" id="d8e-Wa-MML"/>
                                     <constraint firstAttribute="height" constant="40" id="dmD-Qq-zpM"/>
-                                    <constraint firstAttribute="trailing" secondItem="tZc-J2-DRl" secondAttribute="trailing" constant="8" id="hJ4-Zy-TYw"/>
-                                    <constraint firstItem="tZc-J2-DRl" firstAttribute="top" secondItem="vGZ-8P-gz0" secondAttribute="top" constant="5" id="rCb-Pg-3mv"/>
                                 </constraints>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="ueq-DP-xrh" appends="YES" id="YeN-fY-ScM"/>
