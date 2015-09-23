@@ -717,17 +717,21 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   @IBAction func changeColorLeft(sender: AnyObject) {
-    HabitApp.colorIndex -= 1
-    if HabitApp.colorIndex == -1 {
+    let newIndex = HabitApp.colorIndex - 1
+    if newIndex == -1 {
       HabitApp.colorIndex = HabitApp.colors.count - 1
+    } else {
+      HabitApp.colorIndex = newIndex
     }
     changeColor(HabitApp.color)
   }
 
   @IBAction func changeColorRight(sender: AnyObject) {
-    HabitApp.colorIndex += 1
-    if HabitApp.colorIndex == HabitApp.colors.count {
+    let newIndex = HabitApp.colorIndex + 1
+    if newIndex == HabitApp.colors.count {
       HabitApp.colorIndex = 0
+    } else {
+      HabitApp.colorIndex = newIndex
     }
     changeColor(HabitApp.color)
   }
