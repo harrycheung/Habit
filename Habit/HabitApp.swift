@@ -155,12 +155,39 @@ class HabitApp {
     }
   }
   
+  static func initNotification() {
+    let settings = UIApplication.sharedApplication().currentUserNotificationSettings()
+    if !(settings!.types.contains(.Badge) && settings!.types.contains(.Sound) && settings!.types.contains(.Alert)) {
+      let completeAction = UIMutableUserNotificationAction()
+      completeAction.identifier = "COMPLETE"
+      completeAction.title = "Complete"
+      completeAction.activationMode = .Background
+      completeAction.authenticationRequired = false
+      completeAction.destructive = false
+      
+      let skipAction = UIMutableUserNotificationAction()
+      skipAction.identifier = "SKIP"
+      skipAction.title = "Skip"
+      skipAction.activationMode = .Background
+      skipAction.authenticationRequired = false
+      skipAction.destructive = false
+      
+      let habitCategory = UIMutableUserNotificationCategory()
+      habitCategory.identifier = "HABIT_CATEGORY"
+      habitCategory.setActions([completeAction, skipAction], forContext: .Minimal)
+      
+      let notificationSettings =
+        UIUserNotificationSettings(forTypes: [.Badge, .Sound, .Alert], categories: [habitCategory])
+      UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
+    }
+  }
+  
   static func addNotification(entry: Entry, number: Int) {
     if HabitApp.notification {
       if UIApplication.sharedApplication().currentUserNotificationSettings()!.types.contains(.Alert) {
         let local = UILocalNotification()
         local.fireDate = entry.due
-        local.alertBody = entry.habit!.name! + " \(number)"
+        local.alertBody = entry.habit!.name!
         local.userInfo = ["entry": entry.objectID.URIRepresentation().absoluteString]
         local.applicationIconBadgeNumber = number
         local.soundName = UILocalNotificationDefaultSoundName

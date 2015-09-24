@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     // Test for first run
     if HabitApp.timeZone == "" {
+      HabitApp.colorIndex = 0
       HabitApp.upcoming = false
       HabitApp.notification = true
       HabitApp.autoSkip = false
@@ -29,28 +30,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var attr = [NSObject: AnyObject]()
     attr[NSFontAttributeName] = UIFont(name: "Bariol-Regular", size: 15.0)!
     UISegmentedControl.appearance().setTitleTextAttributes(attr, forState: .Normal)
-    
-    // Notifications
-    let completeAction = UIMutableUserNotificationAction()
-    completeAction.identifier = "COMPLETE"
-    completeAction.title = "Complete"
-    completeAction.activationMode = .Background
-    completeAction.authenticationRequired = false
-    completeAction.destructive = false
-    
-    let skipAction = UIMutableUserNotificationAction()
-    skipAction.identifier = "SKIP"
-    skipAction.title = "Skip"
-    skipAction.activationMode = .Background
-    skipAction.authenticationRequired = false
-    skipAction.destructive = false
-    
-    let habitCategory = UIMutableUserNotificationCategory()
-    habitCategory.identifier = "HABIT_CATEGORY"
-    habitCategory.setActions([completeAction, skipAction], forContext: .Minimal)
-    
-    let notificationSettings = UIUserNotificationSettings(forTypes: [.Badge, .Sound, .Alert], categories: [habitCategory])
-    application.registerUserNotificationSettings(notificationSettings)
     
     return true
   }

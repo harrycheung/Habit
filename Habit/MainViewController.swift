@@ -314,19 +314,24 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func refreshNotifications() {
-    UIApplication.sharedApplication().cancelAllLocalNotifications()
-    var count = 0
-    var number = 1
-    let now = NSDate()
-    for entry in entries {
-      if count > 64 {
-        break
+    if HabitApp.notification {
+      UIApplication.sharedApplication().cancelAllLocalNotifications()
+      var count = 0
+      var number = 1
+      let now = NSDate()
+      for entry in entries {
+        if count > 64 {
+          break
+        }
+        if entry.habit!.notifyBool && entry.due!.compare(now) == .OrderedDescending {
+          HabitApp.addNotification(entry, number: number)
+          count += 1
+        }
+        number += 1
       }
-      if entry.habit!.notifyBool && entry.due!.compare(now) == .OrderedDescending {
-        HabitApp.addNotification(entry, number: number)
-        count += 1
+      if count > 0 {
+        HabitApp.initNotification()
       }
-      number += 1
     }
   }
   
