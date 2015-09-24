@@ -25,17 +25,17 @@ install_framework()
   fi
 
   # Embed linked Swift runtime libraries
-  local basename
-  basename=$(echo $1 | sed -E s/\\..+// && exit ${PIPESTATUS[0]})
-  local swift_runtime_libs
-  swift_runtime_libs=$(xcrun otool -LX "${CONFIGURATION_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/$1/${basename}" | grep --color=never @rpath/libswift | sed -E s/@rpath\\/\(.+dylib\).*/\\1/g | uniq -u  && exit ${PIPESTATUS[0]})
-  for lib in $swift_runtime_libs; do
-    echo "rsync -auv \"${SWIFT_STDLIB_PATH}/${lib}\" \"${destination}\""
-    rsync -auv "${SWIFT_STDLIB_PATH}/${lib}" "${destination}"
-    if [ "${CODE_SIGNING_REQUIRED}" == "YES" ]; then
-      code_sign "${destination}/${lib}"
-    fi
-  done
+#  local basename
+#  basename=$(echo $1 | sed -E s/\\..+// && exit ${PIPESTATUS[0]})
+#  local swift_runtime_libs
+#  swift_runtime_libs=$(xcrun otool -LX "${CONFIGURATION_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/$1/${basename}" | grep --color=never @rpath/libswift | sed -E s/@rpath\\/\(.+dylib\).*/\\1/g | uniq -u  && exit ${PIPESTATUS[0]})
+#  for lib in $swift_runtime_libs; do
+#    echo "rsync -auv \"${SWIFT_STDLIB_PATH}/${lib}\" \"${destination}\""
+#    rsync -auv "${SWIFT_STDLIB_PATH}/${lib}" "${destination}"
+#    if [ "${CODE_SIGNING_REQUIRED}" == "YES" ]; then
+#      code_sign "${destination}/${lib}"
+#    fi
+#  done
 }
 
 # Signs a framework with the provided identity
