@@ -55,10 +55,6 @@
             <string>Bariol-Regular</string>
             <string>Bariol-Regular</string>
         </mutableArray>
-        <mutableArray key="FontAwesome.otf">
-            <string>FontAwesome</string>
-            <string>FontAwesome</string>
-        </mutableArray>
     </customFonts>
     <scenes>
         <!--Main View Controller-->
@@ -284,7 +280,7 @@
                                                         <constraint firstAttribute="height" constant="30" id="Z5b-5g-6z9"/>
                                                         <constraint firstAttribute="width" constant="30" id="r9w-Tx-eL9"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="FontAwesome" family="FontAwesome" pointSize="20"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                     <state key="normal" title="X">
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
@@ -615,7 +611,7 @@
                                                         <constraint firstAttribute="height" constant="30" id="3jm-ge-NCn"/>
                                                         <constraint firstAttribute="width" constant="30" id="ZUr-fn-rxQ"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="FontAwesome" family="FontAwesome" pointSize="20"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                     <state key="normal" title="X">
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
