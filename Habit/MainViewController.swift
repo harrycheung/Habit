@@ -205,7 +205,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     reloadEntries()
       
     // Setup timers
-    //refreshTimer = NSTimer.scheduledTimerWithTimeInterval(5 * 60, target: tableView, selector: "reloadData", userInfo: nil, repeats: true)
+    refreshTimer = NSTimer.scheduledTimerWithTimeInterval(5 * 60, target: tableView, selector: "reloadData", userInfo: nil, repeats: true)
     
     // Setup colors
     tableView.backgroundView = nil
@@ -251,7 +251,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func insertEntries(newEntries: [Entry]) {
-    let upcomingCount = upcoming.count
+    let entriesCount = entries.count
     tableView.beginUpdates()
     reloadEntries()
     var inserts: [NSIndexPath] = []
@@ -265,11 +265,23 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         inserts.append(NSIndexPath(forItem: index, inSection: 1))
       }
     }
-    if HabitApp.upcoming && upcomingCount == 0 && upcoming.count > 0 {
-      tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .Top)
+    if HabitApp.upcoming && entriesCount == 0 {
+      tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .None)
     }
-    tableView.insertRowsAtIndexPaths(inserts, withRowAnimation: .Top)
+    tableView.insertRowsAtIndexPaths(inserts, withRowAnimation: entriesCount == 0 ? .None : .Top)
     tableView.endUpdates()
+    
+    if entriesCount == 0 {
+      var delayStart = 0.0
+      for (index, _) in entries.enumerate() {
+        let indexPath = NSIndexPath(forRow: index, inSection: 0)
+        if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+          showCellAnimate(cell, endFrame: tableView.rectForRowAtIndexPath(indexPath), delay: delayStart)
+          delayStart += SlideAnimationDelay
+        }
+      }
+      showUpcoming(delayStart)
+    }
   }
   
   func removeEntries(oldEntries: [Entry]) {
@@ -335,7 +347,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
   }
   
-  
   func hideCellAnimate(view: UIView, delay: NSTimeInterval, complete: (() -> Void)?) {
     var endFrame = view.frame
     endFrame.origin.y = view.frame.origin.y + self.tableView.superview!.bounds.height
@@ -392,18 +403,19 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       }, completion: nil)
   }
   
-  func showUpcoming() {
+  func showUpcoming(var delayStart: Double = 0) {
     if upcoming.count > 0 {
-      // Load up the cells to animate
-      tableView.beginUpdates()
-      tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .None)
-      let indexPaths = upcoming.enumerate().map { (index, entry) in
-        return NSIndexPath(forRow: index, inSection: 1)
+      if delayStart == 0 {
+        // Load up the cells to animate
+        tableView.beginUpdates()
+        tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .None)
+        let indexPaths = upcoming.enumerate().map { (index, entry) in
+          return NSIndexPath(forRow: index, inSection: 1)
+        }
+        tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
+        tableView.endUpdates()
       }
-      tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
-      tableView.endUpdates()
       
-      var delayStart: Double = 0
       if let header = tableView.headerViewForSection(1) {
         showCellAnimate(header, endFrame: tableView.rectForHeaderInSection(1), delay: delayStart)
         for (index, _) in upcoming.enumerate() {
