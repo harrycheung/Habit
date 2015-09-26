@@ -70,6 +70,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     
     // Fill out the form
     if habit != nil {
+      frequencyLabel.text = "Edit \(frequency.description.lowercaseString) habit"
       name.text = habit!.name;
       if habit!.useTimes {
         frequencySettings!.picker.selectRow(habit!.times!.integerValue - 1, inComponent: 0, animated: false)
@@ -79,12 +80,12 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
       notify.on = habit!.notifyBool
       neverAutoSkip.on = habit!.neverAutoSkipBool
     } else {
+      frequencyLabel.text = "Start a \(frequency.description.lowercaseString) habit"
       frequencySettings!.overlayTouched(frequencySettings!.leftOverlay!, touched: false)
       save.setTitle("Start", forState: .Normal)
       deleteWidth.priority = HabitApp.LayoutPriorityHigh
     }
     save.tintColor = UIColor.whiteColor()
-    frequencyLabel.text = "\(frequency.description) habit"
     
     // Tap handlers for closing the keyboard. Note: I need a specific recognizer for
     // the UIPickerViews since they handle the gesture a little differently. I think
@@ -110,7 +111,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     contentView.layer.shadowRadius = 5
     contentView.layer.shadowOffset = CGSizeMake(0, 1)
     
-    name.attributedPlaceholder = NSAttributedString(string: "start a habit",
+    name.attributedPlaceholder = NSAttributedString(string: "describe your habit",
       attributes: [NSForegroundColorAttributeName: UIColor.whiteColor().colorWithAlphaComponent(0.5)])
     name.tintColor = UIColor.whiteColor()
   }
@@ -193,6 +194,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
       self.habit!.name = name
       save(self.habit!)
       transition()
+      self.mvc!.tableView.reloadData()
     }
     
     let trimmedName = self.name.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())

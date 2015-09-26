@@ -619,7 +619,7 @@
                                                         <action selector="closeView:" destination="Y0I-la-TF4" eventType="touchUpInside" id="Mzp-Wo-qtN"/>
                                                     </connections>
                                                 </button>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="start a habit" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="krz-Bl-NLo">
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="describe your habit" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="krz-Bl-NLo">
                                                     <rect key="frame" x="15" y="46" width="274" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="oCH-q5-rrO"/>
