@@ -111,7 +111,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     contentView.layer.shadowRadius = 5
     contentView.layer.shadowOffset = CGSizeMake(0, 1)
     
-    name.attributedPlaceholder = NSAttributedString(string: "describe your habit",
+    name.attributedPlaceholder = NSAttributedString(string: "describe a habit",
       attributes: [NSForegroundColorAttributeName: UIColor.whiteColor().colorWithAlphaComponent(0.5)])
     name.tintColor = UIColor.whiteColor()
   }
