@@ -530,14 +530,16 @@ class Habit: NSManagedObject {
       let upcomingMonth = calendar.dateByAddingUnit(.Month, value: upcoming, toDate: currentDate)!
       while true {
         let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: lastDue)
+        var daysInMonth = calendar.rangeOfUnit(.Day, inUnit: .Month, forDate: lastDue).length
         if count >= expected {
           count = 0
           if components.day != 1 {
             components.month += 1
           }
+          daysInMonth = calendar.rangeOfUnit(.Day, inUnit: .Month,
+            forDate: calendar.dateByAddingUnit(.Month, value: 1, toDate: lastDue)!).length
         }
         count += 1
-        let daysInMonth = calendar.rangeOfUnit(.Day, inUnit: .Month, forDate: lastDue).length
         if useTimes {
           let dueDay = count * daysInMonth / times!.integerValue
           components.day = dueDay
