@@ -433,6 +433,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   func resetFuture() {
     var cellsToHide: [UIView] = []
+    var upcomingHeaderFrame: CGRect? = nil
     if HabitApp.upcoming {
       if let header = tableView.headerViewForSection(1) {
         for index in (0..<upcoming.count).reverse() {
@@ -442,6 +443,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
           }
         }
         cellsToHide.append(header)
+        upcomingHeaderFrame = header.frame
       }
     }
     var entriesToDelete: [Entry] = []
@@ -467,7 +469,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         hideCellAnimate(cellsToHide[index], delay: delayStart, complete: nil)
       } else {
         hideCellAnimate(cellsToHide[index], delay: delayStart) {
-          self.reloadEntries()
+          self.tableView.reloadData()
+          self.tableView.layoutIfNeeded()
           
           var cellsToShow: [(UIView, CGRect)] = []
           for (index, entry) in self.entries.enumerate() {
@@ -484,8 +487,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
           }
           if HabitApp.upcoming {
             // Header will be returned if visible
-            cellsToShow.append((self.tableView.headerViewForSection(1)!,
-                                self.tableView.rectForHeaderInSection(1)))
+            if let header = self.tableView.headerViewForSection(1) {
+              cellsToShow.append((header, upcomingHeaderFrame!))
+            }
             for index in 0..<self.upcoming.count {
               let indexPath = NSIndexPath(forRow: index, inSection: 1)
               if self.tableView.indexPathsForVisibleRows!.contains(indexPath) {
@@ -507,7 +511,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       delayStart += SlideAnimationDelay
     }
     do {
-      // Do batch delete from ios9
       for entry in entriesToDelete {
         HabitApp.moContext.deleteObject(entry)
       }
@@ -520,6 +523,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         habit.update(NSDate())
       }
       try HabitApp.moContext.save()
+      reloadEntries()
+      if cellsToHide.count == 0 {
+        tableView.reloadData()
+      }
     } catch let error as NSError {
       NSLog("Fetch failed: \(error.localizedDescription)")
     }
