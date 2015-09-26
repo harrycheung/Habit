@@ -104,7 +104,7 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
             self.close.alpha = 1
           }, completion: nil)
       } else {
-        performSegueWithIdentifier("SettingsUnwind", sender: self)
+        shouldPerformSegueWithIdentifier("", sender: nil)
       }
     }
   }
