@@ -252,6 +252,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   func insertEntries(newEntries: [Entry]) {
     let entriesCount = entries.count
+    let upcomingCount = upcoming.count
     tableView.beginUpdates()
     reloadEntries()
     var inserts: [NSIndexPath] = []
@@ -265,7 +266,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         inserts.append(NSIndexPath(forItem: index, inSection: 1))
       }
     }
-    if HabitApp.upcoming && entriesCount == 0 {
+    if HabitApp.upcoming && upcomingCount == 0 {
       tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .None)
     }
     tableView.insertRowsAtIndexPaths(inserts, withRowAnimation: entriesCount == 0 ? .None : .Top)
