@@ -15,9 +15,15 @@ import Nimble
 class HabitMonthlyTests: XCTestCase {
     
   var context: NSManagedObjectContext?
+  var previousStartOfDay: Int = 0
+  var previousEndOfDay: Int = 0
   
   override func setUp() {
     super.setUp()
+    
+    previousStartOfDay = HabitApp.startOfDay
+    previousEndOfDay = HabitApp.endOfDay
+    
     context = HabitApp.setUpInMemoryManagedObjectContext()
     HabitApp.upcoming = true
     HabitApp.startOfDay = 0
@@ -27,6 +33,9 @@ class HabitMonthlyTests: XCTestCase {
   override func tearDown() {
     super.tearDown()
     context = nil
+    
+    HabitApp.startOfDay = previousStartOfDay
+    HabitApp.endOfDay = previousEndOfDay
   }
   
   func testCountBeforeCreatedMonthly() {
