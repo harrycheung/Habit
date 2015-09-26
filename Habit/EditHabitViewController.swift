@@ -201,12 +201,21 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     if habit == nil {
       do {
         let request = NSFetchRequest(entityName: "Habit")
-        request.predicate = NSPredicate(format: "name == %@", trimmedName)
+        request.predicate = NSPredicate(format: "name ==[c] %@", trimmedName)
         let habits = try HabitApp.moContext.executeFetchRequest(request) as! [Habit]
         if habits.count > 0 {
           showAlert(nil,
             message: "Another habit with the same name exists.\nContinue with save?",
-            yes: ("Yes", .Default, { normalSave(trimmedName) }),
+            yes: ("Yes", .Default, {
+              if self.habit == nil {
+                self.habit =
+                  Habit(context: HabitApp.moContext, name: trimmedName, details: "", frequency: .Daily, times: 0, createdAt: NSDate())
+                save(self.habit!)
+                transition()
+              } else {
+                normalSave(trimmedName)
+              }
+            }),
             no: ("No", .Cancel, { alert in
               alert.dismissViewControllerAnimated(true, completion: nil)
             }))
