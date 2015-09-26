@@ -687,7 +687,7 @@ class HabitWeeklyTests: XCTestCase {
     
     (habit.entries!.objectAtIndex(0) as! Entry).complete()
     habit.daysOfWeek = [.Sunday, .Tuesday, .Wednesday, .Thursday, .Friday]
-    var predicate = NSPredicate(format: "due > %@", NSDate())
+    var predicate = NSPredicate(format: "due > %@", calendar.dateFromComponents(components)!)
     var entriesToDelete = habit.entries!.filteredOrderedSetUsingPredicate(predicate).array as! [Entry]
     for entry in entriesToDelete {
       context!.deleteObject(entry)
@@ -695,7 +695,7 @@ class HabitWeeklyTests: XCTestCase {
     context!.refreshAllObjects()
     components.minute = 20
     habit.update(calendar.dateFromComponents(components)!)
-    expect(habit.entries!.count) == 7
+    expect(habit.entries!.count) == 8
     
     components.day = 5 // Saturday
     createdAt = calendar.dateFromComponents(components)!
