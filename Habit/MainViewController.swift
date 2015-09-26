@@ -272,7 +272,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     tableView.endUpdates()
     
     if entriesCount == 0 {
-      var delayStart = 0.0
+      // Non-zero just in case there aren't any entries to insert
+      var delayStart = 0.0001
       for (index, _) in entries.enumerate() {
         let indexPath = NSIndexPath(forRow: index, inSection: 0)
         if let cell = tableView.cellForRowAtIndexPath(indexPath) {
