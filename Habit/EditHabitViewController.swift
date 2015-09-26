@@ -59,7 +59,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
         useTimes: habit != nil && habit!.useTimes,
         delegate: self)
     case .Monthly:
-      frequencySettings.configure(leftTitle: "Times a monnth",
+      frequencySettings.configure(leftTitle: "Times a month",
         pickerCount: 5,
         rightTitle: "Parts of month",
         multiSelectItems: Habit.partOfMonthStrings,
