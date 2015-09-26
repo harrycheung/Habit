@@ -505,4 +505,31 @@ class HabitMonthlyTests: XCTestCase {
     expect(habit.entries!.count) == 2
   }
   
+  func testFrequencyChange() {
+    let calendar = HabitApp.calendar
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 9
+    components.day = 15
+    components.hour = 12
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 2, createdAt: createdAt)
+    components.minute = 10
+    habit.update(calendar.dateFromComponents(components)!)
+    expect(habit.entries!.count) == 3
+    
+    (habit.entries!.objectAtIndex(0) as! Entry).complete()
+    habit.times = 1
+    let predicate = NSPredicate(format: "due > %@", calendar.dateFromComponents(components)!)
+    let entriesToDelete = habit.entries!.filteredOrderedSetUsingPredicate(predicate).array as! [Entry]
+    for entry in entriesToDelete {
+      context!.deleteObject(entry)
+    }
+    context!.refreshAllObjects()
+    components.minute = 20
+    habit.update(calendar.dateFromComponents(components)!)
+    expect(habit.entries!.count) == 2
+  }
+
+  
 }
