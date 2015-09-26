@@ -31,7 +31,10 @@ class HabitDailyTests: XCTestCase {
   
   func testCountBeforeCreatedDaily() {
     let calendar = HabitApp.calendar
-    let components = calendar.components([.Year, .Month, .Day, .Hour], fromDate: NSDate())
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 8
+    components.day = 10
     components.hour = 13
     let createdAt = calendar.dateFromComponents(components)!
     var habit = Habit(context: context!, name: "A habit", details: "", frequency: .Daily, times: 12, createdAt: createdAt)
@@ -39,6 +42,9 @@ class HabitDailyTests: XCTestCase {
     expect(habit.countBefore(createdAt)) == 6
     components.hour = 1
     expect(habit.countBefore(calendar.dateFromComponents(components)!)) == 0
+    components.day = 11
+    components.hour = 0
+    expect(habit.countBefore(calendar.dateFromComponents(components)!)) == 12
     
     habit = Habit(context: context!, name: "A habit", details: "", frequency: .Daily, times: 0, createdAt: createdAt)
     habit.partsOfDay = [.Morning, .MidMorning, .MidDay, .Evening]

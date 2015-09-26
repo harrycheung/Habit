@@ -241,16 +241,24 @@ class Habit: NSManagedObject {
     return countBefore(date, start: true)
   }
   
-  func countBefore(date: NSDate, start: Bool) -> Int {
+  //
+  // countBefore
+  //   # of entries before the 'date'. 'start' is true when used on a brand new habit. If true, count anything on 
+  //   the date passed in, regardless if the times has passed or not.
+  //
+  func countBefore(var date: NSDate, start: Bool) -> Int {
     var count = 0
     let calendar = HabitApp.calendar
     switch frequency {
     case .Daily:
       let components = calendar.components([.Hour, .Minute], fromDate: date)
       var time = components.hour * 60 + components.minute
+      if time == 0 {
+        time = HabitApp.dayMinutes
+      }
       if useTimes {
         time -= HabitApp.startOfDay
-        if time > HabitApp.endOfDay - HabitApp.startOfDay {
+        if time >= HabitApp.endOfDay - HabitApp.startOfDay {
           count = times!.integerValue
         } else if time > 0 {
           let interval = (HabitApp.endOfDay - HabitApp.startOfDay) / times!.integerValue
@@ -268,8 +276,14 @@ class Habit: NSManagedObject {
         }
       }
     case .Weekly:
-      let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute, .Weekday], fromDate: date)
+      var components = calendar.components([.Year, .Month, .Day, .Hour, .Minute, .Weekday], fromDate: date)
       var minuteOfDay = components.hour * 60 + components.minute
+      if minuteOfDay == 0 {
+        date = calendar.dateByAddingUnit(.Second, value: -1, toDate: date)!
+        components = calendar.components([.Weekday], fromDate: date)
+        minuteOfDay = HabitApp.dayMinutes
+      }
+      let weekday = components.weekday
       if useTimes {
         let dayMinutes = HabitApp.endOfDay - HabitApp.startOfDay
         if minuteOfDay < HabitApp.startOfDay {
@@ -279,14 +293,15 @@ class Habit: NSManagedObject {
         } else {
           minuteOfDay -= HabitApp.startOfDay
         }
-        let time = (components.weekday - 1) * dayMinutes + minuteOfDay
+        let time = (weekday - 1) * dayMinutes + minuteOfDay
         let interval = dayMinutes * 7 / times!.integerValue
         count = time / interval
       } else {
         for dayOfWeek in daysOfWeek {
-          if dayOfWeek.rawValue < components.weekday {
+          if weekday > dayOfWeek.rawValue {
             count += 1
-          } else if dayOfWeek.rawValue == components.weekday {
+          } else if weekday == dayOfWeek.rawValue {
+            // Ignore minuteOfDay since this is a new habit
             if start || (!start && minuteOfDay >= HabitApp.endOfDay) {
               count += 1
             }
@@ -294,16 +309,27 @@ class Habit: NSManagedObject {
         }
       }
     case .Monthly:
-      let components = calendar.components([.Day, .Hour, .Minute], fromDate: createdAt!)
-      let createdDay = components.day
-      let daysInMonth = calendar.rangeOfUnit(.Day, inUnit: .Month, forDate: createdAt!).length
+      var components = calendar.components([.Day, .Hour, .Minute], fromDate: date)
+      var minuteOfDay = components.hour * 60 + components.minute
+      if minuteOfDay == 0 {
+        date = calendar.dateByAddingUnit(.Second, value: -1, toDate: date)!
+        components = calendar.components([.Day], fromDate: date)
+        minuteOfDay = HabitApp.dayMinutes
+      }
+      let day = components.day
+      let daysInMonth = calendar.rangeOfUnit(.Day, inUnit: .Month, forDate: date).length
       if useTimes {
         let interval = daysInMonth / times!.integerValue
-        count = createdDay / interval
+        count = day / interval
       } else {
         for partOfMonth in partsOfMonth {
-          if createdDay >= partOfMonth.rawValue * daysInMonth / 3 {
+          if day > partOfMonth.rawValue * daysInMonth / 3 {
             count += 1
+          } else if day == partOfMonth.rawValue * daysInMonth / 3 {
+            // Ignore minuteOfDay since this is a new habit
+            if start || (!start && minuteOfDay >= HabitApp.endOfDay) {
+              count += 1
+            }
           }
         }
       }
@@ -531,7 +557,7 @@ class Habit: NSManagedObject {
           calendar.isDate(lastDue, equalToDate: upcomingMonth, toUnitGranularity: .Month) {
           break
         }
-        //print("lastdue: \(formatter.stringFromDate(lastDue))")
+        //print("lastdue: \(HabitApp.dateFormatter.stringFromDate(lastDue))")
         if pausedBool {
           updateHistory(onDate: lastDue, completedBy: 0, skippedBy: 0, totalBy: 0)
         } else {

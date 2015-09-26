@@ -41,7 +41,7 @@ class HabitMonthlyTests: XCTestCase {
     expect(habitTimes.countBefore(createdAt)) == 2
     components.month = 4
     components.day = 1
-    expect(habitTimes.countBefore(calendar.dateFromComponents(components)!)) == 2
+    expect(habitTimes.countBefore(calendar.dateFromComponents(components)!)) == 5
     
     let habitParts = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
     habitParts.partsOfMonth = [.Beginning, .End]
@@ -49,7 +49,7 @@ class HabitMonthlyTests: XCTestCase {
     expect(habitParts.countBefore(createdAt)) == 1
     components.month = 4
     components.day = 1
-    expect(habitParts.countBefore(calendar.dateFromComponents(components)!)) == 1
+    expect(habitParts.countBefore(calendar.dateFromComponents(components)!)) == 2
     expect(habitParts.firstTodo).to(beNil())
   }
   
@@ -513,10 +513,10 @@ class HabitMonthlyTests: XCTestCase {
     components.day = 15
     components.hour = 12
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 2, createdAt: createdAt)
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 3, createdAt: createdAt)
     components.minute = 10
     habit.update(calendar.dateFromComponents(components)!)
-    expect(habit.entries!.count) == 3
+    expect(habit.entries!.count) == 5
     
     (habit.entries!.objectAtIndex(0) as! Entry).complete()
     habit.times = 1
@@ -530,6 +530,21 @@ class HabitMonthlyTests: XCTestCase {
     habit.update(calendar.dateFromComponents(components)!)
     expect(habit.entries!.count) == 2
   }
-
+  
+  func testMultipleUpdates() {
+    let calendar = HabitApp.calendar
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 9
+    components.day = 26
+    components.hour = 12
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 3, createdAt: createdAt)
+    components.minute = 10
+    habit.update(calendar.dateFromComponents(components)!)
+    components.minute = 11
+    habit.update(calendar.dateFromComponents(components)!)
+    expect(habit.entries!.count) == 4
+  }
   
 }

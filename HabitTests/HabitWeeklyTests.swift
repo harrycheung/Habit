@@ -40,15 +40,19 @@ class HabitWeeklyTests: XCTestCase {
     var habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
     
     expect(habit.countBefore(createdAt)) == 3
-    // Sunday
-    expect(habit.countBefore(calendar.dateByAddingUnit(.Day, value: 3, toDate: createdAt)!)) == 0
+    components.day = 20 // Sunday
+    expect(habit.countBefore(calendar.dateFromComponents(components)!)) == 0
+    components.hour = 0
+    expect(habit.countBefore(calendar.dateFromComponents(components)!)) == 6
     
     habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
     habit.daysOfWeek = [.Sunday, .Tuesday, .Wednesday, .Saturday]
     
     expect(habit.countBefore(createdAt)) == 3
-    // Sunday
-    expect(habit.countBefore(calendar.dateByAddingUnit(.Day, value: 3, toDate: createdAt)!)) == 1
+    components.hour = 12
+    expect(habit.countBefore(calendar.dateFromComponents(components)!)) == 1
+    components.day = 21 // Monday
+    expect(habit.countBefore(calendar.dateFromComponents(components)!)) == 1
     expect(habit.firstTodo).to(beNil())
     expect(habit.lastEntry) == createdAt
     
@@ -57,6 +61,7 @@ class HabitWeeklyTests: XCTestCase {
     // 1 hr/10 min
     habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
     expect(habit.countBefore(createdAt)) == 4
+    components.day = 17 // Thursday
     components.hour = 3
     expect(habit.countBefore(calendar.dateFromComponents(components)!)) == 3
   }
