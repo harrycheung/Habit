@@ -230,4 +230,24 @@ class HabitApp {
     return formatter
   }()
   
+  enum PhoneSize {
+    case iPhone4, iPhone5, iPhone6, iPhone6P
+  }
+  
+  static var phoneSize: PhoneSize = {
+    switch UIScreen.mainScreen().scale {
+    case 2.0:
+      switch UIScreen.mainScreen().bounds.size.height {
+      case 667:
+        return .iPhone6
+      case 568:
+        return .iPhone5
+      default:
+        return .iPhone4
+      }
+    default: // 3.0
+      return .iPhone6P // 736.0
+    }
+  }()
+  
 }

@@ -16,6 +16,8 @@ import FontAwesome_swift
 
 class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencySettingsDelegate, UIGestureRecognizerDelegate {
   
+  let iPhone4Height: CGFloat = 440
+  
   var habit: Habit?
   var frequency: Habit.Frequency = .Daily
   var pickerRecognizer: UITapGestureRecognizer?
@@ -33,6 +35,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
   @IBOutlet weak var deleteWidth: NSLayoutConstraint!
   @IBOutlet weak var toolbar: UIView!
   @IBOutlet weak var height: NSLayoutConstraint!
+  @IBOutlet weak var width: NSLayoutConstraint!
   @IBOutlet weak var contentView: UIVisualEffectView!
   
   override func preferredStatusBarStyle() -> UIStatusBarStyle {
@@ -114,6 +117,11 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     name.attributedPlaceholder = NSAttributedString(string: "describe a habit",
       attributes: [NSForegroundColorAttributeName: UIColor.whiteColor().colorWithAlphaComponent(0.5)])
     name.tintColor = UIColor.whiteColor()
+    
+    if HabitApp.phoneSize == .iPhone4 {
+      height.constant = iPhone4Height
+      frequencySettings.picker.transform = CGAffineTransformMakeScale(0.85, 0.85)
+    }
   }
   
   override func viewDidLayoutSubviews() {    
