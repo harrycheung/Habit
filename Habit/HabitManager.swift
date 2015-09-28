@@ -24,7 +24,7 @@ class HabitManager {
       }
       try HabitApp.moContext.save()
     } catch let error as NSError {
-      NSLog("updateHabits failed: \(error.localizedDescription)")
+      NSLog("HabitManager.updateHabits failed: \(error.localizedDescription)")
     }
   }
   
