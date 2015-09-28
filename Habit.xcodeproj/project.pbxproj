@@ -41,6 +41,7 @@
 		4A67ABAB1B8FCEBD00DA641B /* SwipeDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A67ABAA1B8FCEBD00DA641B /* SwipeDialogViewController.swift */; };
 		4A6DB6FC1B4B8781008BC1B7 /* UIButton+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6DB6FB1B4B8781008BC1B7 /* UIButton+Custom.swift */; };
 		4A6DB6FE1B4C1587008BC1B7 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DB6FD1B4C1587008BC1B7 /* Podfile */; };
+		4A8EB4901BB9D21300A781E4 /* HabitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8EB48F1BB9D21300A781E4 /* HabitManager.swift */; settings = {ASSET_TAGS = (); }; };
 		4A91744A1BABC6EB0047B189 /* ShowHabitTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9174491BABC6EB0047B189 /* ShowHabitTransition.swift */; settings = {ASSET_TAGS = (); }; };
 		4A91744C1BACB3840047B189 /* UITextField+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A91744B1BACB3840047B189 /* UITextField+Custom.swift */; settings = {ASSET_TAGS = (); }; };
 		4AA214D51BA4901F00FB77BA /* CreateHabitTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA214D41BA4901F00FB77BA /* CreateHabitTransition.swift */; settings = {ASSET_TAGS = (); }; };
@@ -113,6 +114,7 @@
 		4A67ABAA1B8FCEBD00DA641B /* SwipeDialogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeDialogViewController.swift; sourceTree = "<group>"; };
 		4A6DB6FB1B4B8781008BC1B7 /* UIButton+Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Custom.swift"; sourceTree = "<group>"; };
 		4A6DB6FD1B4C1587008BC1B7 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		4A8EB48F1BB9D21300A781E4 /* HabitManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitManager.swift; sourceTree = "<group>"; };
 		4A9174491BABC6EB0047B189 /* ShowHabitTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowHabitTransition.swift; sourceTree = "<group>"; };
 		4A91744B1BACB3840047B189 /* UITextField+Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextField+Custom.swift"; sourceTree = "<group>"; };
 		4AA214D41BA4901F00FB77BA /* CreateHabitTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateHabitTransition.swift; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 				4A1D08C81B3E1A7A006A9CA4 /* Fonts */,
 				4A1D08971B3E17E9006A9CA4 /* AppDelegate.swift */,
 				4A144D781B61C31B001A6094 /* HabitApp.swift */,
+				4A8EB48F1BB9D21300A781E4 /* HabitManager.swift */,
 				4A1D08DE1B404DF7006A9CA4 /* Models */,
 				4A1D08E01B40C975006A9CA4 /* ViewControllers */,
 				4A46437F1B44581300732389 /* UI */,
@@ -594,6 +597,7 @@
 				4A040C501B7C4D610081CF85 /* History.swift in Sources */,
 				4A44D7871B5A29EC0017B34B /* AppSettingsViewController.swift in Sources */,
 				4A1D08D01B3E1A7A006A9CA4 /* HabitTableViewCell.swift in Sources */,
+				4A8EB4901BB9D21300A781E4 /* HabitManager.swift in Sources */,
 				4A16FDC31B7F7CA000DF9DFC /* EditHabitTransition.swift in Sources */,
 				4A584C051BAEFC6500CA783C /* NSManagedObject+Custom.swift in Sources */,
 				4A1D08DD1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift in Sources */,
