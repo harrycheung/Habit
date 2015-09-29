@@ -245,10 +245,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     if HabitApp.upcoming && upcomingCount == 0 {
       tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .None)
     }
-    tableView.insertRowsAtIndexPaths(inserts, withRowAnimation: entriesCount == 0 ? .None : .Top)
+    tableView.insertRowsAtIndexPaths(inserts, withRowAnimation: (entriesCount == 0 && upcomingCount == 0) ? .None : .Top)
     tableView.endUpdates()
     
-    if entriesCount == 0 {
+    if entriesCount == 0 && upcomingCount == 0 {
       // Non-zero just in case there aren't any entries to insert
       var delayStart = 0.0001
       for (index, _) in EntryManager.entries.enumerate() {
