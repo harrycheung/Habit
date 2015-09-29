@@ -378,6 +378,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
         tableView.endUpdates()
       }
+      tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 1), atScrollPosition: .Top, animated: true)
       
       if let header = tableView.headerViewForSection(1) {
         showCellAnimate(header, endFrame: tableView.rectForHeaderInSection(1), delay: delayStart)
