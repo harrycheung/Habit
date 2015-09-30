@@ -194,8 +194,7 @@
 				4A1D08C81B3E1A7A006A9CA4 /* Fonts */,
 				4A1D08971B3E17E9006A9CA4 /* AppDelegate.swift */,
 				4A144D781B61C31B001A6094 /* HabitApp.swift */,
-				4A8EB48F1BB9D21300A781E4 /* HabitManager.swift */,
-				4A8EB4911BB9DE0500A781E4 /* EntryManager.swift */,
+				4A8F37571BBB60C7006DBCB6 /* Managers */,
 				4A1D08DE1B404DF7006A9CA4 /* Models */,
 				4A1D08E01B40C975006A9CA4 /* ViewControllers */,
 				4A46437F1B44581300732389 /* UI */,
@@ -281,6 +280,15 @@
 				4A584C041BAEFC6500CA783C /* NSManagedObject+Custom.swift */,
 			);
 			name = Custom;
+			sourceTree = "<group>";
+		};
+		4A8F37571BBB60C7006DBCB6 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				4A8EB4911BB9DE0500A781E4 /* EntryManager.swift */,
+				4A8EB48F1BB9D21300A781E4 /* HabitManager.swift */,
+			);
+			name = Managers;
 			sourceTree = "<group>";
 		};
 		4AA214D31BA48FFD00FB77BA /* Transitions */ = {
