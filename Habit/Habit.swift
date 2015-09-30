@@ -396,8 +396,7 @@ class Habit: NSManagedObject {
   func update(var lastDue: NSDate, currentDate: NSDate) {
     let calendar = HabitApp.calendar
     let expected = expectedCount
-    let upcoming = ((expected == 1 && useTimes && HabitApp.endOfDay == HabitApp.dayMinutes) ? 3 : 2) - (HabitApp.upcoming ? 0 : 1)
-    //print("upcoming: \(HabitApp.upcoming) \(upcoming)")
+    let upcoming = (expected == 1 && useTimes && HabitApp.endOfDay == HabitApp.dayMinutes) ? 3 : 2
     var count = entries!.count == 0 ? countBefore(lastDue, start: true) : countBefore(lastDue, start: false)
     switch frequency {
     case .Daily:

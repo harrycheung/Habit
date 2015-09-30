@@ -120,33 +120,10 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
   
   @IBAction func upcomingChanged(sender: AnyObject) {
     HabitApp.upcoming = upcoming.on
-    do {
-      if upcoming.on {
-        let request = NSFetchRequest(entityName: "Habit")
-        let habits = try HabitApp.moContext.executeFetchRequest(request) as! [Habit]
-        for habit in habits {
-          HabitApp.moContext.refreshObject(habit, mergeChanges: false)
-          habit.update(NSDate())
-        }
-      } else {
-        let request = NSFetchRequest(entityName: "Entry")
-        request.predicate = NSPredicate(
-          format: "stateRaw == %@ AND due > %@ AND NOT (period IN %@)", Entry.State.Todo.rawValue, NSDate(), HabitApp.currentPeriods)
-        let upcomingEntries = try HabitApp.moContext.executeFetchRequest(request)
-        for entry in upcomingEntries {
-          HabitApp.moContext.deleteObject(entry as! NSManagedObject)
-        }
-      }
-      try HabitApp.moContext.save()
-    } catch let error as NSError {
-      NSLog("Fetch failed: \(error.localizedDescription)")
-    }
-    if !upcoming.on {
-      mvc!.hideUpcoming()
-    }
-    mvc!.reloadEntries()
     if upcoming.on {
       mvc!.showUpcoming()
+    } else {
+      mvc!.hideUpcoming()
     }
   }
   

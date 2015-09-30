@@ -83,42 +83,42 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   func testData() {
     do {
       let calendar = HabitApp.calendar
-      var date = calendar.dateByAddingUnit(.WeekOfYear, value: -40, toDate: NSDate())!
-      var h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: date)
-      h.update(NSDate())
-      while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
-        //print(formatter.stringFromDate(date))
-        let entries = h.entriesOnDate(date)
-        //print("c: \(entries.count)")
-        for i in 0..<Int(arc4random_uniform(UInt32(entries.count))) {
-          entries[i].complete()
-        }
-        for entry in entries {
-          if entry.state == .Todo {
-            entry.skip()
-          }
-        }
-        date = NSDate(timeInterval: 24 * 3600 * 7, sinceDate: date)
-      }
-      date = calendar.dateByAddingUnit(.WeekOfYear, value: -2, toDate: NSDate())!
-      h = Habit(context: HabitApp.moContext, name: "W: Will not show skip dialog", details: "", frequency: .Weekly, times: 6, createdAt: date)
-      h.update(NSDate())
-      date = calendar.dateByAddingUnit(.WeekOfYear, value: -5, toDate: NSDate())!
-      h = Habit(context: HabitApp.moContext, name: "W: Will show skip dialog", details: "", frequency: .Weekly, times: 0, createdAt: date)
-      h.daysOfWeek = [.Monday, .Tuesday, .Wednesday, .Friday, .Saturday]
-      date = calendar.dateByAddingUnit(.WeekOfYear, value: 1, toDate: date)!
-      h.update(date)
-      h.deleteEntries(after: date)
-      HabitApp.moContext.refreshAllObjects()
-      h.pausedBool = true
-      date = calendar.dateByAddingUnit(.WeekOfYear, value: 2, toDate: date)!
-      h.update(date)
-      h.pausedBool = false
-      h.generateEntries(after: date)
-      h.update(NSDate())
+//      var date = calendar.dateByAddingUnit(.WeekOfYear, value: -40, toDate: NSDate())!
+//      var h = Habit(context: HabitApp.moContext, name: "5. Weekly 6x", details: "", frequency: .Weekly, times: 6, createdAt: date)
+//      h.update(NSDate())
+//      while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
+//        //print(formatter.stringFromDate(date))
+//        let entries = h.entriesOnDate(date)
+//        //print("c: \(entries.count)")
+//        for i in 0..<Int(arc4random_uniform(UInt32(entries.count))) {
+//          entries[i].complete()
+//        }
+//        for entry in entries {
+//          if entry.state == .Todo {
+//            entry.skip()
+//          }
+//        }
+//        date = NSDate(timeInterval: 24 * 3600 * 7, sinceDate: date)
+//      }
+//      date = calendar.dateByAddingUnit(.WeekOfYear, value: -2, toDate: NSDate())!
+//      h = Habit(context: HabitApp.moContext, name: "W: Will not show skip dialog", details: "", frequency: .Weekly, times: 6, createdAt: date)
+//      h.update(NSDate())
+//      date = calendar.dateByAddingUnit(.WeekOfYear, value: -5, toDate: NSDate())!
+//      h = Habit(context: HabitApp.moContext, name: "W: Will show skip dialog", details: "", frequency: .Weekly, times: 0, createdAt: date)
+//      h.daysOfWeek = [.Monday, .Tuesday, .Wednesday, .Friday, .Saturday]
+//      date = calendar.dateByAddingUnit(.WeekOfYear, value: 1, toDate: date)!
+//      h.update(date)
+//      h.deleteEntries(after: date)
+//      HabitApp.moContext.refreshAllObjects()
+//      h.pausedBool = true
+//      date = calendar.dateByAddingUnit(.WeekOfYear, value: 2, toDate: date)!
+//      h.update(date)
+//      h.pausedBool = false
+//      h.generateEntries(after: date)
+//      h.update(NSDate())
       
-      date = calendar.dateByAddingUnit(.Day, value: -180, toDate: NSDate())!
-      h = Habit(context: HabitApp.moContext, name: "Drink water", details: "", frequency: .Daily, times: 8, createdAt: date)
+      var date = calendar.dateByAddingUnit(.Day, value: -180, toDate: NSDate())!
+      let h = Habit(context: HabitApp.moContext, name: "Drink water", details: "", frequency: .Daily, times: 8, createdAt: date)
       h.update(NSDate())
       while !calendar.isDateInToday(date) {
         let entries = h.entriesOnDate(date)
@@ -133,18 +133,18 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         date = NSDate(timeInterval: Double(HabitApp.daySec), sinceDate: date)
       }
       
-      date = calendar.dateByAddingUnit(.Day, value: -25, toDate: NSDate())!
-      h = Habit(context: HabitApp.moContext, name: "Daily with pause", details: "", frequency: .Daily, times: 12, createdAt: date)
-      date = calendar.dateByAddingUnit(.Day, value: 4, toDate: date)!
-      h.update(date)
-      h.deleteEntries(after: date)
-      HabitApp.moContext.refreshAllObjects()
-      h.pausedBool = true
-      date = calendar.dateByAddingUnit(.Day, value: 7, toDate: date)!
-      h.update(date)
-      h.pausedBool = false
-      h.generateEntries(after: date)
-      h.update(NSDate())
+//      date = calendar.dateByAddingUnit(.Day, value: -25, toDate: NSDate())!
+//      h = Habit(context: HabitApp.moContext, name: "Daily with pause", details: "", frequency: .Daily, times: 12, createdAt: date)
+//      date = calendar.dateByAddingUnit(.Day, value: 4, toDate: date)!
+//      h.update(date)
+//      h.deleteEntries(after: date)
+//      HabitApp.moContext.refreshAllObjects()
+//      h.pausedBool = true
+//      date = calendar.dateByAddingUnit(.Day, value: 7, toDate: date)!
+//      h.update(date)
+//      h.pausedBool = false
+//      h.generateEntries(after: date)
+//      h.update(NSDate())
 
       try HabitApp.moContext.save()
     } catch let error as NSError {
@@ -192,6 +192,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     newButton.layer.shadowOffset = CGSizeMake(0, 1)
     
     view.bringSubviewToFront(transitionOverlay)
+    
+    //testData()
   }
   
   override func didReceiveMemoryWarning() {
@@ -340,12 +342,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         hideCellAnimate(header, delay: delayStart) {
           // Remove any traces of the old cells
           // Is this better than calling deleteRowsAtIndexPaths?
-          EntryManager.upcoming = []
           self.tableView.reloadData()
         }
       } else {
         // If not visible, no animation
-        EntryManager.upcoming = []
         tableView.reloadData()
       }
       delayStart += SlideAnimationDelay
@@ -629,7 +629,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-    return EntryManager.upcoming.isEmpty ? 1 : 2
+    return HabitApp.upcoming ? 2 : 1
   }
   
   func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
