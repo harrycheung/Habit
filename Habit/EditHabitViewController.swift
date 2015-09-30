@@ -190,7 +190,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     }
     
     let transition = {
-      self.mvc!.refreshNotifications()
+      EntryManager.updateNotifications()
       self.habit = nil
       self.presentingViewController!.view.hidden = true
       self.presentingViewController!.dismissViewControllerAnimated(true) {
@@ -244,11 +244,11 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
   @IBAction func deleteHabit(sender: AnyObject) {
     showAlert(nil, message: nil, yes: ("Delete habit", .Destructive, {
       for entry in self.habit!.todos {
-        HabitApp.removeNotification(entry)
+        EntryManager.removeNotification(entry)
       }
       
       self.mvc!.removeHabit(self.habit!)
-      self.mvc!.refreshNotifications()
+      EntryManager.updateNotifications()
       // Hide ShowHabitViewController
       self.presentingViewController!.view.hidden = true
       self.presentingViewController!.dismissViewControllerAnimated(true) {

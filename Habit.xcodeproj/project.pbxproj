@@ -43,6 +43,7 @@
 		4A6DB6FE1B4C1587008BC1B7 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DB6FD1B4C1587008BC1B7 /* Podfile */; };
 		4A8EB4901BB9D21300A781E4 /* HabitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8EB48F1BB9D21300A781E4 /* HabitManager.swift */; settings = {ASSET_TAGS = (); }; };
 		4A8EB4921BB9DE0500A781E4 /* EntryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8EB4911BB9DE0500A781E4 /* EntryManager.swift */; settings = {ASSET_TAGS = (); }; };
+		4A8F37591BBB8988006DBCB6 /* FontManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8F37581BBB8988006DBCB6 /* FontManager.swift */; settings = {ASSET_TAGS = (); }; };
 		4A91744A1BABC6EB0047B189 /* ShowHabitTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9174491BABC6EB0047B189 /* ShowHabitTransition.swift */; settings = {ASSET_TAGS = (); }; };
 		4A91744C1BACB3840047B189 /* UITextField+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A91744B1BACB3840047B189 /* UITextField+Custom.swift */; settings = {ASSET_TAGS = (); }; };
 		4AA214D51BA4901F00FB77BA /* CreateHabitTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA214D41BA4901F00FB77BA /* CreateHabitTransition.swift */; settings = {ASSET_TAGS = (); }; };
@@ -117,6 +118,7 @@
 		4A6DB6FD1B4C1587008BC1B7 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		4A8EB48F1BB9D21300A781E4 /* HabitManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitManager.swift; sourceTree = "<group>"; };
 		4A8EB4911BB9DE0500A781E4 /* EntryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntryManager.swift; sourceTree = "<group>"; };
+		4A8F37581BBB8988006DBCB6 /* FontManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontManager.swift; sourceTree = "<group>"; };
 		4A9174491BABC6EB0047B189 /* ShowHabitTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowHabitTransition.swift; sourceTree = "<group>"; };
 		4A91744B1BACB3840047B189 /* UITextField+Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextField+Custom.swift"; sourceTree = "<group>"; };
 		4AA214D41BA4901F00FB77BA /* CreateHabitTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateHabitTransition.swift; sourceTree = "<group>"; };
@@ -287,6 +289,7 @@
 			children = (
 				4A8EB4911BB9DE0500A781E4 /* EntryManager.swift */,
 				4A8EB48F1BB9D21300A781E4 /* HabitManager.swift */,
+				4A8F37581BBB8988006DBCB6 /* FontManager.swift */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -610,6 +613,7 @@
 				4A1D08D01B3E1A7A006A9CA4 /* HabitTableViewCell.swift in Sources */,
 				4A8EB4901BB9D21300A781E4 /* HabitManager.swift in Sources */,
 				4A16FDC31B7F7CA000DF9DFC /* EditHabitTransition.swift in Sources */,
+				4A8F37591BBB8988006DBCB6 /* FontManager.swift in Sources */,
 				4A584C051BAEFC6500CA783C /* NSManagedObject+Custom.swift in Sources */,
 				4A1D08DD1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift in Sources */,
 				4A1D08CF1B3E1A7A006A9CA4 /* Habit.swift in Sources */,

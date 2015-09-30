@@ -135,6 +135,20 @@ class Habit: NSManagedObject {
     let _ = History(context: managedObjectContext!, habit: self, date: createdAt)
   }
   
+  var hasOldEntries: Bool {
+    var has = true
+    switch frequency {
+    case .Daily:
+      has = HabitApp.calendar.components([.Day], fromDate: firstTodo!.due!, toDate: NSDate()).day <= 2
+    case .Weekly:
+      has = HabitApp.calendar.components([.Day], fromDate: firstTodo!.due!, toDate: NSDate()).day <= 14
+    case .Monthly:
+      has = HabitApp.calendar.components([.Month], fromDate: firstTodo!.due!, toDate: NSDate()).month <= 2
+    default: ()
+    }
+    return has
+  }
+  
   private func addEntry(due due: NSDate, period: Int, number: Int) {
     let _ = Entry(context: managedObjectContext!, habit: self, due: due, period: period, number: number)
   }

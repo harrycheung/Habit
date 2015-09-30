@@ -52,6 +52,9 @@ class HabitApp {
   static let LayoutPriorityHigh: UILayoutPriority = 999
   static let TransitionOverlayAlpha: CGFloat = 0.2
   static let TransitionDuration: NSTimeInterval = 0.25
+  static let ColorChangeAnimationDuration: NSTimeInterval = 0.5
+  static let TableCellHeight: CGFloat = 70
+  static let TableSectionHeight: CGFloat = 18
   
   static let calendar: NSCalendar = {
     let c = NSCalendar(identifier: NSCalendarIdentifierGregorian)!
@@ -143,18 +146,6 @@ class HabitApp {
     return managedObjectContext
   }
   
-  static var overdueCount: Int {
-    do {
-      let request = NSFetchRequest(entityName: "Entry")
-      request.predicate = NSPredicate(format: "stateRaw == %@ AND due < %@", Entry.State.Todo.rawValue, NSDate())
-      let r = try HabitApp.moContext.executeFetchRequest(request)
-      return r.count
-    } catch let error as NSError {
-      NSLog("Fetch failed: \(error.localizedDescription)")
-      return 0
-    }
-  }
-  
   static func initNotification() {
     let settings = UIApplication.sharedApplication().currentUserNotificationSettings()
     if !(settings!.types.contains(.Badge) && settings!.types.contains(.Sound) && settings!.types.contains(.Alert)) {
@@ -180,38 +171,6 @@ class HabitApp {
         UIUserNotificationSettings(forTypes: [.Badge, .Sound, .Alert], categories: [habitCategory])
       UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
     }
-  }
-  
-  static func addNotification(entry: Entry, number: Int) {
-    if HabitApp.notification {
-      if UIApplication.sharedApplication().currentUserNotificationSettings()!.types.contains(.Alert) {
-        let local = UILocalNotification()
-        local.fireDate = entry.due
-        local.alertBody = entry.habit!.name!
-        local.userInfo = ["entry": entry.objectID.URIRepresentation().absoluteString]
-        local.applicationIconBadgeNumber = number
-        local.soundName = UILocalNotificationDefaultSoundName
-        local.category = "HABIT_CATEGORY"
-        UIApplication.sharedApplication().scheduleLocalNotification(local)
-      }
-    }
-  }
-  
-  static func removeNotification(entry: Entry) {
-    if HabitApp.notification {
-      if let notification = hasNotification(entry) {
-        UIApplication.sharedApplication().cancelLocalNotification(notification)
-      }
-    }
-  }
-  
-  static func hasNotification(entry: Entry) -> UILocalNotification? {
-    for notification in UIApplication.sharedApplication().scheduledLocalNotifications! {
-      if notification.userInfo!["entry"] as! String == entry.objectID.URIRepresentation().absoluteString {
-        return notification
-      }
-    }
-    return nil
   }
   
   static var currentPeriods: [String] {

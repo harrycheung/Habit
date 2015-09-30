@@ -54,6 +54,7 @@
 // 45: done - Call update on habits after return from background
 // 46: Use visible cells on tableview to animate
 // 47: done - Multiple storyboards for each screen size
+// 48: Should autoskip happen immediately or later?
 
 import UIKit
 import CoreData
@@ -151,9 +152,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     } catch {
       NSLog("Could not save")
     }
-    reloadEntries()
+    EntryManager.reload()
     tableView.reloadData()
-    refreshNotifications()
+    EntryManager.updateNotifications()
   }
   
   override func preferredStatusBarStyle() -> UIStatusBarStyle {
@@ -171,7 +172,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     UIApplication.sharedApplication().delegate!.window!!.tintColor = HabitApp.color
     
     HabitManager.updateHabits()
-    reloadEntries()
+    EntryManager.reload()
       
     // Setup timers
     refreshTimer = NSTimer.scheduledTimerWithTimeInterval(5 * 60, target: self, selector: "reload", userInfo: nil, repeats: true)
@@ -197,7 +198,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func reload() {
-    reloadEntries()
+    EntryManager.reload()
     tableView.reloadData()
   }
   
@@ -216,7 +217,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       }
     }
     EntryManager.upcoming = EntryManager.upcoming.filter { $0.habit! != habit }
-    if HabitApp.upcoming && EntryManager.upcoming.count == 0 {
+    if HabitApp.upcoming && EntryManager.upcomingCount == 0 {
       tableView.deleteSections(NSIndexSet(index: 1), withRowAnimation: .Top)
     }
     tableView.deleteRowsAtIndexPaths(removes, withRowAnimation: .Top)
@@ -224,10 +225,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func insertEntries(newEntries: [Entry]) {
-    let entriesCount = EntryManager.entries.count
-    let upcomingCount = EntryManager.upcoming.count
+    let entriesCount = EntryManager.entriesCount
+    let upcomingCount = EntryManager.upcomingCount
     tableView.beginUpdates()
-    reloadEntries()
+    EntryManager.reload()
     var inserts: [NSIndexPath] = []
     for (index, entry) in EntryManager.entries.enumerate() {
       if newEntries.contains(entry) {
@@ -272,39 +273,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       }
     }
     tableView.beginUpdates()
-    reloadEntries()
-    if HabitApp.upcoming && EntryManager.upcoming.count == 0 {
+    EntryManager.reload()
+    if HabitApp.upcoming && EntryManager.upcomingCount == 0 {
       tableView.deleteSections(NSIndexSet(index: 1), withRowAnimation: .Top)
     }
     tableView.deleteRowsAtIndexPaths(removes, withRowAnimation: .Top)
     tableView.endUpdates()
-  }
-  
-  func reloadEntries() {
-    EntryManager.reload()
-    UIApplication.sharedApplication().applicationIconBadgeNumber = HabitApp.overdueCount
-  }
-  
-  func refreshNotifications() {
-    if HabitApp.notification {
-      UIApplication.sharedApplication().cancelAllLocalNotifications()
-      var count = 0
-      var number = 1
-      let now = NSDate()
-      for entry in EntryManager.entries {
-        if count > 64 {
-          break
-        }
-        if entry.habit!.notifyBool && entry.due!.compare(now) == .OrderedDescending {
-          HabitApp.addNotification(entry, number: number)
-          count += 1
-        }
-        number += 1
-      }
-      if count > 0 {
-        HabitApp.initNotification()
-      }
-    }
   }
   
   func hideCellAnimate(view: UIView, delay: NSTimeInterval, complete: (() -> Void)?) {
@@ -324,9 +298,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   func hideUpcoming() -> Double {
     var delayStart = 0.0
-    if EntryManager.upcoming.count > 0 {
+    if EntryManager.upcomingCount > 0 {
       if let header = tableView.headerViewForSection(1) {
-        for index in (0..<EntryManager.upcoming.count).reverse() {
+        for index in (0..<EntryManager.upcomingCount).reverse() {
           let indexPath = NSIndexPath(forRow: index, inSection: 1)
           if let cell = tableView.cellForRowAtIndexPath(indexPath) {
             hideCellAnimate(cell, delay: delayStart, complete: nil)
@@ -362,7 +336,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func showUpcoming(var delayStart: Double = 0) {
-    if EntryManager.upcoming.count > 0 {
+    if EntryManager.upcomingCount > 0 {
       if delayStart == 0 {
         // Load up the cells to animate
         tableView.beginUpdates()
@@ -393,7 +367,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var upcomingHeaderFrame: CGRect? = nil
     if HabitApp.upcoming {
       if let header = tableView.headerViewForSection(1) {
-        for index in (0..<EntryManager.upcoming.count).reverse() {
+        for index in (0..<EntryManager.upcomingCount).reverse() {
           let indexPath = NSIndexPath(forRow: index, inSection: 1)
           if tableView.indexPathsForVisibleRows!.contains(indexPath) {
             cellsToHide.append(tableView.cellForRowAtIndexPath(indexPath)!)
@@ -407,7 +381,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     let future = HabitApp.calendar.zeroTime(HabitApp.calendar.dateByAddingUnit(.Day, value: 1, toDate: NSDate())!)
     for (index, entry) in EntryManager.entries.enumerate() {
       if future.compare(entry.due!) == .OrderedAscending {
-        for i in (index..<EntryManager.entries.count).reverse() {
+        for i in (index..<EntryManager.entriesCount).reverse() {
           entriesToDelete.append(EntryManager.entries[i])
           let indexPath = NSIndexPath(forRow: i, inSection: 0)
           if tableView.indexPathsForVisibleRows!.contains(indexPath) {
@@ -432,7 +406,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
           var cellsToShow: [(UIView, CGRect)] = []
           for (index, entry) in EntryManager.entries.enumerate() {
             if future.compare(entry.due!) == .OrderedAscending {
-              for i in index..<EntryManager.entries.count {
+              for i in index..<EntryManager.entriesCount {
                 let indexPath = NSIndexPath(forRow: i, inSection: 0)
                 if self.tableView.indexPathsForVisibleRows!.contains(indexPath) {
                   cellsToShow.append((self.tableView.cellForRowAtIndexPath(indexPath)!,
@@ -447,7 +421,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if let header = self.tableView.headerViewForSection(1) {
               cellsToShow.append((header, upcomingHeaderFrame!))
             }
-            for index in 0..<EntryManager.upcoming.count {
+            for index in 0..<EntryManager.upcomingCount {
               let indexPath = NSIndexPath(forRow: index, inSection: 1)
               if self.tableView.indexPathsForVisibleRows!.contains(indexPath) {
                 cellsToShow.append((self.tableView.cellForRowAtIndexPath(indexPath)!,
@@ -480,7 +454,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         habit.update(NSDate())
       }
       try HabitApp.moContext.save()
-      reloadEntries()
+      EntryManager.reload()
       if cellsToHide.count == 0 {
         tableView.reloadData()
       }
@@ -492,77 +466,49 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   // Table view
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let removeEntry = { (indexPath: NSIndexPath, skip: Bool) in
-      let entry = indexPath.section == 0 ? EntryManager.entries.removeAtIndex(indexPath.row) : EntryManager.upcoming.removeAtIndex(indexPath.row)
-      if (skip) {
-        entry.skip()
-      } else {
-        entry.complete()
+    let removeRows = { (indexPaths: [NSIndexPath]) in
+      tableView.deleteRowsAtIndexPaths(indexPaths, withRowAnimation: .Top)
+      UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration) {
+        self.newButton.alpha = 1
       }
-      self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
     }
     
-    let completion = { (cell: SwipeTableViewCell, skipped skipped: Bool) in
+    let complete = { (cell: SwipeTableViewCell) in
       let indexPath = tableView.indexPathForCell(cell)!
-      if skipped {
-        var skipOne = true
-        let entry = indexPath.section == 0 ? EntryManager.entries[indexPath.row] : EntryManager.upcoming[indexPath.row]
-        switch entry.habit!.frequency {
-        case .Daily:
-          skipOne = HabitApp.calendar.components([.Day], fromDate: entry.habit!.firstTodo!.due!, toDate: NSDate()).day <= 2
-        case .Weekly:
-          skipOne = HabitApp.calendar.components([.Day], fromDate: entry.habit!.firstTodo!.due!, toDate: NSDate()).day <= 14
-        case .Monthly:
-          skipOne = HabitApp.calendar.components([.Month], fromDate: entry.habit!.firstTodo!.due!, toDate: NSDate()).month <= 2
-        default: ()
-        }
-        if skipOne {
-          removeEntry(indexPath, true)
-          UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
-            self.newButton.alpha = 1
-          })
-        } else {
-          let sdvc = self.storyboard!.instantiateViewControllerWithIdentifier("SwipeDialogViewController") as! SwipeDialogViewController
-          sdvc.modalTransitionStyle = .CrossDissolve
-          sdvc.modalPresentationStyle = .OverCurrentContext
-          sdvc.yesCompletion = {
-            var indexPaths: [NSIndexPath] = []
-            if entry.due!.compare(NSDate()) == .OrderedDescending {
-              entry.skip()
-              indexPaths.append(indexPath)
-            }
-            let skippedEntries = entry.habit!.skip(before: NSDate(timeIntervalSinceNow: HabitApp.autoSkipDelayTimeInterval))
-            for e in skippedEntries {
-              indexPaths.append(NSIndexPath(forRow: EntryManager.entries.indexOf(e)!, inSection: 0))
-            }
-            self.reloadEntries()
-            self.tableView.deleteRowsAtIndexPaths(indexPaths, withRowAnimation: .Top)
-            self.dismissViewControllerAnimated(true, completion: {
-              UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
-                self.newButton.alpha = 1
-              })
-            })
+      let entry = EntryManager.entries[indexPath.row]
+      EntryManager.complete(entry)
+      removeRows([indexPath])
+    }
+    
+    let skip = { (cell: SwipeTableViewCell) in
+      let indexPath = tableView.indexPathForCell(cell)!
+      let entry = EntryManager.entries[indexPath.row]
+      if entry.habit!.hasOldEntries {
+        let sdvc = self.storyboard!.instantiateViewControllerWithIdentifier("SwipeDialogViewController") as! SwipeDialogViewController
+        sdvc.modalTransitionStyle = .CrossDissolve
+        sdvc.modalPresentationStyle = .OverCurrentContext
+        sdvc.yesCompletion = {
+          var indexPaths: [NSIndexPath] = []
+          // Single out this entry just in case its due > NSDate()
+          if entry.due!.compare(NSDate()) == .OrderedDescending {
+            EntryManager.skip(entry)
+            indexPaths.append(indexPath)
           }
-          sdvc.noCompletion = {
-            removeEntry(indexPath, true)
-            self.dismissViewControllerAnimated(true, completion: {
-              UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
-                self.newButton.alpha = 1
-              })
-            })
+          indexPaths += EntryManager.skip(entry.habit!).map { NSIndexPath(forRow: $0, inSection: 0) }
+          self.dismissViewControllerAnimated(true) {
+            removeRows(indexPaths)
           }
-          self.presentViewController(sdvc, animated: true, completion: nil)
         }
+        sdvc.noCompletion = {
+          EntryManager.skip(entry)
+          self.dismissViewControllerAnimated(true) {
+            removeRows([indexPath])
+          }
+        }
+        self.presentViewController(sdvc, animated: true, completion: nil)
       } else {
-        removeEntry(indexPath, false)
-        UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
-          self.newButton.alpha = 1
-        })
-      }
-      do {
-        try HabitApp.moContext.save()
-      } catch let error {
-        NSLog("Error saving: \(error)")
+        EntryManager.skip(entry)
+        removeRows([indexPath])
       }
     }
     
@@ -575,16 +521,16 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       view: UIImageView(image: UIImage.fontAwesomeIconWithName(.Check, textColor: UIColor.whiteColor(), size: CGSizeMake(24, 24))),
       color: HabitApp.green,
       options: [.Rotate, .Alpha],
-      completion: { (cell: SwipeTableViewCell) in
-        completion(cell, skipped: false)
+      completion: { cell in
+        complete(cell)
     })
     cell.setSwipeGesture(
       direction: .Left,
       view: UIImageView(image: UIImage.fontAwesomeIconWithName(.History, textColor: UIColor.whiteColor(), size: CGSizeMake(24, 24))),
       color: HabitApp.yellow,
       options: [.Rotate, .Alpha],
-      completion: { (cell: SwipeTableViewCell) in
-        completion(cell, skipped: true)
+      completion: { cell in
+        skip(cell)
     })
     if indexPath.section == 1 {
       cell.swipable = false
@@ -604,20 +550,23 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return section == 0 ? EntryManager.entries.count : EntryManager.upcoming.count
+    return section == 0 ? EntryManager.entriesCount : EntryManager.upcomingCount
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    let cell = tableView.cellForRowAtIndexPath(indexPath) as! HabitTableViewCell
-    let shvc = self.storyboard!.instantiateViewControllerWithIdentifier("ShowHabitViewController") as! ShowHabitViewController
-    shvc.modalPresentationStyle = .OverCurrentContext
-    shvc.transitioningDelegate = self.showHabitTransition
-    shvc.habit = cell.entry!.habit!
-    self.presentViewController(shvc, animated: true, completion: nil)
+    // dispatch_async is needed here since selection happens in a new thread
+    dispatch_async(dispatch_get_main_queue()) {
+      let cell = tableView.cellForRowAtIndexPath(indexPath) as! HabitTableViewCell
+      let shvc = self.storyboard!.instantiateViewControllerWithIdentifier("ShowHabitViewController") as! ShowHabitViewController
+      shvc.modalPresentationStyle = .OverCurrentContext
+      shvc.transitioningDelegate = self.showHabitTransition
+      shvc.habit = cell.entry!.habit!
+      self.presentViewController(shvc, animated: true, completion: nil)
+    }
   }
   
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-    return 70
+    return HabitApp.TableCellHeight
   }
   
   func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -625,7 +574,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-    return (section == 1 && EntryManager.upcoming.count > 0) ? 18 : 0
+    return (section == 1 && EntryManager.upcomingCount > 0) ? HabitApp.TableSectionHeight : 0
   }
   
   func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -638,7 +587,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     header!.frame = CGRectMake(0, 0, tableView.frame.width, 20)
     header!.contentView.backgroundColor = HabitApp.color
     let title = UILabel()
-    title.font = UIFont(name: "Bariol-Regular", size: 14.0)!
+    title.font = FontManager.regular(14)
     title.textColor = UIColor.whiteColor().colorWithAlphaComponent(0.5)
     title.text = section == 0 ? "CURRENT" : "UPCOMING"
     header!.contentView.addSubview(title)
@@ -686,7 +635,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     tableView.reloadData()
     
     // Animate color change
-    UIView.animateWithDuration(0.5,
+    UIView.animateWithDuration(HabitApp.ColorChangeAnimationDuration,
       delay: 0,
       options: .CurveEaseInOut,
       animations: {

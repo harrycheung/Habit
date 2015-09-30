@@ -955,7 +955,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4W2-Id-zql" userLabel="Content View">
                                 <rect key="frame" x="15" y="209" width="290" height="150"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="It's been a while. Want to skip the rest of this habit up to today?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hhq-NG-vNN">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="It's been a while. Want to skip the previous entries of this habit up to now?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hhq-NG-vNN">
                                         <rect key="frame" x="32" y="8" width="226" height="91"/>
                                         <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="21"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -985,7 +985,9 @@
                                             <constraint firstAttribute="height" constant="43" id="oz6-HY-7VA"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="19"/>
-                                        <state key="normal" title="Yes"/>
+                                        <state key="normal" title="Yes">
+                                            <color key="titleColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
                                         <state key="disabled">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>

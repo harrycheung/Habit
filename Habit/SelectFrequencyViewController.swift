@@ -47,7 +47,7 @@ class SelectFrequencyViewController: UIViewController {
     let buildLabel = { (label: UIButton, text: String) in
       label.setTitle(text, forState: .Normal)
       label.setTitleColor(HabitApp.color, forState: .Normal)
-      label.titleLabel!.font = UIFont(name: "Bariol-Regular", size: 17)!
+      label.titleLabel!.font = FontManager.regular(17)
       label.contentEdgeInsets = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8)
       label.roundify(10)
       label.backgroundColor = UIColor.whiteColor()

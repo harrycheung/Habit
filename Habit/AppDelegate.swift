@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     var attr = [NSObject: AnyObject]()
-    attr[NSFontAttributeName] = UIFont(name: "Bariol-Regular", size: 15.0)!
+    attr[NSFontAttributeName] = FontManager.regular(15)
     UISegmentedControl.appearance().setTitleTextAttributes(attr, forState: .Normal)
     
     return true
@@ -47,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       default: ()
       }
       try HabitApp.moContext.save()
-      UIApplication.sharedApplication().applicationIconBadgeNumber = HabitApp.overdueCount
+      UIApplication.sharedApplication().applicationIconBadgeNumber = EntryManager.overdue
       reloadEntries()
     } catch let error as NSError {
       NSLog("Could not save \(error), \(error.userInfo)")
@@ -60,7 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func applicationWillResignActive(application: UIApplication) {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-    UIApplication.sharedApplication().applicationIconBadgeNumber = HabitApp.overdueCount
+    UIApplication.sharedApplication().applicationIconBadgeNumber = EntryManager.overdue
   }
 
   func applicationDidEnterBackground(application: UIApplication) {
@@ -87,9 +87,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
   
   func reloadEntries() {
+    EntryManager.reload()
+    EntryManager.updateNotifications()
     let mvc = window!.rootViewController as! MainViewController
-    mvc.reloadEntries()
-    mvc.refreshNotifications()
     mvc.tableView.reloadData()
   }
 

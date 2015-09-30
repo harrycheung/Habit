@@ -125,7 +125,7 @@ class FrequencySettings: UIView, UIPickerViewDelegate, UIPickerViewDataSource, M
   }
   
   func fontOfMultiSelectControl(multiselectControl: MultiSelectControl) -> UIFont {
-    return UIFont(name: "Bariol-Regular", size: 17)!
+    return FontManager.regular(17)
   }
   
   func multiSelectControl(multiSelectControl: MultiSelectControl, itemAtIndex index: Int) -> String? {

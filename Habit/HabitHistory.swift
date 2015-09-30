@@ -79,7 +79,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       dateFormatter.dateFormat = "MMM"
       let label = UILabel()
       label.text = dateFormatter.stringFromDate(date)
-      label.font = UIFont(name: "Bariol-Regular", size: 13.0)!
+      label.font = FontManager.regular(13)
       label.textColor = UIColor.whiteColor()
       content.addSubview(label)
       label.snp_makeConstraints { make in
