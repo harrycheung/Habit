@@ -17,13 +17,13 @@ class SelectFrequencyViewController: UIViewController {
   
   @IBOutlet weak var closeButton: UIButton!
   
-  var dailyButton = UIButton(type: .System)
-  var weeklyButton = UIButton(type: .System)
-  var monthlyButton = UIButton(type: .System)
-  var dailyLabel = UIButton()
-  var weeklyLabel = UIButton()
-  var monthlyLabel = UIButton()
-  var createHabitTransition: UIViewControllerTransitioningDelegate?
+  let dailyButton = UIButton(type: .System)
+  let weeklyButton = UIButton(type: .System)
+  let monthlyButton = UIButton(type: .System)
+  let dailyLabel = UIButton()
+  let weeklyLabel = UIButton()
+  let monthlyLabel = UIButton()
+  let createHabitTransition: UIViewControllerTransitioningDelegate = CreateHabitTransition()
   var timer: NSTimer?
   
   override func preferredStatusBarStyle() -> UIStatusBarStyle {
@@ -68,8 +68,6 @@ class SelectFrequencyViewController: UIViewController {
     buildLabel(weeklyLabel, "Weekly")
     buildLabel(monthlyLabel, "Monthly")
     view.bringSubviewToFront(closeButton)
-    
-    createHabitTransition = CreateHabitTransition()
   }
   
   override func viewDidAppear(animated: Bool) {
@@ -82,7 +80,7 @@ class SelectFrequencyViewController: UIViewController {
     dismissViewControllerAnimated(true, completion: nil)
   }
   
-  func curvedAnimation(button: UIButton, start: CGPoint, end: CGPoint, control: CGPoint) {
+  private func curvedAnimation(button: UIButton, start: CGPoint, end: CGPoint, control: CGPoint) {
     let animation = CAKeyframeAnimation(keyPath: "position")
     animation.duration = HabitApp.TransitionDuration
     let path = UIBezierPath()

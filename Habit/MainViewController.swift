@@ -74,11 +74,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   @IBOutlet weak var transitionOverlay: UIView!
   
   var statusBar: UIView?
-  var activeCell: HabitTableViewCell?
   var refreshTimer: NSTimer?
-  var appSettingsTransition: UIViewControllerTransitioningDelegate?
-  var selectFrequencyTransition: UIViewControllerTransitioningDelegate?
-  var showHabitTransition: UIViewControllerTransitioningDelegate?
+  let appSettingsTransition: UIViewControllerTransitioningDelegate = AppSettingsTransition()
+  let selectFrequencyTransition: UIViewControllerTransitioningDelegate = SelectFrequencyTransition()
+  let showHabitTransition: UIViewControllerTransitioningDelegate = ShowHabitTransition()
   
   func testData() {
     do {
@@ -163,10 +162,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    appSettingsTransition = AppSettingsTransition()
-    selectFrequencyTransition = SelectFrequencyTransition()
-    showHabitTransition = ShowHabitTransition()
     
     statusBar = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 20))
     statusBar!.backgroundColor = HabitApp.color
@@ -613,15 +608,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    // TODO: need dispatch?
-    dispatch_async(dispatch_get_main_queue()) {
-      self.activeCell = tableView.cellForRowAtIndexPath(indexPath) as? HabitTableViewCell
-      let shvc = self.storyboard!.instantiateViewControllerWithIdentifier("ShowHabitViewController") as! ShowHabitViewController
-      shvc.modalPresentationStyle = .OverCurrentContext
-      shvc.transitioningDelegate = self.showHabitTransition
-      shvc.habit = self.activeCell!.entry!.habit!
-      self.presentViewController(shvc, animated: true, completion: nil)
-    }
+    let cell = tableView.cellForRowAtIndexPath(indexPath) as! HabitTableViewCell
+    let shvc = self.storyboard!.instantiateViewControllerWithIdentifier("ShowHabitViewController") as! ShowHabitViewController
+    shvc.modalPresentationStyle = .OverCurrentContext
+    shvc.transitioningDelegate = self.showHabitTransition
+    shvc.habit = cell.entry!.habit!
+    self.presentViewController(shvc, animated: true, completion: nil)
   }
   
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
