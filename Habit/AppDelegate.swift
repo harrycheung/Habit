@@ -35,32 +35,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
   
   func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
-    do {
-      let entryURL = NSURL(string: notification.userInfo!["entry"] as! String)!
-      let entryID = HabitApp.moContext.persistentStoreCoordinator!.managedObjectIDForURIRepresentation(entryURL)!
-      let entry = try HabitApp.moContext.existingObjectWithID(entryID) as! Entry
-      switch (identifier!) {
-      case "COMPLETE":
-        entry.complete()
-      case "SKIP": ()
-        entry.skip()
-      default: ()
-      }
-      try HabitApp.moContext.save()
-      UIApplication.sharedApplication().applicationIconBadgeNumber = EntryManager.overdue
-      reloadEntries()
-    } catch let error as NSError {
-      NSLog("Could not save \(error), \(error.userInfo)")
-    } catch {
-      NSLog("Could not save")
-    }
+    HabitManager.handleNotification(notification, identifier: identifier!)
     completionHandler()
   }
 
   func applicationWillResignActive(application: UIApplication) {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-    UIApplication.sharedApplication().applicationIconBadgeNumber = EntryManager.overdue
+    UIApplication.sharedApplication().applicationIconBadgeNumber = HabitManager.overdue
   }
 
   func applicationDidEnterBackground(application: UIApplication) {
@@ -76,7 +58,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func applicationDidBecomeActive(application: UIApplication) {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     HabitManager.updateHabits()
-    reloadEntries()
+    let mvc = window!.rootViewController as! MainViewController
+    mvc.tableView.reloadData()
   }
 
   func applicationWillTerminate(application: UIApplication) {
@@ -84,13 +67,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Saves changes in the application's managed object context before the application terminates.
     NSUserDefaults.standardUserDefaults().synchronize()
     self.saveContext()
-  }
-  
-  func reloadEntries() {
-    EntryManager.reload()
-    EntryManager.updateNotifications()
-    let mvc = window!.rootViewController as! MainViewController
-    mvc.tableView.reloadData()
   }
 
   // MARK: - Core Data stack

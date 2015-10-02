@@ -81,10 +81,12 @@ class Entry: NSManagedObject {
     default:
       text = "a month"
     }
-    if past {
-      text = "\(text) ago"
-    } else {
-      text = "in \(text)"
+    if di >= 5 {
+      if past {
+        text = "\(text) ago"
+      } else {
+        text = "in \(text)"
+      }
     }
     //return "\(Habit.frequencyStrings[habit!.frequency.rawValue]) (\(ratio)): due \(text)"
     return text

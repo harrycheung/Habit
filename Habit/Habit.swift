@@ -117,6 +117,10 @@ class Habit: NSManagedObject {
   
   var expectedCount: Int { return useTimes ? times!.integerValue : partsArray.count }
   
+  convenience init(context: NSManagedObjectContext, name: String) {
+    self.init(context: context, name: name, details: "", frequency: .Daily, times: 0, createdAt: NSDate())
+  }
+  
   convenience init(context: NSManagedObjectContext, name: String, details: String, frequency: Frequency, times: Int, createdAt: NSDate) {
     let entityDescription = NSEntityDescription.entityForName("Habit", inManagedObjectContext: context)!
     self.init(entity: entityDescription, insertIntoManagedObjectContext: context)
@@ -229,7 +233,7 @@ class Habit: NSManagedObject {
     skipped = skipped!.integerValue + skippedBy
   }
   
-  private func recalculateHistory(onDate date: NSDate) {
+  func recalculateHistory(onDate date: NSDate) {
     let (startDate, _) = dateRange(date)
     let predicate = NSPredicate(format: "date > %@", startDate)
     for history in histories!.filteredOrderedSetUsingPredicate(predicate).array as! [History] {
@@ -385,14 +389,9 @@ class Habit: NSManagedObject {
     return todoEntries
   }
   
-  var todos: [Entry] {
-    let predicate = NSPredicate(format: "stateRaw == %@", Entry.State.Todo.rawValue)
-    return entries!.filteredOrderedSetUsingPredicate(predicate).array as! [Entry]
-  }
-  
   var firstTodo: Entry? {
-    let todoArray = todos
-    return todoArray.count == 0 ? nil : todoArray[0]
+    let predicate = NSPredicate(format: "stateRaw == %@", Entry.State.Todo.rawValue)
+    return entries!.filteredOrderedSetUsingPredicate(predicate).firstObject as? Entry
   }
   
   var lastEntry: NSDate {
@@ -415,15 +414,14 @@ class Habit: NSManagedObject {
     switch frequency {
     case .Daily:
 //      if entries!.count == 0 {
-//        var now = calendar.dateByAddingUnit(.Second, value: 10, toDate: NSDate())!
+//        lastDue = calendar.dateByAddingUnit(.Second, value: 5, toDate: NSDate())!
 //        let components = calendar.components([.Day], fromDate: NSDate())
 //        for index in 1..<5 {
-//          let entry = Entry(context: managedObjectContext!, habit: self, due: now, period: components.day)
-//          entry.number = index
-//          total = total!.integerValue + 1
-//          now = calendar.dateByAddingUnit(.Second, value: 3, toDate: now)!
+//          lastDue = calendar.dateByAddingUnit(.Second, value: 5, toDate: lastDue)!
+//          let _ = Entry(context: managedObjectContext!, habit: self, due: lastDue, period: components.day, number: index)
 //        }
 //      }
+//      count = 4
       let upcomingDay = calendar.dateByAddingUnit(.Day, value: upcoming, toDate: currentDate)!
       let dayMinutes = HabitApp.endOfDay - HabitApp.startOfDay
       while true {
@@ -581,22 +579,6 @@ class Habit: NSManagedObject {
       }
     default: ()
     }
-  }
-  
-  func deleteEntries(after date: NSDate) -> [Entry] {
-    let predicate = NSPredicate(format: "due > %@", date)
-    let entriesToDelete = entries!.filteredOrderedSetUsingPredicate(predicate).array as! [Entry]
-    for entry in entriesToDelete {
-      managedObjectContext!.deleteObject(entry)
-    }
-    recalculateHistory(onDate: date)
-    return entriesToDelete
-  }
-  
-  func generateEntries(after date: NSDate) -> [Entry] {
-    update(date, currentDate: date)
-    let predicate = NSPredicate(format: "due > %@", date)
-    return entries!.filteredOrderedSetUsingPredicate(predicate).array as! [Entry]
   }
 
 }

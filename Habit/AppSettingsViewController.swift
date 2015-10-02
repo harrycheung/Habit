@@ -130,7 +130,7 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
   @IBAction func notificationChanged(sender: AnyObject) {
     HabitApp.notification = !notification.on
     if HabitApp.notification {
-      EntryManager.updateNotifications()
+      HabitManager.updateNotifications()
     } else {
       UIApplication.sharedApplication().cancelAllLocalNotifications()
     }

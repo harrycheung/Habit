@@ -177,20 +177,13 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
       habit.neverAutoSkip = self.neverAutoSkip.on
       habit.paused = self.paused.on
       if !habit.isNew && ((pausedSet && self.paused.on) || frequencyChanged) {
-        self.mvc!.removeEntries(habit.deleteEntries(after: NSDate()))
+        self.mvc!.deleteRows(HabitManager.deleteEntries(habit, after: NSDate(), save: false))
       }
       if habit.isNew || (pausedSet && !self.paused.on) || frequencyChanged {
-        self.mvc!.insertEntries(habit.generateEntries(after: NSDate()))
+        self.mvc!.insertRows(HabitManager.createEntries(habit, after: NSDate()))
       }
-      do {
-        try HabitApp.moContext.save()
-      } catch let error as NSError {
-        NSLog("\(error), \(error.userInfo)")
-      }
-    }
-    
-    let transition = {
-      EntryManager.updateNotifications()
+      // update notifications if name change or frequency changes or new or paused or notify or anything
+      HabitManager.updateNotifications()
       self.habit = nil
       self.presentingViewController!.view.hidden = true
       self.presentingViewController!.dismissViewControllerAnimated(true) {
@@ -198,69 +191,44 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
       }
     }
     
-    let normalSave = { (name: String) in
-      self.habit!.name = name
-      save(self.habit!)
-      transition()
-      self.mvc!.tableView.reloadData()
-    }
-    
-    let trimmedName = self.name.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+    let trimmedName = name.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
     if habit == nil {
-      do {
-        let request = NSFetchRequest(entityName: "Habit")
-        request.predicate = NSPredicate(format: "name ==[c] %@", trimmedName)
-        let habits = try HabitApp.moContext.executeFetchRequest(request) as! [Habit]
-        if habits.count > 0 {
-          showAlert(nil,
-            message: "Another habit with the same name exists.\nContinue with save?",
-            yes: ("Yes", .Default, {
-              if self.habit == nil {
-                self.habit =
-                  Habit(context: HabitApp.moContext, name: trimmedName, details: "", frequency: .Daily, times: 0, createdAt: NSDate())
-                save(self.habit!)
-                transition()
-              } else {
-                normalSave(trimmedName)
-              }
-            }),
-            no: ("No", .Cancel, { alert in
-              alert.dismissViewControllerAnimated(true, completion: nil)
-            }))
-        } else {
-          self.habit =
-            Habit(context: HabitApp.moContext, name: trimmedName, details: "", frequency: .Daily, times: 0, createdAt: NSDate())
-          save(self.habit!)
-          transition()
-        }
-      } catch let error as NSError {
-        NSLog("\(error), \(error.userInfo)")
+      if HabitManager.exists(trimmedName) {
+        showAlert(nil,
+          message: "Another habit with the same name exists.\nContinue with save?",
+          yes: ("Yes", .Default, {
+            if self.habit == nil {
+              self.habit = Habit(context: HabitApp.moContext, name: trimmedName)
+              save(self.habit!)
+            } else {
+              self.habit!.name = trimmedName
+              save(self.habit!)
+            }
+          }),
+          no: ("No", .Cancel, { alert in
+            alert.dismissViewControllerAnimated(true, completion: nil)
+          }))
+      } else {
+        self.habit = Habit(context: HabitApp.moContext, name: trimmedName)
+        save(self.habit!)
       }
     } else {
-      normalSave(trimmedName)
+      self.habit!.name = trimmedName
+      save(self.habit!)
     }
   }
   
   @IBAction func deleteHabit(sender: AnyObject) {
     showAlert(nil, message: nil, yes: ("Delete habit", .Destructive, {
-      for entry in self.habit!.todos {
-        EntryManager.removeNotification(entry)
-      }
-      
-      self.mvc!.removeHabit(self.habit!)
-      EntryManager.updateNotifications()
+      let rows = HabitManager.delete(self.habit!)
+      // Need to update badge numbers
+      HabitManager.updateNotifications()
       // Hide ShowHabitViewController
       self.presentingViewController!.view.hidden = true
       self.presentingViewController!.dismissViewControllerAnimated(true) {
-        self.mvc!.dismissViewControllerAnimated(false, completion: nil)
-      }
-      do {
-        HabitApp.moContext.deleteObject(self.habit!)
-        try HabitApp.moContext.save()
-      } catch let error as NSError {
-        NSLog("Could not save \(error), \(error.userInfo)")
-      } catch {
-        // something
+        self.mvc!.dismissViewControllerAnimated(false) {
+          self.mvc!.deleteRows(rows)
+        }
       }
       self.habit = nil
     }), no: ("Cancel", .Cancel, { alert in
