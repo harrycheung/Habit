@@ -56,7 +56,7 @@
 // 47: done - Multiple storyboards for each screen size
 // 48: Should autoskip happen immediately or later?
 // 49: done - Disable input while row animation is happening
-// 50: Fix blur mask in when editing existing habit
+// 50: done - Fix blur mask in when editing existing habit
 // 51: Fix tint colors on dialogs
 
 import UIKit
