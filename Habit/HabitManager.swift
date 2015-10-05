@@ -243,12 +243,12 @@ class HabitManager {
     }
   }
   
-  static func deleteEntries(habit: Habit, after date: NSDate, save: Bool = true) -> [NSIndexPath] {
+  static func deleteEntries(after date: NSDate, habit: Habit? = nil, save: Bool = false) -> [NSIndexPath] {
     do {
       var rows: [NSIndexPath] = []
       var newCurrent: [Entry] = []
       for (index, entry) in current.enumerate() {
-        if entry.habit! == habit && entry.due!.compare(date) == .OrderedDescending {
+        if (habit == nil || entry.habit == habit) && entry.due!.compare(date) == .OrderedDescending {
           HabitApp.moContext.deleteObject(entry)
           rows.append(NSIndexPath(forRow: index, inSection: 0))
         } else {
@@ -258,15 +258,25 @@ class HabitManager {
       current = newCurrent
       var newUpcoming: [Entry] = []
       for (index, entry) in upcoming.enumerate() {
-        if entry.habit! == habit && entry.due!.compare(date) == .OrderedDescending {
+        if (habit == nil || entry.habit! == habit) && entry.due!.compare(date) == .OrderedDescending {
           HabitApp.moContext.deleteObject(entry)
-          rows.append(NSIndexPath(forRow: index, inSection: 1))
+          if HabitApp.upcoming {
+            rows.append(NSIndexPath(forRow: index, inSection: 1))
+          }
         } else {
           newUpcoming.append(entry)
         }
       }
       upcoming = newUpcoming
-      habit.recalculateHistory(onDate: date)
+      if habit == nil {
+        let habitRequest = NSFetchRequest(entityName: "Habit")
+        let habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
+        for habit in habits {
+          habit.recalculateHistory(onDate: date)
+        }
+      } else {
+        habit!.recalculateHistory(onDate: date)
+      }
       if save { try HabitApp.moContext.save() }
       return rows
     } catch let error as NSError {
@@ -275,22 +285,32 @@ class HabitManager {
     }
   }
   
-  static func createEntries(habit: Habit, after date: NSDate, save: Bool = true) -> [NSIndexPath] {
+  static func createEntries(after date: NSDate, habit: Habit? = nil, save: Bool = true) -> [NSIndexPath] {
     do {
-      habit.update(date, currentDate: date)
+      if habit == nil {
+        let habitRequest = NSFetchRequest(entityName: "Habit")
+        let habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
+        for habit in habits {
+          habit.update(date, currentDate: NSDate())
+        }
+      } else {
+        habit!.update(date, currentDate: NSDate())
+      }
       if save { try HabitApp.moContext.save() }
       // TODO: does fetch hit memory or actual file storage?
       reload()
       
       var rows: [NSIndexPath] = []
       for (index, entry) in current.enumerate() {
-        if entry.habit! == habit && entry.due!.compare(date) == .OrderedDescending {
+        if (habit == nil || entry.habit! == habit) && entry.due!.compare(date) == .OrderedDescending {
           rows.append(NSIndexPath(forRow: index, inSection: 0))
         }
       }
-      for (index, entry) in upcoming.enumerate() {
-        if entry.habit! == habit && entry.due!.compare(date) == .OrderedDescending {
-          rows.append(NSIndexPath(forRow: index, inSection: 1))
+      if HabitApp.upcoming {
+        for (index, entry) in upcoming.enumerate() {
+          if (habit == nil || entry.habit! == habit) && entry.due!.compare(date) == .OrderedDescending {
+            rows.append(NSIndexPath(forRow: index, inSection: 1))
+          }
         }
       }
       return rows

@@ -177,10 +177,10 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
       habit.neverAutoSkip = self.neverAutoSkip.on
       habit.paused = self.paused.on
       if !habit.isNew && ((pausedSet && self.paused.on) || frequencyChanged) {
-        self.mvc!.deleteRows(HabitManager.deleteEntries(habit, after: NSDate(), save: false))
+        self.mvc!.deleteRows(HabitManager.deleteEntries(after: NSDate(), habit: habit))
       }
       if habit.isNew || (pausedSet && !self.paused.on) || frequencyChanged {
-        self.mvc!.insertRows(HabitManager.createEntries(habit, after: NSDate()))
+        self.mvc!.insertRows(HabitManager.createEntries(after: NSDate(), habit: habit, save: true))
       }
       // update notifications if name change or frequency changes or new or paused or notify or anything
       HabitManager.updateNotifications()
