@@ -57,7 +57,7 @@
 // 48: Should autoskip happen immediately or later?
 // 49: done - Disable input while row animation is happening
 // 50: done - Fix blur mask in when editing existing habit
-// 51: Fix tint colors on dialogs
+// 51: done - Fix tint colors on dialogs
 
 import UIKit
 import CoreData
@@ -170,9 +170,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     statusBar = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 20))
     statusBar!.backgroundColor = HabitApp.color
     view.addSubview(statusBar!)
-    
-    // TODO: What's up with the "window!!"?
-    UIApplication.sharedApplication().delegate!.window!!.tintColor = HabitApp.color
     
     HabitManager.updateHabits()
     HabitManager.reload()
@@ -499,7 +496,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     view.bringSubviewToFront(overlayView)
 
     // Change color
-    UIApplication.sharedApplication().keyWindow!.tintColor = color
     titleBar.backgroundColor = color
     statusBar!.backgroundColor = color
     newButton.backgroundColor = color

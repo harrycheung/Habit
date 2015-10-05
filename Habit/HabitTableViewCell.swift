@@ -36,7 +36,6 @@ class HabitTableViewCell: SwipeTableViewCell {
 
   func reload() {
     // Not sure why this tint needs be set here, but otherwise, it picks up the global tint sometimes.
-    name.tintColor = UIColor.whiteColor()
     name.text = entry!.habit!.name
     due.text = entry!.dueText
     let dueIn = entry!.dueIn
