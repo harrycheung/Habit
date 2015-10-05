@@ -121,9 +121,15 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
   @IBAction func upcomingChanged(sender: AnyObject) {
     HabitApp.upcoming = upcoming.on
     if upcoming.on {
-      mvc!.showUpcoming()
+      upcoming.userInteractionEnabled = false
+      mvc!.showUpcoming() {
+        self.upcoming.userInteractionEnabled = true
+      }
     } else {
-      mvc!.hideUpcoming()
+      upcoming.userInteractionEnabled = false
+      mvc!.hideUpcoming() {
+        self.upcoming.userInteractionEnabled = true
+      }
     }
   }
   

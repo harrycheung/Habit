@@ -55,6 +55,7 @@
 // 46: Use visible cells on tableview to animate
 // 47: done - Multiple storyboards for each screen size
 // 48: Should autoskip happen immediately or later?
+// 49: done - Disable input while row animation is happening
 
 import UIKit
 import CoreData
@@ -175,7 +176,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     HabitManager.reload()
       
     // Setup timers
-    refreshTimer = NSTimer.scheduledTimerWithTimeInterval(5 * 60, target: self, selector: "reload", userInfo: nil, repeats: true)
+    refreshTimer = NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: "reload", userInfo: nil, repeats: true)
     
     // Setup colors
     tableView.backgroundColor = UIColor.darkGrayColor()
@@ -202,10 +203,13 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     tableView.reloadData()
   }
   
-  func insertRows(rows: [NSIndexPath]) {
+  func insertRows(rows: [NSIndexPath], completion: (() -> Void)? = nil) {
     if tableView.numberOfRowsInSection(0) > 0 &&
       tableView.headerViewForSection(1) != nil && tableView.numberOfRowsInSection(1) > 0 {
       tableView.insertRowsAtIndexPaths(rows, withRowAnimation: .Top)
+      if completion != nil {
+        completion!()
+      }
     } else {
       // Pretty animation for empty current or upcoming
       tableView.beginUpdates()
@@ -215,6 +219,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       }
       tableView.endUpdates()
 
+      CATransaction.begin()
+      CATransaction.setCompletionBlock() {
+        if completion != nil {
+          completion!()
+        }
+      }
       var animatedUpcomingHeader = false
       var delayStart = 0.0
       for indexPath in rows {
@@ -229,49 +239,61 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
           delayStart += SlideAnimationDelay
         }
       }
+      CATransaction.commit()
     }
   }
   
-  func deleteRows(rows: [NSIndexPath]) {
+  func deleteRows(rows: [NSIndexPath], completion: (() -> Void)? = nil) {
     if HabitManager.currentCount != 0 && HabitApp.upcoming && HabitManager.upcomingCount != 0 {
       tableView.deleteRowsAtIndexPaths(rows, withRowAnimation: .Top)
     } else {
-      var animatedUpcomingHeader = false
+      CATransaction.begin()
+      CATransaction.setCompletionBlock() {
+        print("# of secitons befor: \(self.tableView.numberOfSections)")
+        self.tableView.beginUpdates()
+        self.tableView.deleteRowsAtIndexPaths(rows, withRowAnimation: .None)
+        if self.tableView.headerViewForSection(1) != nil {
+          self.tableView.deleteSections(NSIndexSet(index: 1), withRowAnimation: .None)
+        }
+        self.tableView.endUpdates()
+        print("# of secitons after: \(self.tableView.numberOfSections)")
+        if completion != nil {
+          completion!()
+        }
+      }
+
       var delayStart = 0.0
       for indexPath in rows.reverse() {
-        if indexPath.section == 1 && !animatedUpcomingHeader {
+        if indexPath.section == 1 && indexPath.row == 0 {
           if let header = tableView.headerViewForSection(1) {
-            hideCellAnimate(header, delay: delayStart, complete: nil)
+            hideCellAnimate(header, delay: delayStart, completion: {
+              header.hidden = true
+            })
           }
-          animatedUpcomingHeader = true
         }
         if let cell = tableView.cellForRowAtIndexPath(indexPath) {
-          hideCellAnimate(cell, delay: delayStart, complete: nil)
+          hideCellAnimate(cell, delay: delayStart, completion: {
+            // Hide cell to stop it from flashing when the tableView is updated
+            cell.hidden = true
+          })
           delayStart += SlideAnimationDelay
         }
       }
-      
-      // TOOD: End animation call back
-//      tableView.beginUpdates()
-//      tableView.deleteRowsAtIndexPaths(rows, withRowAnimation: .None)
-//      if HabitManager.upcomingCount == 0 {
-//        tableView.deleteSections(NSIndexSet(index: 1), withRowAnimation: .None)
-//      }
-//      tableView.endUpdates()
+      CATransaction.commit()
     }
   }
   
-  private func hideCellAnimate(view: UIView, delay: NSTimeInterval, complete: (() -> Void)?) {
+  private func hideCellAnimate(view: UIView, delay: NSTimeInterval, completion: (() -> Void)?) {
     var endFrame = view.frame
     endFrame.origin.y = view.frame.origin.y + self.tableView.superview!.bounds.height
-    UIView.animateWithDuration(SlideAnimationDuration,
+    UIView.animateWithDuration(SlideAnimationDuration * 4,
       delay: delay,
       options: [.CurveEaseIn],
       animations: {
         view.frame = endFrame
       }, completion: { finished in
-        if complete != nil {
-          complete!()
+        if completion != nil {
+          completion!()
         }
       })
   }
@@ -288,23 +310,23 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       }, completion: nil)
   }
   
-  func showUpcoming() {
+  func showUpcoming(completion: (() -> Void)?) {
     if HabitManager.upcomingCount > 0 {
       var rows: [NSIndexPath] = []
       for index in 0..<HabitManager.upcomingCount {
         rows.append(NSIndexPath(forRow: index, inSection: 1))
       }
-      insertRows(rows)
+      insertRows(rows, completion: completion)
     }
   }
   
-  func hideUpcoming() {
+  func hideUpcoming(completion: (() -> Void)?) {
     if HabitManager.upcomingCount > 0 {
       var rows: [NSIndexPath] = []
       for index in 0..<HabitManager.upcomingCount {
         rows.append(NSIndexPath(forRow: index, inSection: 1))
       }
-      deleteRows(rows)
+      deleteRows(rows, completion: completion)
     }
   }
   
@@ -356,7 +378,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         delayStart -= SlideAnimationDelay
       }
       if index != cellsToHide.count - 1 {
-        hideCellAnimate(cellsToHide[index], delay: delayStart, complete: nil)
+        hideCellAnimate(cellsToHide[index], delay: delayStart, completion: nil)
       } else {
         hideCellAnimate(cellsToHide[index], delay: delayStart) {
           self.tableView.reloadData()
