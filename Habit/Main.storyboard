@@ -100,7 +100,7 @@
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="ueq-DP-xrh" appends="YES" id="YeN-fY-ScM"/>
                                     <outletCollection property="gestureRecognizers" destination="xp6-XU-iw7" appends="YES" id="wS4-Kx-Tvv"/>
-                                    <outletCollection property="gestureRecognizers" destination="kcS-zS-p5o" appends="YES" id="Siy-Xc-CfQ"/>
+                                    <outletCollection property="gestureRecognizers" destination="IoK-iI-wej" appends="YES" id="3ef-tY-TXn"/>
                                 </connections>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="al0-3V-BIj">
@@ -174,7 +174,7 @@
                                     <color key="titleShadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="tqg-qj-7hm" kind="presentation" modalPresentationStyle="overCurrentContext" id="GP4-Ru-1DZ"/>
+                                    <action selector="showSelectFrequency:" destination="EoV-sV-T6s" eventType="touchUpInside" id="Iiq-ZA-O2f"/>
                                 </connections>
                             </button>
                             <view hidden="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UlU-GY-Z0X">
@@ -231,9 +231,9 @@
                         <action selector="changeColorRight:" destination="EoV-sV-T6s" id="0Au-HB-FZ8"/>
                     </connections>
                 </swipeGestureRecognizer>
-                <tapGestureRecognizer id="kcS-zS-p5o">
+                <tapGestureRecognizer id="IoK-iI-wej">
                     <connections>
-                        <segue destination="g8Q-E4-o4d" kind="presentation" identifier="" modalPresentationStyle="overCurrentContext" id="ha3-S6-fge"/>
+                        <action selector="showSettings:" destination="EoV-sV-T6s" id="lQg-Cl-7ZC"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
@@ -608,7 +608,7 @@
         <!--Select Frequency View Controller-->
         <scene sceneID="Eip-ec-Kat">
             <objects>
-                <viewController id="tqg-qj-7hm" customClass="SelectFrequencyViewController" customModule="Habit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SelectFrequencyViewController" id="tqg-qj-7hm" customClass="SelectFrequencyViewController" customModule="Habit" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2QT-eW-pat"/>
                         <viewControllerLayoutGuide type="bottom" id="D1w-Mg-yzB"/>
@@ -1097,7 +1097,7 @@
         <!--Data Source-->
         <scene sceneID="G1Z-5I-rjw">
             <objects>
-                <viewController title="App Settings View Controller" id="g8Q-E4-o4d" customClass="AppSettingsViewController" customModule="Habit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AppSettingsViewController" title="App Settings View Controller" id="g8Q-E4-o4d" customClass="AppSettingsViewController" customModule="Habit" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2f0-pD-A8a"/>
                         <viewControllerLayoutGuide type="bottom" id="qe5-sL-ghR"/>
@@ -1159,7 +1159,7 @@
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
-                                                        <segue destination="USX-qH-n4Q" kind="unwind" unwindAction="unwind:" id="0JU-x4-bV1"/>
+                                                        <action selector="closeSettings:" destination="g8Q-E4-o4d" eventType="touchUpInside" id="j0O-1d-3JU"/>
                                                     </connections>
                                                 </button>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J2v-yD-GA4" customClass="ColorPicker" customModule="Habit" customModuleProvider="target">
@@ -1269,7 +1269,7 @@
                                                         <constraint firstAttribute="height" constant="20" id="8WQ-S7-psF"/>
                                                     </constraints>
                                                 </view>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Beginning " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="317-AH-BYp">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="317-AH-BYp">
                                                     <rect key="frame" x="15" y="301" width="80" height="19"/>
                                                     <animations/>
                                                     <constraints>
@@ -1292,8 +1292,8 @@
                                                         <rect key="frame" x="95" y="299.5" width="108" height="22.5"/>
                                                     </variation>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BEGINNING / END OF DAY" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Zo-B1-nfF">
-                                                    <rect key="frame" x="15" y="270" width="139" height="13"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="START / END OF DAY" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Zo-B1-nfF">
+                                                    <rect key="frame" x="15" y="270" width="112" height="13"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="13"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1583,20 +1583,14 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="D1Z-SQ-Hf3" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="USX-qH-n4Q" userLabel="Exit" sceneMemberID="exit"/>
                 <panGestureRecognizer minimumNumberOfTouches="1" id="ALh-o6-TbR">
                     <connections>
                         <action selector="panning:" destination="g8Q-E4-o4d" id="e0B-4n-tWw"/>
                     </connections>
                 </panGestureRecognizer>
-                <tapGestureRecognizer id="XH1-TC-qIh">
-                    <connections>
-                        <segue destination="USX-qH-n4Q" kind="unwind" identifier="SettingsUnwind" unwindAction="unwind:" id="Y1v-mH-4PG"/>
-                    </connections>
-                </tapGestureRecognizer>
                 <tapGestureRecognizer id="Le3-w1-tAL">
                     <connections>
-                        <segue destination="USX-qH-n4Q" kind="unwind" unwindAction="unwind:" id="ddO-c4-l3X"/>
+                        <action selector="closeSettings:" destination="g8Q-E4-o4d" id="YDz-tQ-8qQ"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>

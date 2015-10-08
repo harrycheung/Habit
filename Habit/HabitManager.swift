@@ -157,22 +157,22 @@ class HabitManager {
     }
   }
   
-  static func skip(habit: Habit) -> [NSIndexPath] {
+  static func skip(habit: Habit? = nil) -> [NSIndexPath] {
     do {
       let before = NSDate(timeIntervalSinceNow: HabitApp.autoSkipDelayTimeInterval)
-      var indexes: [NSIndexPath] = []
+      var rows: [NSIndexPath] = []
       var newCurrent: [Entry] = []
       for (index, entry) in current.enumerate() {
-        if entry.habit! == habit && entry.due!.compare(before) == .OrderedAscending {
+        if (habit == nil || entry.habit! == habit) && entry.due!.compare(before) == .OrderedAscending {
           entry.skip()
-          indexes.append(NSIndexPath(forRow: index, inSection: 0))
+          rows.append(NSIndexPath(forRow: index, inSection: 0))
         } else {
           newCurrent.append(entry)
         }
       }
       current = newCurrent
       try HabitApp.moContext.save()
-      return indexes
+      return rows
     } catch let error {
       NSLog("HabitManager.skip failed: \(error)")
       return []

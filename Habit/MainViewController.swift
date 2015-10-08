@@ -54,10 +54,11 @@
 // 45: done - Call update on habits after return from background
 // 46: Use visible cells on tableview to animate
 // 47: done - Multiple storyboards for each screen size
-// 48: Should autoskip happen immediately or later?
+// 48: done - Should autoskip happen immediately or later?
 // 49: done - Disable input while row animation is happening
 // 50: done - Fix blur mask in when editing existing habit
 // 51: done - Fix tint colors on dialogs
+// 52: done - Dialog to indicate habits were auto skipped?
 
 import UIKit
 import CoreData
@@ -170,12 +171,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     statusBar = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 20))
     statusBar!.backgroundColor = HabitApp.color
     view.addSubview(statusBar!)
-    
-    HabitManager.updateHabits()
-    HabitManager.reload()
       
     // Setup timers
-    refreshTimer = NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: "reload", userInfo: nil, repeats: true)
+    refreshTimer =
+      NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: "reload", userInfo: nil, repeats: true)
     
     // Setup colors
     tableView.backgroundColor = UIColor.darkGrayColor()
@@ -188,8 +187,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     newButton.layer.shadowOffset = CGSizeMake(0, 1)
     
     view.bringSubviewToFront(transitionOverlay)
-    
-    //testData()
   }
   
   override func didReceiveMemoryWarning() {
@@ -200,6 +197,20 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   func reload() {
     HabitManager.reload()
     tableView.reloadData()
+  }
+  
+  @IBAction func showSettings(sender: UITapGestureRecognizer) {
+    let asvc = storyboard!.instantiateViewControllerWithIdentifier("AppSettingsViewController") as! AppSettingsViewController
+    asvc.modalPresentationStyle = .OverCurrentContext
+    asvc.transitioningDelegate = appSettingsTransition
+    presentViewController(asvc, animated: true, completion: nil)
+  }
+  
+  @IBAction func showSelectFrequency(sender: AnyObject) {
+    let sfvc = storyboard!.instantiateViewControllerWithIdentifier("SelectFrequencyViewController") as! SelectFrequencyViewController
+    sfvc.modalPresentationStyle = .OverCurrentContext
+    sfvc.transitioningDelegate = selectFrequencyTransition
+    presentViewController(sfvc, animated: true, completion: nil)
   }
   
   func insertRows(rows: [NSIndexPath], completion: (() -> Void)? = nil) {
@@ -243,12 +254,20 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   func deleteRows(rows: [NSIndexPath], completion: (() -> Void)? = nil) {
     if HabitManager.currentCount != 0 && HabitApp.upcoming && HabitManager.upcomingCount != 0 {
       tableView.deleteRowsAtIndexPaths(rows, withRowAnimation: .Top)
+      if completion != nil {
+        completion!()
+      }
+    } else if HabitManager.currentCount == 0 && HabitApp.upcoming && HabitManager.upcomingCount != 0 {
+      tableView.deleteRowsAtIndexPaths(rows, withRowAnimation: .Top)
+      if completion != nil {
+        completion!()
+      }
     } else {
       CATransaction.begin()
       CATransaction.setCompletionBlock() {
         self.tableView.beginUpdates()
         self.tableView.deleteRowsAtIndexPaths(rows, withRowAnimation: .None)
-        if self.tableView.headerViewForSection(1) != nil {
+        if (!HabitApp.upcoming || HabitManager.upcomingCount == 0) && self.tableView.numberOfSections == 2 {
           self.tableView.deleteSections(NSIndexSet(index: 1), withRowAnimation: .None)
         }
         self.tableView.endUpdates()
@@ -466,25 +485,11 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     return header
   }
   
-  // Segue
-  
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    super.prepareForSegue(segue, sender: sender)
-    
-    if segue.destinationViewController is AppSettingsViewController {
-      segue.destinationViewController.transitioningDelegate = appSettingsTransition
-      segue.destinationViewController.modalPresentationStyle = .Custom
-    } else if segue.destinationViewController is SelectFrequencyViewController {
-      segue.destinationViewController.transitioningDelegate = selectFrequencyTransition
-      segue.destinationViewController.modalPresentationStyle = .Custom
-    }
-  }
-  
-  @IBAction func unwind(segue: UIStoryboardSegue) { }
-  
   // Colors
   
   func changeColor(color: UIColor) {
+    //testData()
+    
     // Snapshot previous color
     UIGraphicsBeginImageContextWithOptions(UIScreen.mainScreen().bounds.size, false, UIScreen.mainScreen().scale)
     view.drawViewHierarchyInRect(UIScreen.mainScreen().bounds, afterScreenUpdates: true)

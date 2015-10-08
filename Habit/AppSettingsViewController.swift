@@ -104,7 +104,7 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
             self.close.alpha = 1
           }, completion: nil)
       } else {
-        shouldPerformSegueWithIdentifier("", sender: nil)
+        closeSettings(recognizer)
       }
     }
   }
@@ -146,23 +146,19 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     if autoSkip.on {
       let darkenHeight = self.paddingView.bounds.height - self.autoSkipHeight.constant
       autoSkipHeight.priority = HabitApp.LayoutPriorityHigh
-      UIView.animateWithDuration(0.3, delay: 0, options: .CurveEaseOut,
+      UIView.animateWithDuration(HabitApp.TransitionDuration, delay: 0, options: .CurveEaseOut,
         animations: {
           self.darkenView!.frame = CGRectMake(0, 0, self.view.frame.width, darkenHeight)
           self.view.layoutIfNeeded()
-        }, completion: { finished in
-          HabitApp.autoSkip = true
-      })
+        }, completion: nil)
     } else {
       let darkenHeight = self.paddingView.bounds.height + self.autoSkipHeight.constant
       autoSkipHeight.priority = HabitApp.LayoutPriorityLow
-      UIView.animateWithDuration(0.3, delay: 0, options: .CurveEaseOut,
+      UIView.animateWithDuration(HabitApp.TransitionDuration, delay: 0, options: .CurveEaseOut,
         animations: {
           self.darkenView!.frame = CGRectMake(0, 0, self.view.frame.width, darkenHeight)
           self.view.layoutIfNeeded()
-        }, completion: { finished in
-          HabitApp.autoSkip = false
-      })
+        }, completion: nil)
     }
   }
   
@@ -221,34 +217,52 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     setTimeOfDayMinMax()
   }
   
-  override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
-    let newStart = HabitApp.startOfDay != Int(startOfDayStepper.value)
-    let newEnd =  HabitApp.endOfDay != Int(endOfDayStepper.value)
-    if newStart || newEnd {
-      var timing = ""
-      if newStart && newEnd {
-        timing = "start and end times"
-      } else if newStart {
-        timing = "start time"
-      } else {
-        timing = "end time"
+  @IBAction func closeSettings(sender: AnyObject) {
+    let dayAlert = { () -> Void in
+      let newStart = HabitApp.startOfDay != Int(self.startOfDayStepper.value)
+      let newEnd = HabitApp.endOfDay != Int(self.endOfDayStepper.value)
+      if newStart || newEnd {
+        var timing = ""
+        if newStart && newEnd {
+          timing = "start/end of day times"
+        } else if newStart {
+          timing = "start of day time"
+        } else {
+          timing = "end of day time"
+        }
+        let alert = UIAlertController(title: "Start/End of Day Adjusted",
+          message: "Entries after today will be adjusted\nwith new \(timing).\nThis can't be undone.",
+          preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Destructive, handler: nil))
+        alert.addAction(UIAlertAction(title: "Confirm", style: .Default, handler: { action in
+          HabitApp.startOfDay = Int(self.startOfDayStepper.value)
+          HabitApp.endOfDay = Int(self.endOfDayStepper.value)
+          self.mvc!.resetFuture()
+        }))
+        self.mvc!.presentViewController(alert, animated: true, completion: nil)
       }
-      let alert = UIAlertController(title: "Warning",
-        message: "Entries after today will be adjusted\nwith new \(timing).",
-        preferredStyle: .Alert)
-      alert.addAction(UIAlertAction(title: "Cancel", style: .Destructive, handler: { action in
-        self.performSegueWithIdentifier("SettingsUnwind", sender: self)
-      }))
-      alert.addAction(UIAlertAction(title: "Confirm", style: .Default, handler: { action in
-        HabitApp.startOfDay = Int(self.startOfDayStepper.value)
-        HabitApp.endOfDay = Int(self.endOfDayStepper.value)
-        self.mvc!.resetFuture()
-        self.performSegueWithIdentifier("SettingsUnwind", sender: self)
-      }))
-      presentViewController(alert, animated: true, completion: nil)
-      return false
     }
-    return true
+    
+    self.dismissViewControllerAnimated(true) {
+      if self.autoSkip.on && self.autoSkip.on != HabitApp.autoSkip && HabitManager.overdue > 0 {
+        let alert = UIAlertController(title: "Automatic Skip Enabled",
+          message: "Would you like to skip the\n\(HabitManager.overdue) overdue habit entries.\nThis can't be undone.",
+          preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "No", style: .Destructive, handler: { action in
+          HabitApp.autoSkip = true
+          dayAlert()
+        }))
+        alert.addAction(UIAlertAction(title: "Yes", style: .Default, handler: { action in
+          HabitApp.autoSkip = true
+          self.mvc!.deleteRows(HabitManager.skip()) {
+            dayAlert()
+          }
+        }))
+        self.mvc!.presentViewController(alert, animated: true, completion: nil)
+      } else {
+        HabitApp.autoSkip = self.autoSkip.on
+      }
+    }
   }
   
 }
