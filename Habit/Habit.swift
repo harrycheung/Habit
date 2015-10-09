@@ -454,7 +454,7 @@ class Habit: NSManagedObject {
         if (expected == 1 || components.hour != 24) && calendar.isDate(lastDue, inSameDayAsDate: upcomingDay) {// lastDue.compare(upcomingDay) != .OrderedAscending {
           break
         }
-        //print(formatter.stringFromDate(lastDue))
+        //print(HabitApp.dateFormatter.stringFromDate(lastDue))
         if pausedBool {
           updateHistory(onDate: lastDue, completedBy: 0, skippedBy: 0, totalBy: 0)
         } else {
@@ -529,7 +529,7 @@ class Habit: NSManagedObject {
         //print("new lastDue: \(formatter.stringFromDate(lastDue))")
         // Since we do calculations based on the beginning of the week, only create if we past createdAt
         if lastDue.compare(createdAt!) == .OrderedDescending {
-          //print("new entry: \(formatter.stringFromDate(lastDue))")
+          //print("new entry: \(HabitApp.dateFormatter.stringFromDate(lastDue))")
           if pausedBool {
             updateHistory(onDate: lastDue, completedBy: 0, skippedBy: 0, totalBy: 0)
           } else {
@@ -546,9 +546,9 @@ class Habit: NSManagedObject {
           count = 0
           if components.day != 1 {
             components.month += 1
+            daysInMonth = calendar.rangeOfUnit(.Day, inUnit: .Month,
+              forDate: calendar.dateByAddingUnit(.Month, value: 1, toDate: lastDue)!).length
           }
-          daysInMonth = calendar.rangeOfUnit(.Day, inUnit: .Month,
-            forDate: calendar.dateByAddingUnit(.Month, value: 1, toDate: lastDue)!).length
         }
         count += 1
         if useTimes {
