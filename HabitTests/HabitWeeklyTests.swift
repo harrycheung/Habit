@@ -14,7 +14,6 @@ import Nimble
 
 class HabitWeeklyTests: XCTestCase {
 
-  var context: NSManagedObjectContext?
   var previousStartOfDay: Int = 0
   var previousEndOfDay: Int = 0
   
@@ -24,7 +23,7 @@ class HabitWeeklyTests: XCTestCase {
     previousStartOfDay = HabitApp.startOfDay
     previousEndOfDay = HabitApp.endOfDay
     
-    context = HabitApp.setUpInMemoryManagedObjectContext()
+    HabitApp.setUpInMemoryManagedObjectContext()
     HabitApp.upcoming = true
     HabitApp.startOfDay = 0
     HabitApp.endOfDay = 24 * 60
@@ -32,7 +31,6 @@ class HabitWeeklyTests: XCTestCase {
   
   override func tearDown() {
     super.tearDown()
-    context = nil
     
     HabitApp.startOfDay = previousStartOfDay
     HabitApp.endOfDay = previousEndOfDay
@@ -46,7 +44,7 @@ class HabitWeeklyTests: XCTestCase {
     components.day = 17 // Thursday
     components.hour = 12
     let createdAt = calendar.dateFromComponents(components)!
-    var habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
+    var habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
     
     expect(habit.countBefore(createdAt)) == 3
     components.day = 20 // Sunday
@@ -54,7 +52,7 @@ class HabitWeeklyTests: XCTestCase {
     components.hour = 0
     expect(habit.countBefore(calendar.dateFromComponents(components)!)) == 6
     
-    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
     habit.daysOfWeek = [.Sunday, .Tuesday, .Wednesday, .Saturday]
     
     expect(habit.countBefore(createdAt)) == 3
@@ -68,7 +66,7 @@ class HabitWeeklyTests: XCTestCase {
     HabitApp.startOfDay = 8 * 60
     HabitApp.endOfDay = 9 * 60
     // 1 hr/10 min
-    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
+    habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
     expect(habit.countBefore(createdAt)) == 4
     components.day = 17 // Thursday
     components.hour = 3
@@ -82,7 +80,7 @@ class HabitWeeklyTests: XCTestCase {
     components.month = 8
     components.day = 18
     let now = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: now)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: now)
     var (start, end) = habit.dateRange(now)
     components.day = 16
     expect(start) == calendar.dateFromComponents(components)
@@ -130,7 +128,7 @@ class HabitWeeklyTests: XCTestCase {
     components.day = 18
     components.hour = 8
     let createdAt = calendar.dateFromComponents(components)!
-    var habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
+    var habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
     components.hour = 12
     let now = calendar.dateFromComponents(components)!
     habit.update(now)
@@ -143,7 +141,7 @@ class HabitWeeklyTests: XCTestCase {
     components.day = 30
     expect(habit.lastEntry) == calendar.dateFromComponents(components)!
     
-    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
     habit.daysOfWeek = [.Sunday]
     habit.update(now)
     expect(habit.entries!.count) == 1
@@ -153,7 +151,7 @@ class HabitWeeklyTests: XCTestCase {
     expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
     expect(habit.lastEntry) == calendar.dateFromComponents(components)!
     
-    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
     habit.daysOfWeek = [.Saturday]
     habit.update(now)
     expect(habit.entries!.count) == 1
@@ -168,7 +166,7 @@ class HabitWeeklyTests: XCTestCase {
     components.day = 19
     components.hour = 8
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
     let now = calendar.dateByAddingUnit(.WeekOfYear, value: 2, toDate: createdAt)!
     habit.update(now)
     expect(habit.skip(before: now).count) == 4 + 6 + 2
@@ -189,7 +187,7 @@ class HabitWeeklyTests: XCTestCase {
     let components = calendar.components([.Year, .WeekOfYear, .Weekday], fromDate: NSDate())
     components.weekday = 4 // Wednesday
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
     habit.daysOfWeek = [.Sunday, .Tuesday, .Thursday, .Friday, .Saturday]
     components.weekOfYear += 2
     let now = calendar.dateFromComponents(components)!
@@ -209,7 +207,7 @@ class HabitWeeklyTests: XCTestCase {
     components.day -= 22
     components.hour = 0
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)    
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)    
     components.day += 22
     habit.update(calendar.dateFromComponents(components)!)
     components.day -= 7
@@ -222,7 +220,7 @@ class HabitWeeklyTests: XCTestCase {
     components.day -= 22
     components.hour = 0
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
     habit.daysOfWeek = [.Monday, .Tuesday, .Thursday, .Friday]
     components.day += 22
     habit.update(calendar.dateFromComponents(components)!)
@@ -246,7 +244,7 @@ class HabitWeeklyTests: XCTestCase {
     let today = calendar.dateFromComponents(components)!
     components.weekOfYear -= 2
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "2 weeks ago weekly 5", details: "", frequency: .Weekly, times: 5, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "2 weeks ago weekly 5", details: "", frequency: .Weekly, times: 5, createdAt: createdAt)
     habit.update(today)
     
     expect(habit.entryCountBefore(today)) == 4 + 5 + 1
@@ -273,7 +271,7 @@ class HabitWeeklyTests: XCTestCase {
     let today = calendar.dateFromComponents(components)!
     components.weekOfYear -= 2
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "2 weeks ago weekly 5", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "2 weeks ago weekly 5", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
     habit.daysOfWeek = [.Sunday, .Monday, .Wednesday, .Friday, .Saturday]
     habit.update(today)
     
@@ -297,14 +295,14 @@ class HabitWeeklyTests: XCTestCase {
     components.weekday = 3 // Tuesday
     components.hour = 8
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "Weekly 5 times", details: "", frequency: .Weekly, times: 5, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "Weekly 5 times", details: "", frequency: .Weekly, times: 5, createdAt: createdAt)
     expect(habit.useTimes).to(beTrue())
     components.minute = 10
     habit.update(calendar.dateFromComponents(components)!)
 
     do {
       let request = NSFetchRequest(entityName: "Habit")
-      let results = try context!.executeFetchRequest(request)
+      let results = try HabitApp.moContext.executeFetchRequest(request)
       let entries = (results[0] as! Habit).entries!.array as! [Entry]
       entries[0].complete()
       entries[1].complete()
@@ -356,7 +354,7 @@ class HabitWeeklyTests: XCTestCase {
     components.weekday = 2 // Monday
     components.hour = 8
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "Weekly 3 parts", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "Weekly 3 parts", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
     habit.daysOfWeek = [.Monday, .Tuesday, .Thursday, .Friday]
     expect(habit.useTimes).to(beFalse())
     components.minute = 10
@@ -364,7 +362,7 @@ class HabitWeeklyTests: XCTestCase {
     
     do {
       let request = NSFetchRequest(entityName: "Habit")
-      let results = try context!.executeFetchRequest(request)
+      let results = try HabitApp.moContext.executeFetchRequest(request)
       let entries = (results[0] as! Habit).entries!.array as! [Entry]
       entries[0].complete()
       components.weekday = 6 // Friday
@@ -402,14 +400,14 @@ class HabitWeeklyTests: XCTestCase {
     components.weekday = 3 // Tuesday
     components.hour = 8
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "Weekly 5 times", details: "", frequency: .Weekly, times: 5, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "Weekly 5 times", details: "", frequency: .Weekly, times: 5, createdAt: createdAt)
     expect(habit.useTimes).to(beTrue())
     components.minute = 10
     habit.update(calendar.dateFromComponents(components)!)
     
     do {
       let request = NSFetchRequest(entityName: "Habit")
-      let results = try context!.executeFetchRequest(request)
+      let results = try HabitApp.moContext.executeFetchRequest(request)
       let entries = (results[0] as! Habit).entries!.array as! [Entry]
       entries[0].complete()
       entries[1].complete()
@@ -455,7 +453,7 @@ class HabitWeeklyTests: XCTestCase {
     components.weekday = 2 // Monday
     components.hour = 8
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "Weekly 3 parts", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "Weekly 3 parts", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
     habit.daysOfWeek = [.Monday, .Tuesday, .Thursday, .Friday]
     expect(habit.useTimes).to(beFalse())
     components.minute = 10
@@ -463,7 +461,7 @@ class HabitWeeklyTests: XCTestCase {
     
     do {
       let request = NSFetchRequest(entityName: "Habit")
-      let results = try context!.executeFetchRequest(request)
+      let results = try HabitApp.moContext.executeFetchRequest(request)
       let entries = (results[0] as! Habit).entries!.array as! [Entry]
       entries[0].complete()
       entries[1].complete()
@@ -508,7 +506,7 @@ class HabitWeeklyTests: XCTestCase {
     components.day = 6
     components.hour = 8
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
     components.day = 12
     let now = calendar.dateFromComponents(components)!
     habit.update(now)
@@ -530,7 +528,7 @@ class HabitWeeklyTests: XCTestCase {
     components.day = 25
     components.hour = 8
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 6, createdAt: createdAt)
     components.month = 11
     components.day = 1
     let now = calendar.dateFromComponents(components)!
@@ -558,7 +556,7 @@ class HabitWeeklyTests: XCTestCase {
     components.day = 23 // Sunday
     components.hour = 12
     var createdAt = calendar.dateFromComponents(components)!
-    var habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 4, createdAt: createdAt)
+    var habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 4, createdAt: createdAt)
     habit.update(createdAt)
     expect(habit.entries!.count) == 8
     components.month = 8
@@ -574,7 +572,7 @@ class HabitWeeklyTests: XCTestCase {
     components.month = 8
     components.day = 26 // Wednesday
     createdAt = calendar.dateFromComponents(components)!
-    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 4, createdAt: createdAt)
+    habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 4, createdAt: createdAt)
     habit.update(createdAt)
     expect(habit.entries!.count) == 6
     components.day = 28
@@ -586,7 +584,7 @@ class HabitWeeklyTests: XCTestCase {
     components.day = 29 // Saturday
     components.hour = 23
     createdAt = calendar.dateFromComponents(components)!
-    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 4, createdAt: createdAt)
+    habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 4, createdAt: createdAt)
     habit.update(createdAt)
     expect(habit.entries!.count) == 4
     components.day = 31
@@ -606,7 +604,7 @@ class HabitWeeklyTests: XCTestCase {
     components.day = 23 // Sunday
     components.hour = 12
     var createdAt = calendar.dateFromComponents(components)!
-    var habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    var habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
     habit.daysOfWeek = [.Monday, .Tuesday, .Thursday, .Friday, .Saturday]
     habit.update(createdAt)
     expect(habit.entries!.count) == 10
@@ -622,7 +620,7 @@ class HabitWeeklyTests: XCTestCase {
     components.month = 8
     components.day = 26
     createdAt = calendar.dateFromComponents(components)!
-    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
     habit.daysOfWeek = [.Monday, .Tuesday, .Thursday, .Friday, .Saturday]
     habit.update(createdAt)
     expect(habit.entries!.count) == 8
@@ -636,7 +634,7 @@ class HabitWeeklyTests: XCTestCase {
     components.day = 29
     components.hour = 19
     createdAt = calendar.dateFromComponents(components)!
-    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
     habit.daysOfWeek = [.Monday, .Tuesday, .Thursday, .Friday, .Saturday]
     habit.update(createdAt)
     expect(habit.entries!.count) == 5
@@ -655,7 +653,7 @@ class HabitWeeklyTests: XCTestCase {
     components.day = 7 // Monday
     components.hour = 16
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
     habit.daysOfWeek = [.Sunday, .Monday, .Tuesday, .Wednesday, .Thursday, .Friday, .Saturday]
     components.minute = 10
     habit.update(calendar.dateFromComponents(components)!)
@@ -673,12 +671,12 @@ class HabitWeeklyTests: XCTestCase {
     components.day = 7 // Monday
     components.hour = 12
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
     habit.daysOfWeek = [.Sunday, .Monday, .Tuesday, .Wednesday]
     components.minute = 10
     HabitApp.upcoming = false
     habit.update(calendar.dateFromComponents(components)!)
-    expect(habit.entries!.count) == 2
+    expect(habit.entries!.count) == 6
     HabitApp.upcoming = true
     components.minute = 15
     habit.update(calendar.dateFromComponents(components)!)
@@ -693,7 +691,7 @@ class HabitWeeklyTests: XCTestCase {
     components.day = 15 // Tuesday
     components.hour = 12
     var createdAt = calendar.dateFromComponents(components)!
-    var habit = Habit(context: context!, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    var habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
     habit.daysOfWeek = [.Sunday, .Tuesday, .Wednesday, .Friday]
     components.minute = 10
     habit.update(calendar.dateFromComponents(components)!)
@@ -704,16 +702,16 @@ class HabitWeeklyTests: XCTestCase {
     var predicate = NSPredicate(format: "due > %@", calendar.dateFromComponents(components)!)
     var entriesToDelete = habit.entries!.filteredOrderedSetUsingPredicate(predicate).array as! [Entry]
     for entry in entriesToDelete {
-      context!.deleteObject(entry)
+      HabitApp.moContext.deleteObject(entry)
     }
-    context!.refreshAllObjects()
+    HabitApp.moContext.refreshAllObjects()
     components.minute = 20
     habit.update(calendar.dateFromComponents(components)!)
     expect(habit.entries!.count) == 8
     
     components.day = 5 // Saturday
     createdAt = calendar.dateFromComponents(components)!
-    habit = Habit(context: context!, name: "Habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
+    habit = Habit(context: HabitApp.moContext, name: "Habit", details: "", frequency: .Weekly, times: 0, createdAt: createdAt)
     habit.daysOfWeek = [.Monday, .Tuesday, .Wednesday, .Friday, .Saturday]
     components.day = 19
     let today = calendar.dateFromComponents(components)!
@@ -724,9 +722,9 @@ class HabitWeeklyTests: XCTestCase {
     predicate = NSPredicate(format: "due > %@", today)
     entriesToDelete = habit.entries!.filteredOrderedSetUsingPredicate(predicate).array as! [Entry]
     for entry in entriesToDelete {
-      context!.deleteObject(entry)
+      HabitApp.moContext.deleteObject(entry)
     }
-    context!.refreshAllObjects()
+    HabitApp.moContext.refreshAllObjects()
     habit.update(today)
     expect(habit.entries!.count) == 16
   }

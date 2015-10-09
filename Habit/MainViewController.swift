@@ -343,7 +343,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     let future = HabitApp.calendar.zeroTime(HabitApp.calendar.dateByAddingUnit(.Day, value: 1, toDate: NSDate())!)
     CATransaction.setCompletionBlock() {
       // Create future entries
-      self.insertRows(HabitManager.createEntries(after: future, habit: nil))
+      self.insertRows(HabitManager.createEntries(after: future, currentDate: NSDate(),  habit: nil))
     }
     
     // Delete future entries

@@ -13,8 +13,7 @@ import Nimble
 @testable import Habit
 
 class HabitMonthlyTests: XCTestCase {
-    
-  var context: NSManagedObjectContext?
+  
   var previousStartOfDay: Int = 0
   var previousEndOfDay: Int = 0
   
@@ -24,7 +23,7 @@ class HabitMonthlyTests: XCTestCase {
     previousStartOfDay = HabitApp.startOfDay
     previousEndOfDay = HabitApp.endOfDay
     
-    context = HabitApp.setUpInMemoryManagedObjectContext()
+    HabitApp.setUpInMemoryManagedObjectContext()
     HabitApp.upcoming = true
     HabitApp.startOfDay = 0
     HabitApp.endOfDay = 24 * 60
@@ -32,7 +31,6 @@ class HabitMonthlyTests: XCTestCase {
   
   override func tearDown() {
     super.tearDown()
-    context = nil
     
     HabitApp.startOfDay = previousStartOfDay
     HabitApp.endOfDay = previousEndOfDay
@@ -45,14 +43,14 @@ class HabitMonthlyTests: XCTestCase {
     components.month = 3
     components.day = 15
     let createdAt = calendar.dateFromComponents(components)!
-    let habitTimes = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 5, createdAt: createdAt)
+    let habitTimes = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 5, createdAt: createdAt)
     
     expect(habitTimes.countBefore(createdAt)) == 2
     components.month = 4
     components.day = 1
     expect(habitTimes.countBefore(calendar.dateFromComponents(components)!)) == 5
     
-    let habitParts = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
+    let habitParts = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
     habitParts.partsOfMonth = [.Beginning, .End]
     
     expect(habitParts.countBefore(createdAt)) == 1
@@ -69,7 +67,7 @@ class HabitMonthlyTests: XCTestCase {
     components.month = 8
     components.day = 10
     let now = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 5, createdAt: now)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 5, createdAt: now)
     var (start, end) = habit.dateRange(now)
     components.day = 1
     expect(start) == calendar.dateFromComponents(components)
@@ -87,7 +85,7 @@ class HabitMonthlyTests: XCTestCase {
   func testOneTimeAMonth() {
     let calendar = HabitApp.calendar
     let createdAt = NSDate()
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 1, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 1, createdAt: createdAt)
     let now = calendar.dateByAddingUnit(.Hour, value: 1, toDate: createdAt)!
     habit.update(now)
     let nextMonth = calendar.dateByAddingUnit(.Month, value: 1, toDate: now)!
@@ -107,7 +105,7 @@ class HabitMonthlyTests: XCTestCase {
     components.month = 3
     components.day = 15
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 5, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 5, createdAt: createdAt)
     components.month = 5
     let now = calendar.dateFromComponents(components)!
     habit.update(now)
@@ -128,7 +126,7 @@ class HabitMonthlyTests: XCTestCase {
     components.month = 3
     components.day = 15
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
     habit.partsOfMonth = [.Beginning, .End]
     components.month = 5
     let now = calendar.dateFromComponents(components)!
@@ -150,7 +148,7 @@ class HabitMonthlyTests: XCTestCase {
     components.month = 3
     components.day = 15
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 4, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 4, createdAt: createdAt)
     components.month = 7
     habit.update(calendar.dateFromComponents(components)!)
     components.month = 5
@@ -164,7 +162,7 @@ class HabitMonthlyTests: XCTestCase {
     components.month = 3
     components.day = 15
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 4, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 4, createdAt: createdAt)
     components.month = 7
     habit.update(calendar.dateFromComponents(components)!)
     
@@ -187,7 +185,7 @@ class HabitMonthlyTests: XCTestCase {
     components.month = 3
     components.day = 15
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 4, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 4, createdAt: createdAt)
     components.month = 5
     components.day = 5
     let today = calendar.dateFromComponents(components)!
@@ -212,7 +210,7 @@ class HabitMonthlyTests: XCTestCase {
     components.month = 3
     components.day = 15
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
     habit.partsOfMonth = [.Beginning, .End]
     components.month = 5
     components.day = 5
@@ -238,14 +236,14 @@ class HabitMonthlyTests: XCTestCase {
     components.month = 3
     components.day = 2
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 4, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 4, createdAt: createdAt)
     expect(habit.useTimes).to(beTrue())
     components.day = 3
     habit.update(calendar.dateFromComponents(components)!)
     
     do {
       let request = NSFetchRequest(entityName: "Habit")
-      let results = try context!.executeFetchRequest(request)
+      let results = try HabitApp.moContext.executeFetchRequest(request)
       let entries = (results[0] as! Habit).entries!.array as! [Entry]
       entries[0].complete()
       entries[1].complete()
@@ -287,14 +285,14 @@ class HabitMonthlyTests: XCTestCase {
     components.month = 3
     components.day = 5
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
     habit.partsOfMonth = [.Middle, .End]
     components.day = 8
     habit.update(calendar.dateFromComponents(components)!)
     
     do {
       let request = NSFetchRequest(entityName: "Habit")
-      let results = try context!.executeFetchRequest(request)
+      let results = try HabitApp.moContext.executeFetchRequest(request)
       let entries = (results[0] as! Habit).entries!.array as! [Entry]
       entries[0].complete()
       entries[1].complete()
@@ -337,14 +335,14 @@ class HabitMonthlyTests: XCTestCase {
     components.month = 3 // March
     components.day = 2
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 4, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 4, createdAt: createdAt)
     expect(habit.useTimes).to(beTrue())
     components.day = 3
     habit.update(calendar.dateFromComponents(components)!)
     
     do {
       let request = NSFetchRequest(entityName: "Habit")
-      let results = try context!.executeFetchRequest(request)
+      let results = try HabitApp.moContext.executeFetchRequest(request)
       let entries = (results[0] as! Habit).entries!.array as! [Entry]
       entries[0].complete()
       entries[1].complete()
@@ -387,14 +385,14 @@ class HabitMonthlyTests: XCTestCase {
     components.month = 3
     components.day = 5
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
     habit.partsOfMonth = [.Middle, .End]
     components.day = 8
     habit.update(calendar.dateFromComponents(components)!)
     
     do {
       let request = NSFetchRequest(entityName: "Habit")
-      let results = try context!.executeFetchRequest(request)
+      let results = try HabitApp.moContext.executeFetchRequest(request)
       let entries = (results[0] as! Habit).entries!.array as! [Entry]
       entries[0].complete()
       entries[1].complete()
@@ -444,7 +442,7 @@ class HabitMonthlyTests: XCTestCase {
     components.day = 27
     components.hour = 12
     var createdAt = calendar.dateFromComponents(components)!
-    var habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 4, createdAt: createdAt)
+    var habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 4, createdAt: createdAt)
     habit.update(createdAt)
     expect(habit.entries!.count) == 5
     components.month = 8
@@ -461,7 +459,7 @@ class HabitMonthlyTests: XCTestCase {
     components.day = 31
     components.hour = 22
     createdAt = calendar.dateFromComponents(components)!
-    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 4, createdAt: createdAt)
+    habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 4, createdAt: createdAt)
     habit.update(createdAt)
     expect(habit.entries!.count) == 4
     components.month = 9
@@ -485,7 +483,7 @@ class HabitMonthlyTests: XCTestCase {
     components.day = 27
     components.hour = 12
     var createdAt = calendar.dateFromComponents(components)!
-    var habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
+    var habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
     habit.partsOfMonth = [.Beginning, .End]
     habit.update(createdAt)
     expect(habit.entries!.count) == 3
@@ -503,7 +501,7 @@ class HabitMonthlyTests: XCTestCase {
     components.day = 31
     components.hour = 22
     createdAt = calendar.dateFromComponents(components)!
-    habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
+    habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 0, createdAt: createdAt)
     habit.partsOfMonth = [.Beginning, .End]
     habit.update(createdAt)
     components.month = 9
@@ -522,7 +520,7 @@ class HabitMonthlyTests: XCTestCase {
     components.day = 15
     components.hour = 12
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 3, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 3, createdAt: createdAt)
     components.minute = 10
     habit.update(calendar.dateFromComponents(components)!)
     expect(habit.entries!.count) == 5
@@ -532,9 +530,9 @@ class HabitMonthlyTests: XCTestCase {
     let predicate = NSPredicate(format: "due > %@", calendar.dateFromComponents(components)!)
     let entriesToDelete = habit.entries!.filteredOrderedSetUsingPredicate(predicate).array as! [Entry]
     for entry in entriesToDelete {
-      context!.deleteObject(entry)
+      HabitApp.moContext.deleteObject(entry)
     }
-    context!.refreshAllObjects()
+    HabitApp.moContext.refreshAllObjects()
     components.minute = 20
     habit.update(calendar.dateFromComponents(components)!)
     expect(habit.entries!.count) == 2
@@ -548,7 +546,7 @@ class HabitMonthlyTests: XCTestCase {
     components.day = 26
     components.hour = 12
     let createdAt = calendar.dateFromComponents(components)!
-    let habit = Habit(context: context!, name: "A habit", details: "", frequency: .Monthly, times: 3, createdAt: createdAt)
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 3, createdAt: createdAt)
     components.minute = 10
     habit.update(calendar.dateFromComponents(components)!)
     components.minute = 11

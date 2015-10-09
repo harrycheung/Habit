@@ -31,6 +31,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     attr[NSFontAttributeName] = FontManager.regular(15)
     UISegmentedControl.appearance().setTitleTextAttributes(attr, forState: .Normal)
     
+    HabitApp.setupAppManagedObjectContext()
+    
     return true
   }
   

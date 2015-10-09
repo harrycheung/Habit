@@ -261,6 +261,7 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
         self.mvc!.presentViewController(alert, animated: true, completion: nil)
       } else {
         HabitApp.autoSkip = self.autoSkip.on
+        dayAlert()
       }
     }
   }

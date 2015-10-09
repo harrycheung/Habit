@@ -62,8 +62,10 @@ class HabitApp {
     return c
   }()
   
+  static var managedObjectContext: NSManagedObjectContext?
+  
   static var moContext: NSManagedObjectContext {
-    return (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+    return managedObjectContext!
   }
   
   static var color: UIColor {
@@ -130,7 +132,11 @@ class HabitApp {
     set { NSUserDefaults.standardUserDefaults().setInteger(newValue, forKey: endOfDayKey) }
   }
   
-  static func setUpInMemoryManagedObjectContext() -> NSManagedObjectContext {
+  static func setupAppManagedObjectContext() {
+    managedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+  }
+  
+  static func setUpInMemoryManagedObjectContext() {
     let managedObjectModel = NSManagedObjectModel.mergedModelFromBundles([NSBundle.mainBundle()])!
     
     let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
@@ -140,10 +146,8 @@ class HabitApp {
       NSLog("error: \(error)")
     }
     
-    let managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
-    managedObjectContext.persistentStoreCoordinator = persistentStoreCoordinator
-    
-    return managedObjectContext
+    managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+    managedObjectContext!.persistentStoreCoordinator = persistentStoreCoordinator
   }
   
   static func initNotification() {

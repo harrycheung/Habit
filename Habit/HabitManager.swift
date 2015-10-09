@@ -285,16 +285,16 @@ class HabitManager {
     }
   }
   
-  static func createEntries(after date: NSDate, habit: Habit? = nil, save: Bool = true) -> [NSIndexPath] {
+  static func createEntries(after date: NSDate, currentDate: NSDate, habit: Habit? = nil, save: Bool = true) -> [NSIndexPath] {
     do {
       if habit == nil {
         let habitRequest = NSFetchRequest(entityName: "Habit")
         let habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
         for habit in habits {
-          habit.update(date, currentDate: NSDate())
+          habit.update(date, currentDate: currentDate)
         }
       } else {
-        habit!.update(date, currentDate: NSDate())
+        habit!.update(date, currentDate: currentDate)
       }
       if save { try HabitApp.moContext.save() }
       // TODO: does fetch hit memory or actual file storage?

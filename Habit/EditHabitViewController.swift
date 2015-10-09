@@ -180,7 +180,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
         self.mvc!.deleteRows(HabitManager.deleteEntries(after: NSDate(), habit: habit))
       }
       if habit.isNew || (pausedSet && !self.paused.on) || frequencyChanged {
-        self.mvc!.insertRows(HabitManager.createEntries(after: NSDate(), habit: habit, save: true))
+        self.mvc!.insertRows(HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit, save: true))
       }
       // update notifications if name change or frequency changes or new or paused or notify or anything
       HabitManager.updateNotifications()
