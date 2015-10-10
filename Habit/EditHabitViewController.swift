@@ -187,7 +187,6 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
               habit.name = name
               self.mvc!.reloadRows(HabitManager.rows(habit))
             }
-            
             if pausedSet {
               if self.paused.on {
                 self.mvc!.deleteRows(HabitManager.deleteEntries(after: NSDate(), habit: habit))
@@ -199,7 +198,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
                 self.mvc!.insertRows(HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit))
               }
             }
-          } else if habit.isNew {
+          } else {
             self.mvc!.insertRows(HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit))
           }
           HabitManager.save()
