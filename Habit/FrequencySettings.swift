@@ -71,6 +71,8 @@ class FrequencySettings: UIView, UIPickerViewDelegate, UIPickerViewDataSource, M
       make.height.equalTo(self)
     }
     overlayTouched(useTimes ? leftOverlay! : rightOverlay!, touched: false)
+    
+    multiSelect.tintColor = HabitApp.color
   }
   
   func overlayTouched(overlayView: OverlayView, touched: Bool = true) {
