@@ -82,6 +82,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
       }
       notify.on = habit!.notifyBool
       neverAutoSkip.on = habit!.neverAutoSkipBool
+      paused.on = habit!.pausedBool
     } else {
       frequencyLabel.text = "Start a \(frequency.description.lowercaseString) habit"
       frequencySettings!.overlayTouched(frequencySettings!.leftOverlay!, touched: false)
@@ -163,31 +164,48 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
   }
   
   @IBAction func saveHabit(sender: AnyObject) {
-    let save = { (habit: Habit) in
+    let save = { (habit: Habit, name: String) in
       let frequencyChanged = self.frequencyChanged()
-      let pausedSet = self.paused.on && habit.paused != self.paused.on
-      habit.frequency = self.frequency
-      if self.frequencySettings!.useTimes {
-        habit.times = self.frequencySettings!.picker!.selectedRowInComponent(0) + 1
-        habit.partsArray = []
-      } else {
-        habit.partsArray = self.frequencySettings!.multiSelect.selectedIndexes.sort().map { $0 + 1 }
-      }
-      habit.notify = self.notify.on
-      habit.neverAutoSkip = self.neverAutoSkip.on
-      habit.paused = self.paused.on
-      if !habit.isNew && ((pausedSet && self.paused.on) || frequencyChanged) {
-        self.mvc!.deleteRows(HabitManager.deleteEntries(after: NSDate(), habit: habit))
-      }
-      if habit.isNew || (pausedSet && !self.paused.on) || frequencyChanged {
-        self.mvc!.insertRows(HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit, save: true))
-      }
-      // update notifications if name change or frequency changes or new or paused or notify or anything
-      HabitManager.updateNotifications()
+      // To indicate the habit has been edited
       self.habit = nil
       self.presentingViewController!.view.hidden = true
       self.presentingViewController!.dismissViewControllerAnimated(true) {
-        self.mvc!.dismissViewControllerAnimated(false, completion: nil)
+        self.mvc!.dismissViewControllerAnimated(false) {
+          let pausedSet = self.paused.on && habit.paused != self.paused.on
+          habit.frequency = self.frequency
+          if self.frequencySettings!.useTimes {
+            habit.times = self.frequencySettings!.picker!.selectedRowInComponent(0) + 1
+            habit.partsArray = []
+          } else {
+            habit.partsArray = self.frequencySettings!.multiSelect.selectedIndexes.sort().map { $0 + 1 }
+          }
+          habit.notify = self.notify.on
+          habit.neverAutoSkip = self.neverAutoSkip.on
+          habit.paused = self.paused.on
+          if !habit.isNew {
+            if habit.name != name {
+              habit.name = name
+              self.mvc!.reloadRows(HabitManager.rows(habit))
+            }
+            
+            if pausedSet {
+              if self.paused.on {
+                self.mvc!.deleteRows(HabitManager.deleteEntries(after: NSDate(), habit: habit))
+              } else {
+                self.mvc!.insertRows(HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit))
+              }
+            } else if frequencyChanged {
+              self.mvc!.deleteRows(HabitManager.deleteEntries(after: NSDate(), habit: habit)) {
+                self.mvc!.insertRows(HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit))
+              }
+            }
+          } else if habit.isNew {
+            self.mvc!.insertRows(HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit))
+          }
+          HabitManager.save()
+          // update notifications if name change or frequency changes or new or paused or notify or anything
+          HabitManager.updateNotifications()
+        }
       }
     }
     
@@ -199,10 +217,9 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
           yes: ("Yes", .Default, {
             if self.habit == nil {
               self.habit = Habit(context: HabitApp.moContext, name: trimmedName)
-              save(self.habit!)
+              save(self.habit!, trimmedName)
             } else {
-              self.habit!.name = trimmedName
-              save(self.habit!)
+              save(self.habit!, trimmedName)
             }
           }),
           no: ("No", .Cancel, { alert in
@@ -210,11 +227,10 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
           }))
       } else {
         self.habit = Habit(context: HabitApp.moContext, name: trimmedName)
-        save(self.habit!)
+        save(self.habit!, trimmedName)
       }
     } else {
-      self.habit!.name = trimmedName
-      save(self.habit!)
+      save(self.habit!, trimmedName)
     }
   }
   
@@ -243,10 +259,10 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     var valid = true
     var changed = false
     if frequencySettings.useTimes {
-      changed = changed || frequencySettings.picker.selectedRowInComponent(0) != habit!.timesInt - 1
+      changed = frequencySettings.picker.selectedRowInComponent(0) != habit!.timesInt - 1
     } else {
       valid = valid && !frequencySettings.multiSelect.selectedIndexes.isEmpty
-      changed = changed || frequencySettings.multiSelect.selectedIndexes != habit!.partsArray.map { $0 - 1 }
+      changed = frequencySettings.multiSelect.selectedIndexes != habit!.partsArray.map { $0 - 1 }
     }
     if valid && changed && !warnedFrequency {
       let alert = UIAlertController(title: "Warning",
@@ -266,7 +282,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
       changed = changed || notify.on != habit!.notifyBool
       changed = changed || neverAutoSkip.on != habit!.neverAutoSkipBool
       changed = changed || paused.on != habit!.pausedBool
-      changed = changed || frequencyChanged()
+      changed = frequencyChanged() || changed
       save.enabled = !name.text!.isEmpty && changed
     } else {
       // New habit

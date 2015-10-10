@@ -734,23 +734,23 @@ class HabitDailyTests: XCTestCase {
     components.hour = 12
     habit.skip(before: calendar.dateFromComponents(components)!)
     HabitManager.reload()
-    expect(HabitManager.deleteEntries(after: calendar.dateFromComponents(components)!, habit: habit, save: false).count) == 8 + 12
+    expect(HabitManager.deleteEntries(after: calendar.dateFromComponents(components)!, habit: habit).count) == 8 + 12
     HabitApp.moContext.refreshAllObjects()
     expect(habit.firstTodo).to(beNil())
     expect(habit.entries!.count) == 4
     components.hour = 18
     HabitManager.createEntries(after: calendar.dateFromComponents(components)!,
-      currentDate: calendar.dateFromComponents(components)!, habit: habit, save: false)
+      currentDate: calendar.dateFromComponents(components)!, habit: habit)
     expect(habit.entries!.count) == 4 + 2 + 12
     
-    HabitManager.deleteEntries(after: calendar.dateFromComponents(components)!, habit: habit, save: false)
+    HabitManager.deleteEntries(after: calendar.dateFromComponents(components)!, habit: habit)
     HabitApp.moContext.refreshAllObjects()
     habit.pausedBool = true
     components.day = 31
     habit.update(calendar.dateFromComponents(components)!)
     habit.pausedBool = false
     HabitManager.createEntries(after: calendar.dateFromComponents(components)!,
-      currentDate: calendar.dateFromComponents(components)!, habit: habit, save: false)
+      currentDate: calendar.dateFromComponents(components)!, habit: habit)
     expect(habit.entries!.count) == 18
     let histories = habit.histories!.array as! [History]
     expect(calendar.components([.Day], fromDate: histories[0].date!).day) == 27

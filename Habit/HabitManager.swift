@@ -285,7 +285,7 @@ class HabitManager {
     }
   }
   
-  static func createEntries(after date: NSDate, currentDate: NSDate, habit: Habit? = nil, save: Bool = true) -> [NSIndexPath] {
+  static func createEntries(after date: NSDate, currentDate: NSDate, habit: Habit? = nil, save: Bool = false) -> [NSIndexPath] {
     do {
       if habit == nil {
         let habitRequest = NSFetchRequest(entityName: "Habit")
@@ -318,6 +318,31 @@ class HabitManager {
       NSLog("HabitManager.createEntries failed: \(error.localizedDescription)")
       return []
     }
+  }
+  
+  static func save() {
+    do {
+      try HabitApp.moContext.save()
+    } catch let error as NSError {
+      NSLog("HabitManager.save failed: \(error.localizedDescription)")
+    }
+  }
+  
+  static func rows(habit: Habit) -> [NSIndexPath] {
+    var rows: [NSIndexPath] = []
+    for (index, entry) in current.enumerate() {
+      if entry.habit! == habit {
+        rows.append(NSIndexPath(forRow: index, inSection: 0))
+      }
+    }
+    if HabitApp.upcoming {
+      for (index, entry) in upcoming.enumerate() {
+        if entry.habit! == habit {
+          rows.append(NSIndexPath(forRow: index, inSection: 1))
+        }
+      }
+    }
+    return rows
   }
   
 }

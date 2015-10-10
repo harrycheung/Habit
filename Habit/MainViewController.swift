@@ -213,6 +213,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     presentViewController(sfvc, animated: true, completion: nil)
   }
   
+  func reloadRows(rows: [NSIndexPath]) {
+    tableView.reloadRowsAtIndexPaths(rows, withRowAnimation: .None)
+  }
+  
   func insertRows(rows: [NSIndexPath], completion: (() -> Void)? = nil) {
     if tableView.numberOfRowsInSection(0) > 0 &&
       tableView.headerViewForSection(1) != nil && tableView.numberOfRowsInSection(1) > 0 {
@@ -343,7 +347,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     let future = HabitApp.calendar.zeroTime(HabitApp.calendar.dateByAddingUnit(.Day, value: 1, toDate: NSDate())!)
     CATransaction.setCompletionBlock() {
       // Create future entries
-      self.insertRows(HabitManager.createEntries(after: future, currentDate: NSDate(),  habit: nil))
+      self.insertRows(HabitManager.createEntries(after: future, currentDate: NSDate(),  habit: nil, save: true))
     }
     
     // Delete future entries
@@ -488,7 +492,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   // Colors
   
   func changeColor(color: UIColor) {
-    //testData()
+    testData()
     
     // Snapshot previous color
     UIGraphicsBeginImageContextWithOptions(UIScreen.mainScreen().bounds.size, false, UIScreen.mainScreen().scale)
