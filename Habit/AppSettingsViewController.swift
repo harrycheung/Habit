@@ -118,21 +118,6 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     HabitApp.colorIndex = index
   }
   
-  @IBAction func upcomingChanged(sender: AnyObject) {
-    HabitApp.upcoming = upcoming.on
-    if upcoming.on {
-      upcoming.userInteractionEnabled = false
-      mvc!.showUpcoming() {
-        self.upcoming.userInteractionEnabled = true
-      }
-    } else {
-      upcoming.userInteractionEnabled = false
-      mvc!.hideUpcoming() {
-        self.upcoming.userInteractionEnabled = true
-      }
-    }
-  }
-  
   @IBAction func notificationChanged(sender: AnyObject) {
     HabitApp.notification = !notification.on
     if HabitApp.notification {
@@ -243,7 +228,7 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
       }
     }
     
-    self.dismissViewControllerAnimated(true) {
+    let autoSkipAlert = { () -> Void in
       if self.autoSkip.on && self.autoSkip.on != HabitApp.autoSkip && HabitManager.overdue > 0 {
         let alert = UIAlertController(title: "Automatic Skip Enabled",
           message: "Would you like to skip the\n\(HabitManager.overdue) overdue habit entries.\nThis can't be undone.",
@@ -262,6 +247,23 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
       } else {
         HabitApp.autoSkip = self.autoSkip.on
         dayAlert()
+      }
+    }
+    
+    self.dismissViewControllerAnimated(true) {
+      if self.upcoming.on != HabitApp.upcoming {
+        HabitApp.upcoming = self.upcoming.on
+        if self.upcoming.on {
+          self.mvc!.showUpcoming() {
+            autoSkipAlert()
+          }
+        } else {
+          self.mvc!.hideUpcoming() {
+            autoSkipAlert()
+          }
+        }
+      } else {
+        autoSkipAlert()
       }
     }
   }

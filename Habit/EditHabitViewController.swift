@@ -171,7 +171,7 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
       self.presentingViewController!.view.hidden = true
       self.presentingViewController!.dismissViewControllerAnimated(true) {
         self.mvc!.dismissViewControllerAnimated(false) {
-          let pausedSet = self.paused.on && habit.paused != self.paused.on
+          let pausedSet = habit.paused != self.paused.on
           habit.frequency = self.frequency
           if self.frequencySettings!.useTimes {
             habit.times = self.frequencySettings!.picker!.selectedRowInComponent(0) + 1
@@ -189,9 +189,13 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
             }
             if pausedSet {
               if self.paused.on {
-                self.mvc!.deleteRows(HabitManager.deleteEntries(after: NSDate(), habit: habit))
+                self.mvc!.deleteRows(HabitManager.deleteEntries(after: NSDate(), habit: habit)) {
+                  self.mvc!.insertRows(HabitManager.pause(habit))
+                }
               } else {
-                self.mvc!.insertRows(HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit))
+                self.mvc!.deleteRows(HabitManager.unpause(habit)) {
+                  self.mvc!.insertRows(HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit))
+                }
               }
             } else if frequencyChanged {
               self.mvc!.deleteRows(HabitManager.deleteEntries(after: NSDate(), habit: habit)) {

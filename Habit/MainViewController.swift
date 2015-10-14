@@ -59,6 +59,10 @@
 // 50: done - Fix blur mask in when editing existing habit
 // 51: done - Fix tint colors on dialogs
 // 52: done - Dialog to indicate habits were auto skipped?
+// 53: Stop reload when displaying dialog
+// 54: Test single paused habit
+// 55: When skipping past, use swipe animation
+// 56: Inserting new entries should take account of previous ordering
 
 import UIKit
 import CoreData
@@ -218,87 +222,86 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func insertRows(rows: [NSIndexPath], completion: (() -> Void)? = nil) {
-    if tableView.numberOfRowsInSection(0) > 0 &&
-      tableView.headerViewForSection(1) != nil && tableView.numberOfRowsInSection(1) > 0 {
-      tableView.insertRowsAtIndexPaths(rows, withRowAnimation: .Top)
-      if completion != nil {
-        completion!()
-      }
-    } else {
-      // Pretty animation for empty current or upcoming
-      tableView.beginUpdates()
-      if HabitApp.upcoming {
+    if rows.isEmpty {
+      completion?()
+      return
+    }
+    
+    tableView.beginUpdates()
+    if HabitApp.upcoming {
+      if tableView.numberOfSections == 1 {
         tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .None)
       }
-      tableView.insertRowsAtIndexPaths(rows, withRowAnimation: .None)
-      tableView.endUpdates()
-
-      CATransaction.begin()
-      CATransaction.setCompletionBlock() {
-        if completion != nil {
-          completion!()
-        }
+      if tableView.numberOfSections < 3 && HabitManager.pausedCount > 0 {
+        tableView.insertSections(NSIndexSet(index: 2), withRowAnimation: .None)
       }
-      var delayStart = 0.0
-      for indexPath in rows {
-        if indexPath.row == 0 && indexPath.section == 1 {
-          if let header = tableView.headerViewForSection(1) {
-            showCellAnimate(header, endFrame: tableView.rectForHeaderInSection(1), delay: delayStart)
-          }
-        }
-        if let cell = tableView.cellForRowAtIndexPath(indexPath) {
-          showCellAnimate(cell, endFrame: tableView.rectForRowAtIndexPath(indexPath), delay: delayStart)
-          delayStart += SlideAnimationDelay
-        }
-      }
-      CATransaction.commit()
     }
+    tableView.insertRowsAtIndexPaths(rows, withRowAnimation: .None)
+    tableView.endUpdates()
+    
+    CATransaction.begin()
+    CATransaction.setCompletionBlock() {
+      self.tableView.scrollToRowAtIndexPath(rows[0], atScrollPosition: .Top, animated: true)
+      completion?()
+    }
+    var delayStart = 0.0
+    for indexPath in rows {
+      if indexPath.row == 0 && indexPath.section > 0 {
+        if let header = self.tableView.headerViewForSection(indexPath.section) {
+          self.showCellAnimate(header, endFrame: self.tableView.rectForHeaderInSection(indexPath.section), delay: delayStart)
+        }
+      }
+      if let cell = self.tableView.cellForRowAtIndexPath(indexPath) {
+        self.showCellAnimate(cell, endFrame: self.tableView.rectForRowAtIndexPath(indexPath), delay: delayStart)
+        delayStart += self.SlideAnimationDelay
+      }
+    }
+    CATransaction.commit()
   }
   
   func deleteRows(rows: [NSIndexPath], completion: (() -> Void)? = nil) {
-    if HabitManager.currentCount != 0 && HabitApp.upcoming && HabitManager.upcomingCount != 0 {
-      tableView.deleteRowsAtIndexPaths(rows, withRowAnimation: .Top)
-      if completion != nil {
-        completion!()
-      }
-    } else if HabitManager.currentCount == 0 && HabitApp.upcoming && HabitManager.upcomingCount != 0 {
-      tableView.deleteRowsAtIndexPaths(rows, withRowAnimation: .Top)
-      if completion != nil {
-        completion!()
-      }
-    } else {
-      CATransaction.begin()
-      CATransaction.setCompletionBlock() {
-        self.tableView.beginUpdates()
-        self.tableView.deleteRowsAtIndexPaths(rows, withRowAnimation: .None)
-        if (!HabitApp.upcoming || HabitManager.upcomingCount == 0) && self.tableView.numberOfSections == 2 {
+    CATransaction.begin()
+    CATransaction.setCompletionBlock() {
+      self.tableView.beginUpdates()
+      self.tableView.deleteRowsAtIndexPaths(rows, withRowAnimation: .None)
+      if HabitApp.upcoming {
+        if self.tableView.numberOfSections == 3 && HabitManager.pausedCount == 0 {
+          self.tableView.deleteSections(NSIndexSet(index: 2), withRowAnimation: .None)
+        }
+      } else {
+        if self.tableView.numberOfSections > 1 {
           self.tableView.deleteSections(NSIndexSet(index: 1), withRowAnimation: .None)
-        }
-        self.tableView.endUpdates()
-        if completion != nil {
-          completion!()
-        }
-      }
-
-      var delayStart = 0.0
-      for indexPath in rows.reverse() {
-        if indexPath.row == 0 && indexPath.section == 1 {
-          if let header = tableView.headerViewForSection(1) {
-            hideCellAnimate(header, delay: delayStart, completion: {
-              header.hidden = true
-            })
+          if self.tableView.numberOfSections == 3 {
+            self.tableView.deleteSections(NSIndexSet(index: 2), withRowAnimation: .None)
           }
         }
-        if let cell = tableView.cellForRowAtIndexPath(indexPath) {
-          hideCellAnimate(cell, delay: delayStart, completion: {
-            // Hide cell to stop it from flashing when the tableView is updated
-            cell.hidden = true
-          })
-          delayStart += SlideAnimationDelay
+      }
+      self.tableView.endUpdates()
+      completion?()
+    }
+
+    var delayStart = 0.0
+    for indexPath in rows.reverse() {
+      if indexPath.row == 0 && indexPath.section > 0 {
+        if !HabitApp.upcoming ||
+          (indexPath.section == 1 && HabitManager.upcomingCount == 0) ||
+          (indexPath.section == 2 && HabitManager.pausedCount == 0) {
+          if let header = tableView.headerViewForSection(indexPath.section) {
+            hideCellAnimate(header, delay: delayStart) {
+              header.hidden = true
+            }
+          }
         }
       }
-      CATransaction.commit()
+      if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+        hideCellAnimate(cell, delay: delayStart) {
+          // Hide cell to stop it from flashing when the tableView is updated
+          cell.hidden = true
+        }
+        delayStart += SlideAnimationDelay
+      }
     }
+    CATransaction.commit()
   }
   
   private func hideCellAnimate(view: UIView, delay: NSTimeInterval, completion: (() -> Void)?) {
@@ -310,9 +313,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       animations: {
         view.frame = endFrame
       }, completion: { finished in
-        if completion != nil {
-          completion!()
-        }
+        completion?()
       })
   }
   
@@ -320,6 +321,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var startFrame = view.frame
     startFrame.origin.y = endFrame.origin.y + self.tableView.superview!.bounds.height
     view.frame = startFrame
+    view.hidden = false
     UIView.animateWithDuration(SlideAnimationDuration,
       delay: delay,
       options: [.CurveEaseOut],
@@ -329,17 +331,17 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func showUpcoming(completion: (() -> Void)?) {
-    if HabitManager.upcomingCount > 0 {
-      let rows = (0..<HabitManager.upcomingCount).map { NSIndexPath(forRow: $0, inSection: 1) }
-      insertRows(rows, completion: completion)
-    }
+    var rows: [NSIndexPath] = []
+    rows += (0..<HabitManager.upcomingCount).map { NSIndexPath(forRow: $0, inSection: 1) }
+    rows += (0..<HabitManager.pausedCount).map { NSIndexPath(forRow: $0, inSection: 2) }
+    self.insertRows(rows, completion: completion)
   }
   
   func hideUpcoming(completion: (() -> Void)?) {
-    if HabitManager.upcomingCount > 0 {
-      let rows = (0..<HabitManager.upcomingCount).map { NSIndexPath(forRow: $0, inSection: 1) }
-      deleteRows(rows, completion: completion)
-    }
+    var rows: [NSIndexPath] = []
+    rows += (0..<HabitManager.upcomingCount).map { NSIndexPath(forRow: $0, inSection: 1) }
+    rows += (0..<HabitManager.pausedCount).map { NSIndexPath(forRow: $0, inSection: 2) }
+    deleteRows(rows, completion: completion)
   }
   
   func resetFuture() {
@@ -404,8 +406,15 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! HabitTableViewCell
-    let entry = indexPath.section == 0 ? HabitManager.current[indexPath.row] : HabitManager.upcoming[indexPath.row]
-    cell.load(entry)
+    switch indexPath.section {
+    case 0:
+      cell.load(entry: HabitManager.current[indexPath.row])
+    case 1:
+      cell.load(entry: HabitManager.upcoming[indexPath.row])
+    case 2:
+      cell.load(habit: HabitManager.paused[indexPath.row])
+    default: ()
+    }
     cell.delegate = self
     cell.setSwipeGesture(
       direction: .Right,
@@ -434,6 +443,17 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       button.sizeToFit()
       button.roundify(4)
       cell.cantSwipeLabel = button
+    } else if indexPath.section == 2 {
+      cell.swipable = false
+      let button = UIButton(type: .System)
+      button.setTitle("Can't swipe paused", forState: .Normal)
+      button.setTitleColor(UIColor.lightGrayColor(), forState: .Normal)
+      button.titleLabel!.font = UIFont(name: "Bariol-Bold", size: 16)!
+      button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8)
+      button.backgroundColor = UIColor.darkGrayColor()
+      button.sizeToFit()
+      button.roundify(4)
+      cell.cantSwipeLabel = button
     } else {
       cell.swipable = true
     }
@@ -441,7 +461,16 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return section == 0 ? HabitManager.currentCount : HabitManager.upcomingCount
+    switch section {
+    case 0:
+      return HabitManager.currentCount
+    case 1:
+      return HabitManager.upcomingCount
+    case 2:
+      return HabitManager.pausedCount
+    default:
+      return 0
+    }
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -451,7 +480,11 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       let shvc = self.storyboard!.instantiateViewControllerWithIdentifier("ShowHabitViewController") as! ShowHabitViewController
       shvc.modalPresentationStyle = .OverCurrentContext
       shvc.transitioningDelegate = self.showHabitTransition
-      shvc.habit = cell.entry!.habit!
+      if let entry = cell.entry {
+        shvc.habit = entry.habit!
+      } else {
+        shvc.habit = cell.habit!
+      }
       self.presentViewController(shvc, animated: true, completion: nil)
     }
   }
@@ -461,31 +494,43 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-    return HabitApp.upcoming && HabitManager.upcomingCount > 0 ? 2 : 1
+    if HabitApp.upcoming {
+      return 2 + (HabitManager.pausedCount > 0 ? 1 : 0)
+      ///return 1 + (HabitManager.upcomingCount > 0 ? 1 : 0) + (HabitManager.pausedCount > 0 ? 1 : 0)
+    } else {
+      return 1
+    }
   }
   
   func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-    return (section == 1 && HabitManager.upcomingCount > 0) ? HabitApp.TableSectionHeight : 0
+    return ((section == 1 && HabitManager.upcomingCount > 0) || (section == 2 && HabitManager.pausedCount > 0)) ? HabitApp.TableSectionHeight : 0
   }
   
   func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    let upcomingHeader = "UPCOMING_HEADER"
+    var headerId = "CURRENT"
+    switch section {
+    case 1:
+      headerId = "UPCOMING"
+    case 2:
+      headerId = "PAUSED"
+    default: ()
+    }
     
-    var header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(upcomingHeader)
+    var header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(headerId)
     if header == nil {
-      header = UITableViewHeaderFooterView(reuseIdentifier: upcomingHeader)
+      header = UITableViewHeaderFooterView(reuseIdentifier: headerId)
+      header!.frame = CGRectMake(0, 0, tableView.frame.width, 20)
+      let title = UILabel()
+      title.font = FontManager.regular(14)
+      title.textColor = UIColor.whiteColor().colorWithAlphaComponent(0.5)
+      title.text = headerId
+      header!.contentView.addSubview(title)
+      title.snp_makeConstraints { make in
+        make.centerY.equalTo(header!.contentView).offset(1)
+        make.left.equalTo(header!.contentView).offset(8)
+      }
     }
-    header!.frame = CGRectMake(0, 0, tableView.frame.width, 20)
     header!.contentView.backgroundColor = HabitApp.color
-    let title = UILabel()
-    title.font = FontManager.regular(14)
-    title.textColor = UIColor.whiteColor().colorWithAlphaComponent(0.5)
-    title.text = section == 0 ? "CURRENT" : "UPCOMING"
-    header!.contentView.addSubview(title)
-    title.snp_makeConstraints { make in
-      make.centerY.equalTo(header!.contentView).offset(1)
-      make.left.equalTo(header!.contentView).offset(8)
-    }
     return header
   }
   

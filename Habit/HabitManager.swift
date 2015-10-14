@@ -13,6 +13,7 @@ class HabitManager {
   
   private var current = [Entry]()
   private var upcoming = [Entry]()
+  private var paused = [Habit]()
   
   private static var instance: HabitManager = {
     return HabitManager()
@@ -24,7 +25,7 @@ class HabitManager {
   }
   
   static var currentCount: Int {
-    return current.count
+    return HabitManager.instance.current.count
   }
   
   static var upcoming: [Entry] {
@@ -33,7 +34,15 @@ class HabitManager {
   }
   
   static var upcomingCount: Int {
-    return upcoming.count
+    return HabitManager.instance.upcoming.count
+  }
+  
+  static var paused: [Habit] {
+    return HabitManager.instance.paused
+  }
+  
+  static var pausedCount: Int {
+    return HabitManager.instance.paused.count
   }
   
   static func reload() {
@@ -45,6 +54,9 @@ class HabitManager {
       request.predicate = NSPredicate(format: "stateRaw == %@ AND due > %@ AND NOT (period IN %@)",
         Entry.State.Todo.rawValue, NSDate(), HabitApp.currentPeriods)
       instance.upcoming = (try HabitApp.moContext.executeFetchRequest(request) as! [Entry]).sort({ $0.dueIn < $1.dueIn })
+      let pausedRequest = NSFetchRequest(entityName: "Habit")
+      pausedRequest.predicate = NSPredicate(format: "paused == YES")
+      instance.paused = (try HabitApp.moContext.executeFetchRequest(pausedRequest) as! [Habit])
     } catch let error as NSError {
       NSLog("HabitManager.reload failed: \(error.localizedDescription)")
     }
@@ -56,7 +68,7 @@ class HabitManager {
       var count = 0
       var number = 1
       let now = NSDate()
-      for entry in current {
+      for entry in instance.current {
         if count > 64 {
           break
         }
@@ -109,7 +121,7 @@ class HabitManager {
       let entryURL = NSURL(string: notification.userInfo!["entry"] as! String)!
       let entryID = HabitApp.moContext.persistentStoreCoordinator!.managedObjectIDForURIRepresentation(entryURL)!
       let entry = try HabitApp.moContext.existingObjectWithID(entryID) as! Entry
-      let index = current.indexOf(entry)!
+      let index = instance.current.indexOf(entry)!
       switch (identifier) {
       case "COMPLETE":
         complete(index)
@@ -139,7 +151,7 @@ class HabitManager {
   
   static func complete(index: Int) {
     do {
-      let entry = current.removeAtIndex(index)
+      let entry = instance.current.removeAtIndex(index)
       entry.complete()
       try HabitApp.moContext.save()
     } catch let error {
@@ -149,7 +161,7 @@ class HabitManager {
   
   static func skip(index: Int) {
     do {
-      let entry = current.removeAtIndex(index)
+      let entry = instance.current.removeAtIndex(index)
       entry.skip()
       try HabitApp.moContext.save()
     } catch let error {
@@ -162,7 +174,7 @@ class HabitManager {
       let before = NSDate(timeIntervalSinceNow: HabitApp.autoSkipDelayTimeInterval)
       var rows: [NSIndexPath] = []
       var newCurrent: [Entry] = []
-      for (index, entry) in current.enumerate() {
+      for (index, entry) in instance.current.enumerate() {
         if (habit == nil || entry.habit! == habit) && entry.due!.compare(before) == .OrderedAscending {
           entry.skip()
           rows.append(NSIndexPath(forRow: index, inSection: 0))
@@ -170,7 +182,7 @@ class HabitManager {
           newCurrent.append(entry)
         }
       }
-      current = newCurrent
+      instance.current = newCurrent
       try HabitApp.moContext.save()
       return rows
     } catch let error {
@@ -200,25 +212,27 @@ class HabitManager {
     do {
       var rows: [NSIndexPath] = []
       var newCurrent: [Entry] = []
-      for (index, entry) in current.enumerate() {
+      for (index, entry) in instance.current.enumerate() {
         if entry.habit! == habit {
-          rows.append(NSIndexPath(forItem: index, inSection: 0))
           removeNotification(entry)
+          rows.append(NSIndexPath(forItem: index, inSection: 0))
         } else {
           newCurrent.append(entry)
         }
       }
-      current = newCurrent
+      instance.current = newCurrent
       var newUpcoming: [Entry] = []
-      for (index, entry) in upcoming.enumerate() {
+      for (index, entry) in instance.upcoming.enumerate() {
         if entry.habit! == habit {
-          rows.append(NSIndexPath(forItem: index, inSection: 1))
           removeNotification(entry)
+          if HabitApp.upcoming {
+            rows.append(NSIndexPath(forItem: index, inSection: 1))
+          }
         } else {
           newUpcoming.append(entry)
         }
       }
-      upcoming = newUpcoming
+      instance.upcoming = newUpcoming
       HabitApp.moContext.deleteObject(habit)
       try HabitApp.moContext.save()
       return rows
@@ -247,18 +261,20 @@ class HabitManager {
     do {
       var rows: [NSIndexPath] = []
       var newCurrent: [Entry] = []
-      for (index, entry) in current.enumerate() {
+      for (index, entry) in instance.current.enumerate() {
         if (habit == nil || entry.habit == habit) && entry.due!.compare(date) == .OrderedDescending {
+          removeNotification(entry)
           HabitApp.moContext.deleteObject(entry)
           rows.append(NSIndexPath(forRow: index, inSection: 0))
         } else {
           newCurrent.append(entry)
         }
       }
-      current = newCurrent
+      instance.current = newCurrent
       var newUpcoming: [Entry] = []
-      for (index, entry) in upcoming.enumerate() {
+      for (index, entry) in instance.upcoming.enumerate() {
         if (habit == nil || entry.habit! == habit) && entry.due!.compare(date) == .OrderedDescending {
+          removeNotification(entry)
           HabitApp.moContext.deleteObject(entry)
           if HabitApp.upcoming {
             rows.append(NSIndexPath(forRow: index, inSection: 1))
@@ -267,7 +283,7 @@ class HabitManager {
           newUpcoming.append(entry)
         }
       }
-      upcoming = newUpcoming
+      instance.upcoming = newUpcoming
       if habit == nil {
         let habitRequest = NSFetchRequest(entityName: "Habit")
         let habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
@@ -301,13 +317,13 @@ class HabitManager {
       reload()
       
       var rows: [NSIndexPath] = []
-      for (index, entry) in current.enumerate() {
+      for (index, entry) in instance.current.enumerate() {
         if (habit == nil || entry.habit! == habit) && entry.due!.compare(date) == .OrderedDescending {
           rows.append(NSIndexPath(forRow: index, inSection: 0))
         }
       }
       if HabitApp.upcoming {
-        for (index, entry) in upcoming.enumerate() {
+        for (index, entry) in instance.upcoming.enumerate() {
           if (habit == nil || entry.habit! == habit) && entry.due!.compare(date) == .OrderedDescending {
             rows.append(NSIndexPath(forRow: index, inSection: 1))
           }
@@ -330,19 +346,30 @@ class HabitManager {
   
   static func rows(habit: Habit) -> [NSIndexPath] {
     var rows: [NSIndexPath] = []
-    for (index, entry) in current.enumerate() {
+    for (index, entry) in instance.current.enumerate() {
       if entry.habit! == habit {
         rows.append(NSIndexPath(forRow: index, inSection: 0))
       }
     }
     if HabitApp.upcoming {
-      for (index, entry) in upcoming.enumerate() {
+      for (index, entry) in instance.upcoming.enumerate() {
         if entry.habit! == habit {
           rows.append(NSIndexPath(forRow: index, inSection: 1))
         }
       }
     }
     return rows
+  }
+  
+  static func pause(habit: Habit) -> [NSIndexPath] {
+    instance.paused.append(habit)
+    return HabitApp.upcoming ? [NSIndexPath(forRow: instance.paused.count - 1, inSection: 2)] : []
+  }
+  
+  static func unpause(habit:Habit) -> [NSIndexPath] {
+    let index = instance.paused.indexOf(habit)!
+    instance.paused.removeAtIndex(index)
+    return HabitApp.upcoming ? [NSIndexPath(forRow: index, inSection: 2)] : []
   }
   
 }
