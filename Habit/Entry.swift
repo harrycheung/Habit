@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-class Entry: NSManagedObject {
+class Entry: NSManagedObject, Comparable {
   
   enum State: NSNumber {
     case Todo = 0, Skipped = 1, Completed = 2
@@ -107,4 +107,16 @@ class Entry: NSManagedObject {
     habit!.updateHistory(onDate: due!, completedBy: 0, skippedBy: 1, totalBy: 0)
   }
 
+}
+
+func ==(x: Entry, y: Entry) -> Bool {
+  return x.due!.compare(y.due!) == .OrderedSame && x.habit!.name! == y.habit!.name!
+}
+
+func <(x: Entry, y: Entry) -> Bool {
+  if x.due!.compare(y.due!) == .OrderedSame {
+    return x.habit!.name! < y.habit!.name!
+  } else {
+    return x.due!.compare(y.due!) == .OrderedAscending
+  }
 }

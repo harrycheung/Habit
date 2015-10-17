@@ -1,6 +1,0 @@
-framework module SnapKit {
-  umbrella header "Pods-HabitTests-SnapKit-umbrella.h"
-
-  export *
-  module * { export * }
-}

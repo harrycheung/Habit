@@ -46,14 +46,18 @@ class HabitManager {
   }
   
   static func reload() {
+    reload(NSDate())
+  }
+  
+  static func reload(now: NSDate) {
     do {
       let request = NSFetchRequest(entityName: "Entry")
       request.predicate = NSPredicate(format: "stateRaw == %@ AND (due <= %@ || (due > %@ AND period IN %@))",
-        Entry.State.Todo.rawValue, NSDate(), NSDate(), HabitApp.currentPeriods)
-      instance.current = (try HabitApp.moContext.executeFetchRequest(request) as! [Entry]).sort({ $0.dueIn < $1.dueIn })
+        Entry.State.Todo.rawValue, now, now, HabitApp.currentPeriods(now))
+      instance.current = (try HabitApp.moContext.executeFetchRequest(request) as! [Entry]).sort()
       request.predicate = NSPredicate(format: "stateRaw == %@ AND due > %@ AND NOT (period IN %@)",
-        Entry.State.Todo.rawValue, NSDate(), HabitApp.currentPeriods)
-      instance.upcoming = (try HabitApp.moContext.executeFetchRequest(request) as! [Entry]).sort({ $0.dueIn < $1.dueIn })
+        Entry.State.Todo.rawValue, now, HabitApp.currentPeriods(now))
+      instance.upcoming = (try HabitApp.moContext.executeFetchRequest(request) as! [Entry]).sort()
       let pausedRequest = NSFetchRequest(entityName: "Habit")
       pausedRequest.predicate = NSPredicate(format: "paused == YES")
       instance.paused = (try HabitApp.moContext.executeFetchRequest(pausedRequest) as! [Habit])
@@ -303,32 +307,72 @@ class HabitManager {
   
   static func createEntries(after date: NSDate, currentDate: NSDate, habit: Habit? = nil, save: Bool = false) -> [NSIndexPath] {
     do {
+      var entries: [Entry] = []
       if habit == nil {
         let habitRequest = NSFetchRequest(entityName: "Habit")
         let habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
         for habit in habits {
-          habit.update(date, currentDate: currentDate)
+          entries += habit.update(date, currentDate: currentDate)
         }
       } else {
-        habit!.update(date, currentDate: currentDate)
+        entries += habit!.update(date, currentDate: currentDate)
       }
       if save { try HabitApp.moContext.save() }
-      // TODO: does fetch hit memory or actual file storage?
-      reload()
       
       var rows: [NSIndexPath] = []
-      for (index, entry) in instance.current.enumerate() {
-        if (habit == nil || entry.habit! == habit) && entry.due!.compare(date) == .OrderedDescending {
-          rows.append(NSIndexPath(forRow: index, inSection: 0))
-        }
-      }
-      if HabitApp.upcoming {
-        for (index, entry) in instance.upcoming.enumerate() {
-          if (habit == nil || entry.habit! == habit) && entry.due!.compare(date) == .OrderedDescending {
-            rows.append(NSIndexPath(forRow: index, inSection: 1))
+      var newCurrent: [Entry] = []
+      var newUpcoming: [Entry] = []
+      var index = 0
+      let currentPeriods = HabitApp.currentPeriods()
+      var switchedToUpcoming = false
+      for entry in entries {
+        if currentPeriods.contains(entry.period!) {
+          while !instance.current.isEmpty {
+            if entry < instance.current[0] {
+              rows.append(NSIndexPath(forRow: index, inSection: 0))
+              newCurrent.append(entry)
+              index += 1
+              break
+            } else {
+              newCurrent.append(instance.current.removeAtIndex(0))
+              index += 1
+            }
+          }
+          if instance.current.isEmpty {
+            rows.append(NSIndexPath(forRow: index, inSection: 0))
+            newCurrent.append(entry)
+            index += 1
+          }
+        } else {
+          if !switchedToUpcoming {
+            index = 0
+            switchedToUpcoming = true
+          }
+          while !instance.upcoming.isEmpty {
+            if entry < instance.upcoming[0] {
+              if HabitApp.upcoming {
+                rows.append(NSIndexPath(forRow: index, inSection: 1))
+              }
+              newUpcoming.append(entry)
+              index += 1
+              break
+            } else {
+              newUpcoming.append(instance.upcoming.removeAtIndex(0))
+              index += 1
+            }
+          }
+          if instance.upcoming.isEmpty {
+            if HabitApp.upcoming {
+              rows.append(NSIndexPath(forRow: index, inSection: 1))
+            }
+            newUpcoming.append(entry)
+            index += 1
           }
         }
       }
+      instance.current = newCurrent + instance.current
+      instance.upcoming = newUpcoming + instance.upcoming
+
       return rows
     } catch let error as NSError {
       NSLog("HabitManager.createEntries failed: \(error.localizedDescription)")

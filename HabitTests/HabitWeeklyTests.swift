@@ -13,7 +13,7 @@ import Nimble
 @testable import Habit
 
 class HabitWeeklyTests: XCTestCase {
-
+  
   var previousStartOfDay: Int = 0
   var previousEndOfDay: Int = 0
   
@@ -24,16 +24,15 @@ class HabitWeeklyTests: XCTestCase {
     previousEndOfDay = HabitApp.endOfDay
     
     HabitApp.setUpInMemoryManagedObjectContext()
-    HabitApp.upcoming = true
     HabitApp.startOfDay = 0
     HabitApp.endOfDay = 24 * 60
   }
   
   override func tearDown() {
-    super.tearDown()
-    
     HabitApp.startOfDay = previousStartOfDay
     HabitApp.endOfDay = previousEndOfDay
+    
+    super.tearDown()
   }
   
   func testCountBeforeCreatedWeekly() {

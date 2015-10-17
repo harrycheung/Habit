@@ -153,8 +153,8 @@ class Habit: NSManagedObject {
     return has
   }
   
-  private func addEntry(due due: NSDate, period: Int, number: Int) {
-    let _ = Entry(context: managedObjectContext!, habit: self, due: due, period: period, number: number)
+  private func addEntry(due due: NSDate, period: Int, number: Int) -> Entry {
+    return Entry(context: managedObjectContext!, habit: self, due: due, period: period, number: number)
   }
   
   static func dateRange(date: NSDate, frequency: Frequency, includeEnd: Bool) -> (NSDate, NSDate) {
@@ -402,11 +402,12 @@ class Habit: NSManagedObject {
     }
   }
   
-  func update(currentDate: NSDate) {
-    update(lastEntry, currentDate: currentDate)
+  func update(currentDate: NSDate) -> [Entry] {
+    return update(lastEntry, currentDate: currentDate)
   }
   
-  func update(var lastDue: NSDate, currentDate: NSDate) {
+  func update(var lastDue: NSDate, currentDate: NSDate) -> [Entry] {
+    var newEntries: [Entry] = []
     let calendar = HabitApp.calendar
     let expected = expectedCount
     let upcoming = (expected == 1 && useTimes && HabitApp.endOfDay == HabitApp.dayMinutes) ? 3 : 2
@@ -458,7 +459,7 @@ class Habit: NSManagedObject {
         if pausedBool {
           updateHistory(onDate: lastDue, completedBy: 0, skippedBy: 0, totalBy: 0)
         } else {
-          addEntry(due: lastDue, period: components.day, number: count)
+          newEntries.append(addEntry(due: lastDue, period: components.day, number: count))
         }
       }
     case .Weekly:
@@ -533,7 +534,7 @@ class Habit: NSManagedObject {
           if pausedBool {
             updateHistory(onDate: lastDue, completedBy: 0, skippedBy: 0, totalBy: 0)
           } else {
-            addEntry(due: lastDue, period: weekOfYear, number: count)
+            newEntries.append(addEntry(due: lastDue, period: weekOfYear, number: count))
           }
         }
       }
@@ -574,11 +575,12 @@ class Habit: NSManagedObject {
         if pausedBool {
           updateHistory(onDate: lastDue, completedBy: 0, skippedBy: 0, totalBy: 0)
         } else {
-          addEntry(due: lastDue, period: components.month, number: count)
+          newEntries.append(addEntry(due: lastDue, period: components.month, number: count))
         }
       }
     default: ()
     }
+    return newEntries
   }
 
 }
