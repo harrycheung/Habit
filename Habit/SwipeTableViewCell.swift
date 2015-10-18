@@ -347,7 +347,6 @@ class SwipeTableViewCell: UITableViewCell {
         var frame = self.screenshotView!.frame
         frame.origin.x = originX
         self.screenshotView!.frame = frame
-        self.slidingView!.alpha = 0
         self.slideView(direction: direction, percentage: percentage, view: self.activeView)
       }, completion: { finished in
         self.blocks[direction.hashValue]!(self)
@@ -395,4 +394,5 @@ class SwipeTableViewCell: UITableViewCell {
       }
     }
   }
+  
 }

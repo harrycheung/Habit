@@ -209,7 +209,7 @@ class HabitDailyTests: XCTestCase {
     expect(habit.skipped!.integerValue) == 0
     expect(habit.skip(before: today).count) == 14
     expect(habit.skipped!.integerValue) == 14
-    components.day += 1 // today
+    components.day++ // today
     components.hour = 16
     expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
     components.day += 2 // day after tomorrow
@@ -237,7 +237,7 @@ class HabitDailyTests: XCTestCase {
     components.day += 2
     components.hour = 0
     expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
-    components.day += 1
+    components.day++
     components.hour = 0
     expect(habit.lastEntry) == calendar.dateFromComponents(components)!
   }
@@ -282,7 +282,7 @@ class HabitDailyTests: XCTestCase {
     expect(habit.skipped!.integerValue) == 1
     components.hour = 15
     expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
-    components.day += 1
+    components.day++
     components.hour = 15
     expect(habit.lastEntry) == calendar.dateFromComponents(components)!
   }
@@ -296,7 +296,7 @@ class HabitDailyTests: XCTestCase {
     let createdAt = calendar.dateFromComponents(components)!
     let habit = Habit(context: HabitApp.moContext, name: "Yesterday daily 12 times", details: "", frequency: .Daily, times: 12, createdAt: createdAt)
     
-    components.day += 1
+    components.day++
     components.hour = 12
     let now = calendar.dateFromComponents(components)!
     habit.update(now)
@@ -321,7 +321,7 @@ class HabitDailyTests: XCTestCase {
     let habit = Habit(context: HabitApp.moContext, name: "Yesterday daily 12 times", details: "", frequency: .Daily, times: 0, createdAt: createdAt)
     habit.partsOfDay = [.Morning, .MidDay, .Afternoon]
     
-    components.day += 1
+    components.day++
     components.hour = 14
     let now = calendar.dateFromComponents(components)!
     habit.update(now)
@@ -331,7 +331,7 @@ class HabitDailyTests: XCTestCase {
     expect(habit.skipped!.integerValue) == 4
     components.hour = 15
     expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
-    components.day += 1
+    components.day++
     components.hour = 15
     expect(habit.lastEntry) == calendar.dateFromComponents(components)!
   }

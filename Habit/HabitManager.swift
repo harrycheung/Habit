@@ -78,9 +78,9 @@ class HabitManager {
         }
         if entry.habit!.notifyBool && entry.due!.compare(now) == .OrderedDescending {
           addNotification(entry, number: number)
-          count += 1
+          count++
         }
-        number += 1
+        number++
       }
       if count > 0 {
         HabitApp.initNotification()
@@ -331,17 +331,17 @@ class HabitManager {
             if entry < instance.current[0] {
               rows.append(NSIndexPath(forRow: index, inSection: 0))
               newCurrent.append(entry)
-              index += 1
+              index++
               break
             } else {
               newCurrent.append(instance.current.removeAtIndex(0))
-              index += 1
+              index++
             }
           }
           if instance.current.isEmpty {
             rows.append(NSIndexPath(forRow: index, inSection: 0))
             newCurrent.append(entry)
-            index += 1
+            index++
           }
         } else {
           if !switchedToUpcoming {
@@ -354,11 +354,11 @@ class HabitManager {
                 rows.append(NSIndexPath(forRow: index, inSection: 1))
               }
               newUpcoming.append(entry)
-              index += 1
+              index++
               break
             } else {
               newUpcoming.append(instance.upcoming.removeAtIndex(0))
-              index += 1
+              index++
             }
           }
           if instance.upcoming.isEmpty {
@@ -366,7 +366,7 @@ class HabitManager {
               rows.append(NSIndexPath(forRow: index, inSection: 1))
             }
             newUpcoming.append(entry)
-            index += 1
+            index++
           }
         }
       }

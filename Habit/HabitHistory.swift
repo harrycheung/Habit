@@ -135,7 +135,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
             lastMonth = month
           }
           offset += side
-          count += 1
+          count++
           if (habit!.frequency == .Weekly &&
               calendar.isDate(history.date!, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear)) ||
              (habit!.frequency == .Monthly &&

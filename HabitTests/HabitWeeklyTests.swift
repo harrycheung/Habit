@@ -336,7 +336,7 @@ class HabitWeeklyTests: XCTestCase {
       components.hour = Int(0.4 * 24)
       components.minute = Int((0.4 * Double(HabitApp.dayMinutes)) % 60)
       expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
-      components.weekOfYear += 1
+      components.weekOfYear++
       components.weekday = 1
       components.hour = 0
       components.minute = 0
@@ -373,7 +373,7 @@ class HabitWeeklyTests: XCTestCase {
       components.hour = 0
       components.minute = 0
       expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
-      components.weekOfYear += 1
+      components.weekOfYear++
       components.weekday = 7
       expect(habit.lastEntry) == calendar.dateFromComponents(components)!
       entries[1].skip()
@@ -385,7 +385,7 @@ class HabitWeeklyTests: XCTestCase {
       expect(habit.skipped!.integerValue) == 1
       expect(habit.progress(now)) == 1 / 3.0
       expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
-      components.weekOfYear += 1
+      components.weekOfYear++
       expect(habit.lastEntry) == calendar.dateFromComponents(components)!
     } catch let error as NSError {
       NSLog("error: \(error)")
@@ -482,7 +482,7 @@ class HabitWeeklyTests: XCTestCase {
     components.hour = 0
     components.minute = 0
     expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
-    components.weekOfYear += 1
+    components.weekOfYear++
     components.weekday = 7
     expect(habit.lastEntry) == calendar.dateFromComponents(components)!
     let histories = habit.histories!.array as! [History]

@@ -93,7 +93,7 @@ class HabitMonthlyTests: XCTestCase {
     let components = calendar.components([.Year, .Month, .Day], fromDate: nextMonth)
     components.day = 1
     expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
-    components.month += 1
+    components.month++
     expect(habit.lastEntry) == calendar.dateFromComponents(components)!
   }
   

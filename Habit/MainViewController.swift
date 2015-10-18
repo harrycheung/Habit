@@ -61,7 +61,7 @@
 // 52: done - Dialog to indicate habits were auto skipped?
 // 53: done - Stop reload when displaying dialog
 // 54: done - Test single paused habit
-// 55: When skipping past, use swipe animation
+// 55: done - When skipping past, use swipe animation
 // 56: done - Inserting new entries should take account of previous ordering
 
 import UIKit
@@ -129,7 +129,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       var date = calendar.dateByAddingUnit(.Day, value: -180, toDate: NSDate())!
       let h = Habit(context: HabitApp.moContext, name: "Drink water", details: "", frequency: .Daily, times: 8, createdAt: date)
       h.update(NSDate())
-      while !calendar.isDateInToday(date) {
+      while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
         let entries = h.entriesOnDate(date)
         for i in 0..<Int(arc4random_uniform(UInt32(entries.count))) {
           entries[i].complete()
@@ -384,15 +384,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         sdvc.modalTransitionStyle = .CrossDissolve
         sdvc.modalPresentationStyle = .OverCurrentContext
         sdvc.yesCompletion = {
-          var indexPaths: [NSIndexPath] = []
           // Single out this entry just in case its due > NSDate()
           if entry.due!.compare(NSDate()) == .OrderedDescending {
             HabitManager.skip(indexPath.row)
-            indexPaths.append(indexPath)
           }
-          indexPaths += HabitManager.skip(entry.habit!)
           self.dismissViewControllerAnimated(true) {
-            removeRows(indexPaths)
+            removeRows(HabitManager.skip(entry.habit!))
             self.stopReload = false
           }
         }
@@ -543,7 +540,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   // Colors
   
   func changeColor(color: UIColor) {
-    testData()
+    //testData()
     
     // Snapshot previous color
     UIGraphicsBeginImageContextWithOptions(UIScreen.mainScreen().bounds.size, false, UIScreen.mainScreen().scale)
