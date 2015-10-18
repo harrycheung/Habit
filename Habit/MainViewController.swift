@@ -59,10 +59,10 @@
 // 50: done - Fix blur mask in when editing existing habit
 // 51: done - Fix tint colors on dialogs
 // 52: done - Dialog to indicate habits were auto skipped?
-// 53: Stop reload when displaying dialog
-// 54: Test single paused habit
+// 53: done - Stop reload when displaying dialog
+// 54: done - Test single paused habit
 // 55: When skipping past, use swipe animation
-// 56: Inserting new entries should take account of previous ordering
+// 56: done - Inserting new entries should take account of previous ordering
 
 import UIKit
 import CoreData
@@ -84,6 +84,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   var statusBar: UIView?
   var refreshTimer: NSTimer?
+  var stopReload: Bool = false
   let appSettingsTransition: UIViewControllerTransitioningDelegate = AppSettingsTransition()
   let selectFrequencyTransition: UIViewControllerTransitioningDelegate = SelectFrequencyTransition()
   let showHabitTransition: UIViewControllerTransitioningDelegate = ShowHabitTransition()
@@ -199,8 +200,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func reload() {
-    HabitManager.reload()
-    tableView.reloadData()
+    if !stopReload {
+      HabitManager.reload()
+      tableView.reloadData()
+    }
   }
   
   @IBAction func showSettings(sender: UITapGestureRecognizer) {
@@ -390,14 +393,17 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
           indexPaths += HabitManager.skip(entry.habit!)
           self.dismissViewControllerAnimated(true) {
             removeRows(indexPaths)
+            self.stopReload = false
           }
         }
         sdvc.noCompletion = {
           HabitManager.skip(indexPath.row)
           self.dismissViewControllerAnimated(true) {
             removeRows([indexPath])
+            self.stopReload = false
           }
         }
+        self.stopReload = true
         self.presentViewController(sdvc, animated: true, completion: nil)
       } else {
         HabitManager.skip(indexPath.row)
