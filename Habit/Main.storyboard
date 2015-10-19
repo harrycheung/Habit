@@ -631,9 +631,6 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <segue destination="0gf-IA-ZT8" kind="unwind" unwindAction="unwind:" id="fJE-lp-Xwz"/>
-                                </connections>
                             </button>
                         </subviews>
                         <animations/>
@@ -648,7 +645,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EUL-Oj-cIF" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="0gf-IA-ZT8" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="454" y="1132"/>
         </scene>
@@ -1014,7 +1010,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4W2-Id-zql" userLabel="Content View">
                                 <rect key="frame" x="15" y="209" width="290" height="150"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="It's been a while. Want to skip the previous entries of this habit up until now?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hhq-NG-vNN">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="It's been a while. Want to skip all past / missed occurrences of this habit?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hhq-NG-vNN">
                                         <rect key="frame" x="32" y="8" width="226" height="91"/>
                                         <animations/>
                                         <fontDescription key="fontDescription" name="Bariol-Regular" family="Bariol" pointSize="21"/>

@@ -73,7 +73,8 @@ class SelectFrequencyViewController: UIViewController {
   override func viewDidAppear(animated: Bool) {
     timer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: "showLabels", userInfo: nil, repeats: false)
     
-   view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "exit"))
+    view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "exit"))
+    closeButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "exit"))
   }
   
   func exit() {
