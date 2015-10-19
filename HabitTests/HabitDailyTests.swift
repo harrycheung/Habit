@@ -754,11 +754,11 @@ class HabitDailyTests: XCTestCase {
     let histories = habit.histories!.array as! [History]
     expect(calendar.components([.Day], fromDate: histories[0].date!).day) == 27
     expect(calendar.components([.Day], fromDate: histories[1].date!).day) == 28
-    expect(histories[1].pausedBool).to(beTrue())
+    expect(histories[1].paused).to(beTrue())
     expect(calendar.components([.Day], fromDate: histories[2].date!).day) == 29
-    expect(histories[2].pausedBool).to(beTrue())
+    expect(histories[2].paused).to(beTrue())
     expect(calendar.components([.Day], fromDate: histories[3].date!).day) == 30
-    expect(histories[3].pausedBool).to(beTrue())
+    expect(histories[3].paused).to(beTrue())
     expect(calendar.components([.Day], fromDate: histories[4].date!).day) == 31
     expect(calendar.components([.Day], fromDate: histories[5].date!).day) == 1
   }

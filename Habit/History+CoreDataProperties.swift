@@ -16,7 +16,6 @@ extension History {
 
     @NSManaged var completed: NSNumber?
     @NSManaged var date: NSDate?
-    @NSManaged var paused: NSNumber?
     @NSManaged var skipped: NSNumber?
     @NSManaged var total: NSNumber?
     @NSManaged var habit: Habit?

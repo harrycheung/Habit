@@ -292,10 +292,10 @@ class HabitManager {
         let habitRequest = NSFetchRequest(entityName: "Habit")
         let habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
         for habit in habits {
-          habit.recalculateHistory(onDate: date)
+          habit.clearHistory(after: date)
         }
       } else {
-        habit!.recalculateHistory(onDate: date)
+        habit!.clearHistory(after: date)
       }
       if save { try HabitApp.moContext.save() }
       return rows

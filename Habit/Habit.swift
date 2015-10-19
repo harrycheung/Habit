@@ -227,20 +227,19 @@ class Habit: NSManagedObject {
       history.completed = completedBy
       history.skipped = skippedBy
       history.total = totalBy
-      history.paused = paused
     }
     completed = completed!.integerValue + completedBy
     skipped = skipped!.integerValue + skippedBy
   }
   
-  func recalculateHistory(onDate date: NSDate) {
+  func clearHistory(after date: NSDate) {
+    // Delete current history and histories after
     let (startDate, _) = dateRange(date)
     let predicate = NSPredicate(format: "date > %@", startDate)
     for history in histories!.filteredOrderedSetUsingPredicate(predicate).array as! [History] {
-      completed = completed!.integerValue - history.completed!.integerValue
-      skipped = skipped!.integerValue - history.skipped!.integerValue
       managedObjectContext!.deleteObject(history)
     }
+    // Calculate new current history
     var completedBy = 0
     var skippedBy = 0
     for entry in entriesOnDate(date) {
@@ -252,7 +251,7 @@ class Habit: NSManagedObject {
       default: ()
       }
     }
-    updateHistory(onDate: date, completedBy: completedBy, skippedBy: skippedBy, totalBy: 0)
+    updateHistory(onDate: date, completedBy: completedBy, skippedBy: skippedBy, totalBy: completedBy + skippedBy)
   }
   
   func countBefore(date: NSDate) -> Int {

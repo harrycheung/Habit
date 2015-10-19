@@ -57,21 +57,18 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       content.addSubview(square)
       self.squares.append(square)
       
-      if history.pausedBool {
+      if history.paused {
         let mask = CAShapeLayer()
         let path = CGPathCreateMutable()
-        var left: CGFloat = 4
-        let top = frame.height / 2 - frame.width / 2 + 4
-        CGPathAddRect(path, nil, CGRectMake(left, top, frame.width / 2 - 5, frame.width - 8))
-        left = frame.width / 2 + 1
-        CGPathAddRect(path, nil, CGRectMake(left, top, frame.width / 2 - 5, frame.width - 8))
-        CGPathAddRect(path, nil, square.bounds)
+        CGPathAddRect(path, nil, CGRectMake(0, 0, frame.width, frame.width))
+        CGPathAddRect(path, nil, CGRectMake(3, 3, frame.width - 6, frame.width - 6))
         mask.path = path
         mask.fillRule = kCAFillRuleEvenOdd
         square.layer.mask = mask
+        square.backgroundColor = HabitApp.color
+      } else {
+        square.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "squareTap:"))
       }
-      
-      square.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "squareTap:"))
     }
     
     let addLabel = { (content: UIView, date: NSDate) in
@@ -197,19 +194,17 @@ class HabitHistory: UIView, UIScrollViewDelegate {
   }
   
   func squareTap(recognizer: UITapGestureRecognizer) {
+    clearSelection()
     let square = recognizer.view as! SquareView
-    if !square.history!.pausedBool {
-      clearSelection()
-      let frame = square.frame
-      square.frame = CGRectMake(
-        frame.origin.x - Enlargement, frame.origin.y - Enlargement,
-        frame.width + 2 * Enlargement, frame.height + 2 * Enlargement)
-      square.layer.borderColor = UIColor.blackColor().CGColor
-      square.layer.borderWidth = SelectedBorder
-      square.superview!.bringSubviewToFront(square)
-      selectedSquare = square
-      delegate?.habitHistory(self, selectedHistory: square.history!)
-    }
+    let frame = square.frame
+    square.frame = CGRectMake(
+      frame.origin.x - Enlargement, frame.origin.y - Enlargement,
+      frame.width + 2 * Enlargement, frame.height + 2 * Enlargement)
+    square.layer.borderColor = UIColor.blackColor().CGColor
+    square.layer.borderWidth = SelectedBorder
+    square.superview!.bringSubviewToFront(square)
+    selectedSquare = square
+    delegate?.habitHistory(self, selectedHistory: square.history!)
   }
   
   func clearSelection() {

@@ -87,9 +87,9 @@
 		4A1D08941B3E17E9006A9CA4 /* Habit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Habit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A1D08971B3E17E9006A9CA4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4A1D089F1B3E17E9006A9CA4 /* Habit.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Habit.xcdatamodel; sourceTree = "<group>"; };
-		4A1D08A11B3E17E9006A9CA4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4A1D08A11B3E17E9006A9CA4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Habit/Assets.xcassets; sourceTree = "<group>"; };
 		4A1D08A41B3E17E9006A9CA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		4A1D08A61B3E17E9006A9CA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4A1D08A61B3E17E9006A9CA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Habit/Info.plist; sourceTree = "<group>"; };
 		4A1D08AB1B3E17E9006A9CA4 /* HabitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HabitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A1D08B11B3E17E9006A9CA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A1D08B61B3E17EA006A9CA4 /* HabitUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HabitUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -172,7 +172,7 @@
 			isa = PBXGroup;
 			children = (
 				4A6DB6FD1B4C1587008BC1B7 /* Podfile */,
-				4A50A7851B55A5E8002D508B /* Bridge.h */,
+				4AD16F3C1BD47E3C00AC143D /* App */,
 				4A1D08961B3E17E9006A9CA4 /* Habit */,
 				4A1D08AE1B3E17E9006A9CA4 /* HabitTests */,
 				4A1D08B91B3E17EA006A9CA4 /* HabitUITests */,
@@ -203,9 +203,6 @@
 				4A1D08E01B40C975006A9CA4 /* ViewControllers */,
 				4A46437F1B44581300732389 /* UI */,
 				4A6DB6FA1B4A3892008BC1B7 /* Custom */,
-				4A1D08A61B3E17E9006A9CA4 /* Info.plist */,
-				4A1D089E1B3E17E9006A9CA4 /* Habit.xcdatamodeld */,
-				4A1D08A11B3E17E9006A9CA4 /* Assets.xcassets */,
 			);
 			path = Habit;
 			sourceTree = "<group>";
@@ -242,6 +239,7 @@
 				4A1D08DB1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift */,
 				4A1D08DA1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift */,
 				4A040C4D1B7C4D610081CF85 /* History+CoreDataProperties.swift */,
+				4A1D089E1B3E17E9006A9CA4 /* Habit.xcdatamodeld */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -307,6 +305,16 @@
 				4A9174491BABC6EB0047B189 /* ShowHabitTransition.swift */,
 			);
 			name = Transitions;
+			sourceTree = "<group>";
+		};
+		4AD16F3C1BD47E3C00AC143D /* App */ = {
+			isa = PBXGroup;
+			children = (
+				4A50A7851B55A5E8002D508B /* Bridge.h */,
+				4A1D08A61B3E17E9006A9CA4 /* Info.plist */,
+				4A1D08A11B3E17E9006A9CA4 /* Assets.xcassets */,
+			);
+			name = App;
 			sourceTree = "<group>";
 		};
 		8D0E82BCD4F1ADDE017DAF66 /* Pods */ = {
