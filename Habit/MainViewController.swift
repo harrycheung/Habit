@@ -566,7 +566,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   // Colors
   
   func changeColor(color: UIColor) {
-    testData()
+    //testData()
     
     // Snapshot previous color
     UIGraphicsBeginImageContextWithOptions(UIScreen.mainScreen().bounds.size, false, UIScreen.mainScreen().scale)
