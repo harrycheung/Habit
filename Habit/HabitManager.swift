@@ -158,6 +158,7 @@ class HabitManager {
       let entry = instance.current.removeAtIndex(index)
       entry.complete()
       try HabitApp.moContext.save()
+      updateNotifications()
     } catch let error {
       NSLog("HabitManager.complete failed: \(error)")
     }
@@ -168,6 +169,7 @@ class HabitManager {
       let entry = instance.current.removeAtIndex(index)
       entry.skip()
       try HabitApp.moContext.save()
+      updateNotifications()
     } catch let error {
       NSLog("HabitManager.skip failed: \(error)")
     }
@@ -188,6 +190,7 @@ class HabitManager {
       }
       instance.current = newCurrent
       try HabitApp.moContext.save()
+      updateNotifications()
       return rows
     } catch let error {
       NSLog("HabitManager.skip failed: \(error)")
@@ -218,7 +221,6 @@ class HabitManager {
       var newCurrent: [Entry] = []
       for (index, entry) in instance.current.enumerate() {
         if entry.habit! == habit {
-          removeNotification(entry)
           rows.append(NSIndexPath(forItem: index, inSection: 0))
         } else {
           newCurrent.append(entry)
@@ -228,7 +230,6 @@ class HabitManager {
       var newUpcoming: [Entry] = []
       for (index, entry) in instance.upcoming.enumerate() {
         if entry.habit! == habit {
-          removeNotification(entry)
           if HabitApp.upcoming {
             rows.append(NSIndexPath(forItem: index, inSection: 1))
           }
@@ -239,6 +240,7 @@ class HabitManager {
       instance.upcoming = newUpcoming
       HabitApp.moContext.deleteObject(habit)
       try HabitApp.moContext.save()
+      updateNotifications()
       return rows
     } catch let error as NSError {
       NSLog("HabitManager.delete failed: \(error.localizedDescription)")
@@ -267,7 +269,6 @@ class HabitManager {
       var newCurrent: [Entry] = []
       for (index, entry) in instance.current.enumerate() {
         if (habit == nil || entry.habit == habit) && entry.due!.compare(date) == .OrderedDescending {
-          removeNotification(entry)
           HabitApp.moContext.deleteObject(entry)
           rows.append(NSIndexPath(forRow: index, inSection: 0))
         } else {
@@ -278,7 +279,6 @@ class HabitManager {
       var newUpcoming: [Entry] = []
       for (index, entry) in instance.upcoming.enumerate() {
         if (habit == nil || entry.habit! == habit) && entry.due!.compare(date) == .OrderedDescending {
-          removeNotification(entry)
           HabitApp.moContext.deleteObject(entry)
           if HabitApp.upcoming {
             rows.append(NSIndexPath(forRow: index, inSection: 1))
@@ -298,6 +298,7 @@ class HabitManager {
         habit!.clearHistory(after: date)
       }
       if save { try HabitApp.moContext.save() }
+      updateNotifications()
       return rows
     } catch let error as NSError {
       NSLog("HabitManager.deleteEntries failed: \(error.localizedDescription)")
@@ -372,7 +373,7 @@ class HabitManager {
       }
       instance.current = newCurrent + instance.current
       instance.upcoming = newUpcoming + instance.upcoming
-
+      updateNotifications()
       return rows
     } catch let error as NSError {
       NSLog("HabitManager.createEntries failed: \(error.localizedDescription)")
