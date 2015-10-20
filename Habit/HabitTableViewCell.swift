@@ -22,12 +22,16 @@ class HabitTableViewCell: SwipeTableViewCell {
     super.init(coder: aDecoder)
     
     contentView.backgroundColor = HabitApp.color
-    
-    bottomBorder = CALayer()
-    let frame = contentView.frame
-    bottomBorder!.frame = CGRectMake(0, 0, frame.width, 1)
-    bottomBorder!.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.05).CGColor
-    layer.addSublayer(bottomBorder!)
+  }
+  
+  override func layoutSubviews() {
+    if bottomBorder == nil {
+      bottomBorder = CALayer()
+      let frame = contentView.frame
+      bottomBorder!.frame = CGRectMake(0, 0, frame.width, 1)
+      bottomBorder!.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.05).CGColor
+      layer.addSublayer(bottomBorder!)
+    }
   }
   
   func load(entry entry: Entry) {

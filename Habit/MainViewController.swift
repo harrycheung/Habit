@@ -126,36 +126,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 //      h.generateEntries(after: date)
 //      h.update(NSDate())
       
-//      var date = calendar.dateByAddingUnit(.Day, value: -180, toDate: NSDate())!
-//      let h = Habit(context: HabitApp.moContext, name: "Drink water", details: "", frequency: .Daily, times: 8, createdAt: date)
-//      h.update(NSDate())
-//      while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
-//        let entries = h.entriesOnDate(date)
-//        for i in 0..<Int(arc4random_uniform(UInt32(entries.count))) {
-//          entries[i].complete()
-//        }
-//        for entry in entries {
-//          if entry.state == .Todo {
-//            entry.skip()
-//          }
-//        }
-//        date = NSDate(timeInterval: Double(HabitApp.daySec), sinceDate: date)
-//      }
-      let createdAt = calendar.dateByAddingUnit(.Hour, value: 10, toDate: calendar.zeroTime(calendar.dateByAddingUnit(.Day, value: -5, toDate: NSDate())!))!
-      let h = Habit(context: HabitApp.moContext, name: "Drink water", details: "", frequency: .Daily, times: 8, createdAt: createdAt)
+      var date = calendar.dateByAddingUnit(.Day, value: -180, toDate: NSDate())!
+      let h = Habit(context: HabitApp.moContext, name: "Drink water", details: "", frequency: .Daily, times: 8, createdAt: date)
       h.update(NSDate())
-      h.pausedBool = true
-      var date = calendar.dateByAddingUnit(.Day, value: 1, toDate: createdAt)!
-      HabitManager.reload()
-      HabitManager.deleteEntries(after: date, habit: h)
-      HabitApp.moContext.refreshAllObjects()
-      date = calendar.dateByAddingUnit(.Day, value: 1, toDate: date)!
-      h.update(date)
-      h.pausedBool = false
-      date = calendar.dateByAddingUnit(.Day, value: 1, toDate: date)!
-      h.update(date, currentDate: NSDate())
-      date = createdAt
-      while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Day) {
+      while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear) {
         let entries = h.entriesOnDate(date)
         for i in 0..<Int(arc4random_uniform(UInt32(entries.count))) {
           entries[i].complete()
@@ -165,8 +139,35 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             entry.skip()
           }
         }
-        date = calendar.dateByAddingUnit(.Day, value: 1, toDate: date)!
+        date = NSDate(timeInterval: Double(HabitApp.daySec), sinceDate: date)
       }
+      
+//      let createdAt = calendar.dateByAddingUnit(.Hour, value: 10, toDate: calendar.zeroTime(calendar.dateByAddingUnit(.Day, value: -5, toDate: NSDate())!))!
+//      let h = Habit(context: HabitApp.moContext, name: "Drink water", details: "", frequency: .Daily, times: 8, createdAt: createdAt)
+//      h.update(NSDate())
+//      h.pausedBool = true
+//      var date = calendar.dateByAddingUnit(.Day, value: 1, toDate: createdAt)!
+//      HabitManager.reload()
+//      HabitManager.deleteEntries(after: date, habit: h)
+//      HabitApp.moContext.refreshAllObjects()
+//      date = calendar.dateByAddingUnit(.Day, value: 1, toDate: date)!
+//      h.update(date)
+//      h.pausedBool = false
+//      date = calendar.dateByAddingUnit(.Day, value: 1, toDate: date)!
+//      h.update(date, currentDate: NSDate())
+//      date = createdAt
+//      while !calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Day) {
+//        let entries = h.entriesOnDate(date)
+//        for i in 0..<Int(arc4random_uniform(UInt32(entries.count))) {
+//          entries[i].complete()
+//        }
+//        for entry in entries {
+//          if entry.state == .Todo {
+//            entry.skip()
+//          }
+//        }
+//        date = calendar.dateByAddingUnit(.Day, value: 1, toDate: date)!
+//      }
       
 //      date = calendar.dateByAddingUnit(.Day, value: -25, toDate: NSDate())!
 //      h = Habit(context: HabitApp.moContext, name: "Daily with pause", details: "", frequency: .Daily, times: 12, createdAt: date)
@@ -208,7 +209,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: "reload", userInfo: nil, repeats: true)
     
     // Setup colors
-    tableView.backgroundColor = UIColor.darkGrayColor()
     titleBar.backgroundColor = HabitApp.color
     newButton.backgroundColor = HabitApp.color
     newButton.layer.cornerRadius = newButton.bounds.width / 2
