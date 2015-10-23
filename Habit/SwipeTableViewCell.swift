@@ -390,7 +390,7 @@ class SwipeTableViewCell: UITableViewCell {
     
     if !swipable {
       UIView.animateWithDuration(NSTimeInterval(animationDuration)) {
-        cantSwipeLabel?.alpha = 0
+        self.cantSwipeLabel?.alpha = 0
       }
     }
   }

@@ -68,11 +68,12 @@ class HabitManager {
   
   static func updateNotifications() {
     if HabitApp.notification {
+      HabitApp.initNotification()
       UIApplication.sharedApplication().cancelAllLocalNotifications()
       var count = 0
       var number = 1
       let now = NSDate()
-      for entry in instance.current {
+      for entry in (instance.current + instance.upcoming).sort() {
         if count > 64 {
           break
         }
@@ -81,9 +82,6 @@ class HabitManager {
           count++
         }
         number++
-      }
-      if count > 0 {
-        HabitApp.initNotification()
       }
     }
   }
