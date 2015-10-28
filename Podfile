@@ -7,7 +7,7 @@ pod 'KAProgressLabel'
 pod 'FontAwesome.swift'
 
 def testing_pods
-  pod 'Nimble', '2.0.0'
+  pod 'Nimble', '3.0.0'
 end
 
 target 'HabitTests', :exclusive => true do
