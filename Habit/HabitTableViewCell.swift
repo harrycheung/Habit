@@ -37,7 +37,11 @@ class HabitTableViewCell: SwipeTableViewCell {
   func load(entry entry: Entry) {
     self.habit = nil
     self.entry = entry
-    name.text = entry.habit!.name
+    if entry.habit!.isFake {
+      name.text = HabitManager.FakeEntries[entry.number!.integerValue]
+    } else {
+      name.text = entry.habit!.name
+    }
     due.text = entry.dueText
     let dueIn = entry.dueIn
     var alpha = HabitApp.MinimumAlpha

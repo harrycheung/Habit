@@ -68,6 +68,7 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
     
     switchMode.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
     switchMode.setTitle(String.fontAwesomeIconWithName(.Cog), forState: .Normal)
+    if habit!.isFake { switchMode.hidden = true }
     
     progressLabel.labelVCBlock = { label in
       self.progressPercentage.text = "\(Int(label.progress * 100))%"
@@ -75,7 +76,7 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
     }
     progressLabel.progressColor = HabitApp.color
     
-    name.text = habit!.name;
+    name.text = habit!.isFake ? "Example habit" : habit!.name
     
     back.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
     back.setTitle(String.fontAwesomeIconWithName(.ChevronLeft), forState: .Normal)

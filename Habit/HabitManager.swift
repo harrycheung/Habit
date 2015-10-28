@@ -126,9 +126,9 @@ class HabitManager {
       let index = instance.current.indexOf(entry)!
       switch (identifier) {
       case "COMPLETE":
-        complete(index)
+        complete(0, index: index)
       case "SKIP":
-        skip(index)
+        skip(0, index: index)
       default:
         return
       }
@@ -151,23 +151,29 @@ class HabitManager {
     }
   }
   
-  static func complete(index: Int) {
+  static func complete(section: Int, index: Int) {
     do {
-      let entry = instance.current.removeAtIndex(index)
+      let entry = section == 0 ? instance.current.removeAtIndex(index) : instance.upcoming.removeAtIndex(index)
+      let notFake = !entry.habit!.isFake
       entry.complete()
       try HabitApp.moContext.save()
-      updateNotifications()
+      if notFake {
+        updateNotifications()
+      }
     } catch let error {
       NSLog("HabitManager.complete failed: \(error)")
     }
   }
   
-  static func skip(index: Int) {
+  static func skip(section: Int, index: Int) {
     do {
-      let entry = instance.current.removeAtIndex(index)
+      let entry = section == 0 ? instance.current.removeAtIndex(index) : instance.upcoming.removeAtIndex(index)
+      let notFake = !entry.habit!.isFake
       entry.skip()
       try HabitApp.moContext.save()
-      updateNotifications()
+      if notFake {
+        updateNotifications()
+      }
     } catch let error {
       NSLog("HabitManager.skip failed: \(error)")
     }
@@ -202,9 +208,11 @@ class HabitManager {
       let request = NSFetchRequest(entityName: "Habit")
       let habits = try HabitApp.moContext.executeFetchRequest(request) as! [Habit]
       for habit in habits {
-        habit.update(now)
-        if HabitApp.autoSkip && !habit.neverAutoSkipBool {
-          habit.skip(before: NSDate(timeInterval: HabitApp.autoSkipDelayTimeInterval, sinceDate: now))
+        if !habit.isFake {
+          habit.update(now)
+          if HabitApp.autoSkip && !habit.neverAutoSkipBool {
+            habit.skip(before: NSDate(timeInterval: HabitApp.autoSkipDelayTimeInterval, sinceDate: now))
+          }
         }
       }
       try HabitApp.moContext.save()
@@ -413,6 +421,40 @@ class HabitManager {
     let index = instance.paused.indexOf(habit)!
     instance.paused.removeAtIndex(index)
     return HabitApp.upcoming ? [NSIndexPath(forRow: index, inSection: 2)] : []
+  }
+  
+  static var FakeEntries = [
+    "Welcome to habit",
+    "Tap + to create a habit",
+    "Swipe right to complete",
+    "Swipe left to skip",
+    "Tap to view history",
+    "Tap title bar for app settings",
+    "Upcoming shows what's next"
+  ]
+  
+  static func createFirstEntries() {
+    let createdAt = HabitApp.calendar.dateByAddingUnit(.Day, value: -120, toDate: NSDate())!
+    let habit = Habit(context: HabitApp.moContext, name: "", details: "", frequency: .Daily, times: 10, createdAt: createdAt)
+    var dateIterator = HabitApp.calendar.dateByAddingUnit(.Minute, value: -1, toDate: NSDate())!
+    var day = HabitApp.calendar.components([.Day], fromDate: dateIterator).day
+    for i in 0..<FakeEntries.count - 1 {
+      dateIterator = dateIterator.dateByAddingTimeInterval(Double(i))
+      let _ = Entry(context: HabitApp.moContext, habit: habit, due: dateIterator, period: day, number: i)
+    }
+    dateIterator = HabitApp.calendar.zeroTime(HabitApp.calendar.dateByAddingUnit(.Day, value: 1, toDate: NSDate())!)
+    day = HabitApp.calendar.components([.Day], fromDate: dateIterator).day
+    let _ = Entry(context: HabitApp.moContext, habit: habit, due: dateIterator, period: day, number: FakeEntries.count - 1)
+    
+    dateIterator = HabitApp.calendar.dateByAddingUnit(.Day, value: -120, toDate: NSDate())!
+    for _ in 0..<120 {
+      let completed = Int(arc4random_uniform(UInt32(10)))
+      habit.updateHistory(onDate: dateIterator, completedBy: completed, skippedBy: 10 - completed, totalBy: 10)
+      dateIterator = HabitApp.calendar.dateByAddingUnit(.Day, value: 1, toDate: dateIterator)!
+    }
+    habit.currentStreak = 8
+    habit.longestStreak = 27
+    save()
   }
   
 }

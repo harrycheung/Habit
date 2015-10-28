@@ -10,8 +10,8 @@
 		401129C628C7DAC83C65C9A3 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C30FEA7A7703C78B572D2FEA /* Pods.framework */; };
 		4A040C4F1B7C4D610081CF85 /* History+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A040C4D1B7C4D610081CF85 /* History+CoreDataProperties.swift */; };
 		4A040C501B7C4D610081CF85 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A040C4E1B7C4D610081CF85 /* History.swift */; };
-		4A0FD15B1B9F665E0063FB93 /* SelectFrequencyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A0FD15A1B9F665E0063FB93 /* SelectFrequencyViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		4A0FD15D1B9F67C00063FB93 /* SelectFrequencyTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A0FD15C1B9F67C00063FB93 /* SelectFrequencyTransition.swift */; settings = {ASSET_TAGS = (); }; };
+		4A0FD15B1B9F665E0063FB93 /* SelectFrequencyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A0FD15A1B9F665E0063FB93 /* SelectFrequencyViewController.swift */; };
+		4A0FD15D1B9F67C00063FB93 /* SelectFrequencyTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A0FD15C1B9F67C00063FB93 /* SelectFrequencyTransition.swift */; };
 		4A144D791B61C31B001A6094 /* HabitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A144D781B61C31B001A6094 /* HabitApp.swift */; };
 		4A16FDC11B7ED48A00DF9DFC /* EditHabitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A16FDC01B7ED48A00DF9DFC /* EditHabitViewController.swift */; };
 		4A16FDC31B7F7CA000DF9DFC /* EditHabitTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A16FDC21B7F7CA000DF9DFC /* EditHabitTransition.swift */; };
@@ -37,23 +37,23 @@
 		4A4643831B448B3300732389 /* MultiSelectControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4643821B448B3300732389 /* MultiSelectControl.swift */; };
 		4A4D4DA21B6D9618005C86AF /* HabitWeeklyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4D4DA11B6D9618005C86AF /* HabitWeeklyTests.swift */; };
 		4A56B1511B6ED4D80092B98A /* HabitMonthlyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A56B1501B6ED4D80092B98A /* HabitMonthlyTests.swift */; };
-		4A584C051BAEFC6500CA783C /* NSManagedObject+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A584C041BAEFC6500CA783C /* NSManagedObject+Custom.swift */; settings = {ASSET_TAGS = (); }; };
+		4A584C051BAEFC6500CA783C /* NSManagedObject+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A584C041BAEFC6500CA783C /* NSManagedObject+Custom.swift */; };
 		4A67ABAB1B8FCEBD00DA641B /* SwipeDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A67ABAA1B8FCEBD00DA641B /* SwipeDialogViewController.swift */; };
 		4A6DB6FC1B4B8781008BC1B7 /* UIButton+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6DB6FB1B4B8781008BC1B7 /* UIButton+Custom.swift */; };
 		4A6DB6FE1B4C1587008BC1B7 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DB6FD1B4C1587008BC1B7 /* Podfile */; };
-		4A8EB4901BB9D21300A781E4 /* HabitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8EB48F1BB9D21300A781E4 /* HabitManager.swift */; settings = {ASSET_TAGS = (); }; };
-		4A8F37591BBB8988006DBCB6 /* FontManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8F37581BBB8988006DBCB6 /* FontManager.swift */; settings = {ASSET_TAGS = (); }; };
-		4A91744A1BABC6EB0047B189 /* ShowHabitTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9174491BABC6EB0047B189 /* ShowHabitTransition.swift */; settings = {ASSET_TAGS = (); }; };
-		4A91744C1BACB3840047B189 /* UITextField+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A91744B1BACB3840047B189 /* UITextField+Custom.swift */; settings = {ASSET_TAGS = (); }; };
-		4AA214D51BA4901F00FB77BA /* CreateHabitTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA214D41BA4901F00FB77BA /* CreateHabitTransition.swift */; settings = {ASSET_TAGS = (); }; };
+		4A8EB4901BB9D21300A781E4 /* HabitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8EB48F1BB9D21300A781E4 /* HabitManager.swift */; };
+		4A8F37591BBB8988006DBCB6 /* FontManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8F37581BBB8988006DBCB6 /* FontManager.swift */; };
+		4A91744A1BABC6EB0047B189 /* ShowHabitTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9174491BABC6EB0047B189 /* ShowHabitTransition.swift */; };
+		4A91744C1BACB3840047B189 /* UITextField+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A91744B1BACB3840047B189 /* UITextField+Custom.swift */; };
+		4AA214D51BA4901F00FB77BA /* CreateHabitTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA214D41BA4901F00FB77BA /* CreateHabitTransition.swift */; };
 		4AA4AED81B7A73B100A1562F /* HabitHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA4AED71B7A73B100A1562F /* HabitHistory.swift */; };
 		4AAA3C1C1B7AF9B7006572F8 /* UIColor+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AAA3C1B1B7AF9B7006572F8 /* UIColor+Custom.swift */; };
-		4ACE25111BAFA7EC0065FD3B /* HabitDailyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACE250F1BAFA7D60065FD3B /* HabitDailyTests.swift */; settings = {ASSET_TAGS = (); }; };
+		4ACE25111BAFA7EC0065FD3B /* HabitDailyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACE250F1BAFA7D60065FD3B /* HabitDailyTests.swift */; };
 		4ADA905F1B60ABD300826C69 /* ColorPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA905E1B60ABD300826C69 /* ColorPicker.swift */; };
-		4ADD91111BB09AB1009A7D75 /* Habit+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADD91101BB09AB1009A7D75 /* Habit+Test.swift */; settings = {ASSET_TAGS = (); }; };
+		4ADD91111BB09AB1009A7D75 /* Habit+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADD91101BB09AB1009A7D75 /* Habit+Test.swift */; };
 		4AE038681B8E042C00BF4CEC /* NSCalendar+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE038671B8E042C00BF4CEC /* NSCalendar+Custom.swift */; };
-		4AFD29E61BD29BA0003122A7 /* HabitManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFD29E51BD29BA0003122A7 /* HabitManagerTests.swift */; settings = {ASSET_TAGS = (); }; };
-		4AFD29E81BD29C29003122A7 /* NSCalendar+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFD29E71BD29C29003122A7 /* NSCalendar+Custom.swift */; settings = {ASSET_TAGS = (); }; };
+		4AFD29E61BD29BA0003122A7 /* HabitManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFD29E51BD29BA0003122A7 /* HabitManagerTests.swift */; };
+		4AFD29E81BD29C29003122A7 /* NSCalendar+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFD29E71BD29C29003122A7 /* NSCalendar+Custom.swift */; };
 		861BECF906C6AC6A210325FA /* Pods_HabitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA0F26F75A2786B986189DB2 /* Pods_HabitTests.framework */; };
 		E5516A33B694E124AFFB4FEF /* Pods_HabitUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E64B698848D2B19C57A77B12 /* Pods_HabitUITests.framework */; };
 /* End PBXBuildFile section */
@@ -251,7 +251,6 @@
 				4A0FD15A1B9F665E0063FB93 /* SelectFrequencyViewController.swift */,
 				4A1D08CB1B3E1A7A006A9CA4 /* ShowHabitViewController.swift */,
 				4A16FDC01B7ED48A00DF9DFC /* EditHabitViewController.swift */,
-				4A44D7861B5A29EC0017B34B /* AppSettingsViewController.swift */,
 				4A67ABAA1B8FCEBD00DA641B /* SwipeDialogViewController.swift */,
 				4AA214D31BA48FFD00FB77BA /* Transitions */,
 			);
@@ -263,6 +262,7 @@
 			children = (
 				4A1D08A31B3E17E9006A9CA4 /* LaunchScreen.storyboard */,
 				4A1D08D41B3E1E52006A9CA4 /* Main.storyboard */,
+				4A44D7861B5A29EC0017B34B /* AppSettingsViewController.swift */,
 				4A421C191B48960900F3186C /* FrequencySettings.xib */,
 				4A1D08CA1B3E1A7A006A9CA4 /* HabitTableViewCell.swift */,
 				4ADA905E1B60ABD300826C69 /* ColorPicker.swift */,

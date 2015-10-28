@@ -20,9 +20,11 @@ class Entry: NSManagedObject, Comparable {
     self.init(entity: entityDescription, insertIntoManagedObjectContext: context)
     self.habit = habit
     self.due = due
-    self.period = "\(habit.frequency.description)\(period)"
     self.number = number
-    habit.updateHistory(onDate: due, completedBy: 0, skippedBy: 0, totalBy: 1)
+    self.period = "\(habit.frequency.description)\(period)"
+    if !habit.isFake {
+      habit.updateHistory(onDate: due, completedBy: 0, skippedBy: 0, totalBy: 1)
+    }
     //print("\(habit.name) new entry: \(self.period)")
   }
   
@@ -92,19 +94,34 @@ class Entry: NSManagedObject, Comparable {
     return text
   }
   
-  func complete() {
-    state = .Completed
-    habit!.currentStreak = habit!.currentStreak!.integerValue + 1
-    if habit!.currentStreak!.integerValue > habit!.longestStreak!.integerValue {
-      habit!.longestStreak = habit!.currentStreak
+  private func handleFake() {
+    HabitApp.moContext.deleteObject(self)
+    if habit!.entries!.count == 1 {
+      HabitApp.moContext.deleteObject(habit!)
     }
-    habit!.updateHistory(onDate: due!, completedBy: 1, skippedBy: 0, totalBy: 0)
+  }
+  
+  func complete() {
+    if habit!.isFake {
+      handleFake()
+    } else {
+      state = .Completed
+      habit!.currentStreak = habit!.currentStreak!.integerValue + 1
+      if habit!.currentStreak!.integerValue > habit!.longestStreak!.integerValue {
+        habit!.longestStreak = habit!.currentStreak
+      }
+      habit!.updateHistory(onDate: due!, completedBy: 1, skippedBy: 0, totalBy: 0)
+    }
   }
   
   func skip() {
-    state = .Skipped
-    habit!.currentStreak = 0
-    habit!.updateHistory(onDate: due!, completedBy: 0, skippedBy: 1, totalBy: 0)
+    if habit!.isFake {
+      handleFake()
+    } else {
+      state = .Skipped
+      habit!.currentStreak = 0
+      habit!.updateHistory(onDate: due!, completedBy: 0, skippedBy: 1, totalBy: 0)
+    }
   }
 
 }

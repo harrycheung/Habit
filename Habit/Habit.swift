@@ -117,6 +117,8 @@ class Habit: NSManagedObject {
   
   var expectedCount: Int { return useTimes ? times!.integerValue : partsArray.count }
   
+  var isFake: Bool { return name == "" }
+  
   convenience init(context: NSManagedObjectContext, name: String) {
     self.init(context: context, name: name, details: "", frequency: .Daily, times: 0, createdAt: NSDate())
   }

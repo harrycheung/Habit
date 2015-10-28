@@ -7,7 +7,7 @@
 //
 
 // TODO
-//  1. Check timezone changes on load
+//  1. done - Check timezone changes on load
 //  2. done - Snooze behavior
 //  3. done - Sort habits based on time periods
 //  4. done - github style history graph
@@ -20,7 +20,7 @@
 // 11. done - Debug flash when changing color
 // 12. done - Debug flash when dismising habit settings
 // 13. done - simulator only - Debug flash on color picker button
-// 14. Clean up AppDelegate
+// 14. done - Clean up AppDelegate
 // 15. done - Auto-skip
 // 16. done - If a lot to be done, ask to skip all
 // 17. done - Pretify show upcoming animation
@@ -41,9 +41,9 @@
 // 32. done - Icon
 // 33: done - Delete history when deleting entries new frequency
 // 34: done - Long press on frequency selection shows long word
-// 35: Start app first time with example habit
+// 35: done - Start app first time with example habit
 // 36: done - Pause habit
-// 37: Launch screen
+// 37: done - Launch screen
 // 38: done - Resist swiping upcoming
 // 39: done - Show frequency words after 1 second timeout
 // 40: done - Fix overlay on frequency selection
@@ -63,6 +63,7 @@
 // 54: done - Test single paused habit
 // 55: done - When skipping past, use swipe animation
 // 56: done - Inserting new entries should take account of previous ordering
+// 57: Fake habits for review and tell your friends
 
 import UIKit
 import CoreData
@@ -398,21 +399,21 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     let complete = { (cell: SwipeTableViewCell) in
       let indexPath = tableView.indexPathForCell(cell)!
-      HabitManager.complete(indexPath.row)
+      HabitManager.complete(indexPath.section, index: indexPath.row)
       removeRows([indexPath])
     }
     
     let skip = { (cell: SwipeTableViewCell) in
       let indexPath = tableView.indexPathForCell(cell)!
-      let entry = HabitManager.current[indexPath.row]
-      if entry.habit!.hasOldEntries {
+      let entry = indexPath.section == 0 ? HabitManager.current[indexPath.row] : HabitManager.upcoming[indexPath.row]
+      if !entry.habit!.isFake && entry.habit!.hasOldEntries {
         let sdvc = self.storyboard!.instantiateViewControllerWithIdentifier("SwipeDialogViewController") as! SwipeDialogViewController
         sdvc.modalTransitionStyle = .CrossDissolve
         sdvc.modalPresentationStyle = .OverCurrentContext
         sdvc.yesCompletion = {
           // Single out this entry just in case its due > NSDate()
           if entry.due!.compare(NSDate()) == .OrderedDescending {
-            HabitManager.skip(indexPath.row)
+            HabitManager.skip(indexPath.section, index: indexPath.row)
           }
           self.dismissViewControllerAnimated(true) {
             removeRows(HabitManager.skip(entry.habit!))
@@ -420,7 +421,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
           }
         }
         sdvc.noCompletion = {
-          HabitManager.skip(indexPath.row)
+          HabitManager.skip(indexPath.section, index: indexPath.row)
           self.dismissViewControllerAnimated(true) {
             removeRows([indexPath])
             self.stopReload = false
@@ -429,7 +430,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.stopReload = true
         self.presentViewController(sdvc, animated: true, completion: nil)
       } else {
-        HabitManager.skip(indexPath.row)
+        HabitManager.skip(indexPath.section, index: indexPath.row)
         removeRows([indexPath])
       }
     }
@@ -461,30 +462,19 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       completion: { cell in
         skip(cell)
     })
-    if indexPath.section == 1 {
-      cell.swipable = false
-      let button = UIButton(type: .System)
-      button.setTitle("Can't swipe upcoming", forState: .Normal)
-      button.setTitleColor(UIColor.lightGrayColor(), forState: .Normal)
-      button.titleLabel!.font = UIFont(name: "Bariol-Bold", size: 16)!
-      button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8)
-      button.backgroundColor = UIColor.darkGrayColor()
-      button.sizeToFit()
-      button.roundify(4)
-      cell.cantSwipeLabel = button
-    } else if indexPath.section == 2 {
-      cell.swipable = false
-      let button = UIButton(type: .System)
-      button.setTitle("Can't swipe paused", forState: .Normal)
-      button.setTitleColor(UIColor.lightGrayColor(), forState: .Normal)
-      button.titleLabel!.font = UIFont(name: "Bariol-Bold", size: 16)!
-      button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8)
-      button.backgroundColor = UIColor.darkGrayColor()
-      button.sizeToFit()
-      button.roundify(4)
-      cell.cantSwipeLabel = button
-    } else {
+    if indexPath.section == 0 || cell.entry!.habit!.isFake {
       cell.swipable = true
+    } else {
+      cell.swipable = false
+      let button = UIButton(type: .System)
+      button.setTitle("Can't swipe " + (indexPath.section == 1 ? "upcoming" : "paused"), forState: .Normal)
+      button.setTitleColor(UIColor.lightGrayColor(), forState: .Normal)
+      button.titleLabel!.font = UIFont(name: "Bariol-Bold", size: 16)!
+      button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8)
+      button.backgroundColor = UIColor.darkGrayColor()
+      button.sizeToFit()
+      button.roundify(4)
+      cell.cantSwipeLabel = button
     }
     return cell
   }

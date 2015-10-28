@@ -15,23 +15,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
 
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    var attr = [NSObject: AnyObject]()
+    attr[NSFontAttributeName] = FontManager.regular(15)
+    UISegmentedControl.appearance().setTitleTextAttributes(attr, forState: .Normal)
+    
+    HabitApp.setupAppManagedObjectContext()
+    
     // Test for first run
     if HabitApp.timeZone == "" {
       HabitApp.colorIndex = 0
-      HabitApp.upcoming = false
+      HabitApp.upcoming = true
       HabitApp.notification = true
       HabitApp.autoSkip = false
       HabitApp.autoSkipDelay = 60
       HabitApp.timeZone = NSTimeZone.localTimeZone().name
       HabitApp.startOfDay = 8 * 60
       HabitApp.endOfDay = 20 * 60
+      
+      HabitManager.createFirstEntries()
     }
-    
-    var attr = [NSObject: AnyObject]()
-    attr[NSFontAttributeName] = FontManager.regular(15)
-    UISegmentedControl.appearance().setTitleTextAttributes(attr, forState: .Normal)
-    
-    HabitApp.setupAppManagedObjectContext()
     
     return true
   }
