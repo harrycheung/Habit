@@ -553,4 +553,31 @@ class HabitMonthlyTests: XCTestCase {
     expect(habit.entries!.count) == 4
   }
   
+  func testPeriodEndOfYear() {
+    HabitApp.startOfDay = 8 * 60
+    HabitApp.endOfDay = 20 * 60
+    
+    let calendar = HabitApp.calendar
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 11
+    components.day = 15
+    components.hour = 6
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Monthly, times: 1, createdAt: createdAt)
+    components.minute = 10
+    habit.update(calendar.dateFromComponents(components)!)
+    components.month = 12
+    habit.update(calendar.dateFromComponents(components)!)
+    components.year = 2016
+    components.month = 1
+    habit.update(calendar.dateFromComponents(components)!)
+    expect(habit.entries!.count) == 4
+    let entries = habit.entries!.array as! [Entry]
+    expect(entries[0].period) == "Monthly11"
+    expect(entries[1].period) == "Monthly12"
+    expect(entries[2].period) == "Monthly1"
+    expect(entries[3].period) == "Monthly2"
+  }
+  
 }

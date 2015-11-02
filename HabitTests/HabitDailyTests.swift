@@ -763,4 +763,31 @@ class HabitDailyTests: XCTestCase {
     expect(calendar.components([.Day], fromDate: histories[5].date!).day) == 1
   }
   
+  func testPeriodEndOfMonth() {
+    HabitApp.startOfDay = 8 * 60
+    HabitApp.endOfDay = 20 * 60
+    
+    let calendar = HabitApp.calendar
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 10
+    components.day = 30
+    components.hour = 6
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Daily, times: 1, createdAt: createdAt)
+    components.minute = 10
+    habit.update(calendar.dateFromComponents(components)!)
+    components.day = 31
+    habit.update(calendar.dateFromComponents(components)!)
+    components.month = 11
+    components.day = 1
+    habit.update(calendar.dateFromComponents(components)!)
+    expect(habit.entries!.count) == 4
+    let entries = habit.entries!.array as! [Entry]
+    expect(entries[0].period) == "Daily30"
+    expect(entries[1].period) == "Daily31"
+    expect(entries[2].period) == "Daily1"
+    expect(entries[3].period) == "Daily2"
+  }
+  
 }

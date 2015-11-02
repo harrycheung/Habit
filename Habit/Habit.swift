@@ -460,7 +460,8 @@ class Habit: NSManagedObject {
         if pausedBool {
           updateHistory(onDate: lastDue, completedBy: 0, skippedBy: 0, totalBy: 0)
         } else {
-          newEntries.append(addEntry(due: lastDue, period: components.day, number: count))
+          let period = calendar.components(.Day, fromDate: lastDue).day
+          newEntries.append(addEntry(due: lastDue, period: period, number: count))
         }
       }
     case .Weekly:
@@ -495,7 +496,6 @@ class Habit: NSManagedObject {
         } else {
           count++
         }
-        let weekOfYear = calendar.components([.WeekOfYear], fromDate: lastDue).weekOfYear
         var dayIncrement = 0
         var dayTime = 0
         if useTimes {
@@ -535,7 +535,8 @@ class Habit: NSManagedObject {
           if pausedBool {
             updateHistory(onDate: lastDue, completedBy: 0, skippedBy: 0, totalBy: 0)
           } else {
-            newEntries.append(addEntry(due: lastDue, period: weekOfYear, number: count))
+            let period = calendar.components([.WeekOfYear], fromDate: lastDue).weekOfYear
+            newEntries.append(addEntry(due: lastDue, period: period, number: count))
           }
         }
       }
@@ -576,7 +577,8 @@ class Habit: NSManagedObject {
         if pausedBool {
           updateHistory(onDate: lastDue, completedBy: 0, skippedBy: 0, totalBy: 0)
         } else {
-          newEntries.append(addEntry(due: lastDue, period: components.month, number: count))
+          let period = calendar.components(.Month, fromDate: lastDue).month
+          newEntries.append(addEntry(due: lastDue, period: period, number: count))
         }
       }
     default: ()

@@ -727,5 +727,33 @@ class HabitWeeklyTests: XCTestCase {
     habit.update(today)
     expect(habit.entries!.count) == 16
   }
+  
+  func testPeriodEndOfYear() {
+    HabitApp.startOfDay = 8 * 60
+    HabitApp.endOfDay = 20 * 60
+    
+    let calendar = HabitApp.calendar
+    let components = NSDateComponents()
+    components.year = 2015
+    components.month = 12
+    components.day = 23
+    components.hour = 6
+    let createdAt = calendar.dateFromComponents(components)!
+    let habit = Habit(context: HabitApp.moContext, name: "A habit", details: "", frequency: .Weekly, times: 1, createdAt: createdAt)
+    components.minute = 10
+    habit.update(calendar.dateFromComponents(components)!)
+    components.day = 30
+    habit.update(calendar.dateFromComponents(components)!)
+    components.year = 2016
+    components.month = 1
+    components.day = 6
+    habit.update(calendar.dateFromComponents(components)!)
+    expect(habit.entries!.count) == 4
+    let entries = habit.entries!.array as! [Entry]
+    expect(entries[0].period) == "Weekly52"
+    expect(entries[1].period) == "Weekly1"
+    expect(entries[2].period) == "Weekly2"
+    expect(entries[3].period) == "Weekly3"
+  }
 
 }
