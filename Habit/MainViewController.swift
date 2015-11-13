@@ -79,6 +79,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var titleBar: UIView!
+  @IBOutlet weak var settings: UIButton!
   @IBOutlet weak var overlayView: UIView!
   @IBOutlet weak var newButton: UIButton!
   @IBOutlet weak var transitionOverlay: UIView!
@@ -201,6 +202,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    settings.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
+    settings.setTitle(String.fontAwesomeIconWithName(.Cog), forState: .Normal)
+    
     statusBar = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 20))
     statusBar!.backgroundColor = HabitApp.color
     view.addSubview(statusBar!)
@@ -233,7 +237,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
   }
   
-  @IBAction func showSettings(sender: UITapGestureRecognizer) {
+  @IBAction func showSettings(sender: AnyObject) {
     let asvc = storyboard!.instantiateViewControllerWithIdentifier("AppSettingsViewController") as! AppSettingsViewController
     asvc.modalPresentationStyle = .OverCurrentContext
     asvc.transitioningDelegate = appSettingsTransition
@@ -462,7 +466,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       completion: { cell in
         skip(cell)
     })
-    if indexPath.section == 0 || cell.entry!.habit!.isFake {
+    if indexPath.section == 0 || (cell.entry != nil && cell.entry!.habit!.isFake) {
       cell.swipable = true
     } else {
       cell.swipable = false
