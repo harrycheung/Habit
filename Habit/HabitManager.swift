@@ -11,38 +11,38 @@ import CoreData
 
 class HabitManager {
   
-  private var current = [Entry]()
-  private var upcoming = [Entry]()
-  private var paused = [Habit]()
+  private var today = [Entry]()
+  private var tomorrow = [Entry]()
+  private var habits = [Habit]()
   
   private static var instance: HabitManager = {
     return HabitManager()
     }()
   
-  static var current: [Entry] {
-    get { return HabitManager.instance.current }
-    set { HabitManager.instance.current = newValue }
+  static var today: [Entry] {
+    get { return HabitManager.instance.today }
+    set { HabitManager.instance.today = newValue }
   }
   
-  static var currentCount: Int {
-    return HabitManager.instance.current.count
+  static var todayCount: Int {
+    return HabitManager.instance.today.count
   }
   
-  static var upcoming: [Entry] {
-    get { return HabitManager.instance.upcoming }
-    set { HabitManager.instance.upcoming = newValue }
+  static var tomorrow: [Entry] {
+    get { return HabitManager.instance.tomorrow }
+    set { HabitManager.instance.tomorrow = newValue }
   }
   
-  static var upcomingCount: Int {
-    return HabitManager.instance.upcoming.count
+  static var tomorrowCount: Int {
+    return HabitManager.instance.tomorrow.count
   }
   
-  static var paused: [Habit] {
-    return HabitManager.instance.paused
+  static var habits: [Habit] {
+    return HabitManager.instance.habits
   }
   
-  static var pausedCount: Int {
-    return HabitManager.instance.paused.count
+  static var habitCount: Int {
+    return HabitManager.instance.habits.count
   }
   
   static func reload() {
@@ -52,15 +52,13 @@ class HabitManager {
   static func reload(now: NSDate) {
     do {
       let request = NSFetchRequest(entityName: "Entry")
-      request.predicate = NSPredicate(format: "stateRaw == %@ AND (due <= %@ || (due > %@ AND period IN %@))",
-        Entry.State.Todo.rawValue, now, now, HabitApp.currentPeriods(now))
-      instance.current = (try HabitApp.moContext.executeFetchRequest(request) as! [Entry]).sort()
-      request.predicate = NSPredicate(format: "stateRaw == %@ AND due > %@ AND NOT (period IN %@)",
-        Entry.State.Todo.rawValue, now, HabitApp.currentPeriods(now))
-      instance.upcoming = (try HabitApp.moContext.executeFetchRequest(request) as! [Entry]).sort()
-      let pausedRequest = NSFetchRequest(entityName: "Habit")
-      pausedRequest.predicate = NSPredicate(format: "paused == YES")
-      instance.paused = (try HabitApp.moContext.executeFetchRequest(pausedRequest) as! [Habit])
+      request.predicate = NSPredicate(format: "stateRaw == %@ AND due <= %@", Entry.State.Todo.rawValue, now)
+      instance.today = (try HabitApp.moContext.executeFetchRequest(request) as! [Entry]).sort()
+      request.predicate = NSPredicate(format: "stateRaw == %@ AND due > %@", Entry.State.Todo.rawValue, now)
+      instance.tomorrow = (try HabitApp.moContext.executeFetchRequest(request) as! [Entry]).sort()
+      let habitRequest = NSFetchRequest(entityName: "Habit")
+      habitRequest.predicate = NSPredicate(format: "name != ''")
+      instance.habits = (try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit])
     } catch let error as NSError {
       NSLog("HabitManager.reload failed: \(error.localizedDescription)")
     }
@@ -73,7 +71,7 @@ class HabitManager {
       var count = 0
       var number = 1
       let now = NSDate()
-      for entry in (instance.current + instance.upcoming).sort() {
+      for entry in (instance.today + instance.tomorrow).sort() {
         if count > 64 {
           break
         }
@@ -123,12 +121,13 @@ class HabitManager {
       let entryURL = NSURL(string: notification.userInfo!["entry"] as! String)!
       let entryID = HabitApp.moContext.persistentStoreCoordinator!.managedObjectIDForURIRepresentation(entryURL)!
       let entry = try HabitApp.moContext.existingObjectWithID(entryID) as! Entry
-      let index = instance.current.indexOf(entry)!
+      let index = instance.today.indexOf(entry)!
       switch (identifier) {
       case "COMPLETE":
-        complete(0, index: index)
+        // TODO: NOT RIGHT
+        complete(index, today: true)
       case "SKIP":
-        skip(0, index: index)
+        skip(index, today: true)
       default:
         return
       }
@@ -151,9 +150,9 @@ class HabitManager {
     }
   }
   
-  static func complete(section: Int, index: Int) {
+  static func complete(index: Int, today: Bool) {
     do {
-      let entry = section == 0 ? instance.current.removeAtIndex(index) : instance.upcoming.removeAtIndex(index)
+      let entry = today ? instance.today.removeAtIndex(index) : instance.tomorrow.removeAtIndex(index)
       let notFake = !entry.habit!.isFake
       entry.complete()
       try HabitApp.moContext.save()
@@ -165,9 +164,9 @@ class HabitManager {
     }
   }
   
-  static func skip(section: Int, index: Int) {
+  static func skip(index: Int, today: Bool) {
     do {
-      let entry = section == 0 ? instance.current.removeAtIndex(index) : instance.upcoming.removeAtIndex(index)
+      let entry = today ? instance.today.removeAtIndex(index) : instance.tomorrow.removeAtIndex(index)
       let notFake = !entry.habit!.isFake
       entry.skip()
       try HabitApp.moContext.save()
@@ -183,16 +182,16 @@ class HabitManager {
     do {
       let before = NSDate(timeIntervalSinceNow: HabitApp.autoSkipDelayTimeInterval)
       var rows: [NSIndexPath] = []
-      var newCurrent: [Entry] = []
-      for (index, entry) in instance.current.enumerate() {
+      var newToday: [Entry] = []
+      for (index, entry) in instance.today.enumerate() {
         if (habit == nil || entry.habit! == habit) && entry.due!.compare(before) == .OrderedAscending {
           entry.skip()
           rows.append(NSIndexPath(forRow: index, inSection: 0))
         } else {
-          newCurrent.append(entry)
+          newToday.append(entry)
         }
       }
-      instance.current = newCurrent
+      instance.today = newToday
       try HabitApp.moContext.save()
       updateNotifications()
       return rows
@@ -224,26 +223,24 @@ class HabitManager {
   static func delete(habit: Habit) -> [NSIndexPath] {
     do {
       var rows: [NSIndexPath] = []
-      var newCurrent: [Entry] = []
-      for (index, entry) in instance.current.enumerate() {
+      var newToday: [Entry] = []
+      for (index, entry) in instance.today.enumerate() {
         if entry.habit! == habit {
           rows.append(NSIndexPath(forItem: index, inSection: 0))
         } else {
-          newCurrent.append(entry)
+          newToday.append(entry)
         }
       }
-      instance.current = newCurrent
-      var newUpcoming: [Entry] = []
-      for (index, entry) in instance.upcoming.enumerate() {
+      instance.today = newToday
+      var newTomorrow: [Entry] = []
+      for (index, entry) in instance.tomorrow.enumerate() {
         if entry.habit! == habit {
-          if HabitApp.upcoming {
-            rows.append(NSIndexPath(forItem: index, inSection: 1))
-          }
+          rows.append(NSIndexPath(forItem: index, inSection: 1))
         } else {
-          newUpcoming.append(entry)
+          newTomorrow.append(entry)
         }
       }
-      instance.upcoming = newUpcoming
+      instance.tomorrow = newTomorrow
       HabitApp.moContext.deleteObject(habit)
       try HabitApp.moContext.save()
       updateNotifications()
@@ -272,28 +269,26 @@ class HabitManager {
   static func deleteEntries(after date: NSDate, habit: Habit? = nil, save: Bool = false) -> [NSIndexPath] {
     do {
       var rows: [NSIndexPath] = []
-      var newCurrent: [Entry] = []
-      for (index, entry) in instance.current.enumerate() {
+      var newToday: [Entry] = []
+      for (index, entry) in instance.today.enumerate() {
         if (habit == nil || entry.habit == habit) && entry.due!.compare(date) == .OrderedDescending {
           HabitApp.moContext.deleteObject(entry)
           rows.append(NSIndexPath(forRow: index, inSection: 0))
         } else {
-          newCurrent.append(entry)
+          newToday.append(entry)
         }
       }
-      instance.current = newCurrent
-      var newUpcoming: [Entry] = []
-      for (index, entry) in instance.upcoming.enumerate() {
+      instance.today = newToday
+      var newTomorrow: [Entry] = []
+      for (index, entry) in instance.tomorrow.enumerate() {
         if (habit == nil || entry.habit! == habit) && entry.due!.compare(date) == .OrderedDescending {
           HabitApp.moContext.deleteObject(entry)
-          if HabitApp.upcoming {
-            rows.append(NSIndexPath(forRow: index, inSection: 1))
-          }
+          rows.append(NSIndexPath(forRow: index, inSection: 1))
         } else {
-          newUpcoming.append(entry)
+          newTomorrow.append(entry)
         }
       }
-      instance.upcoming = newUpcoming
+      instance.tomorrow = newTomorrow
       if habit == nil {
         let habitRequest = NSFetchRequest(entityName: "Habit")
         let habits = try HabitApp.moContext.executeFetchRequest(habitRequest) as! [Habit]
@@ -323,62 +318,61 @@ class HabitManager {
         }
       } else {
         entries += habit!.update(date, currentDate: currentDate)
+        
+        if habit!.isNew {
+          HabitManager.instance.habits.append(habit!)
+        }
       }
       if save { try HabitApp.moContext.save() }
       
       var rows: [NSIndexPath] = []
-      var newCurrent: [Entry] = []
-      var newUpcoming: [Entry] = []
+      var newToday: [Entry] = []
+      var newTomorrow: [Entry] = []
       var index = 0
-      let currentPeriods = HabitApp.currentPeriods()
-      var switchedToUpcoming = false
+      var switchedTotomorrow = false
       for entry in entries {
-        if currentPeriods.contains(entry.period!) {
-          while !instance.current.isEmpty {
-            if entry < instance.current[0] {
+        if HabitApp.calendar.isDateInToday(entry.due!) {
+          while !instance.today.isEmpty {
+            if entry < instance.today[0] {
               rows.append(NSIndexPath(forRow: index, inSection: 0))
-              newCurrent.append(entry)
+              newToday.append(entry)
               index++
               break
             } else {
-              newCurrent.append(instance.current.removeAtIndex(0))
+              newToday.append(instance.today.removeAtIndex(0))
               index++
             }
           }
-          if instance.current.isEmpty {
+          if instance.today.isEmpty {
             rows.append(NSIndexPath(forRow: index, inSection: 0))
-            newCurrent.append(entry)
+            newToday.append(entry)
             index++
           }
         } else {
-          if !switchedToUpcoming {
+          if !switchedTotomorrow {
             index = 0
-            switchedToUpcoming = true
+            switchedTotomorrow = true
           }
-          while !instance.upcoming.isEmpty {
-            if entry < instance.upcoming[0] {
-              if HabitApp.upcoming {
-                rows.append(NSIndexPath(forRow: index, inSection: 1))
-              }
-              newUpcoming.append(entry)
+          while !instance.tomorrow.isEmpty {
+            if entry < instance.tomorrow[0] {
+              rows.append(NSIndexPath(forRow: index, inSection: 0))
+              newTomorrow.append(entry)
               index++
               break
             } else {
-              newUpcoming.append(instance.upcoming.removeAtIndex(0))
+              newTomorrow.append(instance.tomorrow.removeAtIndex(0))
               index++
             }
           }
-          if instance.upcoming.isEmpty {
-            if HabitApp.upcoming {
-              rows.append(NSIndexPath(forRow: index, inSection: 1))
-            }
-            newUpcoming.append(entry)
+          if instance.tomorrow.isEmpty {
+            rows.append(NSIndexPath(forRow: index, inSection: 0))
+            newTomorrow.append(entry)
             index++
           }
         }
       }
-      instance.current = newCurrent + instance.current
-      instance.upcoming = newUpcoming + instance.upcoming
+      instance.today = newToday + instance.today
+      instance.tomorrow = newTomorrow + instance.tomorrow
       updateNotifications()
       return rows
     } catch let error as NSError {
@@ -397,54 +391,48 @@ class HabitManager {
   
   static func rows(habit: Habit) -> [NSIndexPath] {
     var rows: [NSIndexPath] = []
-    for (index, entry) in instance.current.enumerate() {
-      if entry.habit! == habit {
-        rows.append(NSIndexPath(forRow: index, inSection: 0))
-      }
-    }
-    if HabitApp.upcoming {
-      for (index, entry) in instance.upcoming.enumerate() {
-        if entry.habit! == habit {
-          rows.append(NSIndexPath(forRow: index, inSection: 1))
-        }
-      }
-    }
+//    for (index, entry) in instance.today.enumerate() {
+//      if entry.habit! == habit {
+//        rows.append(NSIndexPath(forRow: index, inSection: 0))
+//      }
+//    }
+//    if HabitApp.tomorrow {
+//      for (index, entry) in instance.tomorrow.enumerate() {
+//        if entry.habit! == habit {
+//          rows.append(NSIndexPath(forRow: index, inSection: 1))
+//        }
+//      }
+//    }
     return rows
   }
   
-  static func pause(habit: Habit) -> [NSIndexPath] {
-    instance.paused.append(habit)
-    return HabitApp.upcoming ? [NSIndexPath(forRow: instance.paused.count - 1, inSection: 2)] : []
-  }
-  
-  static func unpause(habit:Habit) -> [NSIndexPath] {
-    let index = instance.paused.indexOf(habit)!
-    instance.paused.removeAtIndex(index)
-    return HabitApp.upcoming ? [NSIndexPath(forRow: index, inSection: 2)] : []
-  }
+//  static func pause(habit: Habit) -> [NSIndexPath] {
+//    instance.paused.append(habit)
+//    return HabitApp.tomorrow ? [NSIndexPath(forRow: instance.paused.count - 1, inSection: 2)] : []
+//  }
+//  
+//  static func unpause(habit:Habit) -> [NSIndexPath] {
+//    let index = instance.paused.indexOf(habit)!
+//    instance.paused.removeAtIndex(index)
+//    return HabitApp.tomorrow ? [NSIndexPath(forRow: index, inSection: 2)] : []
+//  }
   
   static var FakeEntries = [
     "Welcome to habit",
-    "Tap + to create a habit",
     "Swipe right to complete",
     "Swipe left to skip",
-    "Tap to view history",
-    "Tap title bar for app settings",
-    "Upcoming shows what's next"
+    "Tap to view history"
   ]
   
   static func createFirstEntries() {
     let createdAt = HabitApp.calendar.dateByAddingUnit(.Day, value: -120, toDate: NSDate())!
     let habit = Habit(context: HabitApp.moContext, name: "", details: "", frequency: .Daily, times: 10, createdAt: createdAt)
     var dateIterator = HabitApp.calendar.dateByAddingUnit(.Minute, value: -1, toDate: NSDate())!
-    var day = HabitApp.calendar.components([.Day], fromDate: dateIterator).day
-    for i in 0..<FakeEntries.count - 1 {
+    let day = HabitApp.calendar.components([.Day], fromDate: dateIterator).day
+    for i in 0..<FakeEntries.count {
       dateIterator = dateIterator.dateByAddingTimeInterval(Double(i))
       let _ = Entry(context: HabitApp.moContext, habit: habit, due: dateIterator, period: day, number: i)
     }
-    dateIterator = HabitApp.calendar.zeroTime(HabitApp.calendar.dateByAddingUnit(.Day, value: 1, toDate: NSDate())!)
-    day = HabitApp.calendar.components([.Day], fromDate: dateIterator).day
-    let _ = Entry(context: HabitApp.moContext, habit: habit, due: dateIterator, period: day, number: FakeEntries.count - 1)
     
     dateIterator = HabitApp.calendar.dateByAddingUnit(.Day, value: -120, toDate: NSDate())!
     for _ in 0..<120 {

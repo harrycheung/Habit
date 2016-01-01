@@ -69,7 +69,7 @@ import UIKit
 import CoreData
 import FontAwesome_swift
 
-class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SwipeTableViewCellDelegate {
+class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SwipeTableViewCellDelegate, ExpandTabBarDataSource, ExpandTabBarDelegate {
   
   // IB identifiers
   let cellIdentifier = "HabitCell"
@@ -81,6 +81,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   @IBOutlet weak var titleBar: UIView!
   @IBOutlet weak var settings: UIButton!
   @IBOutlet weak var overlayView: UIView!
+  @IBOutlet weak var tabBar: ExpandTabBar!
   @IBOutlet weak var newButton: UIButton!
   @IBOutlet weak var transitionOverlay: UIView!
   
@@ -215,12 +216,14 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     // Setup colors
     titleBar.backgroundColor = HabitApp.color
+    tabBar.backgroundColor = HabitApp.color
     newButton.backgroundColor = HabitApp.color
     newButton.layer.cornerRadius = newButton.bounds.width / 2
     newButton.layer.shadowColor = UIColor.blackColor().CGColor
     newButton.layer.shadowOpacity = 0.6
     newButton.layer.shadowRadius = 5
     newButton.layer.shadowOffset = CGSizeMake(0, 1)
+    newButton.alpha = 0
     
     view.bringSubviewToFront(transitionOverlay)
   }
@@ -261,17 +264,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       return
     }
     
-    tableView.beginUpdates()
-    if HabitApp.upcoming {
-      if tableView.numberOfSections == 1 {
-        tableView.insertSections(NSIndexSet(index: 1), withRowAnimation: .None)
-      }
-      if tableView.numberOfSections < 3 && HabitManager.pausedCount > 0 {
-        tableView.insertSections(NSIndexSet(index: 2), withRowAnimation: .None)
-      }
-    }
     tableView.insertRowsAtIndexPaths(rows, withRowAnimation: .None)
-    tableView.endUpdates()
     
     CATransaction.begin()
     CATransaction.setCompletionBlock() {
@@ -280,11 +273,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     var delayStart = 0.0
     for indexPath in rows {
-      if indexPath.row == 0 && indexPath.section > 0 {
-        if let header = self.tableView.headerViewForSection(indexPath.section) {
-          self.showCellAnimate(header, endFrame: self.tableView.rectForHeaderInSection(indexPath.section), delay: delayStart)
-        }
-      }
       if let cell = self.tableView.cellForRowAtIndexPath(indexPath) {
         self.showCellAnimate(cell, endFrame: self.tableView.rectForRowAtIndexPath(indexPath), delay: delayStart)
         delayStart += self.SlideAnimationDelay
@@ -298,35 +286,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     CATransaction.setCompletionBlock() {
       self.tableView.beginUpdates()
       self.tableView.deleteRowsAtIndexPaths(rows, withRowAnimation: .None)
-      if HabitApp.upcoming {
-        if self.tableView.numberOfSections == 3 && HabitManager.pausedCount == 0 {
-          self.tableView.deleteSections(NSIndexSet(index: 2), withRowAnimation: .None)
-        }
-      } else {
-        if self.tableView.numberOfSections > 1 {
-          self.tableView.deleteSections(NSIndexSet(index: 1), withRowAnimation: .None)
-          if self.tableView.numberOfSections == 3 {
-            self.tableView.deleteSections(NSIndexSet(index: 2), withRowAnimation: .None)
-          }
-        }
-      }
       self.tableView.endUpdates()
       completion?()
     }
 
     var delayStart = 0.0
     for indexPath in rows.reverse() {
-      if indexPath.row == 0 && indexPath.section > 0 {
-        if !HabitApp.upcoming ||
-          (indexPath.section == 1 && HabitManager.upcomingCount == 0) ||
-          (indexPath.section == 2 && HabitManager.pausedCount == 0) {
-          if let header = tableView.headerViewForSection(indexPath.section) {
-            hideCellAnimate(header, delay: delayStart) {
-              header.hidden = true
-            }
-          }
-        }
-      }
       if let cell = tableView.cellForRowAtIndexPath(indexPath) {
         hideCellAnimate(cell, delay: delayStart) {
           // Hide cell to stop it from flashing when the tableView is updated
@@ -364,26 +329,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
       }, completion: nil)
   }
   
-  func showUpcoming(completion: (() -> Void)?) {
-    var rows: [NSIndexPath] = []
-    rows += (0..<HabitManager.upcomingCount).map { NSIndexPath(forRow: $0, inSection: 1) }
-    rows += (0..<HabitManager.pausedCount).map { NSIndexPath(forRow: $0, inSection: 2) }
-    self.insertRows(rows, completion: completion)
-  }
-  
-  func hideUpcoming(completion: (() -> Void)?) {
-    var rows: [NSIndexPath] = []
-    rows += (0..<HabitManager.upcomingCount).map { NSIndexPath(forRow: $0, inSection: 1) }
-    rows += (0..<HabitManager.pausedCount).map { NSIndexPath(forRow: $0, inSection: 2) }
-    deleteRows(rows, completion: completion)
-  }
-  
   func resetFuture() {
     CATransaction.begin()
     let future = HabitApp.calendar.zeroTime(HabitApp.calendar.dateByAddingUnit(.Day, value: 1, toDate: NSDate())!)
     CATransaction.setCompletionBlock() {
       // Create future entries
-      self.insertRows(HabitManager.createEntries(after: future, currentDate: NSDate(),  habit: nil, save: true))
+      self.insertRows(HabitManager.createEntries(after: future, currentDate: NSDate(), habit: nil, save: true))
     }
     
     // Delete future entries
@@ -403,13 +354,13 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     let complete = { (cell: SwipeTableViewCell) in
       let indexPath = tableView.indexPathForCell(cell)!
-      HabitManager.complete(indexPath.section, index: indexPath.row)
+      HabitManager.complete(indexPath.row, today: self.tabBar.selectedIndex == 1)
       removeRows([indexPath])
     }
     
     let skip = { (cell: SwipeTableViewCell) in
       let indexPath = tableView.indexPathForCell(cell)!
-      let entry = indexPath.section == 0 ? HabitManager.current[indexPath.row] : HabitManager.upcoming[indexPath.row]
+      let entry = self.tabBar.selectedIndex == 0 ? HabitManager.today[indexPath.row] : HabitManager.tomorrow[indexPath.row]
       if !entry.habit!.isFake && entry.habit!.hasOldEntries {
         let sdvc = self.storyboard!.instantiateViewControllerWithIdentifier("SwipeDialogViewController") as! SwipeDialogViewController
         sdvc.modalTransitionStyle = .CrossDissolve
@@ -417,7 +368,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         sdvc.yesCompletion = {
           // Single out this entry just in case its due > NSDate()
           if entry.due!.compare(NSDate()) == .OrderedDescending {
-            HabitManager.skip(indexPath.section, index: indexPath.row)
+            HabitManager.skip(indexPath.row, today: self.tabBar.selectedIndex == 1)
           }
           self.dismissViewControllerAnimated(true) {
             removeRows(HabitManager.skip(entry.habit!))
@@ -425,7 +376,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
           }
         }
         sdvc.noCompletion = {
-          HabitManager.skip(indexPath.section, index: indexPath.row)
+          HabitManager.skip(indexPath.row, today: self.tabBar.selectedIndex == 1)
           self.dismissViewControllerAnimated(true) {
             removeRows([indexPath])
             self.stopReload = false
@@ -434,19 +385,19 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.stopReload = true
         self.presentViewController(sdvc, animated: true, completion: nil)
       } else {
-        HabitManager.skip(indexPath.section, index: indexPath.row)
+        HabitManager.skip(indexPath.row, today: self.tabBar.selectedIndex == 1)
         removeRows([indexPath])
       }
     }
     
     let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! HabitTableViewCell
-    switch indexPath.section {
+    switch self.tabBar.selectedIndex {
     case 0:
-      cell.load(entry: HabitManager.current[indexPath.row])
+      cell.load(habit: HabitManager.habits[indexPath.row])
     case 1:
-      cell.load(entry: HabitManager.upcoming[indexPath.row])
+      cell.load(entry: HabitManager.today[indexPath.row])
     case 2:
-      cell.load(habit: HabitManager.paused[indexPath.row])
+      cell.load(entry: HabitManager.tomorrow[indexPath.row])
     default: ()
     }
     cell.delegate = self
@@ -484,13 +435,13 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    switch section {
+    switch tabBar.selectedIndex {
     case 0:
-      return HabitManager.currentCount
+      return HabitManager.habitCount
     case 1:
-      return HabitManager.upcomingCount
+      return HabitManager.todayCount
     case 2:
-      return HabitManager.pausedCount
+      return HabitManager.tomorrowCount
     default:
       return 0
     }
@@ -517,44 +468,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-    if HabitApp.upcoming {
-      return 2 + (HabitManager.pausedCount > 0 ? 1 : 0)
-      ///return 1 + (HabitManager.upcomingCount > 0 ? 1 : 0) + (HabitManager.pausedCount > 0 ? 1 : 0)
-    } else {
-      return 1
-    }
-  }
-  
-  func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-    return ((section == 1 && HabitManager.upcomingCount > 0) || (section == 2 && HabitManager.pausedCount > 0)) ? HabitApp.TableSectionHeight : 0
-  }
-  
-  func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    var headerId = "CURRENT"
-    switch section {
-    case 1:
-      headerId = "UPCOMING"
-    case 2:
-      headerId = "PAUSED"
-    default: ()
-    }
-    
-    var header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(headerId)
-    if header == nil {
-      header = UITableViewHeaderFooterView(reuseIdentifier: headerId)
-      header!.frame = CGRectMake(0, 0, tableView.frame.width, 20)
-      let title = UILabel()
-      title.font = FontManager.regular(14)
-      title.textColor = UIColor.whiteColor().colorWithAlphaComponent(0.5)
-      title.text = headerId
-      header!.contentView.addSubview(title)
-      title.snp_makeConstraints { make in
-        make.centerY.equalTo(header!.contentView).offset(1)
-        make.left.equalTo(header!.contentView).offset(8)
-      }
-    }
-    header!.contentView.backgroundColor = HabitApp.color
-    return header
+    return 1
   }
   
   // Colors
@@ -574,6 +488,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     // Change color
     titleBar.backgroundColor = color
+    tabBar.backgroundColor = color
     statusBar!.backgroundColor = color
     newButton.backgroundColor = color
     tableView.reloadData()
@@ -651,5 +566,45 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
   }
   
+  // ExpandTabBar
+  
+  func fontOfExpandTabBar(expandTabBar: ExpandTabBar) -> UIFont {
+    return FontManager.regular(18)
+  }
+  
+  func numberOfTabsInExpandTabBar(expandTabBar: ExpandTabBar) -> Int {
+    return 3
+  }
+  
+  func expandTabBar(expandTabBar: ExpandTabBar, itemAtIndex: Int) -> String? {
+    switch itemAtIndex {
+    case 0:
+      return "All habits"
+    case 1:
+      return "Today"
+    case 2:
+      return "Tomorrow"
+    default:
+      return ""
+    }
+  }
+  
+  func defaultIndex(expandTabBar: ExpandTabBar) -> Int {
+    return 1
+  }
+  
+  func expandTabBar(expandTabBar: ExpandTabBar, didSelect: Int) {
+    tableView.reloadData()
+    
+    if didSelect == 0 {
+      UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration) {
+        self.newButton.alpha = 1
+      }
+    } else {
+      UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration) {
+        self.newButton.alpha = 0
+      }
+    }
+  }
 }
 

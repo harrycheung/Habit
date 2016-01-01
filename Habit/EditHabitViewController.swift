@@ -182,7 +182,11 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
           habit.notify = self.notify.on
           habit.neverAutoSkip = self.neverAutoSkip.on
           habit.paused = self.paused.on
-          if !habit.isNew {
+          if habit.isNew {
+            HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit)
+            // Minus 1 because createEntries increments
+            self.mvc!.insertRows([NSIndexPath(forRow: HabitManager.habitCount - 1, inSection: 0)])
+          } else {
             if habit.name != name {
               habit.name = name
               self.mvc!.reloadRows(HabitManager.rows(habit))
@@ -190,20 +194,18 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
             if pausedSet {
               if self.paused.on {
                 self.mvc!.deleteRows(HabitManager.deleteEntries(after: NSDate(), habit: habit)) {
-                  self.mvc!.insertRows(HabitManager.pause(habit))
+                  //self.mvc!.insertRows(HabitManager.pause(habit))
                 }
               } else {
-                self.mvc!.deleteRows(HabitManager.unpause(habit)) {
-                  self.mvc!.insertRows(HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit))
-                }
+//                self.mvc!.deleteRows(HabitManager.unpause(habit)) {
+//                  //self.mvc!.insertRows(HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit))
+//                }
               }
             } else if frequencyChanged {
               self.mvc!.deleteRows(HabitManager.deleteEntries(after: NSDate(), habit: habit)) {
                 self.mvc!.insertRows(HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit))
               }
             }
-          } else {
-            self.mvc!.insertRows(HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit))
           }
           HabitManager.save()
           // update notifications if name change or frequency changes or new or paused or notify or anything

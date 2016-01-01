@@ -39,24 +39,31 @@ class HabitTableViewCell: SwipeTableViewCell {
     self.entry = entry
     if entry.habit!.isFake {
       name.text = HabitManager.FakeEntries[entry.number!.integerValue]
+      due.text = ""
+      let alpha = CGFloat(entry.number!.floatValue) / CGFloat(HabitManager.FakeEntries.count - 1)
+      setBackgroundAlpha(1 - (1 - HabitApp.MinimumAlpha) * alpha)
     } else {
       name.text = entry.habit!.name
+      due.text = entry.dueText
+      let dueIn = entry.dueIn
+      var alpha = HabitApp.MinimumAlpha
+      if dueIn < 10 * 60 {
+        alpha = 1.0
+      } else if dueIn < 24 * 3600 {
+        alpha = HabitApp.MinimumAlpha + (1 - HabitApp.MinimumAlpha) * pow(1000, -CGFloat(dueIn) / (24 * 3600))
+      }
+      setBackgroundAlpha(alpha)
     }
-    due.text = entry.dueText
-    let dueIn = entry.dueIn
-    var alpha = HabitApp.MinimumAlpha
-    if dueIn < 10 * 60 {
-      alpha = 1.0
-    } else if dueIn < 24 * 3600 {
-      alpha = HabitApp.MinimumAlpha + (1 - HabitApp.MinimumAlpha) * pow(1000, -CGFloat(dueIn) / (24 * 3600))
-    }
-    setBackgroundAlpha(alpha)
   }
   
   func load(habit habit: Habit) {
     self.entry = nil
     self.habit = habit
-    name.text = habit.name
+    if habit.isFake {
+      name.text = "Example habit"
+    } else {
+      name.text = habit.name
+    }
     due.text = ""
     setBackgroundAlpha(HabitApp.MinimumAlpha)
   }

@@ -24,7 +24,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Test for first run
     if HabitApp.timeZone == "" {
       HabitApp.colorIndex = 0
-      HabitApp.upcoming = true
       HabitApp.notification = true
       HabitApp.autoSkip = false
       HabitApp.autoSkipDelay = 60

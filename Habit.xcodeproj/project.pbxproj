@@ -49,6 +49,7 @@
 		4AA4AED81B7A73B100A1562F /* HabitHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA4AED71B7A73B100A1562F /* HabitHistory.swift */; };
 		4AAA3C1C1B7AF9B7006572F8 /* UIColor+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AAA3C1B1B7AF9B7006572F8 /* UIColor+Custom.swift */; };
 		4ACE25111BAFA7EC0065FD3B /* HabitDailyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACE250F1BAFA7D60065FD3B /* HabitDailyTests.swift */; };
+		4AD09CDE1C1BF8E90013B2DA /* ExpandTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD09CDD1C1BF8E90013B2DA /* ExpandTabBar.swift */; };
 		4ADA905F1B60ABD300826C69 /* ColorPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA905E1B60ABD300826C69 /* ColorPicker.swift */; };
 		4ADD91111BB09AB1009A7D75 /* Habit+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADD91101BB09AB1009A7D75 /* Habit+Test.swift */; };
 		4AE038681B8E042C00BF4CEC /* NSCalendar+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE038671B8E042C00BF4CEC /* NSCalendar+Custom.swift */; };
@@ -125,6 +126,7 @@
 		4AA4AED71B7A73B100A1562F /* HabitHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitHistory.swift; sourceTree = "<group>"; };
 		4AAA3C1B1B7AF9B7006572F8 /* UIColor+Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Custom.swift"; sourceTree = "<group>"; };
 		4ACE250F1BAFA7D60065FD3B /* HabitDailyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitDailyTests.swift; sourceTree = "<group>"; };
+		4AD09CDD1C1BF8E90013B2DA /* ExpandTabBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandTabBar.swift; sourceTree = "<group>"; };
 		4ADA905E1B60ABD300826C69 /* ColorPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorPicker.swift; sourceTree = "<group>"; };
 		4ADD91101BB09AB1009A7D75 /* Habit+Test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Habit+Test.swift"; sourceTree = "<group>"; };
 		4AE038671B8E042C00BF4CEC /* NSCalendar+Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSCalendar+Custom.swift"; sourceTree = "<group>"; };
@@ -282,6 +284,7 @@
 				4AE038671B8E042C00BF4CEC /* NSCalendar+Custom.swift */,
 				4A91744B1BACB3840047B189 /* UITextField+Custom.swift */,
 				4A584C041BAEFC6500CA783C /* NSManagedObject+Custom.swift */,
+				4AD09CDD1C1BF8E90013B2DA /* ExpandTabBar.swift */,
 			);
 			name = Custom;
 			sourceTree = "<group>";
@@ -625,6 +628,7 @@
 				4A8EB4901BB9D21300A781E4 /* HabitManager.swift in Sources */,
 				4A16FDC31B7F7CA000DF9DFC /* EditHabitTransition.swift in Sources */,
 				4A8F37591BBB8988006DBCB6 /* FontManager.swift in Sources */,
+				4AD09CDE1C1BF8E90013B2DA /* ExpandTabBar.swift in Sources */,
 				4A584C051BAEFC6500CA783C /* NSManagedObject+Custom.swift in Sources */,
 				4A1D08DD1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift in Sources */,
 				4A1D08CF1B3E1A7A006A9CA4 /* Habit.swift in Sources */,

@@ -20,7 +20,6 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
   @IBOutlet weak var paddingView: UIView!
   @IBOutlet weak var close: UIButton!
   @IBOutlet weak var colorPicker: ColorPicker!
-  @IBOutlet weak var upcoming: UISwitch!
   @IBOutlet weak var notification: UISwitch!
   @IBOutlet weak var autoSkip: UISwitch!
   @IBOutlet weak var autoSkipStepper: UIStepper!
@@ -48,7 +47,6 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     close.setTitle(String.fontAwesomeIconWithName(.ChevronDown), forState: .Normal)
     
     colorPicker.selectedIndex = HabitApp.colorIndex
-    upcoming.on = HabitApp.upcoming
     notification.on = !HabitApp.notification
     autoSkip.on = HabitApp.autoSkip
     autoSkipStepper.value = Double(HabitApp.autoSkipDelay)
@@ -251,20 +249,7 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     }
     
     self.dismissViewControllerAnimated(true) {
-      if self.upcoming.on != HabitApp.upcoming {
-        HabitApp.upcoming = self.upcoming.on
-        if self.upcoming.on {
-          self.mvc!.showUpcoming() {
-            autoSkipAlert()
-          }
-        } else {
-          self.mvc!.hideUpcoming() {
-            autoSkipAlert()
-          }
-        }
-      } else {
-        autoSkipAlert()
-      }
+      autoSkipAlert()
     }
   }
   
