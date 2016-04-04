@@ -6,7 +6,6 @@
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
 import CoreData
 
 class HabitManager {
@@ -77,9 +76,9 @@ class HabitManager {
         }
         if entry.habit!.notifyBool && entry.due!.compare(now) == .OrderedDescending {
           addNotification(entry, number: number)
-          count++
+          count += 1
         }
-        number++
+        number += 1
       }
     }
   }
@@ -336,17 +335,17 @@ class HabitManager {
             if entry < instance.today[0] {
               rows.append(NSIndexPath(forRow: index, inSection: 0))
               newToday.append(entry)
-              index++
+              index += 1
               break
             } else {
               newToday.append(instance.today.removeAtIndex(0))
-              index++
+              index += 1
             }
           }
           if instance.today.isEmpty {
             rows.append(NSIndexPath(forRow: index, inSection: 0))
             newToday.append(entry)
-            index++
+            index += 1
           }
         } else {
           if !switchedTotomorrow {
@@ -357,17 +356,17 @@ class HabitManager {
             if entry < instance.tomorrow[0] {
               rows.append(NSIndexPath(forRow: index, inSection: 0))
               newTomorrow.append(entry)
-              index++
+              index += 1
               break
             } else {
               newTomorrow.append(instance.tomorrow.removeAtIndex(0))
-              index++
+              index += 1
             }
           }
           if instance.tomorrow.isEmpty {
             rows.append(NSIndexPath(forRow: index, inSection: 0))
             newTomorrow.append(entry)
-            index++
+            index += 1
           }
         }
       }
@@ -390,7 +389,7 @@ class HabitManager {
   }
   
   static func rows(habit: Habit) -> [NSIndexPath] {
-    var rows: [NSIndexPath] = []
+    let rows: [NSIndexPath] = []
 //    for (index, entry) in instance.today.enumerate() {
 //      if entry.habit! == habit {
 //        rows.append(NSIndexPath(forRow: index, inSection: 0))

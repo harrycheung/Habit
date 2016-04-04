@@ -6,7 +6,6 @@
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
 import CoreData
 import FontAwesome_swift
 
@@ -31,6 +30,8 @@ class SelectFrequencyViewController: UIViewController {
   }
   
   override func viewDidLoad() {
+    super.viewDidLoad()
+    
     let buildButton = { (button: UIButton, text: String, frame: CGRect) in
       button.frame = frame
       button.setTitle(text, forState: .Normal)
@@ -71,10 +72,18 @@ class SelectFrequencyViewController: UIViewController {
   }
   
   override func viewDidAppear(animated: Bool) {
-    timer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: "showLabels", userInfo: nil, repeats: false)
+    super.viewDidAppear(animated)
     
-    view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "exit"))
-    closeButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "exit"))
+    timer = NSTimer.scheduledTimerWithTimeInterval(5,
+                                                   target: self,
+                                                   selector: #selector(SelectFrequencyViewController.showLabels),
+                                                   userInfo: nil,
+                                                   repeats: false)
+    
+    view.addGestureRecognizer(UITapGestureRecognizer(target: self,
+                                                     action: #selector(SelectFrequencyViewController.exit)))
+    closeButton.addGestureRecognizer(UITapGestureRecognizer(target: self,
+                                                            action: #selector(SelectFrequencyViewController.exit)))
   }
   
   func exit() {
@@ -83,7 +92,7 @@ class SelectFrequencyViewController: UIViewController {
   
   private func curvedAnimation(button: UIButton, start: CGPoint, end: CGPoint, control: CGPoint) {
     let animation = CAKeyframeAnimation(keyPath: "position")
-    animation.duration = HabitApp.TransitionDuration
+    animation.duration = Constants.TransitionDuration
     let path = UIBezierPath()
     path.moveToPoint(start)
     path.addQuadCurveToPoint(end, controlPoint: control)
@@ -144,7 +153,7 @@ class SelectFrequencyViewController: UIViewController {
       label.hidden = false
       label.center = start
       label.transform = CGAffineTransformMakeScale(0.01, 0.01)
-      UIView.animateWithDuration(HabitApp.TransitionDuration,
+      UIView.animateWithDuration(Constants.TransitionDuration,
         delay: 0,
         usingSpringWithDamping: 0.5,
         initialSpringVelocity: 1,
@@ -157,14 +166,20 @@ class SelectFrequencyViewController: UIViewController {
     
     let shortSide: CGFloat = LabelDistance * CGFloat(cos(M_PI_4))
 
-    showLabel(dailyLabel, dailyButton.center, CGPointMake(dailyButton.center.x, dailyButton.center.y - LabelDistance * 0.7))
-    showLabel(weeklyLabel, weeklyButton.center, CGPointMake(weeklyButton.center.x - shortSide, weeklyButton.center.y - shortSide * 0.7))
-    showLabel(monthlyLabel, monthlyButton.center, CGPointMake(monthlyButton.center.x - LabelDistance, monthlyButton.center.y))
+    showLabel(dailyLabel,
+              dailyButton.center,
+              CGPointMake(dailyButton.center.x, dailyButton.center.y - LabelDistance * 0.7))
+    showLabel(weeklyLabel,
+              weeklyButton.center,
+              CGPointMake(weeklyButton.center.x - shortSide, weeklyButton.center.y - shortSide * 0.7))
+    showLabel(monthlyLabel,
+              monthlyButton.center,
+              CGPointMake(monthlyButton.center.x - LabelDistance, monthlyButton.center.y))
   }
   
   func hideLabels() {
     let hideLabel = { (label: UIButton, location: CGPoint)  in
-      UIView.animateWithDuration(HabitApp.TransitionDuration,
+      UIView.animateWithDuration(Constants.TransitionDuration,
         animations: {
           label.center = location
           label.transform = CGAffineTransformMakeScale(0.01, 0.01)

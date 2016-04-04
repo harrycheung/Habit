@@ -1,15 +1,14 @@
 //
-//  AppSettingsTransition.swift
+//  SettingsTransition.swift
 //  Habit
 //
 //  Created by harry on 7/18/15.
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
-class AppSettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
+class SettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
 
   static let TransitionDuration: NSTimeInterval = 0.4
   static let SpringDamping: CGFloat = 0.6
@@ -32,7 +31,7 @@ class AppSettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UI
   }
   
   func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
-    return AppSettingsTransition.TransitionDuration
+    return SettingsTransition.TransitionDuration
   }
   
   func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
@@ -43,38 +42,40 @@ class AppSettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UI
     let containerView = transitionContext.containerView()!
 
     if presenting {
-      let asvc = toVC as! AppSettingsViewController
+      let asvc = toVC as! SettingsViewController
       asvc.darkenView = UIView(frame: CGRectMake(0, 0, screenWidth, screenHeight))
-      asvc.darkenView!.backgroundColor = UIColor.blackColor()
-      asvc.darkenView!.alpha = 0
-      containerView.addSubview(asvc.darkenView!)
+      asvc.darkenView.backgroundColor = UIColor.blackColor()
+      asvc.darkenView.alpha = 0
+      containerView.addSubview(asvc.darkenView)
       
       toVC.view.frame = CGRectMake(0, screenHeight, screenWidth, screenHeight)
       containerView.addSubview(toVC.view)
       
-      UIView.animateWithDuration(AppSettingsTransition.TransitionDuration,
-        delay: 0,
-        usingSpringWithDamping: AppSettingsTransition.SpringDamping,
-        initialSpringVelocity: AppSettingsTransition.SpringVelocity,
-        options: AppSettingsTransition.AnimationOptions,
-        animations: {
-          toVC.view.frame = CGRectMake(0, 0, screenWidth, screenHeight)
-          asvc.darkenView!.frame = CGRectMake(0, 0, screenWidth, asvc.paddingView.bounds.height)
-          asvc.darkenView!.alpha = AppSettingsTransition.DarkenAlpha
-        }, completion: { finished in
-          transitionContext.completeTransition(true)
-      })
+      UIView.animateWithDuration(SettingsTransition.TransitionDuration,
+                                 delay: 0,
+                                 usingSpringWithDamping: SettingsTransition.SpringDamping,
+                                 initialSpringVelocity: SettingsTransition.SpringVelocity,
+                                 options: SettingsTransition.AnimationOptions,
+                                 animations: {
+                                   toVC.view.frame = CGRectMake(0, 0, screenWidth, screenHeight)
+                                   asvc.darkenView.frame = CGRectMake(0, 0, screenWidth, asvc.paddingView.bounds.height)
+                                   asvc.darkenView.alpha = SettingsTransition.DarkenAlpha
+                                 },
+                                 completion: { finished in
+                                   transitionContext.completeTransition(true)
+                                 })
     } else {
-      let asvc = fromVC as! AppSettingsViewController
+      let asvc = fromVC as! SettingsViewController
       
-      UIView.animateWithDuration(AppSettingsTransition.TransitionDuration,
-        animations: {
-          fromVC.view.frame = CGRectMake(0, screenHeight, screenWidth, screenHeight)
-          asvc.darkenView!.frame = CGRectMake(0, 0, screenWidth, screenHeight)
-          asvc.darkenView!.alpha = 0
-        }, completion: { finished in
-          transitionContext.completeTransition(true)
-      })
+      UIView.animateWithDuration(SettingsTransition.TransitionDuration,
+                                 animations: {
+                                   fromVC.view.frame = CGRectMake(0, screenHeight, screenWidth, screenHeight)
+                                   asvc.darkenView.frame = CGRectMake(0, 0, screenWidth, screenHeight)
+                                   asvc.darkenView.alpha = 0
+                                 },
+                                 completion: { finished in
+                                   transitionContext.completeTransition(true)
+                                 })
     }
   }
 }

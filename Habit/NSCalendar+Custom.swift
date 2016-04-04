@@ -6,8 +6,6 @@
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
-
 extension NSCalendar {
   
   func components(unitFlags: NSCalendarUnit,

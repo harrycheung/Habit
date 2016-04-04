@@ -6,7 +6,6 @@
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
 
 @testable import Habit
 

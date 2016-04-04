@@ -6,9 +6,7 @@
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
 import UIKit
-import SnapKit
 
 @objc protocol HabitHistoryDelegate {
   
@@ -16,7 +14,7 @@ import SnapKit
   
 }
 
-class HabitHistory: UIView, UIScrollViewDelegate {
+class HabitHistory: UIView {
   
   @IBOutlet var delegate: HabitHistoryDelegate?
 
@@ -26,8 +24,8 @@ class HabitHistory: UIView, UIScrollViewDelegate {
   let Enlargement: CGFloat = 5
   let SelectedBorder: CGFloat = 2
   
-  var habit: Habit?
-  var scrollView: UIScrollView?
+  var habit: Habit!
+  var scrollView: UIScrollView!
   var squares: [SquareView] = []
   var selectedSquare: SquareView?
   
@@ -35,13 +33,14 @@ class HabitHistory: UIView, UIScrollViewDelegate {
     super.init(coder: aDecoder)
     
     scrollView = UIScrollView()
-    scrollView!.delegate = self
-    scrollView!.showsVerticalScrollIndicator = false
-    scrollView!.showsHorizontalScrollIndicator = false
-    addSubview(scrollView!)
-    scrollView!.snp_makeConstraints { make in
-      make.edges.equalTo(self)
-    }
+    scrollView.showsVerticalScrollIndicator = false
+    scrollView.showsHorizontalScrollIndicator = false
+    addSubview(scrollView)
+    scrollView.translatesAutoresizingMaskIntoConstraints = false
+    scrollView.topAnchor.constraintEqualToAnchor(topAnchor).active = true
+    scrollView.bottomAnchor.constraintEqualToAnchor(bottomAnchor).active = true
+    scrollView.leftAnchor.constraintEqualToAnchor(leftAnchor).active = true
+    scrollView.rightAnchor.constraintEqualToAnchor(rightAnchor).active = true
   }
   
   override init(frame: CGRect) {
@@ -49,6 +48,8 @@ class HabitHistory: UIView, UIScrollViewDelegate {
   }
   
   override func layoutSubviews() {
+    super.layoutSubviews()
+    
     let addSquare = { (content: UIView, frame: CGRect, history: History) in
       let square = SquareView(frame: frame, history: history)
       square.translatesAutoresizingMaskIntoConstraints = true
@@ -67,7 +68,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
         square.layer.mask = mask
         square.backgroundColor = HabitApp.color
       } else {
-        square.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "squareTap:"))
+        square.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(HabitHistory.squareTap(_:))))
       }
     }
     
@@ -79,10 +80,9 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       label.font = FontManager.regular(13)
       label.textColor = UIColor.whiteColor()
       content.addSubview(label)
-      label.snp_makeConstraints { make in
-        make.centerX.equalTo(self.squares[self.squares.endIndex - 1])
-        make.centerY.equalTo(content.snp_top).offset(self.TitleBarHeight / 2)
-      }
+      label.translatesAutoresizingMaskIntoConstraints = false
+      label.centerXAnchor.constraintEqualToAnchor(self.squares[self.squares.endIndex - 1].centerXAnchor).active = true
+      label.centerYAnchor.constraintEqualToAnchor(content.topAnchor, constant: self.TitleBarHeight / 2).active = true
     }
     
     let contentHeight = frame.height - TitleBarHeight - Enlargement
@@ -92,11 +92,11 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       var offset: CGFloat = 0
       var content = UIView()
       
-      switch habit!.frequency {
+      switch habit.frequency {
       case .Daily:
         var first = true
         side = (contentHeight + Spacing / 2) / 7.0
-        for element in habit!.histories! {
+        for element in habit.histories! {
           let history = element as! History
           let components = calendar.components([.Weekday, .Day], fromDate: history.date!)
           let weekday = components.weekday
@@ -118,24 +118,24 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       case .Weekly:
         fallthrough
       case .Monthly:
-        var lastMonth = calendar.components([.Month], fromDate: habit!.createdAt!).month
+        var lastMonth = calendar.components([.Month], fromDate: habit.createdAt!).month
         side = (contentHeight + Spacing / 2) / 6.0
         var count = 3
-        for element in habit!.histories! {
+        for element in habit.histories! {
           let history = element as! History
           let frame = CGRectMake(offset, TitleBarHeight, side - Spacing / 2, contentHeight)
           addSquare(content, frame, history)
           let month = calendar.components([.Month], fromDate: history.date!).month
-          if (habit!.frequency == .Weekly && lastMonth != month) ||
-            (habit!.frequency == .Monthly && count % 4 == 0) {
+          if (habit.frequency == .Weekly && lastMonth != month) ||
+            (habit.frequency == .Monthly && count % 4 == 0) {
             addLabel(content, history.date!)
             lastMonth = month
           }
           offset += side
-          count++
-          if (habit!.frequency == .Weekly &&
+          count += 1
+          if (habit.frequency == .Weekly &&
               calendar.isDate(history.date!, equalToDate: NSDate(), toUnitGranularity: .WeekOfYear)) ||
-             (habit!.frequency == .Monthly &&
+             (habit.frequency == .Monthly &&
               calendar.isDate(history.date!, equalToDate: NSDate(), toUnitGranularity: .Month)) {
             break
           }
@@ -148,35 +148,37 @@ class HabitHistory: UIView, UIScrollViewDelegate {
       if offset < frame.width {
         let outerContent = UIView()
         outerContent.addSubview(content)
-        content.snp_makeConstraints { make in
-          make.top.right.equalTo(outerContent)
-          make.width.equalTo(offset)
-          make.height.equalTo(frame.height)
-        }
+        content.translatesAutoresizingMaskIntoConstraints = false
+        content.topAnchor.constraintEqualToAnchor(outerContent.topAnchor).active = true
+        content.rightAnchor.constraintEqualToAnchor(outerContent.rightAnchor).active = true
+        content.widthAnchor.constraintEqualToConstant(offset).active = true
+        content.heightAnchor.constraintEqualToConstant(frame.height).active = true
         content = outerContent
         width = frame.width - 2 * Enlargement
         scroll = false
       }
-      scrollView!.addSubview(content)
-      content.snp_makeConstraints { make in
-        make.edges.equalTo(scrollView!)
-        make.width.equalTo(width)
-        make.height.equalTo(self)
-      }
-      scrollView!.contentInset = UIEdgeInsetsMake(0, Enlargement, 0, Enlargement)
-      scrollView!.layoutIfNeeded()
+      scrollView.addSubview(content)
+      content.translatesAutoresizingMaskIntoConstraints = false
+      content.topAnchor.constraintEqualToAnchor(scrollView.topAnchor).active = true
+      content.bottomAnchor.constraintEqualToAnchor(scrollView.bottomAnchor).active = true
+      content.leftAnchor.constraintEqualToAnchor(scrollView.leftAnchor).active = true
+      content.rightAnchor.constraintEqualToAnchor(scrollView.rightAnchor).active = true
+      content.widthAnchor.constraintEqualToConstant(width).active = true
+      content.heightAnchor.constraintEqualToAnchor(heightAnchor).active = true
+      scrollView.contentInset = UIEdgeInsetsMake(0, Enlargement, 0, Enlargement)
+      scrollView.layoutIfNeeded()
       if scroll {
-        scrollView!.setContentOffset(CGPointMake(width - scrollView!.frame.width + Enlargement, 0), animated: false)
+        scrollView.setContentOffset(CGPointMake(width - scrollView.frame.width + Enlargement, 0), animated: false)
       }
       
       var delay = 0.1
       for square in squares.reverse() {
-        if square.frame.origin.x < width - scrollView!.bounds.width - side {
+        if square.frame.origin.x < width - scrollView.bounds.width - side {
           break
         }
         let endFrame = square.frame
         var startFrame = square.frame
-        startFrame.origin.x = endFrame.origin.x - scrollView!.bounds.width
+        startFrame.origin.x = endFrame.origin.x - scrollView.bounds.width
         square.frame = startFrame
         UIView.animateWithDuration(0.3,
           delay: delay,
@@ -184,7 +186,7 @@ class HabitHistory: UIView, UIScrollViewDelegate {
           animations: {
             square.frame = endFrame
           }, completion: nil)
-        if habit!.frequency == .Daily {
+        if habit.frequency == .Daily {
           delay += 0.005
         } else {
           delay += 0.01

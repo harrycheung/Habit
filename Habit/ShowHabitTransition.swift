@@ -6,7 +6,6 @@
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 class ShowHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
@@ -14,10 +13,10 @@ class ShowHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIVi
   var presenting: Bool = false
   
   func animationControllerForPresentedController(presented: UIViewController,
-    presentingController presenting: UIViewController,
-    sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-      self.presenting = true
-      return self
+                                                 presentingController presenting: UIViewController,
+                                                 sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    self.presenting = true
+    return self
   }
   
   func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -26,7 +25,7 @@ class ShowHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIVi
   }
   
   func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
-    return HabitApp.TransitionDuration
+    return Constants.TransitionDuration
   }
   
   func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
@@ -52,27 +51,29 @@ class ShowHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIVi
       shvc.view.alpha = 0
       containerView.addSubview(shvc.view)
 
-      UIView.animateWithDuration(HabitApp.TransitionDuration,
-        animations: {
-          toVC.view.alpha = 1
-          mvc.transitionOverlay.alpha = HabitApp.TransitionOverlayAlpha
-          mvc.newButton.alpha = 0
-        }, completion: { finished in
-          transitionContext.completeTransition(true)
-      })
+      UIView.animateWithDuration(Constants.TransitionDuration,
+                                 animations: {
+                                   toVC.view.alpha = 1
+                                   mvc.transitionOverlay.alpha = Constants.TransitionOverlayAlpha
+                                   mvc.newButton.alpha = 0
+                                 },
+                                 completion: { finished in
+                                   transitionContext.completeTransition(true)
+                                 })
     } else {
       let mvc = toVC as! MainViewController
       
-      UIView.animateWithDuration(HabitApp.TransitionDuration,
-        animations: {
-          fromVC.view.alpha = 0
-          mvc.transitionOverlay.alpha = 0
-          mvc.newButton.alpha = 1
-        }, completion: { finished in
-          mvc.transitionOverlay.hidden = true
-          mvc.transitionOverlay.layer.mask = nil
-          transitionContext.completeTransition(true)
-      })
+      UIView.animateWithDuration(Constants.TransitionDuration,
+                                 animations: {
+                                   fromVC.view.alpha = 0
+                                   mvc.transitionOverlay.alpha = 0
+                                   mvc.newButton.alpha = 1
+                                 },
+                                 completion: { finished in
+                                   mvc.transitionOverlay.hidden = true
+                                   mvc.transitionOverlay.layer.mask = nil
+                                   transitionContext.completeTransition(true)
+                                 })
     }
   }
 }

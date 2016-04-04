@@ -6,7 +6,6 @@
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 @objc(MultiSelectControlDataSource)
@@ -40,6 +39,8 @@ class MultiSelectControl: UIView {
   }
   
   override func layoutSubviews() {
+    super.layoutSubviews()
+    
     // TODO: Is this the right place for adding buttons? The buttons.isEmpty check is necessary.
     // Otherwise, a recursive loop occurs with each button that gets added. The other wasy to "fix" 
     // this is to give the superview a height constraint with priority 1000.
@@ -58,13 +59,19 @@ class MultiSelectControl: UIView {
         button.layer.masksToBounds = true
         buttons.append(button)
         addSubview(button)
-        button.snp_makeConstraints { make in
-          make.centerX.equalTo(self)
-          make.centerY.equalTo(self).multipliedBy(CGFloat(1 + 2 * index) / CGFloat(count))
-          make.width.equalTo(self)
-          make.height.equalTo(self).multipliedBy(1.0 / CGFloat(count)).offset(-3)
-        }
-        button.addTarget(self, action: "itemTapped:", forControlEvents: .TouchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.centerXAnchor.constraintEqualToAnchor(centerXAnchor).active = true
+        NSLayoutConstraint(item: button,
+                           attribute: .CenterY,
+                           relatedBy: .Equal,
+                           toItem: self,
+                           attribute: .CenterY,
+                           multiplier: (1 + 2 * CGFloat(index)) / CGFloat(count),
+                           constant: 0).active = true
+        button.widthAnchor.constraintEqualToAnchor(widthAnchor).active = true
+        button.heightAnchor.constraintEqualToAnchor(heightAnchor,
+                                                    multiplier: 1.0 / CGFloat(count), constant: -3).active = true
+        button.addTarget(self, action: #selector(MultiSelectControl.itemTapped(_:)), forControlEvents: .TouchUpInside)
         if selectedIndexes.contains(index) {
           button.selected = true
         }

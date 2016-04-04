@@ -1,21 +1,20 @@
 //
-//  AppSettingsViewController.swift
+//  SettingsViewController.swift
 //  Habit
 //
 //  Created by harry on 7/17/15.
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
 import UIKit
 import CoreData
 
-class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorPickerDelegate {
+class SettingsViewController: UIViewController, ColorPickerDataSource, ColorPickerDelegate {
   
   let PanMinimum: CGFloat = 0.5
   
-  var mvc: MainViewController?
-  var darkenView: UIView?
+  var mvc: MainViewController!
+  var darkenView: UIView!
   
   @IBOutlet weak var paddingView: UIView!
   @IBOutlet weak var close: UIButton!
@@ -52,7 +51,7 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
     autoSkipStepper.value = Double(HabitApp.autoSkipDelay)
     autoSkipDelay.text = autoSkipDelayString(HabitApp.autoSkipDelay)
     if !autoSkip.on {
-      autoSkipHeight.priority = HabitApp.LayoutPriorityLow
+      autoSkipHeight.priority = Constants.LayoutPriorityLow
       view.layoutIfNeeded()
     }
     let timeZone = NSTimeZone(name: HabitApp.timeZone)!
@@ -83,22 +82,22 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
   @IBAction func panning(recognizer: UIPanGestureRecognizer) {
     let movement = max(recognizer.translationInView(view).y, 0)
     view.frame = CGRectMake(0, movement, view.frame.width, view.frame.height)
-    darkenView!.frame = CGRectMake(0, 0, view.frame.width, paddingView.bounds.height + movement)
+    darkenView.frame = CGRectMake(0, 0, view.frame.width, paddingView.bounds.height + movement)
     let panPercentage = movement / (view.frame.height - paddingView.bounds.height)
-    darkenView!.alpha = (1 - panPercentage) * AppSettingsTransition.DarkenAlpha
+    darkenView.alpha = (1 - panPercentage) * SettingsTransition.DarkenAlpha
     close.alpha = max(1 - panPercentage / PanMinimum, 0)
 
     if recognizer.state == .Ended || recognizer.state == .Cancelled {
       if panPercentage < PanMinimum {
-        UIView.animateWithDuration(AppSettingsTransition.TransitionDuration,
+        UIView.animateWithDuration(SettingsTransition.TransitionDuration,
           delay: 0,
-          usingSpringWithDamping: AppSettingsTransition.SpringDamping,
-          initialSpringVelocity: AppSettingsTransition.SpringVelocity,
-          options: AppSettingsTransition.AnimationOptions,
+          usingSpringWithDamping: SettingsTransition.SpringDamping,
+          initialSpringVelocity: SettingsTransition.SpringVelocity,
+          options: SettingsTransition.AnimationOptions,
           animations: {
             self.view.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
-            self.darkenView!.frame = CGRectMake(0, 0, self.view.frame.width, self.paddingView.bounds.height)
-            self.darkenView!.alpha = AppSettingsTransition.DarkenAlpha
+            self.darkenView.frame = CGRectMake(0, 0, self.view.frame.width, self.paddingView.bounds.height)
+            self.darkenView.alpha = SettingsTransition.DarkenAlpha
             self.close.alpha = 1
           }, completion: nil)
       } else {
@@ -108,11 +107,11 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
   }
   
   func colorPicker(colorPicker: ColorPicker, colorAtIndex index: Int) -> UIColor {
-    return HabitApp.colors[index]
+    return Constants.colors[index]
   }
   
   func colorPicked(colorPicker: ColorPicker, colorIndex index: Int) {
-    mvc!.changeColor(HabitApp.colors[index])
+    mvc.changeColor(Constants.colors[index])
     HabitApp.colorIndex = index
   }
   
@@ -128,18 +127,18 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
   @IBAction func autoSkipChanged(sender: AnyObject) {
     if autoSkip.on {
       let darkenHeight = self.paddingView.bounds.height - self.autoSkipHeight.constant
-      autoSkipHeight.priority = HabitApp.LayoutPriorityHigh
-      UIView.animateWithDuration(HabitApp.TransitionDuration, delay: 0, options: .CurveEaseOut,
+      autoSkipHeight.priority = Constants.LayoutPriorityHigh
+      UIView.animateWithDuration(Constants.TransitionDuration, delay: 0, options: .CurveEaseOut,
         animations: {
-          self.darkenView!.frame = CGRectMake(0, 0, self.view.frame.width, darkenHeight)
+          self.darkenView.frame = CGRectMake(0, 0, self.view.frame.width, darkenHeight)
           self.view.layoutIfNeeded()
         }, completion: nil)
     } else {
       let darkenHeight = self.paddingView.bounds.height + self.autoSkipHeight.constant
-      autoSkipHeight.priority = HabitApp.LayoutPriorityLow
-      UIView.animateWithDuration(HabitApp.TransitionDuration, delay: 0, options: .CurveEaseOut,
+      autoSkipHeight.priority = Constants.LayoutPriorityLow
+      UIView.animateWithDuration(Constants.TransitionDuration, delay: 0, options: .CurveEaseOut,
         animations: {
-          self.darkenView!.frame = CGRectMake(0, 0, self.view.frame.width, darkenHeight)
+          self.darkenView.frame = CGRectMake(0, 0, self.view.frame.width, darkenHeight)
           self.view.layoutIfNeeded()
         }, completion: nil)
     }
@@ -171,10 +170,10 @@ class AppSettingsViewController: UIViewController, ColorPickerDataSource, ColorP
   }
   
   func timeOfDayString(time: Int) -> String {
-    if time == 0 || time == HabitApp.dayMinutes {
+    if time == 0 || time == Constants.dayMinutes {
       return "midnight"
     } else {
-      let ampm = time < HabitApp.dayMinutes / 2 ? "a.m." : "p.m."
+      let ampm = time < Constants.dayMinutes / 2 ? "a.m." : "p.m."
       var hour = (time / 60) % 12
       if hour == 0 {
         hour = 12

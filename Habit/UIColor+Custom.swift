@@ -6,12 +6,12 @@
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 extension UIColor {
   
-  convenience init(color: UIColor, var fadeToAlpha alpha: CGFloat) {
+  convenience init(color: UIColor, fadeToAlpha alpha: CGFloat) {
+    var alpha = alpha
     var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0
     color.getRed(&red, green: &green, blue: &blue, alpha: nil)
     alpha = 1 - alpha

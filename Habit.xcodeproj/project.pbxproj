@@ -31,7 +31,7 @@
 		4A1D08DC1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D08DA1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift */; };
 		4A1D08DD1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D08DB1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift */; };
 		4A421C1A1B48960900F3186C /* FrequencySettings.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A421C191B48960900F3186C /* FrequencySettings.xib */; };
-		4A44D7871B5A29EC0017B34B /* AppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A44D7861B5A29EC0017B34B /* AppSettingsViewController.swift */; };
+		4A44D7871B5A29EC0017B34B /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A44D7861B5A29EC0017B34B /* SettingsViewController.swift */; };
 		4A44D7891B5A9A930017B34B /* AppSettingsTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A44D7881B5A9A930017B34B /* AppSettingsTransition.swift */; };
 		4A4643811B44632400732389 /* FrequencySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4643801B44632400732389 /* FrequencySettings.swift */; };
 		4A4643831B448B3300732389 /* MultiSelectControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4643821B448B3300732389 /* MultiSelectControl.swift */; };
@@ -53,6 +53,10 @@
 		4ADA905F1B60ABD300826C69 /* ColorPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA905E1B60ABD300826C69 /* ColorPicker.swift */; };
 		4ADD91111BB09AB1009A7D75 /* Habit+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADD91101BB09AB1009A7D75 /* Habit+Test.swift */; };
 		4AE038681B8E042C00BF4CEC /* NSCalendar+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE038671B8E042C00BF4CEC /* NSCalendar+Custom.swift */; };
+		4AE0F00E1CB2DF8E00693AE3 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE0F00D1CB2DF8E00693AE3 /* Constants.swift */; };
+		4AE0F0101CB3099C00693AE3 /* MainViewController+SwipeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE0F00F1CB3099C00693AE3 /* MainViewController+SwipeTableViewCell.swift */; };
+		4AE0F0121CB309FA00693AE3 /* MainViewController+UITableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE0F0111CB309FA00693AE3 /* MainViewController+UITableView.swift */; };
+		4AE0F0141CB30A3F00693AE3 /* MainViewController+UIScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE0F0131CB30A3F00693AE3 /* MainViewController+UIScrollView.swift */; };
 		4AFD29E61BD29BA0003122A7 /* HabitManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFD29E51BD29BA0003122A7 /* HabitManagerTests.swift */; };
 		4AFD29E81BD29C29003122A7 /* NSCalendar+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFD29E71BD29C29003122A7 /* NSCalendar+Custom.swift */; };
 		861BECF906C6AC6A210325FA /* Pods_HabitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA0F26F75A2786B986189DB2 /* Pods_HabitTests.framework */; };
@@ -107,7 +111,7 @@
 		4A1D08DA1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Habit+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4A1D08DB1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Entry+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4A421C191B48960900F3186C /* FrequencySettings.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FrequencySettings.xib; sourceTree = "<group>"; };
-		4A44D7861B5A29EC0017B34B /* AppSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSettingsViewController.swift; sourceTree = "<group>"; };
+		4A44D7861B5A29EC0017B34B /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		4A44D7881B5A9A930017B34B /* AppSettingsTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSettingsTransition.swift; sourceTree = "<group>"; };
 		4A4643801B44632400732389 /* FrequencySettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrequencySettings.swift; sourceTree = "<group>"; };
 		4A4643821B448B3300732389 /* MultiSelectControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSelectControl.swift; sourceTree = "<group>"; };
@@ -130,6 +134,10 @@
 		4ADA905E1B60ABD300826C69 /* ColorPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorPicker.swift; sourceTree = "<group>"; };
 		4ADD91101BB09AB1009A7D75 /* Habit+Test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Habit+Test.swift"; sourceTree = "<group>"; };
 		4AE038671B8E042C00BF4CEC /* NSCalendar+Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSCalendar+Custom.swift"; sourceTree = "<group>"; };
+		4AE0F00D1CB2DF8E00693AE3 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		4AE0F00F1CB3099C00693AE3 /* MainViewController+SwipeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainViewController+SwipeTableViewCell.swift"; sourceTree = "<group>"; };
+		4AE0F0111CB309FA00693AE3 /* MainViewController+UITableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainViewController+UITableView.swift"; sourceTree = "<group>"; };
+		4AE0F0131CB30A3F00693AE3 /* MainViewController+UIScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainViewController+UIScrollView.swift"; sourceTree = "<group>"; };
 		4AFD29E51BD29BA0003122A7 /* HabitManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitManagerTests.swift; sourceTree = "<group>"; };
 		4AFD29E71BD29C29003122A7 /* NSCalendar+Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSCalendar+Custom.swift"; sourceTree = "<group>"; };
 		665F8C2916FF820599C8EF0C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -200,6 +208,7 @@
 				4A1D08C81B3E1A7A006A9CA4 /* Fonts */,
 				4A1D08971B3E17E9006A9CA4 /* AppDelegate.swift */,
 				4A144D781B61C31B001A6094 /* HabitApp.swift */,
+				4AE0F00D1CB2DF8E00693AE3 /* Constants.swift */,
 				4A8F37571BBB60C7006DBCB6 /* Managers */,
 				4A1D08DE1B404DF7006A9CA4 /* Models */,
 				4A1D08E01B40C975006A9CA4 /* ViewControllers */,
@@ -250,6 +259,10 @@
 			isa = PBXGroup;
 			children = (
 				4A1D08CC1B3E1A7A006A9CA4 /* MainViewController.swift */,
+				4AE0F0131CB30A3F00693AE3 /* MainViewController+UIScrollView.swift */,
+				4AE0F0111CB309FA00693AE3 /* MainViewController+UITableView.swift */,
+				4AE0F00F1CB3099C00693AE3 /* MainViewController+SwipeTableViewCell.swift */,
+				4A44D7861B5A29EC0017B34B /* SettingsViewController.swift */,
 				4A0FD15A1B9F665E0063FB93 /* SelectFrequencyViewController.swift */,
 				4A1D08CB1B3E1A7A006A9CA4 /* ShowHabitViewController.swift */,
 				4A16FDC01B7ED48A00DF9DFC /* EditHabitViewController.swift */,
@@ -264,11 +277,10 @@
 			children = (
 				4A1D08A31B3E17E9006A9CA4 /* LaunchScreen.storyboard */,
 				4A1D08D41B3E1E52006A9CA4 /* Main.storyboard */,
-				4A44D7861B5A29EC0017B34B /* AppSettingsViewController.swift */,
-				4A421C191B48960900F3186C /* FrequencySettings.xib */,
 				4A1D08CA1B3E1A7A006A9CA4 /* HabitTableViewCell.swift */,
 				4ADA905E1B60ABD300826C69 /* ColorPicker.swift */,
 				4A4643801B44632400732389 /* FrequencySettings.swift */,
+				4A421C191B48960900F3186C /* FrequencySettings.xib */,
 				4AA4AED71B7A73B100A1562F /* HabitHistory.swift */,
 			);
 			name = UI;
@@ -623,22 +635,26 @@
 				4A4643811B44632400732389 /* FrequencySettings.swift in Sources */,
 				4A91744C1BACB3840047B189 /* UITextField+Custom.swift in Sources */,
 				4A040C501B7C4D610081CF85 /* History.swift in Sources */,
-				4A44D7871B5A29EC0017B34B /* AppSettingsViewController.swift in Sources */,
+				4A44D7871B5A29EC0017B34B /* SettingsViewController.swift in Sources */,
 				4A1D08D01B3E1A7A006A9CA4 /* HabitTableViewCell.swift in Sources */,
 				4A8EB4901BB9D21300A781E4 /* HabitManager.swift in Sources */,
 				4A16FDC31B7F7CA000DF9DFC /* EditHabitTransition.swift in Sources */,
 				4A8F37591BBB8988006DBCB6 /* FontManager.swift in Sources */,
 				4AD09CDE1C1BF8E90013B2DA /* ExpandTabBar.swift in Sources */,
 				4A584C051BAEFC6500CA783C /* NSManagedObject+Custom.swift in Sources */,
+				4AE0F0141CB30A3F00693AE3 /* MainViewController+UIScrollView.swift in Sources */,
 				4A1D08DD1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift in Sources */,
 				4A1D08CF1B3E1A7A006A9CA4 /* Habit.swift in Sources */,
 				4A1D08DC1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift in Sources */,
+				4AE0F0121CB309FA00693AE3 /* MainViewController+UITableView.swift in Sources */,
+				4AE0F0101CB3099C00693AE3 /* MainViewController+SwipeTableViewCell.swift in Sources */,
 				4ADA905F1B60ABD300826C69 /* ColorPicker.swift in Sources */,
 				4A91744A1BABC6EB0047B189 /* ShowHabitTransition.swift in Sources */,
 				4AAA3C1C1B7AF9B7006572F8 /* UIColor+Custom.swift in Sources */,
 				4AE038681B8E042C00BF4CEC /* NSCalendar+Custom.swift in Sources */,
 				4A44D7891B5A9A930017B34B /* AppSettingsTransition.swift in Sources */,
 				4A0FD15B1B9F665E0063FB93 /* SelectFrequencyViewController.swift in Sources */,
+				4AE0F00E1CB2DF8E00693AE3 /* Constants.swift in Sources */,
 				4A0FD15D1B9F67C00063FB93 /* SelectFrequencyTransition.swift in Sources */,
 				4A1D08D31B3E1A7A006A9CA4 /* SwipeTableViewCell.swift in Sources */,
 				4A1D08981B3E17E9006A9CA4 /* AppDelegate.swift in Sources */,

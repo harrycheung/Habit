@@ -6,7 +6,6 @@
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
@@ -14,10 +13,10 @@ class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UI
   var presenting: Bool = false
   
   func animationControllerForPresentedController(presented: UIViewController,
-    presentingController presenting: UIViewController,
-    sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-      self.presenting = true
-      return self
+                                                 presentingController presenting: UIViewController,
+                                                 sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    self.presenting = true
+    return self
   }
   
   func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -26,7 +25,7 @@ class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UI
   }
   
   func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
-    return HabitApp.TransitionDuration
+    return Constants.TransitionDuration
   }
   
   func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
@@ -41,17 +40,18 @@ class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UI
       
       sfvc.hideButtons()
       ehvc.view.alpha = 0
-      UIView.animateWithDuration(HabitApp.TransitionDuration,
-        animations: {
-          ehvc.view.alpha = 1
-          sfvc.closeButton.transform = CGAffineTransformMakeRotation(0)
-          sfvc.closeButton.alpha = 0
-          sfvc.dailyButton.alpha = 0
-          sfvc.weeklyButton.alpha = 0
-          sfvc.monthlyButton.alpha = 0
-        }, completion: { finished in
-          transitionContext.completeTransition(true)
-      })
+      UIView.animateWithDuration(Constants.TransitionDuration,
+                                 animations: {
+                                   ehvc.view.alpha = 1
+                                   sfvc.closeButton.transform = CGAffineTransformMakeRotation(0)
+                                   sfvc.closeButton.alpha = 0
+                                   sfvc.dailyButton.alpha = 0
+                                   sfvc.weeklyButton.alpha = 0
+                                   sfvc.monthlyButton.alpha = 0
+                                 },
+                                 completion: { finished in
+                                   transitionContext.completeTransition(true)
+                                 })
     } else {
       let ehvc = fromVC as! EditHabitViewController
       let sfvc = toVC as! SelectFrequencyViewController
@@ -59,16 +59,17 @@ class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UI
       
       mvc.newButton.hidden = false
       mvc.newButton.alpha = 0
-      UIView.animateWithDuration(HabitApp.TransitionDuration,
-        animations: {
-          ehvc.view.alpha = 0
-          sfvc.view.alpha = 0
-          mvc.newButton.alpha = 1
-          mvc.transitionOverlay.alpha = 0
-        }, completion: { finished in
-          mvc.transitionOverlay.hidden = true
-          transitionContext.completeTransition(true)
-      })
+      UIView.animateWithDuration(Constants.TransitionDuration,
+                                 animations: {
+                                   ehvc.view.alpha = 0
+                                   sfvc.view.alpha = 0
+                                   mvc.newButton.alpha = 1
+                                   mvc.transitionOverlay.alpha = 0
+                                 },
+                                 completion: { finished in
+                                   mvc.transitionOverlay.hidden = true
+                                   transitionContext.completeTransition(true)
+                                 })
     }
   }
 }

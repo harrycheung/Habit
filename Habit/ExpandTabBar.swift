@@ -6,7 +6,6 @@
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 @objc(ExpandTabBarDataSource)
@@ -50,16 +49,26 @@ class ExpandTabBar: UIView {
         button.textAlignment = .Center
         button.textColor = UIColor.whiteColor()
         button.backgroundColor = UIColor.clearColor()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.userInteractionEnabled = true
         buttons.append(button)
         addSubview(button)
-        button.snp_makeConstraints { make in
-          make.centerX.equalTo(self).multipliedBy(CGFloat(1 + 2 * index) / CGFloat(count))
-          make.centerY.equalTo(self)
-          make.width.equalTo(self).multipliedBy(1.0 / CGFloat(count))
-          make.height.equalTo(self)
-        }
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint(item: button,
+                           attribute: .CenterX,
+                           relatedBy: .Equal,
+                           toItem: self,
+                           attribute: .CenterX,
+                           multiplier: (1 + 2 * CGFloat(index)) / CGFloat(count),
+                           constant: 0).active = true
+        button.centerYAnchor.constraintEqualToAnchor(centerYAnchor).active = true
+        NSLayoutConstraint(item: button,
+                           attribute: .Width,
+                           relatedBy: .Equal,
+                           toItem: self,
+                           attribute: .Width,
+                           multiplier: 1 / CGFloat(count),
+                           constant: 0).active = true
+        button.heightAnchor.constraintEqualToAnchor(heightAnchor).active = true
         if index != selectedIndex {
           button.transform = CGAffineTransformMakeScale(0.75, 0.75)
         }
@@ -82,7 +91,7 @@ class ExpandTabBar: UIView {
     func setup(expandTabBar: ExpandTabBar, index: Int) {
       self.expandTabBar = expandTabBar
       self.index = index
-      addGestureRecognizer(UITapGestureRecognizer(target: self, action: "tapped:"))
+      addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(ExpandTabBar.tapped(_:))))
     }
     
     func tapped(recognizer: UITapGestureRecognizer) {

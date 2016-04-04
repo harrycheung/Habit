@@ -6,7 +6,6 @@
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 class SwipeDialogViewController: UIViewController {
@@ -28,10 +27,11 @@ class SwipeDialogViewController: UIViewController {
   }
   
   @IBAction func yes(sender: AnyObject) {
-    if let complete = yesCompletion { complete() }
+    yesCompletion?()
   }
   
   @IBAction func no(sender: AnyObject) {
-    if let complete = noCompletion { complete() }
+    noCompletion?()
   }
+  
 }

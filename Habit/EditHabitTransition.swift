@@ -6,7 +6,6 @@
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 class EditHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
@@ -14,10 +13,10 @@ class EditHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIVi
   var presenting: Bool = false
   
   func animationControllerForPresentedController(presented: UIViewController,
-    presentingController presenting: UIViewController,
-    sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-      self.presenting = true
-      return self
+                                                 presentingController presenting: UIViewController,
+                                                 sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    self.presenting = true
+    return self
   }
   
   func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -26,7 +25,7 @@ class EditHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIVi
   }
   
   func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
-    return HabitApp.TransitionDuration
+    return Constants.TransitionDuration
   }
   
   func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
@@ -45,20 +44,21 @@ class EditHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIVi
       ehvc.view.alpha = 0
       ehvc.height.constant = startHeight
       ehvc.view.layoutIfNeeded()
-      UIView.animateWithDuration(HabitApp.TransitionDuration,
-        animations: {
-          ehvc.view.alpha = 1
-          ehvc.height.constant = endHeight
-          ehvc.view.layoutIfNeeded()
-          shvc.view.alpha = 0
-          shvc.height.constant = endHeight
-          shvc.view.layoutIfNeeded()
-          mvc.transitionOverlay.transform = CGAffineTransformMakeScale(1, 1 + (endHeight - startHeight) / startHeight)
-        }, completion: { finished in
-          transitionContext.completeTransition(true)
-          shvc.height.constant = startHeight
-          shvc.view.layoutIfNeeded()
-        })
+      UIView.animateWithDuration(Constants.TransitionDuration,
+                                 animations: {
+                                   ehvc.view.alpha = 1
+                                   ehvc.height.constant = endHeight
+                                   ehvc.view.layoutIfNeeded()
+                                   shvc.view.alpha = 0
+                                   shvc.height.constant = endHeight
+                                   shvc.view.layoutIfNeeded()
+                                   mvc.transitionOverlay.transform = CGAffineTransformMakeScale(1, 1 + (endHeight - startHeight) / startHeight)
+                                 },
+                                 completion: { finished in
+                                   transitionContext.completeTransition(true)
+                                   shvc.height.constant = startHeight
+                                   shvc.view.layoutIfNeeded()
+                                 })
     } else {
       let ehvc = fromVC as! EditHabitViewController
       let shvc = toVC as! ShowHabitViewController
@@ -67,31 +67,33 @@ class EditHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIVi
       let endHeight = shvc.height.constant
       
       if ehvc.habit == nil {
-        UIView.animateWithDuration(HabitApp.TransitionDuration,
-          animations: {
-            ehvc.view.alpha = 0
-            mvc.transitionOverlay.alpha = 0
-            mvc.newButton.alpha = 1
-          }, completion: { finished in
-            mvc.transitionOverlay.layer.mask = nil
-            mvc.transitionOverlay.transform = CGAffineTransformMakeScale(1, 1)
-            transitionContext.completeTransition(true)
-        })
+        UIView.animateWithDuration(Constants.TransitionDuration,
+                                   animations: {
+                                     ehvc.view.alpha = 0
+                                     mvc.transitionOverlay.alpha = 0
+                                     mvc.newButton.alpha = 1
+                                   },
+                                   completion: { finished in
+                                     mvc.transitionOverlay.layer.mask = nil
+                                     mvc.transitionOverlay.transform = CGAffineTransformMakeScale(1, 1)
+                                     transitionContext.completeTransition(true)
+                                   })
       } else {
         shvc.height.constant = startHeight
         shvc.view.layoutIfNeeded()
-        UIView.animateWithDuration(HabitApp.TransitionDuration,
-          animations: {
-            ehvc.view.alpha = 0
-            ehvc.height.constant = endHeight
-            ehvc.view.layoutIfNeeded()
-            shvc.view.alpha = 1
-            shvc.height.constant = endHeight
-            shvc.view.layoutIfNeeded()
-            mvc.transitionOverlay.transform = CGAffineTransformMakeScale(1, 1)
-          }, completion: { finished in
-            transitionContext.completeTransition(true)
-        })
+        UIView.animateWithDuration(Constants.TransitionDuration,
+                                   animations: {
+                                     ehvc.view.alpha = 0
+                                     ehvc.height.constant = endHeight
+                                     ehvc.view.layoutIfNeeded()
+                                     shvc.view.alpha = 1
+                                     shvc.height.constant = endHeight
+                                     shvc.view.layoutIfNeeded()
+                                     mvc.transitionOverlay.transform = CGAffineTransformMakeScale(1, 1)
+                                   },
+                                   completion: { finished in
+                                     transitionContext.completeTransition(true)
+                                   })
       }
     }
   }

@@ -6,22 +6,19 @@
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
-
 import UIKit
 import CoreData
-import SnapKit
 import KAProgressLabel
 import FontAwesome_swift
 
-class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencySettingsDelegate, UIGestureRecognizerDelegate {
+class EditHabitViewController: UIViewController {
   
   let iPhone4Height: CGFloat = 440
   
   var habit: Habit?
   var frequency: Habit.Frequency = .Daily
-  var pickerRecognizer: UITapGestureRecognizer?
-  var mvc: MainViewController?
+  var pickerRecognizer: UITapGestureRecognizer!
+  var mvc: MainViewController!
   var warnedFrequency: Bool = false
   
   @IBOutlet weak var name: UITextField!
@@ -49,25 +46,25 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     switch frequency {
     case .Daily:
       frequencySettings.configure(leftTitle: "Times a day",
-        pickerCount: 12,
-        rightTitle: "Parts of day",
-        multiSelectItems: Habit.partOfDayStrings,
-        useTimes: habit != nil && habit!.useTimes,
-        delegate: self)
+                                  pickerCount: 12,
+                                  rightTitle: "Parts of day",
+                                  multiSelectItems: Habit.partOfDayStrings,
+                                  useTimes: habit != nil && habit!.useTimes,
+                                  delegate: self)
     case .Weekly:
       frequencySettings.configure(leftTitle: "Times a week",
-        pickerCount: 6,
-        rightTitle: "Days of week",
-        multiSelectItems: Habit.dayOfWeekStrings,
-        useTimes: habit != nil && habit!.useTimes,
-        delegate: self)
+                                  pickerCount: 6,
+                                  rightTitle: "Days of week",
+                                  multiSelectItems: Habit.dayOfWeekStrings,
+                                  useTimes: habit != nil && habit!.useTimes,
+                                  delegate: self)
     case .Monthly:
       frequencySettings.configure(leftTitle: "Times a month",
-        pickerCount: 5,
-        rightTitle: "Parts of month",
-        multiSelectItems: Habit.partOfMonthStrings,
-        useTimes: habit != nil && habit!.useTimes,
-        delegate: self)
+                                  pickerCount: 5,
+                                  rightTitle: "Parts of month",
+                                  multiSelectItems: Habit.partOfMonthStrings,
+                                  useTimes: habit != nil && habit!.useTimes,
+                                  delegate: self)
     default: ()
     }
     
@@ -76,34 +73,34 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
       frequencyLabel.text = "Edit \(frequency.description.lowercaseString) habit"
       name.text = habit!.name;
       if habit!.useTimes {
-        frequencySettings!.picker.selectRow(habit!.times!.integerValue - 1, inComponent: 0, animated: false)
+        frequencySettings.picker.selectRow(habit!.times!.integerValue - 1, inComponent: 0, animated: false)
       } else {
-        frequencySettings!.multiSelect.selectedIndexes = habit!.partsArray.map { $0 - 1 }
+        frequencySettings.multiSelect.selectedIndexes = habit!.partsArray.map { $0 - 1 }
       }
       notify.on = habit!.notifyBool
       neverAutoSkip.on = habit!.neverAutoSkipBool
       paused.on = habit!.pausedBool
     } else {
       frequencyLabel.text = "Start a \(frequency.description.lowercaseString) habit"
-      frequencySettings!.overlayTouched(frequencySettings!.leftOverlay!, touched: false)
+      frequencySettings.overlayTouched(frequencySettings.leftOverlay!, touched: false)
       save.setTitle("Start", forState: .Normal)
-      deleteWidth.priority = HabitApp.LayoutPriorityHigh
+      deleteWidth.priority = Constants.LayoutPriorityHigh
     }
     save.tintColor = UIColor.whiteColor()
     
     // Tap handlers for closing the keyboard. Note: I need a specific recognizer for
     // the UIPickerViews since they handle the gesture a little differently. I think
     // it's a bug.
-    let recognizer = UITapGestureRecognizer(target: self, action: "hideKeyboard:")
+    let recognizer = UITapGestureRecognizer(target: self, action: #selector(EditHabitViewController.hideKeyboard(_:)))
     recognizer.cancelsTouchesInView = false
     recognizer.numberOfTapsRequired = 1
     recognizer.delegate = self
     view.addGestureRecognizer(recognizer)
-    pickerRecognizer = UITapGestureRecognizer(target: self, action: "hideKeyboard:")
-    pickerRecognizer!.cancelsTouchesInView = false
-    pickerRecognizer!.numberOfTapsRequired = 1
-    pickerRecognizer!.delegate = self
-    frequencySettings!.picker.addGestureRecognizer(pickerRecognizer!)
+    pickerRecognizer = UITapGestureRecognizer(target: self, action: #selector(EditHabitViewController.hideKeyboard(_:)))
+    pickerRecognizer.cancelsTouchesInView = false
+    pickerRecognizer.numberOfTapsRequired = 1
+    pickerRecognizer.delegate = self
+    frequencySettings.picker.addGestureRecognizer(pickerRecognizer)
     
     close.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
     close.setTitle(String.fontAwesomeIconWithName(.Close), forState: .Normal)
@@ -125,26 +122,14 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     }
   }
   
-  override func viewDidLayoutSubviews() {    
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    
     name.tintClearButton()
-  }
-  
-  func frequencySettingsChanged() {
-    enableSave()
   }
   
   @IBAction func changed(sender: AnyObject) {
     enableSave()
-  }
-  
-  func textFieldShouldReturn(textField: UITextField) -> Bool {
-    name.resignFirstResponder()
-    return true
-  }
-  
-  func gestureRecognizer(gestureRecognizer: UIGestureRecognizer,
-    shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-      return pickerRecognizer!.isEqual(gestureRecognizer)
   }
   
   func hideKeyboard(recognizer: UIPanGestureRecognizer) {
@@ -170,14 +155,14 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
       self.habit = nil
       self.presentingViewController!.view.hidden = true
       self.presentingViewController!.dismissViewControllerAnimated(true) {
-        self.mvc!.dismissViewControllerAnimated(false) {
+        self.mvc.dismissViewControllerAnimated(false) {
           let pausedSet = habit.paused != self.paused.on
           habit.frequency = self.frequency
-          if self.frequencySettings!.useTimes {
-            habit.times = self.frequencySettings!.picker!.selectedRowInComponent(0) + 1
+          if self.frequencySettings.useTimes {
+            habit.times = self.frequencySettings.picker!.selectedRowInComponent(0) + 1
             habit.partsArray = []
           } else {
-            habit.partsArray = self.frequencySettings!.multiSelect.selectedIndexes.sort().map { $0 + 1 }
+            habit.partsArray = self.frequencySettings.multiSelect.selectedIndexes.sort().map { $0 + 1 }
           }
           habit.notify = self.notify.on
           habit.neverAutoSkip = self.neverAutoSkip.on
@@ -185,25 +170,25 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
           if habit.isNew {
             HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit)
             // Minus 1 because createEntries increments
-            self.mvc!.insertRows([NSIndexPath(forRow: HabitManager.habitCount - 1, inSection: 0)])
+            self.mvc.insertRows([NSIndexPath(forRow: HabitManager.habitCount - 1, inSection: 0)])
           } else {
             if habit.name != name {
               habit.name = name
-              self.mvc!.reloadRows(HabitManager.rows(habit))
+              self.mvc.reloadRows(HabitManager.rows(habit))
             }
             if pausedSet {
               if self.paused.on {
-                self.mvc!.deleteRows(HabitManager.deleteEntries(after: NSDate(), habit: habit)) {
-                  //self.mvc!.insertRows(HabitManager.pause(habit))
+                self.mvc.deleteRows(HabitManager.deleteEntries(after: NSDate(), habit: habit)) {
+                  //self.mvc.insertRows(HabitManager.pause(habit))
                 }
               } else {
-//                self.mvc!.deleteRows(HabitManager.unpause(habit)) {
-//                  //self.mvc!.insertRows(HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit))
+//                self.mvc.deleteRows(HabitManager.unpause(habit)) {
+//                  //self.mvc.insertRows(HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit))
 //                }
               }
             } else if frequencyChanged {
-              self.mvc!.deleteRows(HabitManager.deleteEntries(after: NSDate(), habit: habit)) {
-                self.mvc!.insertRows(HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit))
+              self.mvc.deleteRows(HabitManager.deleteEntries(after: NSDate(), habit: habit)) {
+                self.mvc.insertRows(HabitManager.createEntries(after: NSDate(), currentDate: NSDate(), habit: habit))
               }
             }
           }
@@ -218,18 +203,18 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     if habit == nil {
       if HabitManager.exists(trimmedName) {
         showAlert(nil,
-          message: "Another habit with the same name exists.\nContinue with save?",
-          yes: ("Yes", .Default, {
-            if self.habit == nil {
-              self.habit = Habit(context: HabitApp.moContext, name: trimmedName)
-              save(self.habit!, trimmedName)
-            } else {
-              save(self.habit!, trimmedName)
-            }
-          }),
-          no: ("No", .Cancel, { alert in
-            alert.dismissViewControllerAnimated(true, completion: nil)
-          }))
+                  message: "Another habit with the same name exists.\nContinue with save?",
+                  yes: ("Yes", .Default, {
+                    if self.habit == nil {
+                      self.habit = Habit(context: HabitApp.moContext, name: trimmedName)
+                      save(self.habit!, trimmedName)
+                    } else {
+                      save(self.habit!, trimmedName)
+                    }
+                  }),
+                  no: ("No", .Cancel, { alert in
+                    alert.dismissViewControllerAnimated(true, completion: nil)
+                  }))
       } else {
         self.habit = Habit(context: HabitApp.moContext, name: trimmedName)
         save(self.habit!, trimmedName)
@@ -247,8 +232,8 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
       // Hide ShowHabitViewController
       self.presentingViewController!.view.hidden = true
       self.presentingViewController!.dismissViewControllerAnimated(true) {
-        self.mvc!.dismissViewControllerAnimated(false) {
-          self.mvc!.deleteRows(rows)
+        self.mvc.dismissViewControllerAnimated(false) {
+          self.mvc.deleteRows(rows)
         }
       }
       self.habit = nil
@@ -271,8 +256,8 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     }
     if valid && changed && !warnedFrequency {
       let alert = UIAlertController(title: "Warning",
-        message: "Changes to frequency will\naffect ALL future entries.",
-        preferredStyle: .Alert)
+                                    message: "Changes to frequency will\naffect ALL future entries.",
+                                    preferredStyle: .Alert)
       alert.addAction(UIAlertAction(title: "Continue", style: .Default, handler: nil))
       presentViewController(alert, animated: true, completion: nil)
       warnedFrequency = true
@@ -298,9 +283,10 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
     }
   }
   
-  private func showAlert(title: String?, message: String?,
-    yes: (title: String, style: UIAlertActionStyle, handler: (() -> Void)),
-    no: (title: String, style: UIAlertActionStyle, handler: ((UIAlertController) -> Void))) {
+  private func showAlert(title: String?,
+                         message: String?,
+                         yes: (title: String, style: UIAlertActionStyle, handler: (() -> Void)),
+                         no: (title: String, style: UIAlertActionStyle, handler: ((UIAlertController) -> Void))) {
       let alert = UIAlertController(title: title, message: message, preferredStyle: .ActionSheet)
       alert.addAction(UIAlertAction(title: yes.title, style: yes.style) { action in
         yes.handler()
@@ -309,6 +295,33 @@ class EditHabitViewController: UIViewController, UITextFieldDelegate, FrequencyS
         no.handler(alert)
       })
       presentViewController(alert, animated: true, completion: nil)
+  }
+  
+}
+
+extension EditHabitViewController: UIGestureRecognizerDelegate {
+  
+  func gestureRecognizer(
+    gestureRecognizer: UIGestureRecognizer,
+    shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+      return pickerRecognizer.isEqual(gestureRecognizer)
+  }
+  
+}
+
+extension EditHabitViewController: UITextFieldDelegate {
+  
+  func textFieldShouldReturn(textField: UITextField) -> Bool {
+    name.resignFirstResponder()
+    return true
+  }
+  
+}
+
+extension EditHabitViewController: FrequencySettingsDelegate {
+  
+  func frequencySettingsChanged() {
+    enableSave()
   }
   
 }

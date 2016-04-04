@@ -1,19 +1,16 @@
 PODS:
-  - FontAwesome.swift (0.6.3)
+  - FontAwesome.swift (0.7.1)
   - KAProgressLabel (3.2)
   - Nimble (3.0.0)
-  - SnapKit (0.18.0)
 
 DEPENDENCIES:
   - FontAwesome.swift
   - KAProgressLabel
   - Nimble (= 3.0.0)
-  - SnapKit
 
 SPEC CHECKSUMS:
-  FontAwesome.swift: b78c54716317ef914521e38b594b616e1d498a11
+  FontAwesome.swift: 21ec9db57af8b92d4b4d6ca8208b9ae07031e828
   KAProgressLabel: 4362a1d37c5a7bc7c10cd059fd2da7cb9599cb50
   Nimble: 4c353d43735b38b545cbb4cb91504588eb5de926
-  SnapKit: e1f090a6d47b1dd4bd89b73f72b6746a7835ef3c
 
 COCOAPODS: 0.39.0

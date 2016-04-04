@@ -6,7 +6,6 @@
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 @objc(ColorPickerDataSource)
@@ -57,12 +56,18 @@ class ColorPicker: UIView {
       let button = ColorPickerButton(diameter: diameter, index: index)
       buttons.append(button)
       addSubview(button)
-      button.snp_makeConstraints { make in
-        make.centerX.equalTo(self).multipliedBy(CGFloat(1 + 2 * index) / CGFloat(count))
-        make.centerY.equalTo(self)
-        make.width.height.equalTo(diameter)
-      }
-      button.addTarget(self, action: "itemTapped:", forControlEvents: .TouchUpInside)
+      button.translatesAutoresizingMaskIntoConstraints = false
+      NSLayoutConstraint(item: button,
+                         attribute: .CenterX,
+                         relatedBy: .Equal,
+                         toItem: self,
+                         attribute: .CenterX,
+                         multiplier: (1 + 2 * CGFloat(index)) / CGFloat(count),
+                         constant: 0).active = true
+      button.centerYAnchor.constraintEqualToAnchor(centerYAnchor).active = true
+      button.widthAnchor.constraintEqualToConstant(diameter).active = true
+      button.heightAnchor.constraintEqualToConstant(diameter).active = true
+      button.addTarget(self, action: #selector(ColorPicker.itemTapped(_:)), forControlEvents: .TouchUpInside)
     }
   }
   

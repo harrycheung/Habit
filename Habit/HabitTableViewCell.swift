@@ -6,14 +6,13 @@
 //  Copyright (c) 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 class HabitTableViewCell: SwipeTableViewCell {
   
   var entry: Entry?
   var habit: Habit?
-  var bottomBorder: CALayer?
+  var bottomBorder: CALayer!
   
   @IBOutlet weak var name: UILabel!
   @IBOutlet weak var due: UILabel!
@@ -26,10 +25,10 @@ class HabitTableViewCell: SwipeTableViewCell {
   
   override func layoutSubviews() {
     if bottomBorder == nil {
-      bottomBorder = CALayer()
       let frame = contentView.frame
-      bottomBorder!.frame = CGRectMake(0, 0, frame.width, 1)
-      bottomBorder!.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.05).CGColor
+      bottomBorder = CALayer()
+      bottomBorder.frame = CGRectMake(0, 0, frame.width, 1)
+      bottomBorder.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.05).CGColor
       layer.addSublayer(bottomBorder!)
     }
   }
@@ -41,16 +40,16 @@ class HabitTableViewCell: SwipeTableViewCell {
       name.text = HabitManager.FakeEntries[entry.number!.integerValue]
       due.text = ""
       let alpha = CGFloat(entry.number!.floatValue) / CGFloat(HabitManager.FakeEntries.count - 1)
-      setBackgroundAlpha(1 - (1 - HabitApp.MinimumAlpha) * alpha)
+      setBackgroundAlpha(1 - (1 - Constants.MinimumAlpha) * alpha)
     } else {
       name.text = entry.habit!.name
       due.text = entry.dueText
       let dueIn = entry.dueIn
-      var alpha = HabitApp.MinimumAlpha
+      var alpha = Constants.MinimumAlpha
       if dueIn < 10 * 60 {
         alpha = 1.0
       } else if dueIn < 24 * 3600 {
-        alpha = HabitApp.MinimumAlpha + (1 - HabitApp.MinimumAlpha) * pow(1000, -CGFloat(dueIn) / (24 * 3600))
+        alpha = Constants.MinimumAlpha + (1 - Constants.MinimumAlpha) * pow(1000, -CGFloat(dueIn) / (24 * 3600))
       }
       setBackgroundAlpha(alpha)
     }
@@ -65,7 +64,7 @@ class HabitTableViewCell: SwipeTableViewCell {
       name.text = habit.name
     }
     due.text = ""
-    setBackgroundAlpha(HabitApp.MinimumAlpha)
+    setBackgroundAlpha(Constants.MinimumAlpha)
   }
   
   func setBackgroundAlpha(alpha: CGFloat) {
@@ -75,4 +74,5 @@ class HabitTableViewCell: SwipeTableViewCell {
       contentView.alpha = alpha
     }
   }
+  
 }

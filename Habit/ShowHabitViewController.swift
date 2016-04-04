@@ -6,14 +6,12 @@
 //  Copyright (c) 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
 import UIKit
 import CoreData
-import SnapKit
 import KAProgressLabel
 import FontAwesome_swift
 
-class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
+class ShowHabitViewController: UIViewController {
   
   @IBOutlet weak var name: UILabel!
   @IBOutlet weak var switchMode: UIButton!
@@ -32,8 +30,8 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
   @IBOutlet weak var height: NSLayoutConstraint!
   @IBOutlet weak var contentView: UIVisualEffectView!
   
-  var habit: Habit?
-  var editHabitTransition: EditHabitTransition?
+  var habit: Habit!
+  var editHabitTransition: EditHabitTransition!
   
   struct AnimationNumbers {
     var completedStart: Int = 0
@@ -46,9 +44,12 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
   var animationNumbers = AnimationNumbers()
   
   func animateNumbers(progress: CGFloat) {
-    let percentage = CGFloat(progress - animationNumbers.percentageStart) / CGFloat(animationNumbers.percentageEnd - animationNumbers.percentageStart)
-    let currentCompleted = CGFloat(animationNumbers.completedEnd - animationNumbers.completedStart) * percentage + CGFloat(animationNumbers.completedStart)
-    let currentSkipped = CGFloat(animationNumbers.skippedEnd - animationNumbers.skippedStart) * percentage + CGFloat(animationNumbers.skippedStart)
+    let percentage = CGFloat(progress - animationNumbers.percentageStart) /
+                     CGFloat(animationNumbers.percentageEnd - animationNumbers.percentageStart)
+    let currentCompleted = CGFloat(animationNumbers.completedEnd - animationNumbers.completedStart) * percentage +
+                           CGFloat(animationNumbers.completedStart)
+    let currentSkipped = CGFloat(animationNumbers.skippedEnd - animationNumbers.skippedStart) * percentage +
+                         CGFloat(animationNumbers.skippedStart)
     if currentCompleted.isNormal {
       completed.text = "\(Int(currentCompleted))"
     }
@@ -68,7 +69,7 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
     
     switchMode.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
     switchMode.setTitle(String.fontAwesomeIconWithName(.Cog), forState: .Normal)
-    if habit!.isFake { switchMode.hidden = true }
+    if habit.isFake { switchMode.hidden = true }
     
     progressLabel.labelVCBlock = { label in
       self.progressPercentage.text = "\(Int(label.progress * 100))%"
@@ -76,13 +77,13 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
     }
     progressLabel.progressColor = HabitApp.color
     
-    name.text = habit!.isFake ? "Example habit" : habit!.name
+    name.text = habit.isFake ? "Example habit" : habit.name
     
     back.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
     back.setTitle(String.fontAwesomeIconWithName(.ChevronLeft), forState: .Normal)
     
-    frequency.text = habit!.frequency.description
-    let times = habit!.useTimes ? habit!.times! : habit!.partsArray.count
+    frequency.text = habit.frequency.description
+    let times = habit.useTimes ? habit.times! : habit.partsArray.count
     switch times {
     case 1:
       frequencyValue.text = "once"
@@ -92,7 +93,7 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
       frequencyValue.text = "\(times) times"
     }
     
-    habitHistory.habit = habit!
+    habitHistory.habit = habit
     
     contentView.layer.shadowColor = UIColor.blackColor().CGColor
     contentView.layer.shadowOpacity = 0.6
@@ -101,15 +102,20 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
   }
   
   override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    
     setupStats()
   }
   
-  func setupStats() {
-    currentStreak.text = "\(habit!.currentStreak!)"
-    longestStreak.text = "\(habit!.longestStreak!)"
-    skipped.text = "\(habit!.skipped!)"
-    completed.text = "\(habit!.completed!)"
-    progressLabel.setProgress(habit!.progress(NSDate()), timing: TPPropertyAnimationTimingEaseOut, duration: 0.5, delay: 0.3)
+  private func setupStats() {
+    currentStreak.text = "\(habit.currentStreak!)"
+    longestStreak.text = "\(habit.longestStreak!)"
+    skipped.text = "\(habit.skipped!)"
+    completed.text = "\(habit.completed!)"
+    progressLabel.setProgress(habit.progress(NSDate()),
+                              timing: TPPropertyAnimationTimingEaseOut,
+                              duration: 0.5,
+                              delay: 0.3)
   }
   
   @IBAction func closeView(sender: AnyObject) {
@@ -144,7 +150,7 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
     return formatter
   }()
   
-  func updateStats(when: AnyObject?, percentage: CGFloat, completedCount: Int, skippedCount: Int) {
+  private func updateStats(when: AnyObject?, percentage: CGFloat, completedCount: Int, skippedCount: Int) {
     progressLabel.setProgress(percentage, timing: TPPropertyAnimationTimingEaseOut, duration: 0.5, delay: 0)
     animationNumbers.percentageStart = progressLabel.progress
     animationNumbers.percentageEnd = percentage
@@ -155,7 +161,7 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
     
     if let date = when as? NSDate {
       let calendar = HabitApp.calendar
-      switch habit!.frequency {
+      switch habit.frequency {
       case .Daily:
         progressPeriod.numberOfLines = 1
         if calendar.isDate(date, equalToDate: NSDate(), toUnitGranularity: .Year) {
@@ -203,14 +209,9 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
   @IBAction func allTimeProgress(sender: AnyObject) {
     habitHistory.clearSelection()
     updateStats("All time",
-      percentage: habit!.progress(NSDate()),
-      completedCount: habit!.completed!.integerValue,
-      skippedCount: habit!.skipped!.integerValue)
-  }
-  
-  func habitHistory(habitHistory: HabitHistory, selectedHistory history: History) {
-    updateStats(history.date, percentage: history.percentage,
-      completedCount: history.completed!.integerValue, skippedCount: history.skipped!.integerValue)
+      percentage: habit.progress(NSDate()),
+      completedCount: habit.completed!.integerValue,
+      skippedCount: habit.skipped!.integerValue)
   }
   
   @IBAction func goToSettings() {
@@ -218,8 +219,19 @@ class ShowHabitViewController: UIViewController, HabitHistoryDelegate {
     ehvc.transitioningDelegate = editHabitTransition
     ehvc.modalPresentationStyle = .Custom
     ehvc.habit = habit
-    ehvc.frequency = habit!.frequency
+    ehvc.frequency = habit.frequency
     presentViewController(ehvc, animated: true, completion: nil)
+  }
+  
+}
+
+extension ShowHabitViewController: HabitHistoryDelegate {
+  
+  func habitHistory(habitHistory: HabitHistory, selectedHistory history: History) {
+    updateStats(history.date,
+                percentage: history.percentage,
+                completedCount: history.completed!.integerValue,
+                skippedCount: history.skipped!.integerValue)
   }
   
 }

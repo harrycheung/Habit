@@ -6,7 +6,6 @@
 //  Copyright © 2015 Harry Cheung. All rights reserved.
 //
 
-import Foundation
 import CoreData
 
 class Entry: NSManagedObject, Comparable {
@@ -59,22 +58,22 @@ class Entry: NSManagedObject, Comparable {
       text = "now"
     case 5..<60:
       text = "\(di) minutes"
-    case 60..<HabitApp.dayMinutes:
+    case 60..<Constants.dayMinutes:
       let hours = di / 60
       if hours == 1 {
         text = "an hour"
       } else {
         text = "\(hours) hours"
       }
-    case HabitApp.dayMinutes..<HabitApp.weekMinutes:
-      let days = di / HabitApp.dayMinutes
+    case Constants.dayMinutes..<Constants.weekMinutes:
+      let days = di / Constants.dayMinutes
       if days == 1 {
         text = "a day"
       } else {
         text = "\(days) days"
       }
-    case HabitApp.weekMinutes..<(HabitApp.weekMinutes * 4):
-      let weeks = di / HabitApp.weekMinutes
+    case Constants.weekMinutes..<(Constants.weekMinutes * 4):
+      let weeks = di / Constants.weekMinutes
       if weeks == 1 {
         text = "a week"
       } else {

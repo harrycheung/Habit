@@ -64,12 +64,15 @@
 // 55: done - When skipping past, use swipe animation
 // 56: done - Inserting new entries should take account of previous ordering
 // 57: Fake habits for review and tell your friends
+// 58: iOS9
+// 59: New bottom tab bar with icons
+// 60: New example habits show up late
 
 import UIKit
 import CoreData
 import FontAwesome_swift
 
-class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SwipeTableViewCellDelegate, ExpandTabBarDataSource, ExpandTabBarDelegate {
+class MainViewController: UIViewController {
   
   // IB identifiers
   let cellIdentifier = "HabitCell"
@@ -85,10 +88,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   @IBOutlet weak var newButton: UIButton!
   @IBOutlet weak var transitionOverlay: UIView!
   
-  var statusBar: UIView?
-  var refreshTimer: NSTimer?
+  var statusBar: UIView!
+  var refreshTimer: NSTimer!
   var stopReload: Bool = false
-  let appSettingsTransition: UIViewControllerTransitioningDelegate = AppSettingsTransition()
+  let appSettingsTransition: UIViewControllerTransitioningDelegate = SettingsTransition()
   let selectFrequencyTransition: UIViewControllerTransitioningDelegate = SelectFrequencyTransition()
   let showHabitTransition: UIViewControllerTransitioningDelegate = ShowHabitTransition()
   
@@ -142,7 +145,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             entry.skip()
           }
         }
-        date = NSDate(timeInterval: Double(HabitApp.daySec), sinceDate: date)
+        date = NSDate(timeInterval: Double(Constants.daySec), sinceDate: date)
       }
       
 //      let createdAt = calendar.dateByAddingUnit(.Hour, value: 10, toDate: calendar.zeroTime(calendar.dateByAddingUnit(.Day, value: -5, toDate: NSDate())!))!
@@ -207,12 +210,15 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     settings.setTitle(String.fontAwesomeIconWithName(.Cog), forState: .Normal)
     
     statusBar = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 20))
-    statusBar!.backgroundColor = HabitApp.color
-    view.addSubview(statusBar!)
+    statusBar.backgroundColor = HabitApp.color
+    view.addSubview(statusBar)
       
     // Setup timers
-    refreshTimer =
-      NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: "reload", userInfo: nil, repeats: true)
+    refreshTimer = NSTimer.scheduledTimerWithTimeInterval(60,
+                                                          target: self,
+                                                          selector: #selector(MainViewController.reload),
+                                                          userInfo: nil,
+                                                          repeats: true)
     
     // Setup colors
     titleBar.backgroundColor = HabitApp.color
@@ -228,11 +234,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     view.bringSubviewToFront(transitionOverlay)
   }
   
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
-  
   func reload() {
     if !stopReload {
       HabitManager.reload()
@@ -241,7 +242,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   }
   
   @IBAction func showSettings(sender: AnyObject) {
-    let asvc = storyboard!.instantiateViewControllerWithIdentifier("AppSettingsViewController") as! AppSettingsViewController
+    let asvc = storyboard!.instantiateViewControllerWithIdentifier("AppSettingsViewController") as! SettingsViewController
     asvc.modalPresentationStyle = .OverCurrentContext
     asvc.transitioningDelegate = appSettingsTransition
     presentViewController(asvc, animated: true, completion: nil)
@@ -342,135 +343,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     CATransaction.commit()
   }
   
-  // Table view
-  
-  func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let removeRows = { (indexPaths: [NSIndexPath]) in
-      tableView.deleteRowsAtIndexPaths(indexPaths, withRowAnimation: .Top)
-      UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration) {
-        self.newButton.alpha = 1
-      }
-    }
-    
-    let complete = { (cell: SwipeTableViewCell) in
-      let indexPath = tableView.indexPathForCell(cell)!
-      HabitManager.complete(indexPath.row, today: self.tabBar.selectedIndex == 1)
-      removeRows([indexPath])
-    }
-    
-    let skip = { (cell: SwipeTableViewCell) in
-      let indexPath = tableView.indexPathForCell(cell)!
-      let entry = self.tabBar.selectedIndex == 0 ? HabitManager.today[indexPath.row] : HabitManager.tomorrow[indexPath.row]
-      if !entry.habit!.isFake && entry.habit!.hasOldEntries {
-        let sdvc = self.storyboard!.instantiateViewControllerWithIdentifier("SwipeDialogViewController") as! SwipeDialogViewController
-        sdvc.modalTransitionStyle = .CrossDissolve
-        sdvc.modalPresentationStyle = .OverCurrentContext
-        sdvc.yesCompletion = {
-          // Single out this entry just in case its due > NSDate()
-          if entry.due!.compare(NSDate()) == .OrderedDescending {
-            HabitManager.skip(indexPath.row, today: self.tabBar.selectedIndex == 1)
-          }
-          self.dismissViewControllerAnimated(true) {
-            removeRows(HabitManager.skip(entry.habit!))
-            self.stopReload = false
-          }
-        }
-        sdvc.noCompletion = {
-          HabitManager.skip(indexPath.row, today: self.tabBar.selectedIndex == 1)
-          self.dismissViewControllerAnimated(true) {
-            removeRows([indexPath])
-            self.stopReload = false
-          }
-        }
-        self.stopReload = true
-        self.presentViewController(sdvc, animated: true, completion: nil)
-      } else {
-        HabitManager.skip(indexPath.row, today: self.tabBar.selectedIndex == 1)
-        removeRows([indexPath])
-      }
-    }
-    
-    let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! HabitTableViewCell
-    switch self.tabBar.selectedIndex {
-    case 0:
-      cell.load(habit: HabitManager.habits[indexPath.row])
-    case 1:
-      cell.load(entry: HabitManager.today[indexPath.row])
-    case 2:
-      cell.load(entry: HabitManager.tomorrow[indexPath.row])
-    default: ()
-    }
-    cell.delegate = self
-    cell.setSwipeGesture(
-      direction: .Right,
-      view: UIImageView(image: UIImage.fontAwesomeIconWithName(.Check, textColor: UIColor.whiteColor(), size: CGSizeMake(24, 24))),
-      color: HabitApp.green,
-      options: [.Rotate, .Alpha],
-      completion: { cell in
-        complete(cell)
-    })
-    cell.setSwipeGesture(
-      direction: .Left,
-      view: UIImageView(image: UIImage.fontAwesomeIconWithName(.History, textColor: UIColor.whiteColor(), size: CGSizeMake(24, 24))),
-      color: HabitApp.yellow,
-      options: [.Rotate, .Alpha],
-      completion: { cell in
-        skip(cell)
-    })
-    if indexPath.section == 0 || (cell.entry != nil && cell.entry!.habit!.isFake) {
-      cell.swipable = true
-    } else {
-      cell.swipable = false
-      let button = UIButton(type: .System)
-      button.setTitle("Can't swipe " + (indexPath.section == 1 ? "upcoming" : "paused"), forState: .Normal)
-      button.setTitleColor(UIColor.lightGrayColor(), forState: .Normal)
-      button.titleLabel!.font = UIFont(name: "Bariol-Bold", size: 16)!
-      button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8)
-      button.backgroundColor = UIColor.darkGrayColor()
-      button.sizeToFit()
-      button.roundify(4)
-      cell.cantSwipeLabel = button
-    }
-    return cell
-  }
-  
-  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    switch tabBar.selectedIndex {
-    case 0:
-      return HabitManager.habitCount
-    case 1:
-      return HabitManager.todayCount
-    case 2:
-      return HabitManager.tomorrowCount
-    default:
-      return 0
-    }
-  }
-  
-  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    // dispatch_async is needed here since selection happens in a new thread
-    dispatch_async(dispatch_get_main_queue()) {
-      let cell = tableView.cellForRowAtIndexPath(indexPath) as! HabitTableViewCell
-      let shvc = self.storyboard!.instantiateViewControllerWithIdentifier("ShowHabitViewController") as! ShowHabitViewController
-      shvc.modalPresentationStyle = .OverCurrentContext
-      shvc.transitioningDelegate = self.showHabitTransition
-      if let entry = cell.entry {
-        shvc.habit = entry.habit!
-      } else {
-        shvc.habit = cell.habit!
-      }
-      self.presentViewController(shvc, animated: true, completion: nil)
-    }
-  }
-  
-  func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-    return HabitApp.TableCellHeight
-  }
-  
-  func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-    return 1
-  }
-  
   // Colors
   
   func changeColor(color: UIColor) {
@@ -489,25 +361,26 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // Change color
     titleBar.backgroundColor = color
     tabBar.backgroundColor = color
-    statusBar!.backgroundColor = color
+    statusBar.backgroundColor = color
     newButton.backgroundColor = color
     tableView.reloadData()
     
     // Animate color change
-    UIView.animateWithDuration(HabitApp.ColorChangeAnimationDuration,
-      delay: 0,
-      options: .CurveEaseInOut,
-      animations: {
-        self.overlayView.alpha = 0
-      }, completion: { finished in
-        imageView.removeFromSuperview()
-    })
+    UIView.animateWithDuration(Constants.ColorChangeAnimationDuration,
+                               delay: 0,
+                               options: .CurveEaseInOut,
+                               animations: {
+                                 self.overlayView.alpha = 0
+                               },
+                               completion: { finished in
+                                 imageView.removeFromSuperview()
+                               })
   }
   
   @IBAction func changeColorLeft(sender: AnyObject) {
     let newIndex = HabitApp.colorIndex - 1
     if newIndex == -1 {
-      HabitApp.colorIndex = HabitApp.colors.count - 1
+      HabitApp.colorIndex = Constants.colors.count - 1
     } else {
       HabitApp.colorIndex = newIndex
     }
@@ -516,7 +389,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
   @IBAction func changeColorRight(sender: AnyObject) {
     let newIndex = HabitApp.colorIndex + 1
-    if newIndex == HabitApp.colors.count {
+    if newIndex == Constants.colors.count {
       HabitApp.colorIndex = 0
     } else {
       HabitApp.colorIndex = newIndex
@@ -526,47 +399,11 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
   
   // UIScrollView
   
-  func scrollViewDidScroll(scrollView: UIScrollView) {
-//    NSLog("\(scrollView.contentOffset)")
-  }
+
   
-  func scrollViewWillBeginDragging(scrollView: UIScrollView) {
-    UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
-      self.newButton.alpha = 0
-    })
-  }
-  
-  func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-    if !decelerate {
-      UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
-        self.newButton.alpha = 1
-      })
-    }
-  }
-  
-  func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-    UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
-      self.newButton.alpha = 1
-    })
-  }
-  
-  // SwipeTableViewCell
-  
-  func startSwiping(cell: SwipeTableViewCell) {
-    UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
-      self.newButton.alpha = 0
-    })
-  }
-  
-  func endSwiping(cell: SwipeTableViewCell) {
-    if presentedViewController == nil {
-      UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration, animations: {
-        self.newButton.alpha = 1
-      })
-    }
-  }
-  
-  // ExpandTabBar
+}
+
+extension MainViewController: ExpandTabBarDelegate {
   
   func fontOfExpandTabBar(expandTabBar: ExpandTabBar) -> UIFont {
     return FontManager.regular(18)
@@ -593,18 +430,22 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     return 1
   }
   
+}
+
+extension MainViewController: ExpandTabBarDataSource {
+  
   func expandTabBar(expandTabBar: ExpandTabBar, didSelect: Int) {
     tableView.reloadData()
     
     if didSelect == 0 {
-      UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration) {
+      UIView.animateWithDuration(Constants.NewButtonFadeAnimationDuration) {
         self.newButton.alpha = 1
       }
     } else {
-      UIView.animateWithDuration(HabitApp.NewButtonFadeAnimationDuration) {
+      UIView.animateWithDuration(Constants.NewButtonFadeAnimationDuration) {
         self.newButton.alpha = 0
       }
     }
   }
+  
 }
-
