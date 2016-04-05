@@ -214,6 +214,7 @@ class MainViewController: UIViewController {
     // Change color
     titleBar.backgroundColor = color
     tabBar.backgroundColor = color
+    tabBar.tintColor = color
     statusBar.backgroundColor = color
     newButton.backgroundColor = color
     tableView.reloadData()
