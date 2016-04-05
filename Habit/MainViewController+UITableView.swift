@@ -28,7 +28,7 @@ extension MainViewController: UITableViewDataSource {
       let indexPath = tableView.indexPathForCell(cell)!
       let entry = self.tabBar.selectedIndex == 1 ? HabitManager.today[indexPath.row] : HabitManager.tomorrow[indexPath.row]
       if !entry.habit!.isFake && entry.habit!.hasOldEntries {
-        let sdvc = self.storyboard!.instantiateViewControllerWithIdentifier("SwipeDialogViewController") as! SwipeDialogViewController
+        let sdvc = self.storyboard!.instantiateViewControllerWithIdentifier(String(SwipeDialogViewController)) as! SwipeDialogViewController
         sdvc.modalTransitionStyle = .CrossDissolve
         sdvc.modalPresentationStyle = .OverCurrentContext
         sdvc.yesCompletion = {
@@ -56,7 +56,7 @@ extension MainViewController: UITableViewDataSource {
       }
     }
     
-    let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! HabitTableViewCell
+    let cell = tableView.dequeueReusableCellWithIdentifier(String(HabitTableViewCell), forIndexPath: indexPath) as! HabitTableViewCell
     switch self.tabBar.selectedIndex {
     case 0:
       cell.load(habit: HabitManager.habits[indexPath.row])
