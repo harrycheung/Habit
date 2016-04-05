@@ -56,7 +56,7 @@
         </mutableArray>
     </customFonts>
     <scenes>
-        <!--Data Source-->
+        <!--Main View Controller-->
         <scene sceneID="ho0-ya-1T5">
             <objects>
                 <viewController id="EoV-sV-T6s" customClass="MainViewController" customModule="Habit" customModuleProvider="target" sceneMemberID="viewController">
@@ -160,19 +160,8 @@
                                     <outlet property="delegate" destination="EoV-sV-T6s" id="ym0-yD-8pz"/>
                                 </connections>
                             </tableView>
-                            <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="40" translatesAutoresizingMaskIntoConstraints="NO" id="78L-D5-3dS" customClass="ExpandTabBar" customModule="Habit" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="528" width="320" height="40"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="eQr-NL-9x0"/>
-                                </constraints>
-                                <connections>
-                                    <outlet property="dataSource" destination="EoV-sV-T6s" id="vy9-6E-xGQ"/>
-                                    <outlet property="delegate" destination="EoV-sV-T6s" id="oop-qV-6Ek"/>
-                                </connections>
-                            </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3aO-Hc-w6C">
-                                <rect key="frame" x="244" y="452" width="56" height="56"/>
+                                <rect key="frame" x="244" y="443" width="56" height="56"/>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="56" id="kcs-7O-ddR"/>
@@ -188,6 +177,18 @@
                                     <action selector="showSelectFrequency:" destination="EoV-sV-T6s" eventType="touchUpInside" id="Iiq-ZA-O2f"/>
                                 </connections>
                             </button>
+                            <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="98p-eB-hYg">
+                                <rect key="frame" x="0.0" y="519" width="320" height="49"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <items>
+                                    <tabBarItem title="All" id="IIe-Hc-CC1"/>
+                                    <tabBarItem title="Today" id="x0V-SD-49c"/>
+                                    <tabBarItem title="Upcoming" id="3Cx-ai-ETO"/>
+                                </items>
+                                <connections>
+                                    <outlet property="delegate" destination="EoV-sV-T6s" id="KeG-SN-XPa"/>
+                                </connections>
+                            </tabBar>
                             <view hidden="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UlU-GY-Z0X">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -196,35 +197,38 @@
                         <constraints>
                             <constraint firstItem="UlU-GY-Z0X" firstAttribute="leading" secondItem="LvB-hO-ya5" secondAttribute="leading" id="13z-LD-8aO"/>
                             <constraint firstAttribute="centerX" secondItem="al0-3V-BIj" secondAttribute="centerX" id="3Uz-YV-txl"/>
+                            <constraint firstItem="98p-eB-hYg" firstAttribute="leading" secondItem="LvB-hO-ya5" secondAttribute="leading" id="7Va-BF-Yx9"/>
                             <constraint firstAttribute="trailing" secondItem="3aO-Hc-w6C" secondAttribute="trailing" constant="20" id="8RB-eo-9Zc"/>
                             <constraint firstItem="vGZ-8P-gz0" firstAttribute="width" secondItem="LvB-hO-ya5" secondAttribute="width" id="ARZ-vD-XHO"/>
                             <constraint firstItem="bYN-gK-gVh" firstAttribute="top" secondItem="UlU-GY-Z0X" secondAttribute="bottom" id="DeO-ew-11Q"/>
                             <constraint firstAttribute="trailing" secondItem="YxZ-cZ-8AJ" secondAttribute="trailing" id="GZd-1d-Gme"/>
                             <constraint firstItem="bYN-gK-gVh" firstAttribute="top" secondItem="al0-3V-BIj" secondAttribute="bottom" id="HpE-Ve-aig"/>
-                            <constraint firstItem="bYN-gK-gVh" firstAttribute="top" secondItem="78L-D5-3dS" secondAttribute="bottom" id="MiE-Af-ff9"/>
+                            <constraint firstItem="bYN-gK-gVh" firstAttribute="top" secondItem="98p-eB-hYg" secondAttribute="bottom" id="Lji-aK-EgZ"/>
                             <constraint firstItem="UlU-GY-Z0X" firstAttribute="top" secondItem="ZAm-fX-RF0" secondAttribute="bottom" constant="-20" id="SQd-TT-1j3"/>
                             <constraint firstItem="vGZ-8P-gz0" firstAttribute="top" secondItem="ZAm-fX-RF0" secondAttribute="bottom" id="TFZ-Io-OZ9"/>
+                            <constraint firstAttribute="trailing" secondItem="98p-eB-hYg" secondAttribute="trailing" id="Zmv-UZ-GqH"/>
+                            <constraint firstItem="98p-eB-hYg" firstAttribute="top" secondItem="3aO-Hc-w6C" secondAttribute="bottom" constant="20" id="a1P-Rt-IEM"/>
                             <constraint firstAttribute="centerX" secondItem="vGZ-8P-gz0" secondAttribute="centerX" id="a81-Rm-yX0"/>
                             <constraint firstItem="al0-3V-BIj" firstAttribute="width" secondItem="LvB-hO-ya5" secondAttribute="width" id="aXY-05-rhQ"/>
                             <constraint firstItem="YxZ-cZ-8AJ" firstAttribute="leading" secondItem="LvB-hO-ya5" secondAttribute="leading" id="b03-j4-6B2"/>
-                            <constraint firstItem="78L-D5-3dS" firstAttribute="leading" secondItem="LvB-hO-ya5" secondAttribute="leading" id="dli-gZ-wla"/>
                             <constraint firstItem="YxZ-cZ-8AJ" firstAttribute="top" secondItem="ZAm-fX-RF0" secondAttribute="bottom" constant="-20" id="i2n-na-B4D"/>
-                            <constraint firstItem="78L-D5-3dS" firstAttribute="trailing" secondItem="LvB-hO-ya5" secondAttribute="trailing" id="lM5-PD-Qsw"/>
                             <constraint firstItem="bYN-gK-gVh" firstAttribute="top" secondItem="YxZ-cZ-8AJ" secondAttribute="bottom" id="ru2-5J-G1H"/>
-                            <constraint firstItem="78L-D5-3dS" firstAttribute="top" secondItem="3aO-Hc-w6C" secondAttribute="bottom" constant="20" id="sk0-xV-s9x"/>
                             <constraint firstItem="UlU-GY-Z0X" firstAttribute="trailing" secondItem="LvB-hO-ya5" secondAttribute="trailing" id="spS-9R-syd"/>
                             <constraint firstItem="al0-3V-BIj" firstAttribute="top" secondItem="vGZ-8P-gz0" secondAttribute="bottom" id="ztZ-LO-Oh6"/>
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
+                        <outlet property="allTabBarItem" destination="IIe-Hc-CC1" id="VZH-OO-q5E"/>
                         <outlet property="newButton" destination="3aO-Hc-w6C" id="F7g-IR-5fn"/>
                         <outlet property="overlayView" destination="YxZ-cZ-8AJ" id="zuv-DP-3S4"/>
                         <outlet property="settings" destination="RZi-pq-jTa" id="oMh-CJ-9kH"/>
-                        <outlet property="tabBar" destination="78L-D5-3dS" id="OGF-pl-l1I"/>
+                        <outlet property="tabBar" destination="98p-eB-hYg" id="WEO-Cw-aiE"/>
                         <outlet property="tableView" destination="al0-3V-BIj" id="uHS-GK-pye"/>
                         <outlet property="titleBar" destination="vGZ-8P-gz0" id="Zws-Pv-b8s"/>
+                        <outlet property="todayTabBarItem" destination="x0V-SD-49c" id="Frg-aL-ler"/>
                         <outlet property="transitionOverlay" destination="UlU-GY-Z0X" id="8jE-vW-3HM"/>
+                        <outlet property="upcomingTabBarItem" destination="3Cx-ai-ETO" id="j8K-Zj-Wcw"/>
                         <segue destination="fuZ-7k-oQj" kind="presentation" identifier="ShowHabit" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="PyM-4B-EAp"/>
                     </connections>
                 </viewController>
@@ -597,7 +601,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rY1-QZ-SkP">
-                                <rect key="frame" x="244" y="452" width="56" height="56"/>
+                                <rect key="frame" x="244" y="443" width="56" height="56"/>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="rY1-QZ-SkP" secondAttribute="height" multiplier="1:1" id="fYx-JE-ayS"/>
@@ -613,7 +617,7 @@
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="rY1-QZ-SkP" secondAttribute="trailing" constant="20" id="R3m-hr-cO1"/>
-                            <constraint firstItem="D1w-Mg-yzB" firstAttribute="top" secondItem="rY1-QZ-SkP" secondAttribute="bottom" constant="60" id="xhb-ct-G0q"/>
+                            <constraint firstItem="D1w-Mg-yzB" firstAttribute="top" secondItem="rY1-QZ-SkP" secondAttribute="bottom" constant="69" id="xhb-ct-G0q"/>
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>

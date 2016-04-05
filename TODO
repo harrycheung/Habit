@@ -58,8 +58,8 @@
 // 56: done - Inserting new entries should take account of previous ordering
 // 57: Fake habits for review and tell your friends
 // 58: done - iOS9
-// 59: New bottom tab bar with icons
+// 59: done - New bottom tab bar with icons
 // 60: New example habits show up late
-// 61: Bug with example habits when resetting end of day
+// 61: done - Bug with example habits when resetting end of day
 // 62: Allow swiping when animating spring
 

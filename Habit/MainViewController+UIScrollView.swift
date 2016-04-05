@@ -13,7 +13,7 @@ extension MainViewController {
   }
   
   func scrollViewWillBeginDragging(scrollView: UIScrollView) {
-    if tabBar.selectedIndex == 0 {
+    if tabBar.isSelected(Constants.TabAll) {
       UIView.animateWithDuration(Constants.NewButtonFadeAnimationDuration) {
         self.newButton.alpha = 0
       }
@@ -21,7 +21,7 @@ extension MainViewController {
   }
   
   func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-    if tabBar.selectedIndex == 0 {
+    if tabBar.isSelected(Constants.TabAll) {
       if !decelerate {
         UIView.animateWithDuration(Constants.NewButtonFadeAnimationDuration) {
           self.newButton.alpha = 1
@@ -31,7 +31,7 @@ extension MainViewController {
   }
   
   func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-    if tabBar.selectedIndex == 0 {
+    if tabBar.isSelected(Constants.TabAll) {
       UIView.animateWithDuration(Constants.NewButtonFadeAnimationDuration) {
         self.newButton.alpha = 1
       }

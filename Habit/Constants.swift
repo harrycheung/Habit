@@ -42,4 +42,8 @@ struct Constants {
   static let TableCellHeight: CGFloat = 70
   static let TableSectionHeight: CGFloat = 18
   
+  static let TabAll = "All"
+  static let TabToday = "Today"
+  static let TabUpcoming = "Upcoming"
+  
 }

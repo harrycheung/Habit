@@ -19,9 +19,12 @@ class MainViewController: UIViewController {
   @IBOutlet weak var titleBar: UIView!
   @IBOutlet weak var settings: UIButton!
   @IBOutlet weak var overlayView: UIView!
-  @IBOutlet weak var tabBar: ExpandTabBar!
+  @IBOutlet weak var tabBar: UITabBar!
   @IBOutlet weak var newButton: UIButton!
   @IBOutlet weak var transitionOverlay: UIView!
+  @IBOutlet weak var allTabBarItem: UITabBarItem!
+  @IBOutlet weak var todayTabBarItem: UITabBarItem!
+  @IBOutlet weak var upcomingTabBarItem: UITabBarItem!
   
   var statusBar: UIView!
   var refreshTimer: NSTimer!
@@ -43,7 +46,20 @@ class MainViewController: UIViewController {
     statusBar = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 20))
     statusBar.backgroundColor = HabitApp.color
     view.addSubview(statusBar)
-      
+    
+    tabBar.selectedItem = todayTabBarItem
+    tabBar.tintColor = HabitApp.color
+    tabBar.backgroundColor = HabitApp.color
+    allTabBarItem.image = UIImage.fontAwesomeIconWithName(.Tasks,
+                                                          textColor: UIColor.whiteColor(),
+                                                          size: CGSizeMake(30, 30))
+    todayTabBarItem.image = UIImage.fontAwesomeIconWithName(.CalendarCheckO,
+                                                            textColor: UIColor.whiteColor(),
+                                                            size: CGSizeMake(30, 30))
+    upcomingTabBarItem.image = UIImage.fontAwesomeIconWithName(.MailForward,
+                                                               textColor: UIColor.whiteColor(),
+                                                               size: CGSizeMake(30, 30))
+    
     // Setup timers
     refreshTimer = NSTimer.scheduledTimerWithTimeInterval(60,
                                                           target: self,
@@ -165,12 +181,18 @@ class MainViewController: UIViewController {
     CATransaction.begin()
     let future = HabitApp.calendar.zeroTime(HabitApp.calendar.dateByAddingUnit(.Day, value: 1, toDate: NSDate())!)
     CATransaction.setCompletionBlock() {
-      // Create future entries
-      self.insertRows(HabitManager.createEntries(after: future, currentDate: NSDate(), habit: nil, save: true))
+      let rows = HabitManager.createEntries(after: future, currentDate: NSDate(), habit: nil, save: true)
+      if self.tabBar.isSelected(Constants.TabUpcoming) {
+        // Create future entries
+        self.insertRows(rows)
+      }
     }
     
-    // Delete future entries
-    deleteRows(HabitManager.deleteEntries(after: future, habit: nil))
+    let rows = HabitManager.deleteEntries(after: future, habit: nil)
+    if tabBar.isSelected(Constants.TabUpcoming) {
+      // Delete future entries
+      deleteRows(rows)
+    }
     CATransaction.commit()
   }
   
@@ -228,47 +250,14 @@ class MainViewController: UIViewController {
     changeColor(HabitApp.color)
   }
   
-  // UIScrollView
-  
-
-  
 }
 
-extension MainViewController: ExpandTabBarDelegate {
+extension MainViewController: UITabBarDelegate {
   
-  func fontOfExpandTabBar(expandTabBar: ExpandTabBar) -> UIFont {
-    return FontManager.regular(18)
-  }
-  
-  func numberOfTabsInExpandTabBar(expandTabBar: ExpandTabBar) -> Int {
-    return 3
-  }
-  
-  func expandTabBar(expandTabBar: ExpandTabBar, itemAtIndex: Int) -> String? {
-    switch itemAtIndex {
-    case 0:
-      return "All habits"
-    case 1:
-      return "Today"
-    case 2:
-      return "Tomorrow"
-    default:
-      return ""
-    }
-  }
-  
-  func defaultIndex(expandTabBar: ExpandTabBar) -> Int {
-    return 1
-  }
-  
-}
-
-extension MainViewController: ExpandTabBarDataSource {
-  
-  func expandTabBar(expandTabBar: ExpandTabBar, didSelect: Int) {
+  func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem) {
     tableView.reloadData()
     
-    if didSelect == 0 {
+    if item.title == Constants.TabAll {
       UIView.animateWithDuration(Constants.NewButtonFadeAnimationDuration) {
         self.newButton.alpha = 1
       }

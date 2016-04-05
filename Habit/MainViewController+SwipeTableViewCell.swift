@@ -9,7 +9,7 @@
 extension MainViewController: SwipeTableViewCellDelegate {
   
   func startSwiping(cell: SwipeTableViewCell) {
-    if tabBar.selectedIndex == 0 {
+    if tabBar.isSelected(Constants.TabAll) {
       UIView.animateWithDuration(Constants.NewButtonFadeAnimationDuration) {
         self.newButton.alpha = 0
       }
@@ -17,7 +17,7 @@ extension MainViewController: SwipeTableViewCellDelegate {
   }
   
   func endSwiping(cell: SwipeTableViewCell) {
-    if tabBar.selectedIndex == 0 {
+    if tabBar.isSelected(Constants.TabAll) {
       if presentedViewController == nil {
         UIView.animateWithDuration(Constants.NewButtonFadeAnimationDuration) {
           self.newButton.alpha = 1

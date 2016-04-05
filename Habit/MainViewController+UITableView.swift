@@ -11,7 +11,7 @@ extension MainViewController: UITableViewDataSource {
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let removeRows = { (indexPaths: [NSIndexPath]) in
       tableView.deleteRowsAtIndexPaths(indexPaths, withRowAnimation: .Top)
-      if self.tabBar.selectedIndex == 0 {
+      if self.tabBar.isSelected(Constants.TabAll) {
         UIView.animateWithDuration(Constants.NewButtonFadeAnimationDuration) {
           self.newButton.alpha = 1
         }
@@ -20,13 +20,13 @@ extension MainViewController: UITableViewDataSource {
     
     let complete = { (cell: SwipeTableViewCell) in
       let indexPath = tableView.indexPathForCell(cell)!
-      HabitManager.complete(indexPath.row, today: self.tabBar.selectedIndex == 1)
+      HabitManager.complete(indexPath.row, today: self.tabBar.isSelected(Constants.TabToday))
       removeRows([indexPath])
     }
     
     let skip = { (cell: SwipeTableViewCell) in
       let indexPath = tableView.indexPathForCell(cell)!
-      let entry = self.tabBar.selectedIndex == 1 ? HabitManager.today[indexPath.row] : HabitManager.tomorrow[indexPath.row]
+      let entry = self.tabBar.isSelected(Constants.TabToday) ? HabitManager.today[indexPath.row] : HabitManager.upcoming[indexPath.row]
       if !entry.habit!.isFake && entry.habit!.hasOldEntries {
         let sdvc = self.storyboard!.instantiateViewControllerWithIdentifier(String(SwipeDialogViewController)) as! SwipeDialogViewController
         sdvc.modalTransitionStyle = .CrossDissolve
@@ -34,7 +34,7 @@ extension MainViewController: UITableViewDataSource {
         sdvc.yesCompletion = {
           // Single out this entry just in case its due > NSDate()
           if entry.due!.compare(NSDate()) == .OrderedDescending {
-            HabitManager.skip(indexPath.row, today: self.tabBar.selectedIndex == 1)
+            HabitManager.skip(indexPath.row, today: self.tabBar.isSelected(Constants.TabToday))
           }
           self.dismissViewControllerAnimated(true) {
             removeRows(HabitManager.skip(entry.habit!))
@@ -42,7 +42,7 @@ extension MainViewController: UITableViewDataSource {
           }
         }
         sdvc.noCompletion = {
-          HabitManager.skip(indexPath.row, today: self.tabBar.selectedIndex == 1)
+          HabitManager.skip(indexPath.row, today: self.tabBar.isSelected(Constants.TabToday))
           self.dismissViewControllerAnimated(true) {
             removeRows([indexPath])
             self.stopReload = false
@@ -51,19 +51,19 @@ extension MainViewController: UITableViewDataSource {
         self.stopReload = true
         self.presentViewController(sdvc, animated: true, completion: nil)
       } else {
-        HabitManager.skip(indexPath.row, today: self.tabBar.selectedIndex == 1)
+        HabitManager.skip(indexPath.row, today: self.tabBar.isSelected(Constants.TabToday))
         removeRows([indexPath])
       }
     }
     
     let cell = tableView.dequeueReusableCellWithIdentifier(String(HabitTableViewCell), forIndexPath: indexPath) as! HabitTableViewCell
-    switch self.tabBar.selectedIndex {
-    case 0:
+    switch tabBar.selectedItem!.title! {
+    case Constants.TabAll:
       cell.load(habit: HabitManager.habits[indexPath.row])
-    case 1:
+    case Constants.TabToday:
       cell.load(entry: HabitManager.today[indexPath.row])
-    case 2:
-      cell.load(entry: HabitManager.tomorrow[indexPath.row])
+    case Constants.TabUpcoming:
+      cell.load(entry: HabitManager.upcoming[indexPath.row])
     default: ()
     }
     cell.delegate = self
@@ -83,7 +83,7 @@ extension MainViewController: UITableViewDataSource {
       completion: { cell in
         skip(cell)
     })
-    if tabBar.selectedIndex != 0 || (cell.entry != nil && cell.entry!.habit!.isFake) {
+    if !tabBar.isSelected(Constants.TabAll) || (cell.entry != nil && cell.entry!.habit!.isFake) {
       cell.swipable = true
     } else {
       cell.swipable = false
@@ -101,13 +101,13 @@ extension MainViewController: UITableViewDataSource {
   }
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    switch tabBar.selectedIndex {
-    case 0:
+    switch tabBar.selectedItem!.title! {
+    case Constants.TabAll:
       return HabitManager.habitCount
-    case 1:
+    case Constants.TabToday:
       return HabitManager.todayCount
-    case 2:
-      return HabitManager.tomorrowCount
+    case Constants.TabUpcoming:
+      return HabitManager.upcomingCount
     default:
       return 0
     }

@@ -209,7 +209,7 @@ class HabitDailyTests: XCTestCase {
     expect(habit.skipped!.integerValue) == 0
     expect(habit.skip(before: today).count) == 14
     expect(habit.skipped!.integerValue) == 14
-    components.day++ // today
+    components.day += 1 // today
     components.hour = 16
     expect(habit.firstTodo!.due!) == calendar.dateFromComponents(components)!
     components.day += 2 // day after tomorrow

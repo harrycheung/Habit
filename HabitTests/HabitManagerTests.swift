@@ -44,10 +44,10 @@ class HabitManagerTests: XCTestCase {
     expect(B.update(createdAt).count) == 4
     
     HabitManager.reload(createdAt)
-    expect(HabitManager.currentCount) == 2
+    expect(HabitManager.todayCount) == 2
     expect(HabitManager.upcomingCount) == 2
-    expect(HabitManager.current[0].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 27, hour: 14, minute: 0)
-    expect(HabitManager.current[1].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 27, hour: 20, minute: 0)
+    expect(HabitManager.today[0].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 27, hour: 14, minute: 0)
+    expect(HabitManager.today[1].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 27, hour: 20, minute: 0)
     expect(HabitManager.upcoming[0].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 28, hour: 14, minute: 0)
     expect(HabitManager.upcoming[1].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 28, hour: 20, minute: 0)
     
@@ -55,12 +55,12 @@ class HabitManagerTests: XCTestCase {
     expect(C.update(createdAt).count) == 4
     
     HabitManager.reload(createdAt)
-    expect(HabitManager.currentCount) == 4
+    expect(HabitManager.todayCount) == 4
     expect(HabitManager.upcomingCount) == 4
-    expect(HabitManager.current[1].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 27, hour: 14, minute: 0)
-    expect(HabitManager.current[1].habit!.name!) == "C"
-    expect(HabitManager.current[3].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 27, hour: 20, minute: 0)
-    expect(HabitManager.current[3].habit!.name!) == "C"
+    expect(HabitManager.today[1].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 27, hour: 14, minute: 0)
+    expect(HabitManager.today[1].habit!.name!) == "C"
+    expect(HabitManager.today[3].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 27, hour: 20, minute: 0)
+    expect(HabitManager.today[3].habit!.name!) == "C"
     expect(HabitManager.upcoming[1].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 28, hour: 14, minute: 0)
     expect(HabitManager.upcoming[1].habit!.name!) == "C"
     expect(HabitManager.upcoming[3].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 28, hour: 20, minute: 0)
@@ -70,12 +70,12 @@ class HabitManagerTests: XCTestCase {
     expect(A.update(createdAt).count) == 4
     
     HabitManager.reload(createdAt)
-    expect(HabitManager.currentCount) == 6
+    expect(HabitManager.todayCount) == 6
     expect(HabitManager.upcomingCount) == 6
-    expect(HabitManager.current[0].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 27, hour: 14, minute: 0)
-    expect(HabitManager.current[0].habit!.name!) == "A"
-    expect(HabitManager.current[3].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 27, hour: 20, minute: 0)
-    expect(HabitManager.current[3].habit!.name!) == "A"
+    expect(HabitManager.today[0].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 27, hour: 14, minute: 0)
+    expect(HabitManager.today[0].habit!.name!) == "A"
+    expect(HabitManager.today[3].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 27, hour: 20, minute: 0)
+    expect(HabitManager.today[3].habit!.name!) == "A"
     expect(HabitManager.upcoming[0].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 28, hour: 14, minute: 0)
     expect(HabitManager.upcoming[0].habit!.name!) == "A"
     expect(HabitManager.upcoming[3].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 28, hour: 20, minute: 0)
@@ -84,11 +84,11 @@ class HabitManagerTests: XCTestCase {
     let now = HabitApp.calendar.date(year: 2015, month: 8, day: 27, hour: 21, minute: 0)!
     HabitManager.deleteEntries(after: now, habit: B, save: true)
     HabitManager.reload(now)
-    expect(HabitManager.currentCount) == 6
+    expect(HabitManager.todayCount) == 6
     expect(HabitManager.upcomingCount) == 4
     HabitManager.createEntries(after: now, currentDate: now, habit: B, save: true)
     HabitManager.reload(now)
-    expect(HabitManager.currentCount) == 6
+    expect(HabitManager.todayCount) == 6
     expect(HabitManager.upcomingCount) == 6
     expect(HabitManager.upcoming[1].due) == HabitApp.calendar.date(year: 2015, month: 8, day: 28, hour: 14, minute: 0)
     expect(HabitManager.upcoming[1].habit!.name!) == "B"
