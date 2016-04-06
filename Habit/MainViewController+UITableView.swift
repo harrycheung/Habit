@@ -67,22 +67,24 @@ extension MainViewController: UITableViewDataSource {
     default: ()
     }
     cell.delegate = self
-    cell.setSwipeGesture(
-      direction: .Right,
-      view: UIImageView(image: UIImage.fontAwesomeIconWithName(.Check, textColor: UIColor.whiteColor(), size: CGSizeMake(24, 24))),
-      color: Constants.green,
-      options: [.Rotate, .Alpha],
-      completion: { cell in
-        complete(cell)
-    })
-    cell.setSwipeGesture(
-      direction: .Left,
-      view: UIImageView(image: UIImage.fontAwesomeIconWithName(.History, textColor: UIColor.whiteColor(), size: CGSizeMake(24, 24))),
-      color: Constants.yellow,
-      options: [.Rotate, .Alpha],
-      completion: { cell in
-        skip(cell)
-    })
+    cell.setSwipeGesture(direction: .Right,
+                         view: UIImageView(image: UIImage.fontAwesomeIconWithName(.Check,
+                                                                                  textColor: UIColor.whiteColor(),
+                                                                                  size: CGSizeMake(40, 40))),
+                         color: Constants.green,
+                         options: [.Rotate, .Alpha],
+                         completion: { cell in
+                           complete(cell)
+                         })
+    cell.setSwipeGesture(direction: .Left,
+                         view: UIImageView(image: UIImage.fontAwesomeIconWithName(.History,
+                                                                                  textColor: UIColor.whiteColor(),
+                                                                                  size: CGSizeMake(40, 40))),
+                         color: Constants.yellow,
+                         options: [.Rotate, .Alpha],
+                         completion: { cell in
+                           skip(cell)
+                         })
     if !tabBar.isSelected(Constants.TabAll) || (cell.entry != nil && cell.entry!.habit!.isFake) {
       cell.swipable = true
     } else {
