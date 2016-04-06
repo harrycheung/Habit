@@ -56,10 +56,10 @@
 // 54: done - Test single paused habit
 // 55: done - When skipping past, use swipe animation
 // 56: done - Inserting new entries should take account of previous ordering
-// 57: Fake habits for review and tell your friends
+// 57: Fake habits for app store review and tell your friends
 // 58: done - iOS9
 // 59: done - New bottom tab bar with icons
-// 60: New example habits show up late
+// 60: done - New example habits show up late
 // 61: done - Bug with example habits when resetting end of day
-// 62: Allow swiping when animating spring
-
+// 62: done - Allow swiping when animating spring
+// 63: Show overdue section
