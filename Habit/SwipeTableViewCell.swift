@@ -97,7 +97,10 @@ class SwipeTableViewCell: UITableViewCell {
   
   override func prepareForReuse() {
     super.prepareForReuse()
-        
+    
+    if !colorViews.isEmpty {
+      uninstallSwipingView()
+    }
     initDefaults()
   }
   
