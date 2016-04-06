@@ -67,37 +67,34 @@ extension MainViewController: UITableViewDataSource {
     default: ()
     }
     cell.delegate = self
+    let rightImage = UIImage.fontAwesomeIconWithName(.Check, textColor: UIColor.whiteColor(), size: CGSizeMake(40, 40))
     cell.setSwipeGesture(direction: .Right,
-                         view: UIImageView(image: UIImage.fontAwesomeIconWithName(.Check,
-                                                                                  textColor: UIColor.whiteColor(),
-                                                                                  size: CGSizeMake(40, 40))),
+                         iconView: UIImageView(image: rightImage),
                          color: Constants.green,
-                         options: [.Rotate, .Alpha],
-                         completion: { cell in
-                           complete(cell)
-                         })
+                         options: [.Rotate, .Alpha]) { cell in
+                          complete(cell)
+    }
+    let leftImage = UIImage.fontAwesomeIconWithName(.History, textColor: UIColor.whiteColor(), size: CGSizeMake(40, 40))
     cell.setSwipeGesture(direction: .Left,
-                         view: UIImageView(image: UIImage.fontAwesomeIconWithName(.History,
-                                                                                  textColor: UIColor.whiteColor(),
-                                                                                  size: CGSizeMake(40, 40))),
+                         iconView: UIImageView(image: leftImage),
                          color: Constants.yellow,
-                         options: [.Rotate, .Alpha],
-                         completion: { cell in
-                           skip(cell)
-                         })
+                         options: [.Rotate, .Alpha]) { cell in
+                          skip(cell)
+    }
     if !tabBar.isSelected(Constants.TabAll) || (cell.entry != nil && cell.entry!.habit!.isFake) {
       cell.swipable = true
     } else {
       cell.swipable = false
-      //      let button = UIButton(type: .System)
-      //      button.setTitle("Can't swipe " + (indexPath.section == 1 ? "upcoming" : "paused"), forState: .Normal)
-      //      button.setTitleColor(UIColor.lightGrayColor(), forState: .Normal)
-      //      button.titleLabel!.font = UIFont(name: "Bariol-Bold", size: 16)!
-      //      button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8)
-      //      button.backgroundColor = UIColor.darkGrayColor()
-      //      button.sizeToFit()
-      //      button.roundify(4)
-      //      cell.cantSwipeLabel = button
+      
+      let button = UIButton(type: .System)
+      button.setTitle("Can't swipe", forState: .Normal)
+      button.setTitleColor(UIColor.lightGrayColor(), forState: .Normal)
+      button.titleLabel!.font = UIFont(name: "Bariol-Bold", size: 16)!
+      button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8)
+      button.backgroundColor = UIColor.darkGrayColor()
+      button.sizeToFit()
+      button.roundify(4)
+      cell.cantSwipeLabel = button
     }
     return cell
   }
