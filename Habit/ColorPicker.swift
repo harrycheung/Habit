@@ -8,13 +8,6 @@
 
 import UIKit
 
-@objc(ColorPickerDataSource)
-protocol ColorPickerDataSource {
-  
-  func colorPicker(colorPicker: ColorPicker, colorAtIndex: Int) -> UIColor
-  
-}
-
 @objc(ColorPickerDelegate)
 protocol ColorPickerDelegate {
   
@@ -25,12 +18,10 @@ protocol ColorPickerDelegate {
 @IBDesignable
 class ColorPicker: UIView {
   
-  @IBOutlet var dataSource: ColorPickerDataSource?
   @IBOutlet var delegate: ColorPickerDelegate?
 
   var buttons: [UIButton] = []
 
-  @IBInspectable var count: Int = 6
   @IBInspectable var diameter: CGFloat = 40
   
   var selectedIndex: Int {
@@ -51,9 +42,12 @@ class ColorPicker: UIView {
   
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
-    
-    for index in 0..<count {
+  }
+  
+  func configure(colors: [UIColor]) {
+    for index in 0..<colors.count {
       let button = ColorPickerButton(diameter: diameter, index: index)
+      button.backgroundColor = colors[index]
       buttons.append(button)
       addSubview(button)
       button.translatesAutoresizingMaskIntoConstraints = false
@@ -62,22 +56,12 @@ class ColorPicker: UIView {
                          relatedBy: .Equal,
                          toItem: self,
                          attribute: .CenterX,
-                         multiplier: (1 + 2 * CGFloat(index)) / CGFloat(count),
+                         multiplier: (1 + 2 * CGFloat(index)) / CGFloat(colors.count),
                          constant: 0).active = true
       button.centerYAnchor.constraintEqualToAnchor(centerYAnchor).active = true
       button.widthAnchor.constraintEqualToConstant(diameter).active = true
       button.heightAnchor.constraintEqualToConstant(diameter).active = true
       button.addTarget(self, action: #selector(ColorPicker.itemTapped(_:)), forControlEvents: .TouchUpInside)
-    }
-  }
-  
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-  }
-  
-  override func layoutSubviews() {
-    for (index, button) in buttons.enumerate() {
-      button.backgroundColor = dataSource!.colorPicker(self, colorAtIndex: index)
     }
   }
   

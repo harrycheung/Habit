@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -14,9 +14,9 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FrequencySettings" customModule="Habit" customModuleProvider="target">
             <connections>
                 <outlet property="leftTitle" destination="QyN-w6-dga" id="dnV-hX-O0G"/>
-                <outlet property="multiSelect" destination="vIP-Ib-9Mc" id="Ipq-Hg-V4Y"/>
-                <outlet property="picker" destination="wLI-h7-Hzg" id="avY-Tf-5sl"/>
+                <outlet property="partsMultiSelect" destination="vIP-Ib-9Mc" id="DUd-Fw-xpp"/>
                 <outlet property="rightTitle" destination="Ocd-v8-HiC" id="mJH-FR-HRx"/>
+                <outlet property="timesMultiSelect" destination="cTi-dB-CTV" id="7Me-pS-ZoT"/>
                 <outlet property="view" destination="iN0-l3-epB" id="d8m-lx-odK"/>
             </connections>
         </placeholder>
@@ -50,35 +50,13 @@
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vIP-Ib-9Mc" customClass="MultiSelectControl" customModule="Habit" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cTi-dB-CTV" userLabel="Times Multi Select" customClass="MultiSelectControl" customModule="Habit" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="21" width="160" height="547"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vIP-Ib-9Mc" userLabel="Parts Multi Select" customClass="MultiSelectControl" customModule="Habit" customModuleProvider="target">
                     <rect key="frame" x="168.5" y="21" width="151.5" height="547"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    <connections>
-                        <outlet property="dataSource" destination="-1" id="hg6-Pc-Eah"/>
-                        <outlet property="delegate" destination="-1" id="ruK-bj-aYi"/>
-                    </connections>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cTi-dB-CTV" userLabel="Picker Container">
-                    <rect key="frame" x="0.0" y="21" width="160" height="547"/>
-                    <subviews>
-                        <pickerView contentMode="scaleToFill" showsSelectionIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wLI-h7-Hzg">
-                            <rect key="frame" x="0.0" y="165" width="152" height="216"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="216" id="BJu-5Z-uUB"/>
-                            </constraints>
-                            <connections>
-                                <outlet property="dataSource" destination="-1" id="ADw-ud-lAi"/>
-                                <outlet property="delegate" destination="-1" id="dUW-cH-9lf"/>
-                            </connections>
-                        </pickerView>
-                    </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstAttribute="trailing" secondItem="wLI-h7-Hzg" secondAttribute="trailing" constant="8" id="Itx-Gd-RSH"/>
-                        <constraint firstItem="wLI-h7-Hzg" firstAttribute="centerY" secondItem="cTi-dB-CTV" secondAttribute="centerY" id="sOI-Eo-0BP"/>
-                        <constraint firstItem="wLI-h7-Hzg" firstAttribute="leading" secondItem="cTi-dB-CTV" secondAttribute="leading" id="tox-1K-6IX"/>
-                    </constraints>
                 </view>
             </subviews>
             <constraints>

@@ -9,14 +9,16 @@
 import UIKit
 import CoreData
 
-class SettingsViewController: UIViewController, ColorPickerDataSource, ColorPickerDelegate {
+class SettingsViewController: UIViewController {
   
   let PanMinimum: CGFloat = 0.5
   
   var mvc: MainViewController!
   var darkenView: UIView!
   
-  @IBOutlet weak var paddingView: UIView!
+  @IBOutlet weak var blurView: UIView!
+  @IBOutlet weak var settingsView: UIView!
+  @IBOutlet weak var slideConstraint: NSLayoutConstraint!
   @IBOutlet weak var close: UIButton!
   @IBOutlet weak var colorPicker: ColorPicker!
   @IBOutlet weak var notification: UISwitch!
@@ -31,7 +33,6 @@ class SettingsViewController: UIViewController, ColorPickerDataSource, ColorPick
   @IBOutlet weak var defaultAbbreviation: UILabel!
   @IBOutlet weak var defaultTimeZone: UILabel!
   @IBOutlet weak var local: UIView!
-  @IBOutlet weak var localLabel: UILabel!
   @IBOutlet weak var localAbbreviation: UILabel!
   @IBOutlet weak var localTimeZone: UILabel!
   
@@ -45,6 +46,8 @@ class SettingsViewController: UIViewController, ColorPickerDataSource, ColorPick
     close.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
     close.setTitle(String.fontAwesomeIconWithName(.ChevronDown), forState: .Normal)
     
+    colorPicker.delegate = self
+    colorPicker.configure(Constants.colors)
     colorPicker.selectedIndex = HabitApp.colorIndex
     notification.on = !HabitApp.notification
     autoSkip.on = HabitApp.autoSkip
@@ -52,7 +55,6 @@ class SettingsViewController: UIViewController, ColorPickerDataSource, ColorPick
     autoSkipDelay.text = autoSkipDelayString(HabitApp.autoSkipDelay)
     if !autoSkip.on {
       autoSkipHeight.priority = Constants.LayoutPriorityLow
-      view.layoutIfNeeded()
     }
     let timeZone = NSTimeZone(name: HabitApp.timeZone)!
     defaultTimeZone.text = timeZone.name.stringByReplacingOccurrencesOfString("_", withString: " ")
@@ -63,7 +65,6 @@ class SettingsViewController: UIViewController, ColorPickerDataSource, ColorPick
       localTimeZone.text = localTZ.name.stringByReplacingOccurrencesOfString("_", withString: " ")
     } else {
       local.removeFromSuperview()
-      view.layoutIfNeeded()
     }
     startOfDayStepper.value = Double(HabitApp.startOfDay)
     startOfDayLabel.text = timeOfDayString(HabitApp.startOfDay)
@@ -77,14 +78,16 @@ class SettingsViewController: UIViewController, ColorPickerDataSource, ColorPick
     view.layer.shadowOffset = CGSizeMake(0, -1)
     
     mvc = presentingViewController as? MainViewController
+    
+    slideConstraint.priority = Constants.LayoutPriorityLow
+    view.layoutIfNeeded()
   }
   
   @IBAction func panning(recognizer: UIPanGestureRecognizer) {
     let movement = max(recognizer.translationInView(view).y, 0)
-    view.frame = CGRectMake(0, movement, view.frame.width, view.frame.height)
-    darkenView.frame = CGRectMake(0, 0, view.frame.width, paddingView.bounds.height + movement)
-    let panPercentage = movement / (view.frame.height - paddingView.bounds.height)
-    darkenView.alpha = (1 - panPercentage) * SettingsTransition.DarkenAlpha
+    settingsView.frame = CGRectMake(0, movement + settingsView.frame.origin.y,
+                                    settingsView.frame.width, settingsView.frame.height)
+    let panPercentage = movement / settingsView.frame.height
     close.alpha = max(1 - panPercentage / PanMinimum, 0)
 
     if recognizer.state == .Ended || recognizer.state == .Cancelled {
@@ -95,24 +98,13 @@ class SettingsViewController: UIViewController, ColorPickerDataSource, ColorPick
           initialSpringVelocity: SettingsTransition.SpringVelocity,
           options: SettingsTransition.AnimationOptions,
           animations: {
-            self.view.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
-            self.darkenView.frame = CGRectMake(0, 0, self.view.frame.width, self.paddingView.bounds.height)
-            self.darkenView.alpha = SettingsTransition.DarkenAlpha
+            self.settingsView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
             self.close.alpha = 1
           }, completion: nil)
       } else {
         closeSettings(recognizer)
       }
     }
-  }
-  
-  func colorPicker(colorPicker: ColorPicker, colorAtIndex index: Int) -> UIColor {
-    return Constants.colors[index]
-  }
-  
-  func colorPicked(colorPicker: ColorPicker, colorIndex index: Int) {
-    mvc.changeColor(Constants.colors[index])
-    HabitApp.colorIndex = index
   }
   
   @IBAction func notificationChanged(sender: AnyObject) {
@@ -126,21 +118,19 @@ class SettingsViewController: UIViewController, ColorPickerDataSource, ColorPick
   
   @IBAction func autoSkipChanged(sender: AnyObject) {
     if autoSkip.on {
-      let darkenHeight = self.paddingView.bounds.height - self.autoSkipHeight.constant
       autoSkipHeight.priority = Constants.LayoutPriorityHigh
       UIView.animateWithDuration(Constants.TransitionDuration, delay: 0, options: .CurveEaseOut,
-        animations: {
-          self.darkenView.frame = CGRectMake(0, 0, self.view.frame.width, darkenHeight)
-          self.view.layoutIfNeeded()
-        }, completion: nil)
+                                 animations: {
+                                  self.view.layoutIfNeeded()
+                                 },
+                                 completion: nil)
     } else {
-      let darkenHeight = self.paddingView.bounds.height + self.autoSkipHeight.constant
       autoSkipHeight.priority = Constants.LayoutPriorityLow
       UIView.animateWithDuration(Constants.TransitionDuration, delay: 0, options: .CurveEaseOut,
-        animations: {
-          self.darkenView.frame = CGRectMake(0, 0, self.view.frame.width, darkenHeight)
-          self.view.layoutIfNeeded()
-        }, completion: nil)
+                                 animations: {
+                                  self.view.layoutIfNeeded()
+                                 },
+                                 completion: nil)
     }
   }
   
@@ -250,6 +240,15 @@ class SettingsViewController: UIViewController, ColorPickerDataSource, ColorPick
     self.dismissViewControllerAnimated(true) {
       autoSkipAlert()
     }
+  }
+  
+}
+
+extension SettingsViewController: ColorPickerDelegate {
+  
+  func colorPicked(colorPicker: ColorPicker, colorIndex index: Int) {
+    mvc.changeColor(Constants.colors[index])
+    HabitApp.colorIndex = index
   }
   
 }

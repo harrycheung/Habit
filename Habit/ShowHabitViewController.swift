@@ -18,7 +18,6 @@ class ShowHabitViewController: UIViewController {
   @IBOutlet weak var progressLabel: KAProgressLabel!
   @IBOutlet weak var progressPercentage: UILabel!
   @IBOutlet weak var progressPeriod: UILabel!
-  @IBOutlet weak var toolbar: UIView!
   @IBOutlet weak var back: UIButton!
   @IBOutlet weak var frequency: UILabel!
   @IBOutlet weak var frequencyValue: UILabel!
@@ -28,7 +27,8 @@ class ShowHabitViewController: UIViewController {
   @IBOutlet weak var completed: UILabel!
   @IBOutlet weak var habitHistory: HabitHistory!
   @IBOutlet weak var height: NSLayoutConstraint!
-  @IBOutlet weak var contentView: UIVisualEffectView!
+  @IBOutlet weak var backgroundView: UIView!
+  @IBOutlet weak var contentView: UIView!
   
   var habit: Habit!
   var editHabitTransition: EditHabitTransition!
@@ -94,11 +94,7 @@ class ShowHabitViewController: UIViewController {
     }
     
     habitHistory.habit = habit
-    
-    contentView.layer.shadowColor = UIColor.blackColor().CGColor
-    contentView.layer.shadowOpacity = 0.6
-    contentView.layer.shadowRadius = 5
-    contentView.layer.shadowOffset = CGSizeMake(0, 1)
+    habitHistory.delegate = self
   }
   
   override func viewWillAppear(animated: Bool) {
@@ -215,7 +211,7 @@ class ShowHabitViewController: UIViewController {
   }
   
   @IBAction func goToSettings() {
-    let ehvc = storyboard!.instantiateViewControllerWithIdentifier("EditHabitViewController") as! EditHabitViewController
+    let ehvc = EditHabitViewController(nibName: String(EditHabitViewController), bundle: nil)
     ehvc.transitioningDelegate = editHabitTransition
     ehvc.modalPresentationStyle = .Custom
     ehvc.habit = habit

@@ -16,6 +16,7 @@ class MainViewController: UIViewController {
   let SlideAnimationDuration: NSTimeInterval = 0.4
 
   @IBOutlet weak var tableView: UITableView!
+  @IBOutlet weak var statusBar: UIView!
   @IBOutlet weak var titleBar: UIView!
   @IBOutlet weak var settings: UIButton!
   @IBOutlet weak var overlayView: UIView!
@@ -26,10 +27,9 @@ class MainViewController: UIViewController {
   @IBOutlet weak var todayTabBarItem: UITabBarItem!
   @IBOutlet weak var upcomingTabBarItem: UITabBarItem!
   
-  var statusBar: UIView!
   var refreshTimer: NSTimer!
   var stopReload: Bool = false
-  let appSettingsTransition: UIViewControllerTransitioningDelegate = SettingsTransition()
+  let settingsTransition: UIViewControllerTransitioningDelegate = SettingsTransition()
   let selectFrequencyTransition: UIViewControllerTransitioningDelegate = SelectFrequencyTransition()
   let showHabitTransition: UIViewControllerTransitioningDelegate = ShowHabitTransition()
   
@@ -43,9 +43,15 @@ class MainViewController: UIViewController {
     settings.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
     settings.setTitle(String.fontAwesomeIconWithName(.Cog), forState: .Normal)
     
-    statusBar = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 20))
+//    statusBar = UIView()
     statusBar.backgroundColor = HabitApp.color
-    view.addSubview(statusBar)
+//    view.addSubview(statusBar)
+//    view.bringSubviewToFront(statusBar)
+//    statusBar.translatesAutoresizingMaskIntoConstraints = false
+//    statusBar.topAnchor.constraintEqualToAnchor(view.topAnchor, constant: -20)
+//    statusBar.bottomAnchor.constraintEqualToAnchor(tabBar.topAnchor)
+//    statusBar.leftAnchor.constraintEqualToAnchor(view.leftAnchor)
+//    statusBar.rightAnchor.constraintEqualToAnchor(view.rightAnchor)
     
     tabBar.selectedItem = todayTabBarItem
     tabBar.tintColor = HabitApp.color
@@ -89,14 +95,15 @@ class MainViewController: UIViewController {
   }
   
   @IBAction func showSettings(sender: AnyObject) {
-    let asvc = storyboard!.instantiateViewControllerWithIdentifier("AppSettingsViewController") as! SettingsViewController
-    asvc.modalPresentationStyle = .OverCurrentContext
-    asvc.transitioningDelegate = appSettingsTransition
-    presentViewController(asvc, animated: true, completion: nil)
+    let svc = SettingsViewController(nibName: String(SettingsViewController), bundle: nil)
+    svc.modalPresentationStyle = .OverCurrentContext
+    svc.transitioningDelegate = settingsTransition
+    presentViewController(svc, animated: true, completion: nil)
   }
   
   @IBAction func showSelectFrequency(sender: AnyObject) {
-    let sfvc = storyboard!.instantiateViewControllerWithIdentifier("SelectFrequencyViewController") as! SelectFrequencyViewController
+    //let sfvc = storyboard!.instantiateViewControllerWithIdentifier(String(SelectFrequencyViewController)) as! SelectFrequencyViewController
+    let sfvc = SelectFrequencyViewController(nibName: String(SelectFrequencyViewController), bundle: nil)
     sfvc.modalPresentationStyle = .OverCurrentContext
     sfvc.transitioningDelegate = selectFrequencyTransition
     presentViewController(sfvc, animated: true, completion: nil)

@@ -45,7 +45,7 @@
 // 43: done - Debug hide keyboard in new habit
 // 44: done - Fix border in habit history
 // 45: done - Call update on habits after return from background
-// 46: Use visible cells on tableview to animate
+// 46: done - Use visible cells on tableview to animate
 // 47: done - Multiple storyboards for each screen size
 // 48: done - Should autoskip happen immediately or later?
 // 49: done - Disable input while row animation is happening
@@ -62,4 +62,5 @@
 // 60: done - New example habits show up late
 // 61: done - Bug with example habits when resetting end of day
 // 62: done - Allow swiping when animating spring
-// 63: Show overdue section
+// 63: done - Breakdown storyboard into xib
+// 64: Configure notification times

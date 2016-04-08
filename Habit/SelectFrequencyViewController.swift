@@ -14,6 +14,7 @@ class SelectFrequencyViewController: UIViewController {
   let ButtonRadius: CGFloat = 80
   let LabelDistance: CGFloat = 80
   
+  @IBOutlet weak var backgroundView: UIView!
   @IBOutlet weak var closeButton: UIButton!
   
   let dailyButton = UIButton(type: .System)
@@ -137,7 +138,7 @@ class SelectFrequencyViewController: UIViewController {
       view.removeGestureRecognizer(recognizer)
     }
     
-    let ehvc = self.storyboard!.instantiateViewControllerWithIdentifier("EditHabitViewController") as! EditHabitViewController
+    let ehvc = EditHabitViewController(nibName: String(EditHabitViewController), bundle: nil)
     ehvc.frequency = frequency
     ehvc.modalPresentationStyle = .Custom
     ehvc.transitioningDelegate = createHabitTransition

@@ -10,6 +10,8 @@ import UIKit
 
 class SwipeDialogViewController: UIViewController {
   
+  @IBOutlet weak var backgroundView: UIView!
+  
   var yesCompletion: (() -> Void)?
   var noCompletion: (() -> Void)?
   
@@ -20,10 +22,7 @@ class SwipeDialogViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    view.layer.shadowColor = UIColor.blackColor().CGColor
-    view.layer.shadowOpacity = 1
-    view.layer.shadowRadius = 10
-    view.layer.shadowOffset = CGSizeMake(0, 5)
+    backgroundView.layer.cornerRadius = 4
   }
   
   @IBAction func yes(sender: AnyObject) {

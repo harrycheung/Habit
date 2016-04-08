@@ -22,19 +22,15 @@ class Habit: NSManagedObject {
   static let frequencyUnitStrings = ["hour", "day", "week", "month"]
   
   enum PartOfDay: Int {
-    case Morning = 1, MidMorning = 2, MidDay = 3, Afternoon = 4, LateAfternoon = 5, Evening = 6
+    case Morning = 1, MidDay = 2, Afternoon = 3, Evening = 4
     
     var description: String { return Habit.partOfDayStrings[rawValue - 1] }
   }
   
-  static let partOfDayStrings = [
-    "Morning",
-    "Midmorning",
-    "Midday",
-    "Afternoon",
-    "Late Afternoon",
-    "Evening"
-  ]
+  static let partOfDayStrings = ["Morning",
+                                 "Midday",
+                                 "Afternoon",
+                                 "Evening"]
   
   enum DayOfWeek: Int {
     case Sunday = 1, Monday = 2, Tuesday = 3, Wednesday = 4, Thursday = 5, Friday = 6, Saturday = 7
@@ -43,15 +39,13 @@ class Habit: NSManagedObject {
     var shortDescription: String { return description.substringToIndex(description.startIndex.advancedBy(3)) }
   }
   
-  static let dayOfWeekStrings = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday"
-  ]
+  static let dayOfWeekStrings = ["Sun",
+                                 "Mon",
+                                 "Tues",
+                                 "Wed",
+                                 "Thur",
+                                 "Fri",
+                                 "Sat"]
   
   enum PartOfMonth: Int {
     case Beginning = 1, Middle = 2, End = 3
@@ -59,15 +53,14 @@ class Habit: NSManagedObject {
     var description: String { return Habit.partOfMonthStrings[rawValue - 1] }
   }
   
-  static let partOfMonthStrings = [
-    "Beginning",
-    "Middle",
-    "End"
-  ]
+  static let partOfMonthStrings = ["Beginning",
+                                   "Middle",
+                                   "End"]
   
-  let endDayTimes = [
-    PartOfDay.Morning: 9, PartOfDay.MidMorning: 11, PartOfDay.MidDay: 13,
-    PartOfDay.Afternoon: 15, PartOfDay.LateAfternoon: 17, PartOfDay.Evening: HabitApp.endOfDay]
+  let endDayTimes = [PartOfDay.Morning: 9,
+                     PartOfDay.MidDay: 13,
+                     PartOfDay.Afternoon: 17,
+                     PartOfDay.Evening: 21]
   
   // TODO: Check all usages of partsArray to see if we can just map - 1 here.
   var partsArray: [Int] {

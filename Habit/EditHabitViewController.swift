@@ -17,7 +17,6 @@ class EditHabitViewController: UIViewController {
   
   var habit: Habit?
   var frequency: Habit.Frequency = .Daily
-  var pickerRecognizer: UITapGestureRecognizer!
   var mvc: MainViewController!
   var warnedFrequency: Bool = false
   
@@ -26,14 +25,12 @@ class EditHabitViewController: UIViewController {
   @IBOutlet weak var frequencyLabel: UILabel!
   @IBOutlet weak var frequencySettings: FrequencySettings!
   @IBOutlet weak var notify: UISwitch!
+  @IBOutlet weak var notifySetting: UISegmentedControl!
   @IBOutlet weak var neverAutoSkip: UISwitch!
   @IBOutlet weak var paused: UISwitch!
   @IBOutlet weak var save: UIButton!
   @IBOutlet weak var deleteWidth: NSLayoutConstraint!
-  @IBOutlet weak var toolbar: UIView!
   @IBOutlet weak var height: NSLayoutConstraint!
-  @IBOutlet weak var width: NSLayoutConstraint!
-  @IBOutlet weak var contentView: UIVisualEffectView!
   
   override func preferredStatusBarStyle() -> UIStatusBarStyle {
     return .LightContent
@@ -46,25 +43,37 @@ class EditHabitViewController: UIViewController {
     switch frequency {
     case .Daily:
       frequencySettings.configure(leftTitle: "Times a day",
-                                  pickerCount: 12,
+                                  times: 8,
+                                  timesColumns: 4,
                                   rightTitle: "Parts of day",
-                                  multiSelectItems: Habit.partOfDayStrings,
+                                  partsItems: Habit.partOfDayStrings,
+                                  partsColumns: 1,
                                   useTimes: habit != nil && habit!.useTimes,
                                   delegate: self)
+      notifySetting.setTitle("Morning due", forSegmentAtIndex: 0)
+      notifySetting.setTitle("An hour before", forSegmentAtIndex: 1)
     case .Weekly:
       frequencySettings.configure(leftTitle: "Times a week",
-                                  pickerCount: 6,
+                                  times: 4,
+                                  timesColumns: 2,
                                   rightTitle: "Days of week",
-                                  multiSelectItems: Habit.dayOfWeekStrings,
+                                  partsItems: Habit.dayOfWeekStrings,
+                                  partsColumns: 2,
                                   useTimes: habit != nil && habit!.useTimes,
                                   delegate: self)
+      notifySetting.setTitle("Week before", forSegmentAtIndex: 0)
+      notifySetting.setTitle("Day before", forSegmentAtIndex: 1)
     case .Monthly:
       frequencySettings.configure(leftTitle: "Times a month",
-                                  pickerCount: 5,
+                                  times: 4,
+                                  timesColumns: 2,
                                   rightTitle: "Parts of month",
-                                  multiSelectItems: Habit.partOfMonthStrings,
+                                  partsItems: Habit.partOfMonthStrings,
+                                  partsColumns: 1,
                                   useTimes: habit != nil && habit!.useTimes,
                                   delegate: self)
+      notifySetting.setTitle("2 weeks before", forSegmentAtIndex: 0)
+      notifySetting.setTitle("Week before", forSegmentAtIndex: 1)
     default: ()
     }
     
@@ -73,9 +82,9 @@ class EditHabitViewController: UIViewController {
       frequencyLabel.text = "Edit \(frequency.description.lowercaseString) habit"
       name.text = habit!.name;
       if habit!.useTimes {
-        frequencySettings.picker.selectRow(habit!.times!.integerValue - 1, inComponent: 0, animated: false)
+        frequencySettings.timesMultiSelect.selectedIndexes = [habit!.times!.integerValue - 1]
       } else {
-        frequencySettings.multiSelect.selectedIndexes = habit!.partsArray.map { $0 - 1 }
+        frequencySettings.partsMultiSelect.selectedIndexes = habit!.partsArray.map { $0 - 1 }
       }
       notify.on = habit!.notifyBool
       neverAutoSkip.on = habit!.neverAutoSkipBool
@@ -94,32 +103,19 @@ class EditHabitViewController: UIViewController {
     let recognizer = UITapGestureRecognizer(target: self, action: #selector(EditHabitViewController.hideKeyboard(_:)))
     recognizer.cancelsTouchesInView = false
     recognizer.numberOfTapsRequired = 1
-    recognizer.delegate = self
+//    recognizer.delegate = self
     view.addGestureRecognizer(recognizer)
-    pickerRecognizer = UITapGestureRecognizer(target: self, action: #selector(EditHabitViewController.hideKeyboard(_:)))
-    pickerRecognizer.cancelsTouchesInView = false
-    pickerRecognizer.numberOfTapsRequired = 1
-    pickerRecognizer.delegate = self
-    frequencySettings.picker.addGestureRecognizer(pickerRecognizer)
     
     close.titleLabel!.font = UIFont.fontAwesomeOfSize(20)
     close.setTitle(String.fontAwesomeIconWithName(.Close), forState: .Normal)
     
     mvc = presentingViewController!.presentingViewController as? MainViewController
     
-    contentView.layer.shadowColor = UIColor.blackColor().CGColor
-    contentView.layer.shadowOpacity = 0.6
-    contentView.layer.shadowRadius = 5
-    contentView.layer.shadowOffset = CGSizeMake(0, 1)
-    
     name.attributedPlaceholder = NSAttributedString(string: "describe a habit",
       attributes: [NSForegroundColorAttributeName: UIColor.whiteColor().colorWithAlphaComponent(0.5)])
     name.tintColor = UIColor.whiteColor()
     
-    if HabitApp.phoneSize == .iPhone4 {
-      height.constant = iPhone4Height
-      frequencySettings.picker.transform = CGAffineTransformMakeScale(0.85, 0.85)
-    }
+    notifySetting.setTitleTextAttributes([NSForegroundColorAttributeName: HabitApp.color], forState: .Selected)
   }
   
   override func viewDidLayoutSubviews() {
@@ -133,7 +129,6 @@ class EditHabitViewController: UIViewController {
   }
   
   func hideKeyboard(recognizer: UIPanGestureRecognizer) {
-    // TODO: or name.resignFirstResponder?
     view.endEditing(true)
   }
   
@@ -159,10 +154,10 @@ class EditHabitViewController: UIViewController {
           let pausedSet = habit.paused != self.paused.on
           habit.frequency = self.frequency
           if self.frequencySettings.useTimes {
-            habit.times = self.frequencySettings.picker!.selectedRowInComponent(0) + 1
+            habit.times = self.frequencySettings.timesMultiSelect.selectedIndexes[0] + 1
             habit.partsArray = []
           } else {
-            habit.partsArray = self.frequencySettings.multiSelect.selectedIndexes.sort().map { $0 + 1 }
+            habit.partsArray = self.frequencySettings.partsMultiSelect.selectedIndexes.sort().map { $0 + 1 }
           }
           habit.notify = self.notify.on
           habit.neverAutoSkip = self.neverAutoSkip.on
@@ -249,10 +244,10 @@ class EditHabitViewController: UIViewController {
     var valid = true
     var changed = false
     if frequencySettings.useTimes {
-      changed = frequencySettings.picker.selectedRowInComponent(0) != habit!.timesInt - 1
+      changed = frequencySettings.timesMultiSelect.selectedIndexes[0] != habit!.timesInt - 1
     } else {
-      valid = valid && !frequencySettings.multiSelect.selectedIndexes.isEmpty
-      changed = frequencySettings.multiSelect.selectedIndexes != habit!.partsArray.map { $0 - 1 }
+      valid = valid && !frequencySettings.partsMultiSelect.selectedIndexes.isEmpty
+      changed = frequencySettings.partsMultiSelect.selectedIndexes != habit!.partsArray.map { $0 - 1 }
     }
     if valid && changed && !warnedFrequency {
       let alert = UIAlertController(title: "Warning",
@@ -277,8 +272,10 @@ class EditHabitViewController: UIViewController {
     } else {
       // New habit
       save.enabled = !name.text!.isEmpty
-      if !frequencySettings.useTimes {
-        save.enabled = save.enabled && !frequencySettings.multiSelect.selectedIndexes.isEmpty
+      if frequencySettings.useTimes {
+        save.enabled = save.enabled && !frequencySettings.timesMultiSelect.selectedIndexes.isEmpty
+      } else {
+        save.enabled = save.enabled && !frequencySettings.partsMultiSelect.selectedIndexes.isEmpty
       }
     }
   }
@@ -295,16 +292,6 @@ class EditHabitViewController: UIViewController {
         no.handler(alert)
       })
       presentViewController(alert, animated: true, completion: nil)
-  }
-  
-}
-
-extension EditHabitViewController: UIGestureRecognizerDelegate {
-  
-  func gestureRecognizer(
-    gestureRecognizer: UIGestureRecognizer,
-    shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-      return pickerRecognizer.isEqual(gestureRecognizer)
   }
   
 }

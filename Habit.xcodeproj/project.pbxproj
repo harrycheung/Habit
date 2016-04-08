@@ -31,8 +31,13 @@
 		4A1D08DC1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D08DA1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift */; };
 		4A1D08DD1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D08DB1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift */; };
 		4A421C1A1B48960900F3186C /* FrequencySettings.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A421C191B48960900F3186C /* FrequencySettings.xib */; };
+		4A44A86F1CB7096600438EFA /* SwipeDialogViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A44A86E1CB7096600438EFA /* SwipeDialogViewController.xib */; };
+		4A44A8731CB75AB500438EFA /* SelectFrequencyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A44A8721CB75AB500438EFA /* SelectFrequencyViewController.xib */; };
+		4A44A8751CB80D8400438EFA /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A44A8741CB80D8400438EFA /* SettingsViewController.xib */; };
+		4A44A8771CB837FE00438EFA /* ShowHabitViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A44A8761CB837FE00438EFA /* ShowHabitViewController.xib */; };
+		4A44A8791CB83ED400438EFA /* EditHabitViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A44A8781CB83ED400438EFA /* EditHabitViewController.xib */; };
 		4A44D7871B5A29EC0017B34B /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A44D7861B5A29EC0017B34B /* SettingsViewController.swift */; };
-		4A44D7891B5A9A930017B34B /* AppSettingsTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A44D7881B5A9A930017B34B /* AppSettingsTransition.swift */; };
+		4A44D7891B5A9A930017B34B /* SettingsTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A44D7881B5A9A930017B34B /* SettingsTransition.swift */; };
 		4A4643811B44632400732389 /* FrequencySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4643801B44632400732389 /* FrequencySettings.swift */; };
 		4A4643831B448B3300732389 /* MultiSelectControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4643821B448B3300732389 /* MultiSelectControl.swift */; };
 		4A4D4DA21B6D9618005C86AF /* HabitWeeklyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4D4DA11B6D9618005C86AF /* HabitWeeklyTests.swift */; };
@@ -114,8 +119,13 @@
 		4A1D08DA1B3F4F3F006A9CA4 /* Habit+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Habit+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4A1D08DB1B3F4F3F006A9CA4 /* Entry+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Entry+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4A421C191B48960900F3186C /* FrequencySettings.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FrequencySettings.xib; sourceTree = "<group>"; };
+		4A44A86E1CB7096600438EFA /* SwipeDialogViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SwipeDialogViewController.xib; sourceTree = "<group>"; };
+		4A44A8721CB75AB500438EFA /* SelectFrequencyViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SelectFrequencyViewController.xib; sourceTree = "<group>"; };
+		4A44A8741CB80D8400438EFA /* SettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingsViewController.xib; sourceTree = "<group>"; };
+		4A44A8761CB837FE00438EFA /* ShowHabitViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowHabitViewController.xib; sourceTree = "<group>"; };
+		4A44A8781CB83ED400438EFA /* EditHabitViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditHabitViewController.xib; sourceTree = "<group>"; };
 		4A44D7861B5A29EC0017B34B /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		4A44D7881B5A9A930017B34B /* AppSettingsTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSettingsTransition.swift; sourceTree = "<group>"; };
+		4A44D7881B5A9A930017B34B /* SettingsTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTransition.swift; sourceTree = "<group>"; };
 		4A4643801B44632400732389 /* FrequencySettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrequencySettings.swift; sourceTree = "<group>"; };
 		4A4643821B448B3300732389 /* MultiSelectControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSelectControl.swift; sourceTree = "<group>"; };
 		4A4D4DA11B6D9618005C86AF /* HabitWeeklyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitWeeklyTests.swift; sourceTree = "<group>"; };
@@ -271,10 +281,15 @@
 				4AE0F0111CB309FA00693AE3 /* MainViewController+UITableView.swift */,
 				4AE0F00F1CB3099C00693AE3 /* MainViewController+SwipeTableViewCell.swift */,
 				4A44D7861B5A29EC0017B34B /* SettingsViewController.swift */,
+				4A44A8741CB80D8400438EFA /* SettingsViewController.xib */,
 				4A0FD15A1B9F665E0063FB93 /* SelectFrequencyViewController.swift */,
+				4A44A8721CB75AB500438EFA /* SelectFrequencyViewController.xib */,
 				4A1D08CB1B3E1A7A006A9CA4 /* ShowHabitViewController.swift */,
+				4A44A8761CB837FE00438EFA /* ShowHabitViewController.xib */,
 				4A16FDC01B7ED48A00DF9DFC /* EditHabitViewController.swift */,
+				4A44A8781CB83ED400438EFA /* EditHabitViewController.xib */,
 				4A67ABAA1B8FCEBD00DA641B /* SwipeDialogViewController.swift */,
+				4A44A86E1CB7096600438EFA /* SwipeDialogViewController.xib */,
 				4AA214D31BA48FFD00FB77BA /* Transitions */,
 			);
 			name = ViewControllers;
@@ -322,7 +337,7 @@
 		4AA214D31BA48FFD00FB77BA /* Transitions */ = {
 			isa = PBXGroup;
 			children = (
-				4A44D7881B5A9A930017B34B /* AppSettingsTransition.swift */,
+				4A44D7881B5A9A930017B34B /* SettingsTransition.swift */,
 				4A16FDC21B7F7CA000DF9DFC /* EditHabitTransition.swift */,
 				4A0FD15C1B9F67C00063FB93 /* SelectFrequencyTransition.swift */,
 				4AA214D41BA4901F00FB77BA /* CreateHabitTransition.swift */,
@@ -477,13 +492,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A44A8791CB83ED400438EFA /* EditHabitViewController.xib in Resources */,
 				4A6DB6FE1B4C1587008BC1B7 /* Podfile in Resources */,
+				4A44A8731CB75AB500438EFA /* SelectFrequencyViewController.xib in Resources */,
 				4A1D08A51B3E17E9006A9CA4 /* LaunchScreen.storyboard in Resources */,
 				4A1D08A21B3E17E9006A9CA4 /* Assets.xcassets in Resources */,
+				4A44A8771CB837FE00438EFA /* ShowHabitViewController.xib in Resources */,
 				4A1D08CE1B3E1A7A006A9CA4 /* Fonts in Resources */,
 				4AE0F0161CB32BCD00693AE3 /* TODO in Resources */,
+				4A44A86F1CB7096600438EFA /* SwipeDialogViewController.xib in Resources */,
 				4A1D08D51B3E1E52006A9CA4 /* Main.storyboard in Resources */,
 				4A421C1A1B48960900F3186C /* FrequencySettings.xib in Resources */,
+				4A44A8751CB80D8400438EFA /* SettingsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -664,7 +684,7 @@
 				4A91744A1BABC6EB0047B189 /* ShowHabitTransition.swift in Sources */,
 				4AAA3C1C1B7AF9B7006572F8 /* UIColor+Custom.swift in Sources */,
 				4AE038681B8E042C00BF4CEC /* NSCalendar+Custom.swift in Sources */,
-				4A44D7891B5A9A930017B34B /* AppSettingsTransition.swift in Sources */,
+				4A44D7891B5A9A930017B34B /* SettingsTransition.swift in Sources */,
 				4A0FD15B1B9F665E0063FB93 /* SelectFrequencyViewController.swift in Sources */,
 				4AE0F00E1CB2DF8E00693AE3 /* Constants.swift in Sources */,
 				4A0FD15D1B9F67C00063FB93 /* SelectFrequencyTransition.swift in Sources */,

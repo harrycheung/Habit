@@ -15,14 +15,15 @@ class SettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UIVie
   static let SpringVelocity: CGFloat = 1
   static let AnimationOptions: UIViewAnimationOptions = [.CurveEaseOut]
   static let DarkenAlpha: CGFloat = 0.2
+  static let InsetPixels: CGFloat = 20
   
-  var presenting: Bool = false
+  private var presenting: Bool = false
   
   func animationControllerForPresentedController(presented: UIViewController,
-    presentingController presenting: UIViewController,
-    sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-      self.presenting = true
-      return self
+                                                 presentingController presenting: UIViewController,
+                                                 sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    self.presenting = true
+    return self
   }
   
   func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -37,18 +38,13 @@ class SettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UIVie
   func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
     let fromVC = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey)!
     let toVC = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)!
-    let screenWidth = UIScreen.mainScreen().bounds.size.width
-    let screenHeight = UIScreen.mainScreen().bounds.size.height
     let containerView = transitionContext.containerView()!
 
     if presenting {
-      let asvc = toVC as! SettingsViewController
-      asvc.darkenView = UIView(frame: CGRectMake(0, 0, screenWidth, screenHeight))
-      asvc.darkenView.backgroundColor = UIColor.blackColor()
-      asvc.darkenView.alpha = 0
-      containerView.addSubview(asvc.darkenView)
+      let svc = toVC as! SettingsViewController
       
-      toVC.view.frame = CGRectMake(0, screenHeight, screenWidth, screenHeight)
+      svc.blurView.alpha = 0
+      svc.slideConstraint.priority = Constants.LayoutPriorityHigh
       containerView.addSubview(toVC.view)
       
       UIView.animateWithDuration(SettingsTransition.TransitionDuration,
@@ -57,24 +53,23 @@ class SettingsTransition: NSObject, UIViewControllerTransitioningDelegate, UIVie
                                  initialSpringVelocity: SettingsTransition.SpringVelocity,
                                  options: SettingsTransition.AnimationOptions,
                                  animations: {
-                                   toVC.view.frame = CGRectMake(0, 0, screenWidth, screenHeight)
-                                   asvc.darkenView.frame = CGRectMake(0, 0, screenWidth, asvc.paddingView.bounds.height)
-                                   asvc.darkenView.alpha = SettingsTransition.DarkenAlpha
+                                  svc.blurView.alpha = 1
+                                  svc.view.layoutIfNeeded()
                                  },
                                  completion: { finished in
-                                   transitionContext.completeTransition(true)
-                                 })
+                                  transitionContext.completeTransition(true)
+      })
     } else {
-      let asvc = fromVC as! SettingsViewController
+      let svc = fromVC as! SettingsViewController
+      svc.slideConstraint.priority = Constants.LayoutPriorityLow
       
       UIView.animateWithDuration(SettingsTransition.TransitionDuration,
                                  animations: {
-                                   fromVC.view.frame = CGRectMake(0, screenHeight, screenWidth, screenHeight)
-                                   asvc.darkenView.frame = CGRectMake(0, 0, screenWidth, screenHeight)
-                                   asvc.darkenView.alpha = 0
+                                  svc.blurView.alpha = 0
+                                  svc.view.layoutIfNeeded()
                                  },
                                  completion: { finished in
-                                   transitionContext.completeTransition(true)
+                                  transitionContext.completeTransition(true)
                                  })
     }
   }

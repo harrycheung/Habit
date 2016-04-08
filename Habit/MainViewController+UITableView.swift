@@ -26,9 +26,10 @@ extension MainViewController: UITableViewDataSource {
     
     let skip = { (cell: SwipeTableViewCell) in
       let indexPath = tableView.indexPathForCell(cell)!
-      let entry = self.tabBar.isSelected(Constants.TabToday) ? HabitManager.today[indexPath.row] : HabitManager.upcoming[indexPath.row]
+      let entry = self.tabBar.isSelected(Constants.TabToday) ? HabitManager.today[indexPath.row] :
+                                                               HabitManager.upcoming[indexPath.row]
       if !entry.habit!.isFake && entry.habit!.hasOldEntries {
-        let sdvc = self.storyboard!.instantiateViewControllerWithIdentifier(String(SwipeDialogViewController)) as! SwipeDialogViewController
+        let sdvc = SwipeDialogViewController(nibName: String(SwipeDialogViewController), bundle: nil)
         sdvc.modalTransitionStyle = .CrossDissolve
         sdvc.modalPresentationStyle = .OverCurrentContext
         sdvc.yesCompletion = {
@@ -56,7 +57,8 @@ extension MainViewController: UITableViewDataSource {
       }
     }
     
-    let cell = tableView.dequeueReusableCellWithIdentifier(String(HabitTableViewCell), forIndexPath: indexPath) as! HabitTableViewCell
+    let cell = tableView.dequeueReusableCellWithIdentifier(String(HabitTableViewCell),
+                                                           forIndexPath: indexPath) as! HabitTableViewCell
     switch tabBar.selectedItem!.title! {
     case Constants.TabAll:
       cell.load(habit: HabitManager.habits[indexPath.row])
@@ -128,7 +130,7 @@ extension MainViewController: UITableViewDelegate {
     // dispatch_async is needed here since selection happens in a new thread
     dispatch_async(dispatch_get_main_queue()) {
       let cell = tableView.cellForRowAtIndexPath(indexPath) as! HabitTableViewCell
-      let shvc = self.storyboard!.instantiateViewControllerWithIdentifier("ShowHabitViewController") as! ShowHabitViewController
+      let shvc = ShowHabitViewController(nibName: String(ShowHabitViewController), bundle: nil)
       shvc.modalPresentationStyle = .OverCurrentContext
       shvc.transitioningDelegate = self.showHabitTransition
       if let entry = cell.entry {

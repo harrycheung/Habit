@@ -22,13 +22,12 @@ class FrequencySettings: UIView {
   @IBOutlet weak var view: UIView!
   @IBOutlet weak var leftTitle: UILabel!
   @IBOutlet weak var rightTitle: UILabel!
-  @IBOutlet weak var picker: UIPickerView!
-  @IBOutlet weak var multiSelect: MultiSelectControl!
+  @IBOutlet weak var timesMultiSelect: MultiSelectControl!
+  @IBOutlet weak var partsMultiSelect: MultiSelectControl!
   
   var leftOverlay: OverlayView!
   var rightOverlay: OverlayView!
-  var pickerCount: Int = 0
-  var multiSelectItems: [String] = []
+  var partsItems: [String] = []
   var useTimes: Bool = false
   var delegate: FrequencySettingsDelegate?
   
@@ -37,21 +36,35 @@ class FrequencySettings: UIView {
   }
   
   func configure(leftTitle leftTitle: String,
-                           pickerCount: Int,
-                           rightTitle: String,
-                           multiSelectItems: [String],
-                           useTimes: Bool,
-                           delegate: FrequencySettingsDelegate?) {
+                 times: Int,
+                 timesColumns: Int,
+                 rightTitle: String,
+                 partsItems: [String],
+                 partsColumns: Int,
+                 useTimes: Bool,
+                 delegate: FrequencySettingsDelegate?) {
     NSBundle.mainBundle().loadNibNamed(String(FrequencySettings), owner: self, options: nil)
     bounds = view.bounds
     addSubview(view)
     
     self.leftTitle.text = leftTitle
-    self.pickerCount = pickerCount
     self.rightTitle.text = rightTitle
-    self.multiSelectItems = multiSelectItems
+    self.partsItems = partsItems
     self.useTimes = useTimes
     self.delegate = delegate
+    
+    var timesArray: [String] = []
+    for i in 1...times {
+      timesArray.append(String(i))
+    }
+    timesMultiSelect.configure(timesArray, numberofColumns: timesColumns, single: true)
+    timesMultiSelect.font = FontManager.regular(17)
+    timesMultiSelect.tintColor = HabitApp.color
+    timesMultiSelect.delegate = self
+    partsMultiSelect.configure(partsItems, numberofColumns: partsColumns)
+    partsMultiSelect.font = FontManager.regular(17)
+    partsMultiSelect.tintColor = HabitApp.color
+    partsMultiSelect.delegate = self
     
     leftOverlay = OverlayView(frequencySettings: self)
     leftOverlay.backgroundColor = UIColor.clearColor()
@@ -94,8 +107,6 @@ class FrequencySettings: UIView {
                        constant: 0).active = true
     rightOverlay.heightAnchor.constraintEqualToAnchor(view.heightAnchor).active = true
     overlayTouched(useTimes ? leftOverlay : rightOverlay, touched: false)
-    
-    multiSelect.tintColor = HabitApp.color
   }
   
   func overlayTouched(overlayView: OverlayView, touched: Bool = true) {
@@ -105,9 +116,9 @@ class FrequencySettings: UIView {
       rightOverlay.alpha = 1
       UIView.animateWithDuration(OverlayTransitionDuration) {
         self.leftTitle.alpha = 1
-        self.picker.alpha = 1
+        self.timesMultiSelect.alpha = 1
         self.rightTitle.alpha = self.DeactivatedAlpha
-        self.multiSelect.alpha = self.DeactivatedAlpha
+        self.partsMultiSelect.alpha = self.DeactivatedAlpha
       }
     } else {
       useTimes = false
@@ -115,9 +126,9 @@ class FrequencySettings: UIView {
       rightOverlay.alpha = 0
       UIView.animateWithDuration(OverlayTransitionDuration) {
         self.leftTitle.alpha = self.DeactivatedAlpha
-        self.picker.alpha = self.DeactivatedAlpha
+        self.timesMultiSelect.alpha = self.DeactivatedAlpha
         self.rightTitle.alpha = 1
-        self.multiSelect.alpha = 1
+        self.partsMultiSelect.alpha = 1
       }
     }
     if touched {
@@ -146,52 +157,9 @@ class FrequencySettings: UIView {
 
 }
 
-extension FrequencySettings: UIPickerViewDataSource {
-  
-  func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
-    return 1
-  }
-  
-  func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-    return pickerCount
-  }
-  
-  func pickerView(pickerView: UIPickerView,
-                  attributedTitleForRow row: Int,
-                  forComponent component: Int) -> NSAttributedString? {
-    return NSAttributedString(string: String(row + 1),
-                              attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
-  }
-  
-}
-
-extension FrequencySettings: UIPickerViewDelegate {
-  
-  func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-    delegate?.frequencySettingsChanged()
-  }
-  
-}
-
-extension FrequencySettings: MultiSelectControlDataSource {
-  
-  func numberOfItemsInMultiSelectControl(multiSelectControl: MultiSelectControl) -> Int {
-    return multiSelectItems.count
-  }
-  
-  func fontOfMultiSelectControl(multiselectControl: MultiSelectControl) -> UIFont {
-    return FontManager.regular(17)
-  }
-  
-  func multiSelectControl(multiSelectControl: MultiSelectControl, itemAtIndex index: Int) -> String? {
-    return multiSelectItems[index]
-  }
-  
-}
-
 extension FrequencySettings: MultiSelectControlDelegate {
   
-  func multiSelectControl(multiSelectControl: MultiSelectControl, didChangeIndexes: [Int]) {
+  func multiSelectControl(multiSelectControl: MultiSelectControl, indexSelected: Int) {
     delegate?.frequencySettingsChanged()
   }
   

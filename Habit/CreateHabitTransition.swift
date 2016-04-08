@@ -10,7 +10,7 @@ import UIKit
 
 class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
   
-  var presenting: Bool = false
+  private var presenting: Bool = false
   
   func animationControllerForPresentedController(presented: UIViewController,
                                                  presentingController presenting: UIViewController,
@@ -42,15 +42,15 @@ class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UI
       ehvc.view.alpha = 0
       UIView.animateWithDuration(Constants.TransitionDuration,
                                  animations: {
-                                   ehvc.view.alpha = 1
-                                   sfvc.closeButton.transform = CGAffineTransformMakeRotation(0)
-                                   sfvc.closeButton.alpha = 0
-                                   sfvc.dailyButton.alpha = 0
-                                   sfvc.weeklyButton.alpha = 0
-                                   sfvc.monthlyButton.alpha = 0
+                                  ehvc.view.alpha = 1
+                                  sfvc.closeButton.transform = CGAffineTransformMakeRotation(0)
+                                  sfvc.closeButton.alpha = 0
+                                  sfvc.dailyButton.alpha = 0
+                                  sfvc.weeklyButton.alpha = 0
+                                  sfvc.monthlyButton.alpha = 0
                                  },
                                  completion: { finished in
-                                   transitionContext.completeTransition(true)
+                                  transitionContext.completeTransition(true)
                                  })
     } else {
       let ehvc = fromVC as! EditHabitViewController
@@ -61,14 +61,14 @@ class CreateHabitTransition: NSObject, UIViewControllerTransitioningDelegate, UI
       mvc.newButton.alpha = 0
       UIView.animateWithDuration(Constants.TransitionDuration,
                                  animations: {
-                                   ehvc.view.alpha = 0
-                                   sfvc.view.alpha = 0
-                                   mvc.newButton.alpha = 1
-                                   mvc.transitionOverlay.alpha = 0
+                                  ehvc.view.alpha = 0
+                                  sfvc.view.alpha = 0
+                                  if mvc.tabBar.isSelected(Constants.TabAll) {
+                                    mvc.newButton.alpha = 1
+                                  }
                                  },
                                  completion: { finished in
-                                   mvc.transitionOverlay.hidden = true
-                                   transitionContext.completeTransition(true)
+                                  transitionContext.completeTransition(true)
                                  })
     }
   }

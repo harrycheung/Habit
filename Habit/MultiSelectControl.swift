@@ -8,86 +8,107 @@
 
 import UIKit
 
-@objc(MultiSelectControlDataSource)
-protocol MultiSelectControlDataSource {
-  
-  func fontOfMultiSelectControl(multiselectControl: MultiSelectControl) -> UIFont
-  func numberOfItemsInMultiSelectControl(multiSelectControl: MultiSelectControl) -> Int
-  func multiSelectControl(multiSelectControl: MultiSelectControl, itemAtIndex: Int) -> String?
-  
-}
-
 @objc(MultiSelectControlDelegate)
 protocol MultiSelectControlDelegate {
   
-  func multiSelectControl(multiSelectControl: MultiSelectControl, didChangeIndexes: [Int])
+  func multiSelectControl(multiSelectControl: MultiSelectControl, indexSelected: Int)
   
 }
 
 class MultiSelectControl: UIView {
   
-  @IBOutlet var dataSource: MultiSelectControlDataSource?
   @IBOutlet var delegate: MultiSelectControlDelegate?
   
-  var segments: [String] = []
-  var count: Int = 0
-  var buttons: [UIButton] = []
-  var selectedIndexes: [Int] = []
+  private var buttons: [UIButton] = []
+  private var single: Bool = false
+  
+  var selectedIndexes: [Int] = [] {
+    didSet {
+      for index in selectedIndexes {
+        buttons[index].selected = true
+      }
+    }
+  }
+  
+  var font: UIFont = UIFont.systemFontOfSize(17) {
+    didSet {
+      for button in buttons {
+        button.titleLabel!.font = font
+      }
+    }
+  }
+  
+  override var tintColor: UIColor! {
+    didSet {
+      for button in buttons {
+        button.setTitleColor(tintColor, forState: .Selected)
+      }
+    }
+  }
   
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
   }
   
-  override func layoutSubviews() {
-    super.layoutSubviews()
-    
-    // TODO: Is this the right place for adding buttons? The buttons.isEmpty check is necessary.
-    // Otherwise, a recursive loop occurs with each button that gets added. The other wasy to "fix" 
-    // this is to give the superview a height constraint with priority 1000.
-    if dataSource != nil && buttons.isEmpty {
-      count = dataSource!.numberOfItemsInMultiSelectControl(self)
-      for index in 0..<count {
-        let button = UIButton()
-        button.setTitle(dataSource!.multiSelectControl(self, itemAtIndex: index), forState: .Normal)
-        button.titleLabel!.font = dataSource!.fontOfMultiSelectControl(self)
-        button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        button.setBackgroundColor(UIColor.clearColor(), forState: .Normal)
-        button.setTitleColor(tintColor, forState: .Selected)
-        button.setBackgroundColor(UIColor.whiteColor(), forState: .Selected)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.cornerRadius = 3
-        button.layer.masksToBounds = true
-        buttons.append(button)
-        addSubview(button)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.centerXAnchor.constraintEqualToAnchor(centerXAnchor).active = true
-        NSLayoutConstraint(item: button,
-                           attribute: .CenterY,
-                           relatedBy: .Equal,
-                           toItem: self,
-                           attribute: .CenterY,
-                           multiplier: (1 + 2 * CGFloat(index)) / CGFloat(count),
-                           constant: 0).active = true
-        button.widthAnchor.constraintEqualToAnchor(widthAnchor).active = true
-        button.heightAnchor.constraintEqualToAnchor(heightAnchor,
-                                                    multiplier: 1.0 / CGFloat(count), constant: -3).active = true
-        button.addTarget(self, action: #selector(MultiSelectControl.itemTapped(_:)), forControlEvents: .TouchUpInside)
-        if selectedIndexes.contains(index) {
-          button.selected = true
-        }
+  func configure(items: [String], numberofColumns columns: Int, single: Bool = false) {
+    self.single = single
+    let rows = CGFloat(items.count / columns + items.count % columns)
+    for index in 0..<items.count {
+      let button = UIButton()
+      button.setTitle(items[index], forState: .Normal)
+      button.titleLabel!.font = font
+      button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+      button.setBackgroundColor(UIColor.clearColor(), forState: .Normal)
+      button.setTitleColor(tintColor, forState: .Selected)
+      button.setBackgroundColor(UIColor.whiteColor(), forState: .Selected)
+      button.translatesAutoresizingMaskIntoConstraints = false
+      button.layer.cornerRadius = 3
+      button.layer.masksToBounds = true
+      buttons.append(button)
+      addSubview(button)
+      button.translatesAutoresizingMaskIntoConstraints = false
+      NSLayoutConstraint(item: button,
+                         attribute: .CenterX,
+                         relatedBy: .Equal,
+                         toItem: self,
+                         attribute: .CenterX,
+                         multiplier: (1 + 2 * CGFloat(index % columns)) / CGFloat(columns),
+                         constant: 0).active = true
+      NSLayoutConstraint(item: button,
+                         attribute: .CenterY,
+                         relatedBy: .Equal,
+                         toItem: self,
+                         attribute: .CenterY,
+                         multiplier: (1 + 2 * CGFloat(index / columns)) / rows,
+                         constant: 0).active = true
+      button.widthAnchor.constraintEqualToAnchor(widthAnchor,
+                                                 multiplier: 1.0 / CGFloat(columns),
+                                                 constant: columns == 0 ? 0 : -3).active = true
+      button.heightAnchor.constraintEqualToAnchor(heightAnchor,
+                                                  multiplier: 1.0 / rows,
+                                                  constant: -3).active = true
+      button.addTarget(self, action: #selector(MultiSelectControl.itemTapped(_:)), forControlEvents: .TouchUpInside)
+      if selectedIndexes.contains(index) {
+        button.selected = true
       }
     }
   }
   
   func itemTapped(sender: AnyObject) {
-    let button = sender as! UIButton
-    if button.selected {
-      selectedIndexes.removeAtIndex(selectedIndexes.indexOf(buttons.indexOf(button)!)!)
-    } else {
-      selectedIndexes.append(buttons.indexOf(button)!)
+    let tapped = sender as! UIButton
+    tapped.selected = !tapped.selected
+    
+    if tapped.selected && single {
+      for button in buttons {
+        button.selected = button == tapped
+      }
     }
-    button.selected = !button.selected
-    delegate?.multiSelectControl(self, didChangeIndexes: selectedIndexes)
+    
+    selectedIndexes = buttons.enumerate().map { (index, button) in
+      return button.selected ? index : -1
+    }.filter { $0 > -1 }
+    
+    delegate?.multiSelectControl(self, indexSelected: buttons.indexOf(tapped)!)
   }
 
 }

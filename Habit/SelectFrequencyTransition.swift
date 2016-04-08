@@ -10,7 +10,7 @@ import UIKit
 
 class SelectFrequencyTransition: NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
   
-  var presenting: Bool = false
+  private var presenting: Bool = false
   
   func animationControllerForPresentedController(presented: UIViewController,
                                                  presentingController presenting: UIViewController,
@@ -40,15 +40,14 @@ class SelectFrequencyTransition: NSObject, UIViewControllerTransitioningDelegate
       containerView.addSubview(sfvc.view)
       
       sfvc.showButtons()
-      mvc.transitionOverlay.hidden = false
-      mvc.transitionOverlay.alpha = 0
+      sfvc.backgroundView.alpha = 0
       UIView.animateWithDuration(Constants.TransitionDuration,
                                  animations: {
-                                   mvc.transitionOverlay.alpha = Constants.TransitionOverlayAlpha
-                                   sfvc.closeButton.transform = CGAffineTransformMakeRotation(CGFloat(M_PI / 4))
+                                  sfvc.backgroundView.alpha = 1
+                                  sfvc.closeButton.transform = CGAffineTransformMakeRotation(CGFloat(M_PI / 4))
                                  },
                                  completion: { finished in
-                                   transitionContext.completeTransition(true)
+                                  transitionContext.completeTransition(true)
                                  })
     } else {
       let mvc = toVC as! MainViewController
@@ -57,13 +56,12 @@ class SelectFrequencyTransition: NSObject, UIViewControllerTransitioningDelegate
       sfvc.hideButtons()
       UIView.animateWithDuration(Constants.TransitionDuration,
                                  animations: {
-                                   mvc.transitionOverlay.alpha = 0
-                                   sfvc.closeButton.transform = CGAffineTransformMakeRotation(0)
+                                  sfvc.backgroundView.alpha = 0
+                                  sfvc.closeButton.transform = CGAffineTransformMakeRotation(0)
                                  },
                                  completion: { finished in
-                                   mvc.newButton.hidden = false
-                                   mvc.transitionOverlay.hidden = true
-                                   transitionContext.completeTransition(true)
+                                  mvc.newButton.hidden = false
+                                  transitionContext.completeTransition(true)
                                  })
     }
   }

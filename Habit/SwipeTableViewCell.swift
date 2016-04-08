@@ -369,14 +369,13 @@ class SwipeTableViewCell: UITableViewCell {
   private func reset(direction: Direction) {
     swipingConstraint.constant = 0
     
-    UIView.animateWithDuration(NSTimeInterval(animationDuration * 3),
+    UIView.animateWithDuration(NSTimeInterval(animationDuration),
                                delay: NSTimeInterval(0),
                                usingSpringWithDamping: Defaults.Damping,
                                initialSpringVelocity: Defaults.Velocity,
                                options: [.CurveEaseOut, .AllowUserInteraction],
                                animations: {
                                 self.animateSwipe(direction, percentage: 0)
-                                //self.iconViews[direction.hashValue]!.alpha = 0
                                 self.layoutIfNeeded()
       },
                                completion: { finished in
