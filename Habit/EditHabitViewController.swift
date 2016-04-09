@@ -13,8 +13,6 @@ import FontAwesome_swift
 
 class EditHabitViewController: UIViewController {
   
-  let iPhone4Height: CGFloat = 440
-  
   var habit: Habit?
   var frequency: Habit.Frequency = .Daily
   var mvc: MainViewController!

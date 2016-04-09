@@ -46,7 +46,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9ZQ-EC-JBp">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vGZ-8P-gz0">
@@ -179,7 +179,7 @@
                             <constraint firstItem="98p-eB-hYg" firstAttribute="leading" secondItem="LvB-hO-ya5" secondAttribute="leading" id="7Va-BF-Yx9"/>
                             <constraint firstItem="9ZQ-EC-JBp" firstAttribute="top" secondItem="ZAm-fX-RF0" secondAttribute="bottom" constant="-20" id="7Yd-UO-0pd"/>
                             <constraint firstAttribute="trailing" secondItem="3aO-Hc-w6C" secondAttribute="trailing" constant="20" id="8RB-eo-9Zc"/>
-                            <constraint firstItem="9ZQ-EC-JBp" firstAttribute="bottom" secondItem="vGZ-8P-gz0" secondAttribute="bottom" id="9K5-Rt-Jer"/>
+                            <constraint firstItem="9ZQ-EC-JBp" firstAttribute="bottom" secondItem="vGZ-8P-gz0" secondAttribute="top" id="9K5-Rt-Jer"/>
                             <constraint firstItem="vGZ-8P-gz0" firstAttribute="width" secondItem="LvB-hO-ya5" secondAttribute="width" id="ARZ-vD-XHO"/>
                             <constraint firstItem="bYN-gK-gVh" firstAttribute="top" secondItem="UlU-GY-Z0X" secondAttribute="bottom" id="DeO-ew-11Q"/>
                             <constraint firstAttribute="trailing" secondItem="YxZ-cZ-8AJ" secondAttribute="trailing" id="GZd-1d-Gme"/>

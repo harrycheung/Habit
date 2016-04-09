@@ -25,7 +25,7 @@ class SettingsViewController: UIViewController {
   @IBOutlet weak var autoSkip: UISwitch!
   @IBOutlet weak var autoSkipStepper: UIStepper!
   @IBOutlet weak var autoSkipDelay: UILabel!
-  @IBOutlet weak var autoSkipHeight: NSLayoutConstraint!
+  @IBOutlet weak var autoSkipView: UIView!
   @IBOutlet weak var startOfDayStepper: UIStepper!
   @IBOutlet weak var startOfDayLabel: UILabel!
   @IBOutlet weak var endOfDayStepper: UIStepper!
@@ -54,7 +54,8 @@ class SettingsViewController: UIViewController {
     autoSkipStepper.value = Double(HabitApp.autoSkipDelay)
     autoSkipDelay.text = autoSkipDelayString(HabitApp.autoSkipDelay)
     if !autoSkip.on {
-      autoSkipHeight.priority = Constants.LayoutPriorityLow
+      autoSkipView.hidden = true
+      autoSkipView.alpha = 0
     }
     let timeZone = NSTimeZone(name: HabitApp.timeZone)!
     defaultTimeZone.text = timeZone.name.stringByReplacingOccurrencesOfString("_", withString: " ")
@@ -118,17 +119,21 @@ class SettingsViewController: UIViewController {
   
   @IBAction func autoSkipChanged(sender: AnyObject) {
     if autoSkip.on {
-      autoSkipHeight.priority = Constants.LayoutPriorityHigh
-      UIView.animateWithDuration(Constants.TransitionDuration, delay: 0, options: .CurveEaseOut,
+      UIView.animateWithDuration(Constants.TransitionDuration,
+                                 delay: 0,
+                                 options: .CurveEaseOut,
                                  animations: {
-                                  self.view.layoutIfNeeded()
+                                  self.autoSkipView.hidden = false
+                                  self.autoSkipView.alpha = 1
                                  },
                                  completion: nil)
     } else {
-      autoSkipHeight.priority = Constants.LayoutPriorityLow
-      UIView.animateWithDuration(Constants.TransitionDuration, delay: 0, options: .CurveEaseOut,
+      UIView.animateWithDuration(Constants.TransitionDuration,
+                                 delay: 0,
+                                 options: .CurveEaseOut,
                                  animations: {
-                                  self.view.layoutIfNeeded()
+                                  self.autoSkipView.hidden = true
+                                  self.autoSkipView.alpha = 0
                                  },
                                  completion: nil)
     }
@@ -136,7 +141,7 @@ class SettingsViewController: UIViewController {
   
   func autoSkipDelayString(delay: Int) -> String {
     if delay == 0 {
-      return "immediately"
+      return "Immediately"
     } else {
       let hour = delay / 60
       var hourText = ""
@@ -148,9 +153,9 @@ class SettingsViewController: UIViewController {
       let minute = delay % 60
       var minuteText = ""
       if minute > 0 {
-        minuteText = "\(minute) min"
+        minuteText = "\(minute) min "
       }
-      return "\(hourText)\(minuteText)"
+      return "\(hourText)\(minuteText)past due"
     }
   }
   
