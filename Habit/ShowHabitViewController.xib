@@ -286,14 +286,14 @@
                             <variation key="default">
                                 <mask key="constraints">
                                     <exclude reference="XJw-0h-EAB"/>
-                                    <exclude reference="mNa-zx-eh7"/>
                                     <exclude reference="Emd-dC-Frr"/>
-                                    <exclude reference="tTp-kV-Pfk"/>
+                                    <exclude reference="mNa-zx-eh7"/>
                                     <exclude reference="mun-1W-49i"/>
+                                    <exclude reference="tTp-kV-Pfk"/>
                                     <exclude reference="7YC-nw-gMi"/>
                                     <exclude reference="Jod-jG-bRy"/>
-                                    <exclude reference="fIw-g0-Hf0"/>
                                     <exclude reference="O9r-tu-UyS"/>
+                                    <exclude reference="fIw-g0-Hf0"/>
                                 </mask>
                             </variation>
                         </view>

@@ -23,7 +23,6 @@ class EditHabitViewController: UIViewController {
   @IBOutlet weak var frequencyLabel: UILabel!
   @IBOutlet weak var frequencySettings: FrequencySettings!
   @IBOutlet weak var notify: UISwitch!
-  @IBOutlet weak var notifySetting: UISegmentedControl!
   @IBOutlet weak var neverAutoSkip: UISwitch!
   @IBOutlet weak var paused: UISwitch!
   @IBOutlet weak var save: UIButton!
@@ -48,8 +47,6 @@ class EditHabitViewController: UIViewController {
                                   partsColumns: 1,
                                   useTimes: habit != nil && habit!.useTimes,
                                   delegate: self)
-      notifySetting.setTitle("Morning due", forSegmentAtIndex: 0)
-      notifySetting.setTitle("An hour before", forSegmentAtIndex: 1)
     case .Weekly:
       frequencySettings.configure(leftTitle: "Times a week",
                                   times: 4,
@@ -59,8 +56,6 @@ class EditHabitViewController: UIViewController {
                                   partsColumns: 2,
                                   useTimes: habit != nil && habit!.useTimes,
                                   delegate: self)
-      notifySetting.setTitle("Week before", forSegmentAtIndex: 0)
-      notifySetting.setTitle("Day before", forSegmentAtIndex: 1)
     case .Monthly:
       frequencySettings.configure(leftTitle: "Times a month",
                                   times: 4,
@@ -70,8 +65,6 @@ class EditHabitViewController: UIViewController {
                                   partsColumns: 1,
                                   useTimes: habit != nil && habit!.useTimes,
                                   delegate: self)
-      notifySetting.setTitle("2 weeks before", forSegmentAtIndex: 0)
-      notifySetting.setTitle("Week before", forSegmentAtIndex: 1)
     default: ()
     }
     
@@ -112,8 +105,6 @@ class EditHabitViewController: UIViewController {
     name.attributedPlaceholder = NSAttributedString(string: "describe a habit",
       attributes: [NSForegroundColorAttributeName: UIColor.whiteColor().colorWithAlphaComponent(0.5)])
     name.tintColor = UIColor.whiteColor()
-    
-    notifySetting.setTitleTextAttributes([NSForegroundColorAttributeName: HabitApp.color], forState: .Selected)
   }
   
   override func viewDidLayoutSubviews() {
