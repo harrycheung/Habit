@@ -21,7 +21,7 @@ class EditHabitViewController: UIViewController {
   @IBOutlet weak var name: UITextField!
   @IBOutlet weak var close: UIButton!
   @IBOutlet weak var frequencyLabel: UILabel!
-  @IBOutlet weak var frequencySettings: FrequencySettings!
+  @IBOutlet weak var frequencySettings: MultiSelectControl!
   @IBOutlet weak var notify: UISwitch!
   @IBOutlet weak var neverAutoSkip: UISwitch!
   @IBOutlet weak var paused: UISwitch!
@@ -36,53 +36,29 @@ class EditHabitViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    // Setup settings views for each frequency
     switch frequency {
     case .Daily:
-      frequencySettings.configure(leftTitle: "Times a day",
-                                  times: 8,
-                                  timesColumns: 4,
-                                  rightTitle: "Parts of day",
-                                  partsItems: Habit.partOfDayStrings,
-                                  partsColumns: 1,
-                                  useTimes: habit != nil && habit!.useTimes,
-                                  delegate: self)
+      let times = [Int](0...11).map({ Helpers.timeOfDayString(($0 + 8) * 60, short: true) })
+      frequencySettings.configure(times, numberofColumns: 4)
     case .Weekly:
-      frequencySettings.configure(leftTitle: "Times a week",
-                                  times: 4,
-                                  timesColumns: 2,
-                                  rightTitle: "Days of week",
-                                  partsItems: Habit.dayOfWeekStrings,
-                                  partsColumns: 2,
-                                  useTimes: habit != nil && habit!.useTimes,
-                                  delegate: self)
+      frequencySettings.configure(["1", "3"], numberofColumns: 2)
     case .Monthly:
-      frequencySettings.configure(leftTitle: "Times a month",
-                                  times: 4,
-                                  timesColumns: 2,
-                                  rightTitle: "Parts of month",
-                                  partsItems: Habit.partOfMonthStrings,
-                                  partsColumns: 1,
-                                  useTimes: habit != nil && habit!.useTimes,
-                                  delegate: self)
+      frequencySettings.configure(["1", "3"], numberofColumns: 2)
     default: ()
     }
+    frequencySettings.font = FontManager.regular(17)
+    frequencySettings.tintColor = HabitApp.color
+    frequencySettings.delegate = self
     
     // Fill out the form
     if habit != nil {
       frequencyLabel.text = "Edit \(frequency.description.lowercaseString) habit"
       name.text = habit!.name;
-      if habit!.useTimes {
-        frequencySettings.timesMultiSelect.selectedIndexes = [habit!.times!.integerValue - 1]
-      } else {
-        frequencySettings.partsMultiSelect.selectedIndexes = habit!.partsArray.map { $0 - 1 }
-      }
       notify.on = habit!.notifyBool
       neverAutoSkip.on = habit!.neverAutoSkipBool
       paused.on = habit!.pausedBool
     } else {
       frequencyLabel.text = "Start a \(frequency.description.lowercaseString) habit"
-      frequencySettings.overlayTouched(frequencySettings.leftOverlay!, touched: false)
       save.setTitle("Start", forState: .Normal)
       deleteWidth.priority = Constants.LayoutPriorityHigh
     }
@@ -142,12 +118,7 @@ class EditHabitViewController: UIViewController {
         self.mvc.dismissViewControllerAnimated(false) {
           let pausedSet = habit.paused != self.paused.on
           habit.frequency = self.frequency
-          if self.frequencySettings.useTimes {
-            habit.times = self.frequencySettings.timesMultiSelect.selectedIndexes[0] + 1
-            habit.partsArray = []
-          } else {
-            habit.partsArray = self.frequencySettings.partsMultiSelect.selectedIndexes.sort().map { $0 + 1 }
-          }
+          habit.partsArray = self.frequencySettings.selectedIndexes.sort().map { $0 + 1 }
           habit.notify = self.notify.on
           habit.neverAutoSkip = self.neverAutoSkip.on
           habit.paused = self.paused.on
@@ -230,14 +201,8 @@ class EditHabitViewController: UIViewController {
     if habit!.isNew {
       return false
     }
-    var valid = true
-    var changed = false
-    if frequencySettings.useTimes {
-      changed = frequencySettings.timesMultiSelect.selectedIndexes[0] != habit!.timesInt - 1
-    } else {
-      valid = valid && !frequencySettings.partsMultiSelect.selectedIndexes.isEmpty
-      changed = frequencySettings.partsMultiSelect.selectedIndexes != habit!.partsArray.map { $0 - 1 }
-    }
+    let valid = !frequencySettings.selectedIndexes.isEmpty
+    let changed = frequencySettings.selectedIndexes != habit!.partsArray.map { $0 - 1 }
     if valid && changed && !warnedFrequency {
       let alert = UIAlertController(title: "Warning",
                                     message: "Changes to frequency will\naffect ALL future entries.",
@@ -261,11 +226,7 @@ class EditHabitViewController: UIViewController {
     } else {
       // New habit
       save.enabled = !name.text!.isEmpty
-      if frequencySettings.useTimes {
-        save.enabled = save.enabled && !frequencySettings.timesMultiSelect.selectedIndexes.isEmpty
-      } else {
-        save.enabled = save.enabled && !frequencySettings.partsMultiSelect.selectedIndexes.isEmpty
-      }
+      save.enabled = save.enabled && !frequencySettings.selectedIndexes.isEmpty
     }
   }
   
@@ -294,9 +255,9 @@ extension EditHabitViewController: UITextFieldDelegate {
   
 }
 
-extension EditHabitViewController: FrequencySettingsDelegate {
+extension EditHabitViewController: MultiSelectControlDelegate {
   
-  func frequencySettingsChanged() {
+  func multiSelectControl(multiSelectControl: MultiSelectControl, indexSelected: Int) {
     enableSave()
   }
   

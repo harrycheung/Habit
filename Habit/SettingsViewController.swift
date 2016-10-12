@@ -68,9 +68,9 @@ class SettingsViewController: UIViewController {
       local.removeFromSuperview()
     }
     startOfDayStepper.value = Double(HabitApp.startOfDay)
-    startOfDayLabel.text = timeOfDayString(HabitApp.startOfDay)
+    startOfDayLabel.text = Helpers.timeOfDayString(HabitApp.startOfDay)
     endOfDayStepper.value = Double(HabitApp.endOfDay)
-    endOfDayLabel.text = timeOfDayString(HabitApp.endOfDay)
+    endOfDayLabel.text = Helpers.timeOfDayString(HabitApp.endOfDay)
     setTimeOfDayMinMax()
     
     view.layer.shadowColor = UIColor.blackColor().CGColor
@@ -164,33 +164,18 @@ class SettingsViewController: UIViewController {
     HabitApp.autoSkipDelay = Int(autoSkipStepper.value)
   }
   
-  func timeOfDayString(time: Int) -> String {
-    if time == 0 || time == Constants.dayMinutes {
-      return "midnight"
-    } else {
-      let ampm = time < Constants.dayMinutes / 2 ? "a.m." : "p.m."
-      var hour = (time / 60) % 12
-      if hour == 0 {
-        hour = 12
-      }
-      let minute = time % 60
-      let minuteText = minute < 10 ? 0 : ""
-      return "\(hour):\(minuteText)\(minute) \(ampm)"
-    }
-  }
-  
   func setTimeOfDayMinMax() {
     startOfDayStepper.maximumValue = endOfDayStepper.value - 2 * 60.0
     endOfDayStepper.minimumValue = startOfDayStepper.value + 2 * 60.0
   }
   
   @IBAction func startOfDayChanged(sender: AnyObject) {
-    startOfDayLabel.text = timeOfDayString(Int(startOfDayStepper.value))
+    startOfDayLabel.text = Helpers.timeOfDayString(Int(startOfDayStepper.value))
     setTimeOfDayMinMax()
   }
   
   @IBAction func endOfDayChanged(sender: AnyObject) {
-    endOfDayLabel.text = timeOfDayString(Int(endOfDayStepper.value))
+    endOfDayLabel.text = Helpers.timeOfDayString(Int(endOfDayStepper.value))
     setTimeOfDayMinMax()
   }
   

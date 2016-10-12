@@ -21,7 +21,7 @@
                 <outlet property="close" destination="04o-he-cAr" id="iaX-4S-VHh"/>
                 <outlet property="deleteWidth" destination="4gF-2k-XmM" id="Mcm-0w-wm3"/>
                 <outlet property="frequencyLabel" destination="dJc-rm-lC4" id="6IX-4T-tN3"/>
-                <outlet property="frequencySettings" destination="PNx-e2-gxP" id="0kx-oF-fk0"/>
+                <outlet property="frequencySettings" destination="PNx-e2-gxP" id="BXI-xx-eSR"/>
                 <outlet property="height" destination="Fhb-SM-ZOK" id="Un6-HI-4z7"/>
                 <outlet property="name" destination="ccD-lr-Gsk" id="qFb-i6-gOv"/>
                 <outlet property="neverAutoSkip" destination="HZ3-bh-4Fo" id="bIs-KE-WRL"/>
@@ -93,7 +93,7 @@
                                         <constraint firstAttribute="height" constant="1" id="YWq-0N-dW9"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PNx-e2-gxP" customClass="FrequencySettings" customModule="Habit" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PNx-e2-gxP" customClass="MultiSelectControl" customModule="Habit" customModuleProvider="target">
                                     <rect key="frame" x="15" y="9" width="274" height="231"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
