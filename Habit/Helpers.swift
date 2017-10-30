@@ -18,7 +18,7 @@ class Helpers {
         hour = 12
       }
       let minute = time % 60
-      let minuteText = minute < 10 ? 0 : ""
+      let minuteText = minute < 10 ? "0" : ""
       return short ? "\(hour):\(minuteText)\(minute)\(ampm)" : "\(hour):\(minuteText)\(minute) \(ampm)"
     }
   }

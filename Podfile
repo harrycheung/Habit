@@ -1,18 +1,21 @@
+
 source 'https://github.com/CocoaPods/Specs.git'
+
 platform :ios, '9.0'
+inhibit_all_warnings!
 use_frameworks!
 
-pod 'KAProgressLabel'
-pod 'FontAwesome.swift'
+target 'Habit' do
+  project 'Habit'
 
-def testing_pods
-  pod 'Nimble'
-end
+  pod 'KAProgressLabel'
+  pod 'FontAwesome.swift', :git => 'https://github.com/thii/FontAwesome.swift.git', :branch => 'swift-4.0'
 
-target 'HabitTests', :exclusive => true do
-  testing_pods
-end
+  target 'HabitTests' do
+    inherit! :search_paths
+  end
 
-target 'HabitUITests', :exclusive => true do
-  testing_pods
+  target 'HabitUITests' do
+    inherit! :search_paths
+  end
 end

@@ -6,6 +6,8 @@
 //  Copyright © 2016 Harry Cheung. All rights reserved.
 //
 
+import UIKit
+
 struct Constants {
   
   // App colors
@@ -33,12 +35,12 @@ struct Constants {
   static let weekHours = 7 * dayHours
   
   static let MinimumAlpha: CGFloat = 0.4
-  static let NewButtonFadeAnimationDuration: NSTimeInterval = 0.2
-  static let LayoutPriorityLow: UILayoutPriority = 500
-  static let LayoutPriorityHigh: UILayoutPriority = 999
+  static let NewButtonFadeAnimationDuration: TimeInterval = 0.2
+  static let LayoutPriorityLow: UILayoutPriority = UILayoutPriority(rawValue: 500)
+  static let LayoutPriorityHigh: UILayoutPriority = UILayoutPriority(rawValue: 999)
   static let TransitionOverlayAlpha: CGFloat = 0.2
-  static let TransitionDuration: NSTimeInterval = 0.25
-  static let ColorChangeAnimationDuration: NSTimeInterval = 0.5
+  static let TransitionDuration: TimeInterval = 0.25
+  static let ColorChangeAnimationDuration: TimeInterval = 0.5
   static let TableCellHeight: CGFloat = 70
   static let TableSectionHeight: CGFloat = 18
   

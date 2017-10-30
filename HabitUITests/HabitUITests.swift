@@ -2,11 +2,10 @@
 //  HabitUITests.swift
 //  HabitUITests
 //
-//  Created by harry on 6/26/15.
-//  Copyright © 2015 Harry Cheung. All rights reserved.
+//  Created by Harry on 10/3/17.
+//  Copyright © 2017 Harry. All rights reserved.
 //
 
-import Foundation
 import XCTest
 
 class HabitUITests: XCTestCase {
@@ -20,6 +19,8 @@ class HabitUITests: XCTestCase {
         continueAfterFailure = false
         // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test method.
         XCUIApplication().launch()
+
+        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
     
     override func tearDown() {

@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import UserNotifications
 
 class HabitApp {
   
@@ -22,8 +23,8 @@ class HabitApp {
   static let endOfDayKey = "endofday"
   
   static let calendar: NSCalendar = {
-    let c = NSCalendar(identifier: NSCalendarIdentifierGregorian)!
-    c.timeZone = NSTimeZone(name: HabitApp.timeZone)!
+    let c = NSCalendar(identifier: NSCalendar.Identifier.gregorian)!
+    c.timeZone = TimeZone(identifier: HabitApp.timeZone)!
     return c
   }()
   
@@ -39,7 +40,7 @@ class HabitApp {
   
   static var colorIndex: Int {
     get {
-      if let color = NSUserDefaults.standardUserDefaults().objectForKey(colorSettingKey) {
+      if let color = UserDefaults.standard.object(forKey: colorSettingKey) {
         return Constants.colorsNameToIndex[color as! String]!
       } else {
         return 1
@@ -48,116 +49,112 @@ class HabitApp {
     set {
       for (name, index) in Constants.colorsNameToIndex {
         if index == newValue {
-          NSUserDefaults.standardUserDefaults().setObject(name, forKey: colorSettingKey)
+          UserDefaults.standard.set(name, forKey: colorSettingKey)
         }
       }
     }
   }
   
   static var notification: Bool {
-    get { return NSUserDefaults.standardUserDefaults().boolForKey(notificationSettingKey) }
-    set { NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: notificationSettingKey) }
+    get { return UserDefaults.standard.bool(forKey: notificationSettingKey) }
+    set { UserDefaults.standard.set(newValue, forKey: notificationSettingKey) }
   }
   
   static var upcoming: Bool {
-    get { return NSUserDefaults.standardUserDefaults().boolForKey(upcomingSettingKey) }
-    set { NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: upcomingSettingKey) }
+    get { return UserDefaults.standard.bool(forKey: upcomingSettingKey) }
+    set { UserDefaults.standard.set(newValue, forKey: upcomingSettingKey) }
   }
   
   static var autoSkip: Bool {
-    get { return NSUserDefaults.standardUserDefaults().boolForKey(autoSkipSettingKey) }
-    set { NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: autoSkipSettingKey) }
+    get { return UserDefaults.standard.bool(forKey: autoSkipSettingKey) }
+    set { UserDefaults.standard.set(newValue, forKey: autoSkipSettingKey) }
   }
   
   static var autoSkipDelay: Int {
-    get { return NSUserDefaults.standardUserDefaults().integerForKey(autoSkipDelaySettingKey) }
-    set { NSUserDefaults.standardUserDefaults().setInteger(newValue, forKey: autoSkipDelaySettingKey) }
+    get { return UserDefaults.standard.integer(forKey: autoSkipDelaySettingKey) }
+    set { UserDefaults.standard.set(newValue, forKey: autoSkipDelaySettingKey) }
   }
   
-  static var autoSkipDelayTimeInterval: NSTimeInterval { return NSTimeInterval(Constants.minSec * autoSkipDelay) }
+  static var autoSkipDelayTimeInterval: TimeInterval { return TimeInterval(Constants.minSec * autoSkipDelay) }
   
   static var timeZone: String {
     get {
-      if let tz = NSUserDefaults.standardUserDefaults().stringForKey(timeZoneSettingKey) {
+      if let tz = UserDefaults.standard.string(forKey: timeZoneSettingKey) {
         return tz
       } else {
         return ""
       }
     }
-    set { NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: timeZoneSettingKey) }
+    set { UserDefaults.standard.set(newValue, forKey: timeZoneSettingKey) }
   }
   
   static var startOfDay: Int {
-    get { return NSUserDefaults.standardUserDefaults().integerForKey(startOfDayKey) }
-    set { NSUserDefaults.standardUserDefaults().setInteger(newValue, forKey: startOfDayKey) }
+    get { return UserDefaults.standard.integer(forKey: startOfDayKey) }
+    set { UserDefaults.standard.set(newValue, forKey: startOfDayKey) }
   }
   
   static var endOfDay: Int {
-    get { return NSUserDefaults.standardUserDefaults().integerForKey(endOfDayKey) }
-    set { NSUserDefaults.standardUserDefaults().setInteger(newValue, forKey: endOfDayKey) }
+    get { return UserDefaults.standard.integer(forKey: endOfDayKey) }
+    set { UserDefaults.standard.set(newValue, forKey: endOfDayKey) }
   }
   
   static func setupAppManagedObjectContext() {
-    managedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+    managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
   }
   
   static func setUpInMemoryManagedObjectContext() {
-    let managedObjectModel = NSManagedObjectModel.mergedModelFromBundles([NSBundle.mainBundle()])!
+    let managedObjectModel = NSManagedObjectModel.mergedModel(from: [Bundle.main])!
     
     let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
     do {
-      try persistentStoreCoordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: nil)
+      try persistentStoreCoordinator.addPersistentStore(ofType: NSInMemoryStoreType, configurationName: nil, at: nil, options: nil)
     } catch let error as NSError {
       NSLog("error: \(error)")
     }
     
-    managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+    managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
     managedObjectContext!.persistentStoreCoordinator = persistentStoreCoordinator
   }
   
   static func initNotification() {
-    let settings = UIApplication.sharedApplication().currentUserNotificationSettings()
-    if !(settings!.types.contains(.Badge) && settings!.types.contains(.Sound) && settings!.types.contains(.Alert)) {
-      let completeAction = UIMutableUserNotificationAction()
-      completeAction.identifier = "COMPLETE"
-      completeAction.title = "Complete"
-      completeAction.activationMode = .Background
-      completeAction.authenticationRequired = false
-      completeAction.destructive = false
-      
-      let skipAction = UIMutableUserNotificationAction()
-      skipAction.identifier = "SKIP"
-      skipAction.title = "Skip"
-      skipAction.activationMode = .Background
-      skipAction.authenticationRequired = false
-      skipAction.destructive = false
-      
-      let habitCategory = UIMutableUserNotificationCategory()
-      habitCategory.identifier = "HABIT_CATEGORY"
-      habitCategory.setActions([completeAction, skipAction], forContext: .Minimal)
-      
-      let notificationSettings =
-        UIUserNotificationSettings(forTypes: [.Badge, .Sound, .Alert], categories: [habitCategory])
-      UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
+    UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+      if !(settings.badgeSetting == .enabled && settings.soundSetting == .enabled && settings.alertSetting == .enabled) {
+        let completeAction = UNNotificationAction(identifier: "COMPLETE",
+                                                  title: "Complete",
+                                                  options: [.destructive, .authenticationRequired])
+        let skipAction = UNNotificationAction(identifier: "SKIP",
+                                              title: "Skip",
+                                              options: [.destructive, .authenticationRequired])
+        let habitCategory = UNNotificationCategory(identifier: "HABIT_CATEGORY",
+                                                   actions: [completeAction, skipAction],
+                                                   intentIdentifiers: []);
+        
+        let center = UNUserNotificationCenter.current()
+        center.setNotificationCategories([habitCategory])
+        center.requestAuthorization(options: [.badge, .sound, .alert]) {
+          (granted, error) in
+          //Parse errors and track state
+        }
+      }
     }
   }
   
   static func currentPeriods() -> [String] {
-    return currentPeriods(NSDate())
+    return currentPeriods(now: Date())
   }
   
-  static func currentPeriods(now: NSDate) -> [String] {
+  static func currentPeriods(now: Date) -> [String] {
     return [
-      "Daily\(HabitApp.calendar.components([.Day], fromDate: now).day)",
-      "Weekly\(HabitApp.calendar.components([.WeekOfYear], fromDate: now).weekOfYear)",
-      "Monthly\(HabitApp.calendar.components([.Month], fromDate: now).month)"
+      "Daily\(HabitApp.calendar.components([.day], from: now).day!)",
+      "Weekly\(HabitApp.calendar.components([.weekOfYear], from: now).weekOfYear!)",
+      "Monthly\(HabitApp.calendar.components([.month], from: now).month!)"
     ]
   }
   
-  static var dateFormatter: NSDateFormatter = {
-    let formatter = NSDateFormatter()
+  static var dateFormatter: DateFormatter = {
+    let formatter = DateFormatter()
     formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
-    formatter.timeZone = NSTimeZone(abbreviation: "PST")
+    formatter.timeZone = TimeZone(abbreviation: "PST")
     return formatter
   }()
   
@@ -166,9 +163,9 @@ class HabitApp {
   }
   
   static var phoneSize: PhoneSize = {
-    switch UIScreen.mainScreen().scale {
+    switch UIScreen.main.scale {
     case 2.0:
-      switch UIScreen.mainScreen().bounds.size.height {
+      switch UIScreen.main.bounds.size.height {
       case 667:
         return .iPhone6
       case 568:
