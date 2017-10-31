@@ -1,10 +1,24 @@
+@font-face {
+  font-family: 'Bariol';
+  src: url('fonts/Bariol_regular.otf');
+  font-style:   normal;
+  font-weight:  400;
+}
+
+@font-face {
+  font-family: 'Bariol Bold';
+  src: url('fonts/Bariol_bold.otf');
+  font-style:   normal;
+  font-weight:  700;
+}
+
 * {
   box-sizing: border-box; }
 
 body {
   padding: 0;
   margin: 0;
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Bariol", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.5;
   color: #606c71; }
@@ -55,9 +69,7 @@ a {
 
 .page-header {
   color: #fff;
-  text-align: center;
-  background-color: #159957;
-  background-image: linear-gradient(120deg, #155799, #159957); }
+  text-align: center; }
 
 @media screen and (min-width: 64em) {
   .page-header {
@@ -108,11 +120,14 @@ a {
   margin-top: 0; }
 .main-content img {
   max-width: 100%; }
+.main-content h1 {
+  text-align: center;
+}
 .main-content h1, .main-content h2, .main-content h3, .main-content h4, .main-content h5, .main-content h6 {
   margin-top: 2rem;
   margin-bottom: 1rem;
-  font-weight: normal;
-  color: #159957; }
+  font-family: "Bariol Bold";
+  color: black; }
 .main-content p {
   margin-bottom: 1em; }
 .main-content code {
